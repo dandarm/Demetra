@@ -13,9 +13,14 @@ Manifests CSV in `data/manifests/` con colonne:
 - `presence` — 1 se c'è un ciclone; 0 altrimenti.
 - `cx`, `cy` — coordinate **in pixel originali** del centro (solo se presence=1; altrimenti vuote o -1).
 
+-------------
+
 Esempio:
 
-
+image_path,presence,cx,cy<br>
+/data/frames/2020-10-25T00-00.png,1,834,207 <br> 
+/data/frames/2020-10-25T00-05.png,1,836,208 <br>
+/data/frames/2020-10-25T00-10.png,0,,<br>
 
 
 ## Setup
