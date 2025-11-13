@@ -10,7 +10,17 @@ from cyclone_locator.losses.heatmap_loss import HeatmapMSE
 
 def parse_args():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--config", default="config/default.yaml")
+    ap.add_argument("--config", default="config/default.yml")
+    ap.add_argument("--train_csv")
+    ap.add_argument("--val_csv")
+    ap.add_argument("--image_size", type=int)
+    ap.add_argument("--heatmap_stride", type=int)
+    ap.add_argument("--heatmap_sigma_px", type=float)
+    ap.add_argument("--backbone")
+    ap.add_argument("--epochs", type=int)
+    ap.add_argument("--bs", type=int)
+    ap.add_argument("--lr", type=float)
+    ap.add_argument("--log_dir")
     return ap.parse_args()
 
 def set_seed(sd):
@@ -23,6 +33,29 @@ def bce_logits(pred, target):
 def main():
     args = parse_args()
     cfg = yaml.safe_load(open(args.config))
+
+    # Optional CLI overrides keep backwards-compat with config-driven flow.
+    if args.train_csv:
+        cfg["data"]["manifest_train"] = args.train_csv
+    if args.val_csv:
+        cfg["data"]["manifest_val"] = args.val_csv
+    if args.image_size:
+        cfg["train"]["image_size"] = args.image_size
+    if args.heatmap_stride:
+        cfg["train"]["heatmap_stride"] = args.heatmap_stride
+    if args.heatmap_sigma_px:
+        cfg["loss"]["heatmap_sigma_px"] = args.heatmap_sigma_px
+    if args.backbone:
+        cfg["train"]["backbone"] = args.backbone
+    if args.epochs:
+        cfg["train"]["epochs"] = args.epochs
+    if args.bs:
+        cfg["train"]["batch_size"] = args.bs
+    if args.lr:
+        cfg["train"]["lr"] = args.lr
+    if args.log_dir:
+        cfg["train"]["save_dir"] = args.log_dir
+
     set_seed(cfg["train"]["seed"])
 
     # Datasets

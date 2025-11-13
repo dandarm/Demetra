@@ -21,10 +21,17 @@ Per generare nuovi manifest da un CSV di finestre temporali (`medicanes_new_wind
 ```bash
 python scripts/make_manifest_from_windows.py \
   --windows-csv path/medicanes_new_windows.csv \
-  --images-dir path/pre_letterbox_512 \
+  --images-dir data/letterboxed_512/resized \
   --out-dir path/manifests \
-  --orig-size 1290 420 --target-size 512
+  --orig-size 1290 420 \
+  --target-size 384 \
+  --val-split 0.15 --test-split 0.15 \
+  --attach-keypoints auto
 ```
+
+* Legge `data/medicanes_new_windows.csv`.
+* Scansiona `data/letterboxed_512/resized` (immagini già letterbox SxS).
+* Scrive: `data/manifests/train.csv`, `data/manifests/val.csv`, `data/manifests/test.csv`.
 
 Lo script etichetta ogni frame in base alle finestre `[start_time, end_time]` (inclusione chiusa).
 Se il CSV contiene colonne `x_pix`,`y_pix`, vengono proiettate nella letterbox S×S e salvate come
@@ -48,6 +55,18 @@ pip install -r requirements.txt
 
 
 ## Training
+```bash
+python -m src.cyclone_locator.train \
+  --train_csv manifests/train.csv \
+  --val_csv   manifests/val.csv \
+  --image_size 512 \
+  --heatmap_stride 4 \
+  --heatmap_sigma_px 8 \
+  --backbone resnet18 \
+  --epochs 5 --bs 64 --lr 3e-4 \
+  --log_dir outputs/runs/exp1
+```
+
 python -m cyclone_locator.train --config config/default.yaml
 
 ## Inferenza

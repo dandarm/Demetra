@@ -22,6 +22,8 @@ def make_df():
         ],
         "x_pix": [100, 110, 120],
         "y_pix": [200, 210, 220],
+        "id_final": [7001, 7001, 7001],
+        "source": ["GT", "GT", "GT"],
     }
     return pd.DataFrame(data)
 
@@ -42,3 +44,23 @@ def test_windows_keypoint_lookup():
     assert kp is not None
     assert kp.x == 110
     assert kp.y == 210
+
+
+def test_windows_keypoint_interpolation():
+    df = make_df()
+    labeler = WindowsLabeling.from_dataframe(df)
+    midpoint = pd.Timestamp("2021-01-01 10:15:00")
+    kp = labeler.keypoint_for(midpoint)
+    assert kp is not None
+    assert abs(kp.x - 105.0) < 1e-6
+    assert abs(kp.y - 205.0) < 1e-6
+
+
+def test_windows_keypoint_interpolation_to_last_point():
+    df = make_df()
+    labeler = WindowsLabeling.from_dataframe(df)
+    almost_end = pd.Timestamp("2021-01-01 10:50:00")
+    kp = labeler.keypoint_for(almost_end)
+    assert kp is not None
+    assert kp.x > 110
+    assert kp.y > 210

@@ -1,6 +1,7 @@
 """Utilities for labeling frames from temporal windows manifests."""
 from __future__ import annotations
 
+from bisect import bisect_left
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
@@ -30,6 +31,52 @@ class Keypoint:
     cyclone_id: Optional[str] = None
 
 
+@dataclass(frozen=True)
+class EventTrack:
+    event_id: Optional[str]
+    start: pd.Timestamp
+    end: pd.Timestamp
+    timestamps: Tuple[pd.Timestamp, ...]
+    keypoints: Tuple[Keypoint, ...]
+
+    def contains(self, ts: pd.Timestamp) -> bool:
+        return self.start <= ts <= self.end
+
+    def keypoint_at(self, ts: pd.Timestamp) -> Optional[Keypoint]:
+        if not self.contains(ts) or not self.timestamps:
+            return None
+
+        idx = bisect_left(self.timestamps, ts)
+        if idx < len(self.timestamps) and self.timestamps[idx] == ts:
+            return self.keypoints[idx]
+
+        if idx <= 0:
+            # Before first recorded point -> clamp to first
+            base = self.keypoints[0]
+            return base
+        if idx >= len(self.timestamps):
+            # After last recorded point -> clamp to last
+            base = self.keypoints[-1]
+            return base
+
+        prev_idx = idx - 1
+        next_idx = idx
+        prev_ts = self.timestamps[prev_idx]
+        next_ts = self.timestamps[next_idx]
+        prev_kp = self.keypoints[prev_idx]
+        next_kp = self.keypoints[next_idx]
+
+        total = (next_ts - prev_ts).total_seconds()
+        if total <= 0:
+            return prev_kp
+        alpha = (ts - prev_ts).total_seconds() / total
+        x = prev_kp.x + alpha * (next_kp.x - prev_kp.x)
+        y = prev_kp.y + alpha * (next_kp.y - prev_kp.y)
+        cyclone_id = prev_kp.cyclone_id or next_kp.cyclone_id or self.event_id
+        source = "interpolated"
+        return Keypoint(float(x), float(y), source=source, cyclone_id=cyclone_id)
+
+
 class WindowsLabeling:
     """Index temporal windows and optional keypoints for frame labeling."""
 
@@ -37,10 +84,12 @@ class WindowsLabeling:
         self,
         intervals: Sequence[Tuple[pd.Timestamp, pd.Timestamp]],
         timestamp_keypoints: Dict[pd.Timestamp, Keypoint],
+        event_tracks: Sequence[EventTrack] | None = None,
     ) -> None:
         merged = self._merge_intervals(intervals)
         self._intervals: List[Tuple[pd.Timestamp, pd.Timestamp]] = merged
         self._keypoints = timestamp_keypoints
+        self._event_tracks: Tuple[EventTrack, ...] = tuple(event_tracks) if event_tracks else tuple()
 
     @staticmethod
     def _merge_intervals(
@@ -61,12 +110,44 @@ class WindowsLabeling:
         return merged
 
     @classmethod
+    @staticmethod
+    def _detect_event_id_column(df: pd.DataFrame) -> Optional[str]:
+        candidates = (
+            "id_final",
+            "id",
+            "event_id",
+            "cyclone_id",
+            "id_cyc_unico",
+            "idorig",
+        )
+        for col in candidates:
+            if col in df.columns:
+                return col
+        return None
+
+    @staticmethod
+    def _normalize_event_id(value) -> Optional[str]:
+        if value is None or (isinstance(value, float) and np.isnan(value)) or pd.isna(value):
+            return None
+        if isinstance(value, (int, np.integer)):
+            return str(int(value))
+        if isinstance(value, (float, np.floating)):
+            fval = float(value)
+            if fval.is_integer():
+                return str(int(fval))
+            return str(fval)
+        text = str(value).strip()
+        return text or None
+
+    @classmethod
     def from_dataframe(cls, df: pd.DataFrame) -> "WindowsLabeling":
         if "start_time" not in df.columns or "end_time" not in df.columns:
             raise ValueError("CSV must include start_time and end_time columns")
         intervals: List[Tuple[pd.Timestamp, pd.Timestamp]] = []
         keypoints: Dict[pd.Timestamp, Keypoint] = {}
+        event_tracks: Dict[str, Dict[str, object]] = {}
         seen_intervals = set()
+        event_col = cls._detect_event_id_column(df)
         for _, row in df.iterrows():
             start = row.get("start_time")
             end = row.get("end_time")
@@ -83,6 +164,20 @@ class WindowsLabeling:
                 intervals.append((start_ts, end_ts))
                 seen_intervals.add(key)
 
+            event_id = cls._normalize_event_id(row.get(event_col)) if event_col else None
+            if event_id is None:
+                event_id = f"{start_ts.isoformat()}__{end_ts.isoformat()}"
+            track = event_tracks.setdefault(
+                event_id,
+                {
+                    "start": start_ts,
+                    "end": end_ts,
+                    "points": {},
+                },
+            )
+            track["start"] = min(track["start"], start_ts)
+            track["end"] = max(track["end"], end_ts)
+
             if "time" in row and not pd.isna(row["time"]):
                 ts_value = row["time"]
                 if isinstance(ts_value, str):
@@ -91,13 +186,37 @@ class WindowsLabeling:
                 x = row["x_pix"] if "x_pix" in row.index else None
                 y = row["y_pix"] if "y_pix" in row.index else None
                 if x is not None and y is not None and not (pd.isna(x) or pd.isna(y)):
+                    source = row.get("source") if isinstance(row, pd.Series) else None
+                    cyclone_id = row.get("id_final") if isinstance(row, pd.Series) else None
+                    cyclone_id = cls._normalize_event_id(cyclone_id) or event_id
+                    kp_value = Keypoint(
+                        float(x),
+                        float(y),
+                        source=str(source) if pd.notna(source) else None,
+                        cyclone_id=str(cyclone_id) if cyclone_id is not None else None,
+                    )
                     if timestamp not in keypoints:
-                        source = row.get("source") if isinstance(row, pd.Series) else None
-                        cyclone_id = row.get("id_final") if isinstance(row, pd.Series) else None
-                        keypoints[timestamp] = Keypoint(float(x), float(y),
-                                                        source=str(source) if pd.notna(source) else None,
-                                                        cyclone_id=str(cyclone_id) if pd.notna(cyclone_id) else None)
-        return cls(intervals, keypoints)
+                        keypoints[timestamp] = kp_value
+                    track_points: Dict[pd.Timestamp, Keypoint] = track["points"]  # type: ignore[assignment]
+                    track_points[timestamp] = kp_value
+
+        track_objs: List[EventTrack] = []
+        for event_id, data in event_tracks.items():
+            point_dict: Dict[pd.Timestamp, Keypoint] = data["points"]  # type: ignore[assignment]
+            sorted_items = sorted(point_dict.items(), key=lambda item: item[0])
+            timestamps = tuple(ts for ts, _ in sorted_items)
+            kp_values = tuple(kp for _, kp in sorted_items)
+            track_objs.append(
+                EventTrack(
+                    event_id=event_id,
+                    start=data["start"],  # type: ignore[arg-type]
+                    end=data["end"],      # type: ignore[arg-type]
+                    timestamps=timestamps,
+                    keypoints=kp_values,
+                )
+            )
+
+        return cls(intervals, keypoints, track_objs)
 
     @classmethod
     def from_csv(cls, csv_path: Path | str) -> "WindowsLabeling":
@@ -115,7 +234,14 @@ class WindowsLabeling:
 
     def keypoint_for(self, timestamp: datetime | pd.Timestamp) -> Optional[Keypoint]:
         ts = pd.Timestamp(timestamp)
-        return self._keypoints.get(ts, None)
+        direct = self._keypoints.get(ts, None)
+        if direct is not None:
+            return direct
+        for track in self._event_tracks:
+            kp = track.keypoint_at(ts)
+            if kp is not None:
+                return kp
+        return None
 
     def has_keypoints(self) -> bool:
         return bool(self._keypoints)
