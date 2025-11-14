@@ -59,7 +59,7 @@ pip install -r requirements.txt
 python -m src.cyclone_locator.train \
   --train_csv manifests/train.csv \
   --val_csv   manifests/val.csv \
-  --image_size 512 \
+  --image_size 384 \
   --heatmap_stride 4 \
   --heatmap_sigma_px 8 \
   --backbone resnet18 \
@@ -67,17 +67,22 @@ python -m src.cyclone_locator.train \
   --log_dir outputs/runs/exp1
 ```
 
-python -m cyclone_locator.train --config config/default.yaml
 
 ## Inferenza
+```bash
 python -m cyclone_locator.infer \
   --config config/default.yaml \
-  --checkpoint checkpoints/best.ckpt \
-  --out_dir outputs/preds/
+  --checkpoint outputs/runs/exp1/checkpoints/best.ckpt \
+  --out_dir outputs/preds/ \
+  --presence_threshold 0.5 \
+  --roi_base_radius_px 128 \
+  --roi_sigma_multiplier 2.0
+```
 
+### Output:
 
-## Output:
+Cosa produce
 
-preds.csv con (presence_prob, x_g,y_g in 512, x_orig,y_orig, r_crop_px, ecc.)
+outputs/preds/preds.csv con: orig_path, resized_path, presence_prob, x_g, y_g (SxS), x_orig, y_orig (pixel originali), r_crop_px, roi_path.
 
-ROI ritagliate per il VideoMAE HR (cartella outputs/preds/roi/).
+outputs/preds/roi/*.png  ROI con i ritagli centrati per il VideoMAE HR.

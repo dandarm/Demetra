@@ -4,16 +4,22 @@ import numpy as np
 import pandas as pd
 import torch
 from cyclone_locator.models.simplebaseline import SimpleBaseline
-from cyclone_locator.utils.metrics import peak_and_width
+from cyclone_locator.utils.metric import peak_and_width
 from cyclone_locator.utils.geometry import crop_square
 
 def parse_args():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--config", default="config/default.yaml")
+    ap.add_argument("--config", default="config/default.yml")
     ap.add_argument("--checkpoint", required=True)
     ap.add_argument("--out_dir", default=None)
     ap.add_argument("--frames_glob", default=None,
                     help="(opzionale) se specifichi, verrà filtrato il meta solo per questi file")
+    ap.add_argument("--presence_threshold", type=float, default=None,
+                    help="Override della soglia presence definita nel config")
+    ap.add_argument("--roi_base_radius_px", type=int, default=None,
+                    help="Override del raggio base ROI")
+    ap.add_argument("--roi_sigma_multiplier", type=float, default=None,
+                    help="Override del moltiplicatore sigma ROI")
     return ap.parse_args()
 
 def sigmoid(x): return 1.0 / (1.0 + np.exp(-x))
@@ -21,6 +27,13 @@ def sigmoid(x): return 1.0 / (1.0 + np.exp(-x))
 def main():
     args = parse_args()
     cfg = yaml.safe_load(open(args.config))
+    if args.presence_threshold is not None:
+        cfg["infer"]["presence_threshold"] = args.presence_threshold
+    if args.roi_base_radius_px is not None:
+        cfg["infer"]["roi_base_radius_px"] = args.roi_base_radius_px
+    if args.roi_sigma_multiplier is not None:
+        cfg["infer"]["roi_sigma_multiplier"] = args.roi_sigma_multiplier
+
     out_dir = cfg["infer"]["out_dir"] if args.out_dir is None else args.out_dir
     os.makedirs(out_dir, exist_ok=True)
 
