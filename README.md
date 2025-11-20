@@ -5,6 +5,12 @@ First-pass **detector+locator** del centro di ciclone su **intero Mediterraneo**
 - Input: frame **letterbox 512x512**, no deformazioni.
 - Output: CSV/JSON con (x_orig, y_orig), **probabilità di presenza**, e **ROI** ritagliate per il modello HR (VideoMAE).
 
+## Setup
+
+python -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+
+
 ## Dati attesi
 
 Manifests CSV in `data/manifests/` con colonne:
@@ -47,10 +53,7 @@ image_path,presence,cx,cy<br>
 /data/frames/2020-10-25T00-10.png,0,,<br>
 
 
-## Setup
 
-python -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
 
 
 
