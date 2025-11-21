@@ -25,7 +25,8 @@ exec python -m src.cyclone_locator.train \
   --heatmap_stride "$HEATMAP_STRIDE" \
   --heatmap_sigma_px "$HEATMAP_SIGMA" \
   --backbone "$BACKBONE" \
-  --epochs "$EPOCHS" \
-  --bs "$BATCH_SIZE" \
-  --lr "$LR" \
   --log_dir "$LOG_DIR"
+
+  #   --epochs "$EPOCHS" \
+  # --bs "$BATCH_SIZE" \
+  # --lr "$LR" \

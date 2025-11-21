@@ -14,13 +14,13 @@ data:
 
 train:
   image_size: 384
-  batch_size: 128
-  num_workers: 0
-  epochs: 30
+  batch_size: 300
+  num_workers: 20
+  epochs: 100
   lr: 1.0e-3
   weight_decay: 1.0e-4
   amp: true
-  seed: 42
+  seed: 44
   save_dir: checkpoints
   val_every: 1
   best_ckpt_start_epoch: 10

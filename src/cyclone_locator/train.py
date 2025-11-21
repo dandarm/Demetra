@@ -118,15 +118,34 @@ def main():
                 letterbox_meta_csv=cfg["data"]["letterbox_meta_csv"],
                 letterbox_size_assert=cfg["data"]["letterbox_size_assert"]
             )
-            test_loader = DataLoader(ds_te, batch_size=cfg["train"]["batch_size"], shuffle=False,
-                                     num_workers=cfg["train"]["num_workers"], pin_memory=True)
+            test_loader = DataLoader(
+                ds_te,
+                batch_size=cfg["train"]["batch_size"],
+                shuffle=False,
+                num_workers=cfg["train"]["num_workers"],
+                pin_memory=True,
+                persistent_workers=cfg["train"]["num_workers"] > 0
+            )
         else:
             print(f"[WARN] Test manifest {manifest_test} non trovato: salto l'eval di test.")
 
-    tr_loader = DataLoader(ds_tr, batch_size=cfg["train"]["batch_size"], shuffle=True,
-                           num_workers=cfg["train"]["num_workers"], pin_memory=True, drop_last=True)
-    va_loader = DataLoader(ds_va, batch_size=cfg["train"]["batch_size"], shuffle=False,
-                           num_workers=cfg["train"]["num_workers"], pin_memory=True)
+    tr_loader = DataLoader(
+        ds_tr,
+        batch_size=cfg["train"]["batch_size"],
+        shuffle=True,
+        num_workers=cfg["train"]["num_workers"],
+        pin_memory=True,
+        persistent_workers=cfg["train"]["num_workers"] > 0,
+        drop_last=True
+    )
+    va_loader = DataLoader(
+        ds_va,
+        batch_size=cfg["train"]["batch_size"],
+        shuffle=False,
+        num_workers=cfg["train"]["num_workers"],
+        pin_memory=True,
+        persistent_workers=cfg["train"]["num_workers"] > 0
+    )
 
     # Model
     model = SimpleBaseline(backbone=cfg["train"]["backbone"], out_heatmap_ch=1)
@@ -155,6 +174,7 @@ def main():
         writer.writeheader()
 
         for epoch in range(1, cfg["train"]["epochs"]+1):
+            epoch_start = time.time()
             model.train()
             losses = []; hm_losses = []; pres_losses = []
             for batch in tr_loader:
@@ -189,12 +209,18 @@ def main():
                 val_score = val_metrics["loss"]
                 print(f"          val:  L={val_score:.4f} (hm={val_metrics['hm']:.4f}, pr={val_metrics['presence']:.4f})")
 
-                ckpt_path = os.path.join(save_dir, f"epoch{epoch:03d}_val{val_score:.4f}.ckpt")
-                torch.save({"model": model.state_dict(), "cfg": cfg}, ckpt_path)
-                if epoch >= best_start_epoch and val_score < best_val:
-                    best_val = val_score; best_path = ckpt_path
-                    torch.save({"model": model.state_dict(), "cfg": cfg}, os.path.join(save_dir, "best.ckpt"))
-                    print("Saved best:", os.path.join(save_dir, "best.ckpt"))
+                if epoch < best_start_epoch:
+                    print(f"[Epoch {epoch}] checkpoint skip: epoch < best_ckpt_start_epoch ({best_start_epoch})")
+                elif val_score < best_val:
+                    best_val = val_score
+                    best_target = os.path.join(save_dir, "best.ckpt")
+                    t0 = time.time()
+                    print(f"[Epoch {epoch}] saving BEST checkpoint to {best_target} ...")
+                    torch.save({"model": model.state_dict(), "cfg": cfg}, best_target)
+                    print(f"[Epoch {epoch}] best checkpoint saved in {time.time()-t0:.2f}s")
+                    best_path = best_target
+                else:
+                    print(f"[Epoch {epoch}] no val improvement ({val_score:.4f} >= {best_val:.4f}); checkpoint not saved")
 
             row = {
                 "epoch": epoch,
@@ -209,6 +235,8 @@ def main():
                 "test_presence_loss": test_metrics["presence"] if test_metrics else ""
             }
             writer.writerow(row); log_file.flush()
+            elapsed = time.time() - epoch_start
+            print(f"[Epoch {epoch}] elapsed: {elapsed:.1f}s")
 
     print("Done. Best:", best_path)
 
