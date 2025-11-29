@@ -16,7 +16,7 @@ EPOCHS="20"
 BATCH_SIZE="64"
 LR="3e-4"
 
-LOG_DIR="outputs/runs/exp4"
+LOG_DIR="outputs/runs/exp5"
 
 mkdir -p "$LOG_DIR"
 

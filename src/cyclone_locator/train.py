@@ -35,20 +35,7 @@ def bce_logits(pred, target):
 def combine_losses(L_hm, L_pr, loss_cfg):
     hm_w = loss_cfg["w_heatmap"]
     pr_w = loss_cfg["w_presence"]
-
-    if loss_cfg.get("auto_balance", False):
-        # Riallinea i pesi in base alle magnitudini correnti per evitare che una loss
-        # (tipicamente la detection/presence) domini l'altra.
-        hm_det = L_hm.detach()
-        pr_det = L_pr.detach()
-        total = hm_det + pr_det + 1e-6
-        hm_w = hm_w * 0.5 * total / (hm_det + 1e-6)
-        pr_w = pr_w * 0.5 * total / (pr_det + 1e-6)
-        min_w, max_w = loss_cfg.get("auto_balance_clip", (0.1, 10.0))
-        hm_w = torch.clamp(hm_w, min=min_w, max=max_w)
-        pr_w = torch.clamp(pr_w, min=min_w, max=max_w)
-
-    return hm_w, pr_w, hm_w*L_hm + pr_w*L_pr
+    return hm_w, pr_w, hm_w * L_hm + pr_w * L_pr
 
 def evaluate_loader(model, loader, hm_loss, amp_enabled, loss_weights):
     vL, vHm, vPr = [], [], []
@@ -59,7 +46,7 @@ def evaluate_loader(model, loader, hm_loss, amp_enabled, loss_weights):
             pres = batch["presence"].cuda(non_blocking=True)
             with autocast(enabled=amp_enabled):
                 hm_p, pres_logit = model(img)
-                L_hm = hm_loss(hm_p, hm_t, pres.view(-1))
+                L_hm = hm_loss(hm_p, hm_t)
                 L_pr = bce_logits(pres_logit, pres)
                 _, _, L = combine_losses(L_hm, L_pr, loss_weights)
             vL.append(L.item()); vHm.append(L_hm.item()); vPr.append(L_pr.item())
@@ -194,7 +181,7 @@ def main():
         for epoch in range(1, cfg["train"]["epochs"]+1):
             epoch_start = time.time()
             model.train()
-            losses = []; hm_losses = []; pres_losses = []
+            losses = []; hm_losses = []; pres_losses = []; peak_preds = []
             for batch in tr_loader:
                 img = batch["image"].cuda(non_blocking=True)
                 hm_t = batch["heatmap"].cuda(non_blocking=True)
@@ -203,18 +190,20 @@ def main():
                 opt.zero_grad(set_to_none=True)
                 with autocast(enabled=cfg["train"]["amp"]):
                     hm_p, pres_logit = model(img)
-                    L_hm = hm_loss(hm_p, hm_t, pres.view(-1))                # solo positivi
-                    L_pr = bce_logits(pres_logit, pres)                      # tutti
+                    L_hm = hm_loss(hm_p, hm_t)
+                    L_pr = bce_logits(pres_logit, pres)
                     _, _, L = combine_losses(L_hm, L_pr, loss_weights)
                 scaler.scale(L).backward()
                 scaler.step(opt); scaler.update()
 
                 losses.append(L.item()); hm_losses.append(L_hm.item()); pres_losses.append(L_pr.item())
+                peak_preds.append(hm_p.detach().amax(dim=[-1, -2]).mean().item())
 
             tr_loss = float(np.mean(losses))
             tr_hm = float(np.mean(hm_losses))
             tr_pr = float(np.mean(pres_losses))
-            print(f"[Epoch {epoch}] train: L={tr_loss:.4f} (hm={tr_hm:.4f}, pr={tr_pr:.4f})")
+            tr_peak = float(np.mean(peak_preds))
+            print(f"[Epoch {epoch}] train: L={tr_loss:.4f} (hm={tr_hm:.4f}, pr={tr_pr:.4f}, peak={tr_peak:.4f})")
 
             val_metrics = None; test_metrics = None
             if epoch % cfg["train"]["val_every"] == 0:

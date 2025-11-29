@@ -371,6 +371,18 @@ def decode_heatmap(hm: np.ndarray, stride: int, soft: bool = False) -> Tuple[flo
     return x * stride, y * stride
 
 
+def combine_presence(presence_prob: torch.Tensor, heatmap: torch.Tensor) -> torch.Tensor:
+    """
+    presence_prob: (B,) con sigmoid(logits)
+    heatmap: (B,H,W) o (B,1,H,W)
+    Restituisce una media semplice tra la presenza predetta e il picco della heatmap.
+    """
+    if heatmap.ndim == 4 and heatmap.shape[1] == 1:
+        heatmap = heatmap.squeeze(1)
+    peak = heatmap.amax(dim=[-1, -2])
+    return 0.5 * presence_prob + 0.5 * peak
+
+
 def run_inference(
     model: torch.nn.Module,
     data_loader: DataLoader,
@@ -387,10 +399,16 @@ def run_inference(
         for batch in data_loader:
             images = batch["image"].to(device)
             with torch.cuda.amp.autocast(enabled=autocast_enabled):
-                heatmaps, logits = model(images)
-            probs = torch.sigmoid(logits).squeeze(1)
-            heatmaps_np = heatmaps.squeeze(1).cpu().numpy()
-            probs_np = probs.cpu().numpy()
+                heatmaps_pred, logits = model(images)
+            probs_raw = torch.sigmoid(logits).squeeze(1)
+            heatmaps = heatmaps_pred.squeeze(1)
+            combined_probs = combine_presence(probs_raw, heatmaps)
+            peaks = heatmaps.amax(dim=[1, 2])
+
+            heatmaps_np = heatmaps.cpu().numpy()
+            probs_np = combined_probs.cpu().numpy()
+            probs_raw_np = probs_raw.cpu().numpy()
+            peaks_np = peaks.cpu().numpy()
             logits_np = logits.squeeze(1).cpu().numpy()
             manifest_idx_batch = batch["manifest_idx"]
             for i, path in enumerate(batch["image_path"]):
@@ -401,7 +419,9 @@ def run_inference(
                     "image_path": path,
                     "manifest_idx": int(manifest_idx_batch[i]),
                     "presence_prob": float(probs_np[i]),
+                    "presence_prob_raw": float(probs_raw_np[i]),
                     "presence_logit": float(logits_np[i]),
+                    "heatmap_peak": float(peaks_np[i]),
                     "x_g": float(x_g),
                     "y_g": float(y_g),
                     "peak_width_heatmap": float(width),

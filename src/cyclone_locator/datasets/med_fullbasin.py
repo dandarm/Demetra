@@ -128,13 +128,17 @@ class MedFullBasinDataset(Dataset):
         if presence == 1:
             cx_hm = xg / self.stride
             cy_hm = yg / self.stride
-            hm = make_gaussian_heatmap(self.Ho, self.Wo, cx_hm, cy_hm, self.sigma / self.stride)
+            hm = torch.from_numpy(
+                make_gaussian_heatmap(self.Ho, self.Wo, cx_hm, cy_hm, self.sigma / self.stride)
+            )
         else:
-            hm = np.zeros((self.Ho, self.Wo), dtype=np.float32)
+            noise_level = 0.01
+            hm = torch.rand((self.Ho, self.Wo), dtype=torch.float32) * noise_level
+            hm = torch.clamp(hm, 0.0, 0.02)
 
         sample = {
             "image": img_t,                        # (C,H,W) float32
-            "heatmap": torch.from_numpy(hm)[None], # (1,Ho,Wo)
+            "heatmap": hm.unsqueeze(0),            # (1,Ho,Wo)
             "presence": torch.tensor([presence], dtype=torch.float32),
             # meta serve solo in inferenza; in training teniamo lo stretto necessario
             "meta_scale": meta["scale"],

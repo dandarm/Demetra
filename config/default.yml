@@ -14,9 +14,9 @@ data:
 
 train:
   image_size: 384
-  batch_size: 356
+  batch_size: 64
   num_workers: 20
-  epochs: 5000
+  epochs: 500
   lr: 1.0e-3
   weight_decay: 1.0e-4
   amp: true
