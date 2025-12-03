@@ -10,7 +10,7 @@ Questa guida descrive l'architettura e il flusso operativo del modello first-pas
 - **Loss**: [`src/cyclone_locator/losses/heatmap_loss.py`](src/cyclone_locator/losses/heatmap_loss.py) implementa la loss MSE condizionata sulla presenza.
 - **Training / inferenza**: [`src/cyclone_locator/train.py`](src/cyclone_locator/train.py) coordina training/val con AMP opzionale; [`src/cyclone_locator/infer.py`](src/cyclone_locator/infer.py) gestisce l'esportazione di predizioni, incluso l'hand-off a stadi successivi.
 - **Utility**: [`src/cyclone_locator/utils/geometry.py`](src/cyclone_locator/utils/geometry.py) e [`src/cyclone_locator/utils/metric.py`](src/cyclone_locator/utils/metric.py) coprono funzioni geometriche e metriche; [`src/cyclone_locator/utils/visualize.py`](src/cyclone_locator/utils/visualize.py) produce overlay heatmap/debug.
-- **Script dati**: la cartella [`scripts/`](scripts) contiene utilità CLI per la preparazione dati, tra cui `generate_manifest.py`, `make_manifest_from_windows.py`, `letterbox_folder.py`, `make_letterboxed_copies.py`.
+- **Script dati**: la cartella [`scripts/`](scripts) contiene utilità CLI per la preparazione dati, tra cui `make_manifest_from_windows.py`, `letterbox_folder.py`, `make_letterboxed_copies.py`.
 - **Dati di esempio**: [`mini_data_input/`](mini_data_input) ospita un manifest dimostrativo e immagini letterbox.
 
 ## Manifest CSV
@@ -43,7 +43,7 @@ Orig→LB:  x_lb = scale * x_orig + pad_x
 LB→Orig:  x_orig = (x_lb - pad_x) / scale
           y_orig = (y_lb - pad_y) / scale
 ```
-Questi valori sono serializzati da [`scripts/generate_manifest.py`](scripts/generate_manifest.py) e riutilizzati dal dataset via CSV metadati (colonne `orig_path`, `resized_path`, `orig_w`, `orig_h`, `out_size`, `scale`, `pad_x`, `pad_y`).
+Questi valori sono serializzati da [`scripts/make_manifest_from_windows.py`](scripts/make_manifest_from_windows.py) e riutilizzati dal dataset via CSV metadati (colonne `orig_path`, `resized_path`, `orig_w`, `orig_h`, `out_size`, `scale`, `pad_x`, `pad_y`).
 
 ## Dataset e tensori prodotti
 `MedFullBasinDataset` combina il manifest e (opzionalmente) il CSV dei metadati letterbox. Durante `__getitem__`:
