@@ -20,7 +20,7 @@ train:
   lr: 1.0e-3
   weight_decay: 1.0e-4
   amp: true
-  seed: 47
+  seed: 48
   save_dir: checkpoints
   val_every: 1
   best_ckpt_start_epoch: 10

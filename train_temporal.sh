@@ -14,10 +14,10 @@ BACKBONE="resnet18"
 TEMPORAL_T="3"
 
 EPOCHS="20"
-BATCH_SIZE="64"
+BATCH_SIZE="32"
 LR="3e-4"
 
-LOG_DIR="outputs/runs/exp7_temporalT${TEMPORAL_T}"
+LOG_DIR="outputs/runs/exp10_temporalT${TEMPORAL_T}_bs${BATCH_SIZE}_buffer36"
 
 mkdir -p "$LOG_DIR"
 
@@ -29,8 +29,9 @@ exec python -m src.cyclone_locator.train \
   --heatmap_sigma_px "$HEATMAP_SIGMA" \
   --backbone "$BACKBONE" \
   --temporal_T "$TEMPORAL_T" \
-  --log_dir "$LOG_DIR"
+  --log_dir "$LOG_DIR" \
+  --bs "$BATCH_SIZE" 
 
   #   --epochs "$EPOCHS" \
-  # --bs "$BATCH_SIZE" \
+  # 
   # --lr "$LR" \

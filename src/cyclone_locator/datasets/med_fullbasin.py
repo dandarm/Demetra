@@ -127,6 +127,9 @@ class MedFullBasinDataset(Dataset):
                 img_np = center_img
             frames.append(img_np)
 
+        #print(np.mean((frames[0] - frames[1])**2).item(),
+        #      np.mean((frames[1] - frames[2])**2).item())
+
         presence = int(row["presence"])
         if presence == 1:
             if self.letterboxed_manifest and self._has_resized_keypoints and \
@@ -178,4 +181,5 @@ class MedFullBasinDataset(Dataset):
             "orig_h": meta["orig_h"],
             "image_path": row["image_path"]
         }
+
         return sample
