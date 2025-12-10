@@ -60,13 +60,18 @@ def combine_losses(L_hm, L_pr, loss_cfg):
 def evaluate_loader(model, loader, hm_loss, amp_enabled, loss_weights, device, rank: int = 0):
     vL, vHm, vPr = [], [], []
     bad_batches = 0
+    total_batches = 0
     with torch.no_grad():
         for batch in loader:
+            total_batches += 1
             img = batch["image"].to(device, non_blocking=True)
             hm_t = batch["heatmap"].to(device, non_blocking=True)
             pres = batch["presence"].to(device, non_blocking=True)
-            with autocast(enabled=amp_enabled):
+            # Val in full precision to reduce risk of overflow/NaN
+            with autocast(enabled=False):
                 hm_p, pres_logit = model(img)
+                hm_p = torch.nan_to_num(hm_p, nan=0.0, posinf=1e4, neginf=-1e4)
+                pres_logit = torch.nan_to_num(pres_logit, nan=0.0, posinf=50.0, neginf=-50.0)
                 L_hm = hm_loss(hm_p, hm_t)
                 L_pr = bce_logits(pres_logit, pres)
                 _, _, L = combine_losses(L_hm, L_pr, loss_weights)
@@ -80,7 +85,8 @@ def evaluate_loader(model, loader, hm_loss, amp_enabled, loss_weights, device, r
         "loss": float(np.mean(vL)) if len(vL) > 0 else float("nan"),
         "hm": float(np.mean(vHm)) if len(vHm) > 0 else float("nan"),
         "presence": float(np.mean(vPr)) if len(vPr) > 0 else float("nan"),
-        "bad_batches": bad_batches
+        "bad_batches": bad_batches,
+        "total_batches": total_batches
     }
 
 def main():
@@ -323,12 +329,20 @@ def main():
             val_metrics = None; test_metrics = None
             if epoch % cfg["train"]["val_every"] == 0 and is_main_process(rank):
                 model.eval()
-                val_metrics = evaluate_loader(model, va_loader, hm_loss, cfg["train"]["amp"], loss_weights, device)
+                val_metrics = evaluate_loader(model, va_loader, hm_loss, False, loss_weights, device)
                 if test_loader is not None:
-                    test_metrics = evaluate_loader(model, test_loader, hm_loss, cfg["train"]["amp"], loss_weights, device)
+                    test_metrics = evaluate_loader(model, test_loader, hm_loss, False, loss_weights, device)
                 model.train()
 
                 val_score = val_metrics["loss"]
+                if val_metrics.get("bad_batches", 0) > 0:
+                    total = val_metrics.get("total_batches", 0)
+                    msg = f"[WARN] val skipped {val_metrics['bad_batches']} non-finite batches"
+                    if total:
+                        msg += f" out of {total}"
+                    print(msg)
+                    if total and val_metrics["bad_batches"] == total:
+                        raise RuntimeError("Validation produced only non-finite batches; aborting.")
                 print(f"          val:  L={val_score:.4f} (hm={val_metrics['hm']:.4f}, pr={val_metrics['presence']:.4f})")
 
                 if epoch < best_start_epoch:
