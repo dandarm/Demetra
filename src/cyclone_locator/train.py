@@ -242,7 +242,8 @@ def main():
         model = torch.nn.parallel.DistributedDataParallel(
             model,
             device_ids=[local_rank] if device.type == "cuda" else None,
-            output_device=local_rank if device.type == "cuda" else None
+            output_device=local_rank if device.type == "cuda" else None,
+            broadcast_buffers=False
         )
     model_to_save = model.module if distributed else model
 
@@ -327,23 +328,30 @@ def main():
                 print(f"[Epoch {epoch}] train: L={tr_loss:.4f} (hm={tr_hm:.4f}, pr={tr_pr:.4f}, peak={tr_peak:.4f})")
 
             val_metrics = None; test_metrics = None
-            if epoch % cfg["train"]["val_every"] == 0 and is_main_process(rank):
-                model.eval()
-                val_metrics = evaluate_loader(model, va_loader, hm_loss, False, loss_weights, device)
-                if test_loader is not None:
-                    test_metrics = evaluate_loader(model, test_loader, hm_loss, False, loss_weights, device)
-                model.train()
+            if epoch % cfg["train"]["val_every"] == 0:
+                if distributed:
+                    dist.barrier()
+                if is_main_process(rank):
+                    eval_model = model.module if distributed else model
+                    eval_model.eval()
+                    val_metrics = evaluate_loader(eval_model, va_loader, hm_loss, False, loss_weights, device)
+                    if test_loader is not None:
+                        test_metrics = evaluate_loader(eval_model, test_loader, hm_loss, False, loss_weights, device)
+                    eval_model.train()
+                if distributed:
+                    dist.barrier()
 
-                val_score = val_metrics["loss"]
-                if val_metrics.get("bad_batches", 0) > 0:
-                    total = val_metrics.get("total_batches", 0)
-                    msg = f"[WARN] val skipped {val_metrics['bad_batches']} non-finite batches"
-                    if total:
-                        msg += f" out of {total}"
-                    print(msg)
-                    if total and val_metrics["bad_batches"] == total:
-                        raise RuntimeError("Validation produced only non-finite batches; aborting.")
-                print(f"          val:  L={val_score:.4f} (hm={val_metrics['hm']:.4f}, pr={val_metrics['presence']:.4f})")
+                if is_main_process(rank) and val_metrics is not None:
+                    val_score = val_metrics["loss"]
+                    if val_metrics.get("bad_batches", 0) > 0:
+                        total = val_metrics.get("total_batches", 0)
+                        msg = f"[WARN] val skipped {val_metrics['bad_batches']} non-finite batches"
+                        if total:
+                            msg += f" out of {total}"
+                        print(msg)
+                        if total and val_metrics["bad_batches"] == total:
+                            raise RuntimeError("Validation produced only non-finite batches; aborting.")
+                    print(f"          val:  L={val_score:.4f} (hm={val_metrics['hm']:.4f}, pr={val_metrics['presence']:.4f})")
 
                 if epoch < best_start_epoch:
                     print(f"[Epoch {epoch}] checkpoint skip: epoch < best_ckpt_start_epoch ({best_start_epoch})")
