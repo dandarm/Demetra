@@ -3,7 +3,7 @@
 #SBATCH --nodes=4                # aggiorna se usi un solo nodo
 #SBATCH --ntasks-per-node=4      # una task per GPU
 #SBATCH --gres=gpu:4
-#SBATCH --cpus-per-task=4
+#SBATCH --cpus-per-task=8
 #SBATCH --partition=boost_usr_prod
 #SBATCH --time=00:30:00
 #SBATCH --output=cyc_first_train.out
@@ -24,12 +24,13 @@ VAL_CSV="manifests/val.csv"
 LOG_DIR="outputs/runs/exp_mpi_1"
 mkdir -p "$LOG_DIR"
 
+export NCCL_DEBUG=INFO
 # imposta MASTER_ADDR/PORT per l'inizializzazione distribuita
 export MASTER_ADDR="$(scontrol show hostnames "$SLURM_JOB_NODELIST" | head -n 1)"
 export MASTER_PORT=12340
 
 GPUS_PER_NODE="${SLURM_GPUS_ON_NODE:-4}"
-CPUS_PER_TASK=4
+CPUS_PER_TASK=8
 
 mpirun --map-by socket:PE=${CPUS_PER_TASK} --report-bindings \
   python -m src.cyclone_locator.train \
