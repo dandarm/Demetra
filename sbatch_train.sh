@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=cyc-firstpass-train
-#SBATCH --nodes=1                # aggiorna se usi un solo nodo
+#SBATCH --nodes=4                # aggiorna se usi un solo nodo
 #SBATCH --ntasks-per-node=4      # una task per GPU
 #SBATCH --gres=gpu:4
 #SBATCH --cpus-per-task=8
@@ -41,5 +41,5 @@ mpirun --map-by socket:PE=${CPUS_PER_TASK} --report-bindings \
     --train_csv "$TRAIN_CSV" \
     --val_csv "$VAL_CSV" \
     --log_dir "$LOG_DIR" \
-    --num_workers 0 \
+    --num_workers 8 \
     --dataloader_timeout_s 30
