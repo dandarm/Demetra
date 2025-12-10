@@ -9,70 +9,65 @@ Loading cineca-ai/4.3.0
     libffi/3.4.4-6r7brdq libxcrypt/4.4.35-ss2rzin sqlite/3.43.2
     util-linux-uuid/2.38.1-jkdi7kv python/3.11.6--gcc--8.5.0 cmake/3.27.7
     openjdk/11.0.20.1_1
-lrdn0201:3254232:3254232 [0] NCCL INFO Bootstrap : Using ib0:10.128.9.69<0>
-lrdn0201:3254232:3254232 [0] NCCL INFO NET/Plugin : dlerror=libnccl-net.so: cannot open shared object file: No such file or directory No plugin found (libnccl-net.so), using internal implementation
-lrdn0201:3254232:3254232 [0] NCCL INFO cudaDriverVersion 12020
+lrdn1405:1535166:1535166 [0] NCCL INFO Bootstrap : Using ib0:10.128.28.21<0>
+lrdn1405:1535166:1535166 [0] NCCL INFO NET/Plugin : dlerror=libnccl-net.so: cannot open shared object file: No such file or directory No plugin found (libnccl-net.so), using internal implementation
+lrdn1405:1535166:1535166 [0] NCCL INFO cudaDriverVersion 12020
 NCCL version 2.19.1+cuda12.1
-lrdn0201:3254233:3254233 [1] NCCL INFO cudaDriverVersion 12020
-lrdn0201:3254233:3254233 [1] NCCL INFO Bootstrap : Using ib0:10.128.9.69<0>
-lrdn0201:3254233:3254233 [1] NCCL INFO NET/Plugin : dlerror=libnccl-net.so: cannot open shared object file: No such file or directory No plugin found (libnccl-net.so), using internal implementation
-lrdn0201:3254232:3254277 [0] NCCL INFO NET/IB : Using [0]mlx5_0:1/IB [1]mlx5_1:1/IB [2]mlx5_2:1/IB [3]mlx5_3:1/IB [RO]; OOB ib0:10.128.9.69<0>
-lrdn0201:3254232:3254277 [0] NCCL INFO Using non-device net plugin version 0
-lrdn0201:3254232:3254277 [0] NCCL INFO Using network IB
-lrdn0201:3254233:3254278 [1] NCCL INFO NET/IB : Using [0]mlx5_0:1/IB [1]mlx5_1:1/IB [2]mlx5_2:1/IB [3]mlx5_3:1/IB [RO]; OOB ib0:10.128.9.69<0>
-lrdn0201:3254233:3254278 [1] NCCL INFO Using non-device net plugin version 0
-lrdn0201:3254233:3254278 [1] NCCL INFO Using network IB
-lrdn0201:3254233:3254278 [1] NCCL INFO comm 0x9ab3560 rank 1 nranks 2 cudaDev 1 nvmlDev 1 busId 56000 commId 0xf35e4a6736d1ef2b - Init START
-lrdn0201:3254232:3254277 [0] NCCL INFO comm 0xa860dd0 rank 0 nranks 2 cudaDev 0 nvmlDev 0 busId 1d000 commId 0xf35e4a6736d1ef2b - Init START
-lrdn0201:3254233:3254278 [1] NCCL INFO Setting affinity for GPU 1 to ff00
-lrdn0201:3254232:3254277 [0] NCCL INFO Setting affinity for GPU 0 to ff
-lrdn0201:3254232:3254277 [0] NCCL INFO Channel 00/08 :    0   1
-lrdn0201:3254232:3254277 [0] NCCL INFO Channel 01/08 :    0   1
-lrdn0201:3254233:3254278 [1] NCCL INFO Trees [0] -1/-1/-1->1->0 [1] -1/-1/-1->1->0 [2] 0/-1/-1->1->-1 [3] 0/-1/-1->1->-1 [4] -1/-1/-1->1->0 [5] -1/-1/-1->1->0 [6] 0/-1/-1->1->-1 [7] 0/-1/-1->1->-1
-lrdn0201:3254233:3254278 [1] NCCL INFO P2P Chunksize set to 524288
-lrdn0201:3254232:3254277 [0] NCCL INFO Channel 02/08 :    0   1
-lrdn0201:3254232:3254277 [0] NCCL INFO Channel 03/08 :    0   1
-lrdn0201:3254232:3254277 [0] NCCL INFO Channel 04/08 :    0   1
-lrdn0201:3254232:3254277 [0] NCCL INFO Channel 05/08 :    0   1
-lrdn0201:3254232:3254277 [0] NCCL INFO Channel 06/08 :    0   1
-lrdn0201:3254232:3254277 [0] NCCL INFO Channel 07/08 :    0   1
-lrdn0201:3254232:3254277 [0] NCCL INFO Trees [0] 1/-1/-1->0->-1 [1] 1/-1/-1->0->-1 [2] -1/-1/-1->0->1 [3] -1/-1/-1->0->1 [4] 1/-1/-1->0->-1 [5] 1/-1/-1->0->-1 [6] -1/-1/-1->0->1 [7] -1/-1/-1->0->1
-lrdn0201:3254232:3254277 [0] NCCL INFO P2P Chunksize set to 524288
-lrdn0201:3254232:3254277 [0] NCCL INFO Channel 00/0 : 0[0] -> 1[1] via P2P/CUMEM/read
-lrdn0201:3254233:3254278 [1] NCCL INFO Channel 00/0 : 1[1] -> 0[0] via P2P/CUMEM/read
-lrdn0201:3254232:3254277 [0] NCCL INFO Channel 01/0 : 0[0] -> 1[1] via P2P/CUMEM/read
-lrdn0201:3254233:3254278 [1] NCCL INFO Channel 01/0 : 1[1] -> 0[0] via P2P/CUMEM/read
-lrdn0201:3254232:3254277 [0] NCCL INFO Channel 02/0 : 0[0] -> 1[1] via P2P/CUMEM/read
-lrdn0201:3254233:3254278 [1] NCCL INFO Channel 02/0 : 1[1] -> 0[0] via P2P/CUMEM/read
-lrdn0201:3254232:3254277 [0] NCCL INFO Channel 03/0 : 0[0] -> 1[1] via P2P/CUMEM/read
-lrdn0201:3254233:3254278 [1] NCCL INFO Channel 03/0 : 1[1] -> 0[0] via P2P/CUMEM/read
-lrdn0201:3254232:3254277 [0] NCCL INFO Channel 04/0 : 0[0] -> 1[1] via P2P/CUMEM/read
-lrdn0201:3254233:3254278 [1] NCCL INFO Channel 04/0 : 1[1] -> 0[0] via P2P/CUMEM/read
-lrdn0201:3254232:3254277 [0] NCCL INFO Channel 05/0 : 0[0] -> 1[1] via P2P/CUMEM/read
-lrdn0201:3254233:3254278 [1] NCCL INFO Channel 05/0 : 1[1] -> 0[0] via P2P/CUMEM/read
-lrdn0201:3254232:3254277 [0] NCCL INFO Channel 06/0 : 0[0] -> 1[1] via P2P/CUMEM/read
-lrdn0201:3254233:3254278 [1] NCCL INFO Channel 06/0 : 1[1] -> 0[0] via P2P/CUMEM/read
-lrdn0201:3254232:3254277 [0] NCCL INFO Channel 07/0 : 0[0] -> 1[1] via P2P/CUMEM/read
-lrdn0201:3254233:3254278 [1] NCCL INFO Channel 07/0 : 1[1] -> 0[0] via P2P/CUMEM/read
-lrdn0201:3254232:3254277 [0] NCCL INFO Connected all rings
-lrdn0201:3254232:3254277 [0] NCCL INFO Connected all trees
-lrdn0201:3254233:3254278 [1] NCCL INFO Connected all rings
-lrdn0201:3254233:3254278 [1] NCCL INFO Connected all trees
-lrdn0201:3254233:3254278 [1] NCCL INFO threadThresholds 8/8/64 | 16/8/64 | 512 | 512
-lrdn0201:3254233:3254278 [1] NCCL INFO 8 coll channels, 0 nvls channels, 8 p2p channels, 8 p2p channels per peer
-lrdn0201:3254232:3254277 [0] NCCL INFO threadThresholds 8/8/64 | 16/8/64 | 512 | 512
-lrdn0201:3254232:3254277 [0] NCCL INFO 8 coll channels, 0 nvls channels, 8 p2p channels, 8 p2p channels per peer
-lrdn0201:3254232:3254277 [0] NCCL INFO comm 0xa860dd0 rank 0 nranks 2 cudaDev 0 nvmlDev 0 busId 1d000 commId 0xf35e4a6736d1ef2b - Init COMPLETE
-lrdn0201:3254233:3254278 [1] NCCL INFO comm 0x9ab3560 rank 1 nranks 2 cudaDev 1 nvmlDev 1 busId 56000 commId 0xf35e4a6736d1ef2b - Init COMPLETE
+lrdn1405:1535167:1535167 [1] NCCL INFO cudaDriverVersion 12020
+lrdn1405:1535167:1535167 [1] NCCL INFO Bootstrap : Using ib0:10.128.28.21<0>
+lrdn1405:1535167:1535167 [1] NCCL INFO NET/Plugin : dlerror=libnccl-net.so: cannot open shared object file: No such file or directory No plugin found (libnccl-net.so), using internal implementation
+lrdn1405:1535166:1535210 [0] NCCL INFO NET/IB : Using [0]mlx5_0:1/IB [1]mlx5_1:1/IB [2]mlx5_2:1/IB [3]mlx5_3:1/IB [RO]; OOB ib0:10.128.28.21<0>
+lrdn1405:1535166:1535210 [0] NCCL INFO Using non-device net plugin version 0
+lrdn1405:1535166:1535210 [0] NCCL INFO Using network IB
+lrdn1405:1535167:1535211 [1] NCCL INFO NET/IB : Using [0]mlx5_0:1/IB [1]mlx5_1:1/IB [2]mlx5_2:1/IB [3]mlx5_3:1/IB [RO]; OOB ib0:10.128.28.21<0>
+lrdn1405:1535167:1535211 [1] NCCL INFO Using non-device net plugin version 0
+lrdn1405:1535167:1535211 [1] NCCL INFO Using network IB
+lrdn1405:1535167:1535211 [1] NCCL INFO comm 0x9313200 rank 1 nranks 2 cudaDev 1 nvmlDev 1 busId 56000 commId 0xe2c74000ef8c6c03 - Init START
+lrdn1405:1535166:1535210 [0] NCCL INFO comm 0xa8024a0 rank 0 nranks 2 cudaDev 0 nvmlDev 0 busId 1d000 commId 0xe2c74000ef8c6c03 - Init START
+lrdn1405:1535167:1535211 [1] NCCL INFO Setting affinity for GPU 1 to ff00
+lrdn1405:1535166:1535210 [0] NCCL INFO Setting affinity for GPU 0 to ff
+lrdn1405:1535166:1535210 [0] NCCL INFO Channel 00/08 :    0   1
+lrdn1405:1535166:1535210 [0] NCCL INFO Channel 01/08 :    0   1
+lrdn1405:1535166:1535210 [0] NCCL INFO Channel 02/08 :    0   1
+lrdn1405:1535166:1535210 [0] NCCL INFO Channel 03/08 :    0   1
+lrdn1405:1535166:1535210 [0] NCCL INFO Channel 04/08 :    0   1
+lrdn1405:1535167:1535211 [1] NCCL INFO Trees [0] -1/-1/-1->1->0 [1] -1/-1/-1->1->0 [2] 0/-1/-1->1->-1 [3] 0/-1/-1->1->-1 [4] -1/-1/-1->1->0 [5] -1/-1/-1->1->0 [6] 0/-1/-1->1->-1 [7] 0/-1/-1->1->-1
+lrdn1405:1535167:1535211 [1] NCCL INFO P2P Chunksize set to 524288
+lrdn1405:1535166:1535210 [0] NCCL INFO Channel 05/08 :    0   1
+lrdn1405:1535166:1535210 [0] NCCL INFO Channel 06/08 :    0   1
+lrdn1405:1535166:1535210 [0] NCCL INFO Channel 07/08 :    0   1
+lrdn1405:1535166:1535210 [0] NCCL INFO Trees [0] 1/-1/-1->0->-1 [1] 1/-1/-1->0->-1 [2] -1/-1/-1->0->1 [3] -1/-1/-1->0->1 [4] 1/-1/-1->0->-1 [5] 1/-1/-1->0->-1 [6] -1/-1/-1->0->1 [7] -1/-1/-1->0->1
+lrdn1405:1535166:1535210 [0] NCCL INFO P2P Chunksize set to 524288
+lrdn1405:1535166:1535210 [0] NCCL INFO Channel 00/0 : 0[0] -> 1[1] via P2P/CUMEM/read
+lrdn1405:1535167:1535211 [1] NCCL INFO Channel 00/0 : 1[1] -> 0[0] via P2P/CUMEM/read
+lrdn1405:1535166:1535210 [0] NCCL INFO Channel 01/0 : 0[0] -> 1[1] via P2P/CUMEM/read
+lrdn1405:1535167:1535211 [1] NCCL INFO Channel 01/0 : 1[1] -> 0[0] via P2P/CUMEM/read
+lrdn1405:1535166:1535210 [0] NCCL INFO Channel 02/0 : 0[0] -> 1[1] via P2P/CUMEM/read
+lrdn1405:1535167:1535211 [1] NCCL INFO Channel 02/0 : 1[1] -> 0[0] via P2P/CUMEM/read
+lrdn1405:1535166:1535210 [0] NCCL INFO Channel 03/0 : 0[0] -> 1[1] via P2P/CUMEM/read
+lrdn1405:1535167:1535211 [1] NCCL INFO Channel 03/0 : 1[1] -> 0[0] via P2P/CUMEM/read
+lrdn1405:1535166:1535210 [0] NCCL INFO Channel 04/0 : 0[0] -> 1[1] via P2P/CUMEM/read
+lrdn1405:1535167:1535211 [1] NCCL INFO Channel 04/0 : 1[1] -> 0[0] via P2P/CUMEM/read
+lrdn1405:1535166:1535210 [0] NCCL INFO Channel 05/0 : 0[0] -> 1[1] via P2P/CUMEM/read
+lrdn1405:1535167:1535211 [1] NCCL INFO Channel 05/0 : 1[1] -> 0[0] via P2P/CUMEM/read
+lrdn1405:1535166:1535210 [0] NCCL INFO Channel 06/0 : 0[0] -> 1[1] via P2P/CUMEM/read
+lrdn1405:1535167:1535211 [1] NCCL INFO Channel 06/0 : 1[1] -> 0[0] via P2P/CUMEM/read
+lrdn1405:1535166:1535210 [0] NCCL INFO Channel 07/0 : 0[0] -> 1[1] via P2P/CUMEM/read
+lrdn1405:1535167:1535211 [1] NCCL INFO Channel 07/0 : 1[1] -> 0[0] via P2P/CUMEM/read
+lrdn1405:1535166:1535210 [0] NCCL INFO Connected all rings
+lrdn1405:1535166:1535210 [0] NCCL INFO Connected all trees
+lrdn1405:1535167:1535211 [1] NCCL INFO Connected all rings
+lrdn1405:1535167:1535211 [1] NCCL INFO Connected all trees
+lrdn1405:1535167:1535211 [1] NCCL INFO threadThresholds 8/8/64 | 16/8/64 | 512 | 512
+lrdn1405:1535167:1535211 [1] NCCL INFO 8 coll channels, 0 nvls channels, 8 p2p channels, 8 p2p channels per peer
+lrdn1405:1535166:1535210 [0] NCCL INFO threadThresholds 8/8/64 | 16/8/64 | 512 | 512
+lrdn1405:1535166:1535210 [0] NCCL INFO 8 coll channels, 0 nvls channels, 8 p2p channels, 8 p2p channels per peer
+lrdn1405:1535167:1535211 [1] NCCL INFO comm 0x9313200 rank 1 nranks 2 cudaDev 1 nvmlDev 1 busId 56000 commId 0xe2c74000ef8c6c03 - Init COMPLETE
+lrdn1405:1535166:1535210 [0] NCCL INFO comm 0xa8024a0 rank 0 nranks 2 cudaDev 0 nvmlDev 0 busId 1d000 commId 0xe2c74000ef8c6c03 - Init COMPLETE
 [INFO] rank 0/2 device=cuda:0
 [INFO] batch_size per GPU=256 (global=512)
 [INFO] lr scaled from 0.0002 to 0.0004 for world_size=2
 Logging metrics to outputs/runs/exp_mpi_1/training_log.csv
 [Epoch 1] train: L=78.1833 (hm=0.7750, pr=0.6825, peak=2.4022)
-[Epoch 1] elapsed: 46.1s
+[Epoch 1] elapsed: 45.9s
 [Epoch 2] train: L=0.9363 (hm=0.0026, pr=0.6732, peak=0.2753)
-[Epoch 2] elapsed: 38.2s
-[Epoch 3] train: L=0.7442 (hm=0.0007, pr=0.6729, peak=0.1045)
-[Epoch 3] elapsed: 37.6s
-[Epoch 4] train: L=0.7349 (hm=0.0006, pr=0.6729, peak=0.0957)
-[Epoch 4] elapsed: 37.4s
