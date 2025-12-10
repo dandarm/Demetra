@@ -30,6 +30,8 @@ def parse_args():
     ap.add_argument("--lr", type=float)
     ap.add_argument("--log_dir")
     ap.add_argument("--best_ckpt_start_epoch", type=int)
+    ap.add_argument("--num_workers", type=int, help="Override dataloader workers (use 0 to debug NCCL stalls)")
+    ap.add_argument("--dataloader_timeout_s", type=int, help="Timeout (s) for DataLoader get_batch to avoid deadlocks")
     return ap.parse_args()
 
 def set_seed(sd):
@@ -102,6 +104,10 @@ def main():
         cfg["train"]["save_dir"] = args.log_dir
     if args.best_ckpt_start_epoch is not None:
         cfg["train"]["best_ckpt_start_epoch"] = args.best_ckpt_start_epoch
+    if args.num_workers is not None:
+        cfg["train"]["num_workers"] = args.num_workers
+    if args.dataloader_timeout_s is not None:
+        cfg["train"]["dataloader_timeout_s"] = args.dataloader_timeout_s
 
     rank, local_rank, world_size, _, env_num_workers = get_resources()
     distributed = world_size > 1
@@ -126,6 +132,7 @@ def main():
         num_workers = min(num_workers, env_num_workers)
     num_workers = int(num_workers or 0)
     cfg["train"]["num_workers"] = num_workers
+    dl_timeout = int(cfg["train"].get("dataloader_timeout_s", 0) or 0)
     pin_memory = device.type == "cuda"
 
     # Datasets
@@ -192,6 +199,7 @@ def main():
         num_workers=num_workers,
         pin_memory=pin_memory,
         persistent_workers=num_workers > 0,
+        timeout=dl_timeout,
         worker_init_fn=seed_worker if num_workers > 0 else None,
         drop_last=True
     )
@@ -202,6 +210,7 @@ def main():
         num_workers=num_workers,
         pin_memory=pin_memory,
         persistent_workers=num_workers > 0,
+        timeout=dl_timeout,
         worker_init_fn=seed_worker if num_workers > 0 else None
     )
 

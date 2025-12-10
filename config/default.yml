@@ -16,6 +16,7 @@ train:
   image_size: 384
   batch_size: 256   # per GPU; global = batch_size * world_size
   num_workers: 4
+  dataloader_timeout_s: 0   # >0 per evitare deadlock: solleva eccezione se il dataloader si blocca
   epochs: 500
   lr: 8.0e-3
   weight_decay: 1.0e-4

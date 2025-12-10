@@ -37,4 +37,6 @@ mpirun --map-by socket:PE=${CPUS_PER_TASK} --report-bindings \
     --config "$CONFIG" \
     --train_csv "$TRAIN_CSV" \
     --val_csv "$VAL_CSV" \
-    --log_dir "$LOG_DIR"
+    --log_dir "$LOG_DIR" \
+    --num_workers 0 \
+    --dataloader_timeout_s 60
