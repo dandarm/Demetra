@@ -23,7 +23,7 @@ train:
   weight_decay: 1.0e-4
   amp: true
   scale_lr_by_world_size: false
-  seed: 492
+  seed: 491
   save_dir: checkpoints
   val_every: 2
   best_ckpt_start_epoch: 5
@@ -35,7 +35,7 @@ train:
 
 loss:
   heatmap_sigma_px: 8
-  w_heatmap: 20.0
+  w_heatmap: 2.0
   w_presence: 1.0
   auto_balance: false          # bilancia automaticamente le magnitudini di heatmap e presence
   auto_balance_clip: [0.1, 100.0]
