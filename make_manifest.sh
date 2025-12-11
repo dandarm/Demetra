@@ -6,7 +6,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR"
 
 WINDOWS_CSV="mini_data_input/medicanes_new_windows.csv"
-IMAGES_DIR="/media/fenrir/disk1/danieleda/resized" 
+IMAGES_DIR="/leonardo_scratch/fast/IscrC_SAME-D/Medicanes_Data/from_gcloud/resized" 
 OUT_DIR="manifests"
 ORIG_SIZE_X="1290"
 ORIG_SIZE_Y="420"
