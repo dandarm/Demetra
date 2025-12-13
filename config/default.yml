@@ -22,7 +22,7 @@ train:
   lr: 1.0e-4
   weight_decay: 1.0e-4
   amp: true
-  scale_lr_by_world_size: false
+  scale_lr_by_world_size: true
   seed: 492
   save_dir: checkpoints
   val_every: 2
