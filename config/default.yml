@@ -18,9 +18,9 @@ train:
   num_workers: 0
   dataloader_timeout_s: 60   # >0 per evitare deadlock: solleva eccezione se il dataloader si blocca
   persistent_workers: true   # disattiva (false) se sospetti deadlock dei worker tra le epoche
-  epochs: 150
+  epochs: 100
   lr: 1.0e-4
-  weight_decay: 1.0e-4
+  weight_decay: 1.0e-3
   amp: true
   scale_lr_by_world_size: true
   seed: 492
@@ -32,6 +32,7 @@ train:
   use_aug: false            # puoi mettere true se serve
   temporal_T: 5             # numero di frame temporali (early fusion canali)
   temporal_stride: 6        # salto tra frame temporali (>=1)
+  presence_dropout: 0.5     # dropout tra GAP e FC della testa presenza
 
 loss:
   heatmap_sigma_px: 8
@@ -39,6 +40,7 @@ loss:
   w_presence: 10.0
   auto_balance: false          # bilancia automaticamente le magnitudini di heatmap e presence
   auto_balance_clip: [0.1, 100.0]
+  presence_label_smoothing: 0.05
 
 infer:
   batch_size: 128

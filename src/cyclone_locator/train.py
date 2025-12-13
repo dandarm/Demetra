@@ -54,6 +54,11 @@ def seed_worker(worker_id):
 def bce_logits(pred, target):
     return nn.functional.binary_cross_entropy_with_logits(pred, target)
 
+def smooth_targets(target, eps: float):
+    if eps <= 0.0:
+        return target
+    return target * (1.0 - eps) + (1.0 - target) * eps
+
 def combine_losses(L_hm, L_pr, loss_cfg):
     hm_w = loss_cfg["w_heatmap"]
     pr_w = loss_cfg["w_presence"]
@@ -93,7 +98,8 @@ def log_temporal_debug_samples(dataset, tag="train", max_samples=3):
 
 
 def evaluate_loader(model, loader, hm_loss, amp_enabled, loss_weights, device, rank: int = 0,
-                    distributed: bool = False, world_size: int = 1):
+                    distributed: bool = False, world_size: int = 1,
+                    presence_smoothing: float = 0.0):
     #vL, vHm, vPr = [], [], []
     sum_L, sum_hm, sum_pr = 0.0, 0.0, 0.0
     bad_batches = 0
@@ -104,13 +110,14 @@ def evaluate_loader(model, loader, hm_loss, amp_enabled, loss_weights, device, r
             img = batch["image"].to(device, non_blocking=True)
             hm_t = batch["heatmap"].to(device, non_blocking=True)
             pres = batch["presence"].to(device, non_blocking=True)
+            pres_smooth = smooth_targets(pres, presence_smoothing)
             # Val in full precision to reduce risk of overflow/NaN
             with autocast(enabled=amp_enabled):
                 hm_p, pres_logit = model(img)
                 hm_p = torch.nan_to_num(hm_p, nan=0.0, posinf=1e4, neginf=-1e4)
                 pres_logit = torch.nan_to_num(pres_logit, nan=0.0, posinf=50.0, neginf=-50.0)
                 L_hm = hm_loss(hm_p, hm_t)
-                L_pr = bce_logits(pres_logit, pres)
+                L_pr = bce_logits(pres_logit, pres_smooth)
                 _, _, L = combine_losses(L_hm, L_pr, loss_weights)
             if not torch.isfinite(L):
                 bad_batches += 1
@@ -326,7 +333,12 @@ def main():
     )
 
     # Model
-    model = SimpleBaseline(backbone=cfg["train"]["backbone"], out_heatmap_ch=1, temporal_T=temporal_T)
+    model = SimpleBaseline(
+        backbone=cfg["train"]["backbone"],
+        out_heatmap_ch=1,
+        temporal_T=temporal_T,
+        presence_dropout=cfg["train"].get("presence_dropout", 0.0)
+    )
     model = model.to(device)
     if distributed:
         model = torch.nn.parallel.DistributedDataParallel(
@@ -345,6 +357,7 @@ def main():
     scaler = GradScaler(enabled=cfg["train"]["amp"] and device.type == "cuda")
     hm_loss = HeatmapMSE()
     loss_weights = cfg["loss"]
+    presence_smoothing = float(cfg["loss"].get("presence_label_smoothing", 0.0) or 0.0)
 
     if is_main_process(rank):
         save_dir = cfg["train"]["save_dir"]; os.makedirs(save_dir, exist_ok=True)
@@ -390,12 +403,13 @@ def main():
                 img = batch["image"].to(device, non_blocking=True)
                 hm_t = batch["heatmap"].to(device, non_blocking=True)
                 pres = batch["presence"].to(device, non_blocking=True)
+                pres_smooth = smooth_targets(pres, presence_smoothing)
 
                 opt.zero_grad(set_to_none=True)
                 with autocast(enabled=cfg["train"]["amp"]):
                     hm_p, pres_logit = model(img)
                     L_hm = hm_loss(hm_p, hm_t)
-                    L_pr = bce_logits(pres_logit, pres)
+                    L_pr = bce_logits(pres_logit, pres_smooth)
                     _, _, L = combine_losses(L_hm, L_pr, loss_weights)
                 if not torch.isfinite(L):
                     if is_main_process(rank):
@@ -428,12 +442,14 @@ def main():
                 eval_model.eval()
                 val_metrics = evaluate_loader(
                     eval_model, va_loader, hm_loss, False, loss_weights, device,
-                    rank=rank, distributed=distributed, world_size=world_size
+                    rank=rank, distributed=distributed, world_size=world_size,
+                    presence_smoothing=presence_smoothing
                 )
                 if test_loader is not None:
                     test_metrics = evaluate_loader(
                         eval_model, test_loader, hm_loss, False, loss_weights, device,
-                        rank=rank, distributed=distributed, world_size=world_size
+                        rank=rank, distributed=distributed, world_size=world_size,
+                        presence_smoothing=presence_smoothing
                     )
                 eval_model.train()
 
