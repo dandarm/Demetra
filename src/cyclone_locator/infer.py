@@ -639,13 +639,18 @@ def main():
             joined = joined.rename(columns={"image_path_x": "image_path"})
             joined = joined.drop(columns=["image_path_y"])
         y_true = joined["presence"].to_numpy()
-        y_score = joined["presence_prob"].to_numpy()
+        y_score_combined = joined["presence_prob"].to_numpy()
+        y_score_logit = joined["presence_prob_raw"].to_numpy() if "presence_prob_raw" in joined.columns else None
         if {"x_pix_resized", "y_pix_resized"}.issubset(joined.columns):
             finite_centers = np.isfinite(joined["x_pix_resized"]) & np.isfinite(joined["y_pix_resized"])
         else:
             finite_centers = np.zeros(len(joined), dtype=bool)
-        pr_curve_data = metrics_lib.pr_curve(y_true, y_score)
-        roc_curve_data = metrics_lib.roc_curve(y_true, y_score)
+        pr_curve_comb = metrics_lib.pr_curve(y_true, y_score_combined)
+        roc_curve_comb = metrics_lib.roc_curve(y_true, y_score_combined)
+        pr_curve_logit = roc_curve_logit = None
+        if y_score_logit is not None:
+            pr_curve_logit = metrics_lib.pr_curve(y_true, y_score_logit)
+            roc_curve_logit = metrics_lib.roc_curve(y_true, y_score_logit)
 
         if metrics_path:
             os.makedirs(os.path.dirname(metrics_path) or out_dir, exist_ok=True)
@@ -655,13 +660,21 @@ def main():
                 "n_with_gt_center": int(finite_centers.sum()),
                 "threshold_used": float(threshold_for_metrics) if threshold_for_metrics is not None else None,
             }
-            metrics_payload["presence_metrics"] = metrics_lib.presence_aggregate(
+            metrics_payload["presence_metrics_combined"] = metrics_lib.presence_aggregate(
                 y_true,
-                y_score,
+                y_score_combined,
                 threshold_for_metrics,
-                pr_curve_data,
-                roc_curve_data,
+                pr_curve_comb,
+                roc_curve_comb,
             )
+            if y_score_logit is not None:
+                metrics_payload["presence_metrics_logit"] = metrics_lib.presence_aggregate(
+                    y_true,
+                    y_score_logit,
+                    threshold_for_metrics,
+                    pr_curve_logit,
+                    roc_curve_logit,
+                )
             if has_center_gt:
                 joined["x_g"] = joined["x_g"].astype(float)
                 joined["y_g"] = joined["y_g"].astype(float)
@@ -705,10 +718,13 @@ def main():
 
         if curves_dir:
             os.makedirs(curves_dir, exist_ok=True)
-            pr_path = os.path.join(curves_dir, "pr_curve.csv")
-            roc_path = os.path.join(curves_dir, "roc_curve.csv")
-            pd.DataFrame(pr_curve_data).to_csv(pr_path, index=False)
-            pd.DataFrame(roc_curve_data).to_csv(roc_path, index=False)
+            pr_path = os.path.join(curves_dir, "pr_curve_combined.csv")
+            roc_path = os.path.join(curves_dir, "roc_curve_combined.csv")
+            pd.DataFrame(pr_curve_comb).to_csv(pr_path, index=False)
+            pd.DataFrame(roc_curve_comb).to_csv(roc_path, index=False)
+            if pr_curve_logit is not None and roc_curve_logit is not None:
+                pd.DataFrame(pr_curve_logit).to_csv(os.path.join(curves_dir, "pr_curve_logit.csv"), index=False)
+                pd.DataFrame(roc_curve_logit).to_csv(os.path.join(curves_dir, "roc_curve_logit.csv"), index=False)
             logger.info("Saved sweep curves to %s", curves_dir)
 
 
