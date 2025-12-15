@@ -125,3 +125,7 @@ Logging metrics to outputs/runs/exp_x3d_1/training_log.csv
 [Epoch 34] elapsed: 46.2s
 [Epoch 35] train: L=0.0643 (hm=0.0006, pr=0.0006, peak=0.0262)
 [Epoch 35] elapsed: 30.4s
+[Epoch 36] train: L=0.0897 (hm=0.0006, pr=0.0009, peak=0.0244)
+          val:  L=88.6153 (hm=0.0007, pr=0.8861)
+[Epoch 36] no val improvement (88.6153 >= 12.2506); checkpoint not saved
+[Epoch 36] elapsed: 47.4s
