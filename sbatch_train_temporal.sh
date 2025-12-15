@@ -22,7 +22,7 @@ export PYTHONUNBUFFERED=1
 CONFIG="config/default.yml"
 TRAIN_CSV="manifests/train.csv"
 VAL_CSV="manifests/val.csv"
-LOG_DIR="outputs/runs/exp_x3d_3"
+LOG_DIR="outputs/runs/exp_x3d_4"
 mkdir -p "$LOG_DIR"
 
 TEMPORAL_T="5"
