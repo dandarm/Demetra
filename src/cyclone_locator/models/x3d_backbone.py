@@ -1,30 +1,29 @@
 import torch
 import torch.nn as nn
 
-
 try:
-    from torchvision.models.video import (
-        x3d_s,
-        x3d_xs,
-        X3D_S_Weights,
-        X3D_XS_Weights,
-    )
+    from pytorchvideo.models.hub import x3d_s, x3d_xs
 except ImportError as exc:  # pragma: no cover - handled at runtime
-    raise ImportError("torchvision with video models is required for X3D backbones") from exc
+    raise ImportError("pytorchvideo is required for X3D backbones (install pytorchvideo>=0.1).") from exc
 
 
-def _build_x3d(variant: str, pretrained: bool):
+def _build_backbone(variant: str, pretrained: bool):
     if variant == "x3d_xs":
-        weights = X3D_XS_Weights.DEFAULT if pretrained else None
-        base = x3d_xs(weights=weights)
+        base = x3d_xs(pretrained=pretrained)
     elif variant == "x3d_s":
-        weights = X3D_S_Weights.DEFAULT if pretrained else None
-        base = x3d_s(weights=weights)
+        base = x3d_s(pretrained=pretrained)
     else:
         raise ValueError("variant must be x3d_xs|x3d_s")
-    head = base.blocks[-1]
-    feat_channels = head.proj.in_channels
-    return base, feat_channels
+
+    # Drop the classification head and keep only the feature extractor blocks.
+    stem = nn.Sequential(*list(base.blocks[:-1]))
+
+    # Infer the channel dimension once so the decoder can be wired correctly.
+    with torch.no_grad():
+        dummy = torch.zeros(1, 3, 4, 128, 128)
+        feat_channels = stem(dummy).shape[1]
+
+    return stem, feat_channels
 
 
 def deconv_block(in_ch, out_ch):
@@ -52,8 +51,7 @@ class X3DBackbone(nn.Module):
     ):
         super().__init__()
         self.backbone_name = backbone
-        base, feat_ch = _build_x3d(backbone, pretrained)
-        self.stem = nn.Sequential(*base.blocks[:-1])
+        self.stem, feat_ch = _build_backbone(backbone, pretrained)
 
         # Preserve temporal dynamics until this pooling collapses only T -> 1.
         self.temporal_pool = nn.AdaptiveAvgPool3d((1, None, None))
