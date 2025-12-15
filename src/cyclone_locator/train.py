@@ -7,6 +7,7 @@ from torch.cuda.amp import autocast, GradScaler
 
 from cyclone_locator.datasets.med_fullbasin import MedFullBasinDataset
 from cyclone_locator.models.simplebaseline import SimpleBaseline
+from cyclone_locator.models.x3d_backbone import X3DBackbone
 from cyclone_locator.losses.heatmap_loss import HeatmapMSE
 from cyclone_locator.utils.distributed import (
     cleanup_distributed,
@@ -126,7 +127,8 @@ def evaluate_loader(model, loader, hm_loss, amp_enabled, loss_weights, device, r
                     distributed: bool = False, world_size: int = 1,
                     presence_smoothing: float = 0.0,
                     presence_loss_fn=None,
-                    log_combined_presence: bool = False):
+                    log_combined_presence: bool = False,
+                    input_key: str = "image"):
     #vL, vHm, vPr = [], [], []
     sum_L, sum_hm, sum_pr, sum_pr_comb = 0.0, 0.0, 0.0, 0.0
     bad_batches = 0
@@ -134,7 +136,7 @@ def evaluate_loader(model, loader, hm_loss, amp_enabled, loss_weights, device, r
     with torch.no_grad():
         for batch in loader:
             total_batches += 1
-            img = batch["image"].to(device, non_blocking=True)
+            img = batch[input_key].to(device, non_blocking=True)
             hm_t = batch["heatmap"].to(device, non_blocking=True)
             pres = batch["presence"].to(device, non_blocking=True)
             pres_smooth = smooth_targets(pres, presence_smoothing)
@@ -367,12 +369,23 @@ def main():
     )
 
     # Model
-    model = SimpleBaseline(
-        backbone=cfg["train"]["backbone"],
-        out_heatmap_ch=1,
-        temporal_T=temporal_T,
-        presence_dropout=cfg["train"].get("presence_dropout", 0.0)
-    )
+    backbone_name = cfg["train"]["backbone"]
+    pretrained_backbone = bool(cfg["train"].get("backbone_pretrained", True))
+    if backbone_name.startswith("x3d"):
+        model = X3DBackbone(
+            backbone=backbone_name,
+            out_heatmap_ch=1,
+            presence_dropout=cfg["train"].get("presence_dropout", 0.0),
+            pretrained=pretrained_backbone,
+        )
+    else:
+        model = SimpleBaseline(
+            backbone=backbone_name,
+            out_heatmap_ch=1,
+            temporal_T=temporal_T,
+            presence_dropout=cfg["train"].get("presence_dropout", 0.0),
+            pretrained=pretrained_backbone,
+        )
     model = model.to(device)
     if distributed:
         model = torch.nn.parallel.DistributedDataParallel(
@@ -382,6 +395,7 @@ def main():
             broadcast_buffers=False
         )
     model_to_save = model.module if distributed else model
+    input_key = "video" if getattr(model_to_save, "input_is_video", False) else "image"
 
 
     # Optim
@@ -445,7 +459,7 @@ def main():
             losses = []; hm_losses = []; pres_losses = []; peak_preds = []
             for batch in tr_loader:
                 #log_batch_temporal_samples(batch, ds_tr.temporal_selector, tag=f"train batch ", max_samples=3)   #{batch_idx}
-                img = batch["image"].to(device, non_blocking=True)
+                img = batch[input_key].to(device, non_blocking=True)
                 hm_t = batch["heatmap"].to(device, non_blocking=True)
                 pres = batch["presence"].to(device, non_blocking=True)
                 pres_smooth = smooth_targets(pres, presence_smoothing)
@@ -490,7 +504,8 @@ def main():
                     rank=rank, distributed=distributed, world_size=world_size,
                     presence_smoothing=presence_smoothing,
                     presence_loss_fn=presence_loss_fn,
-                    log_combined_presence=False
+                    log_combined_presence=False,
+                    input_key=input_key
                 )
                 if test_loader is not None:
                     test_metrics = evaluate_loader(
@@ -498,7 +513,8 @@ def main():
                         rank=rank, distributed=distributed, world_size=world_size,
                         presence_smoothing=presence_smoothing,
                         presence_loss_fn=presence_loss_fn,
-                        log_combined_presence=True
+                        log_combined_presence=True,
+                        input_key=input_key
                     )
                 eval_model.train()
 

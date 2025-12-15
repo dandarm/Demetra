@@ -27,7 +27,8 @@ train:
   save_dir: checkpoints
   val_every: 2
   best_ckpt_start_epoch: 5
-  backbone: resnet18        # resnet18|resnet50
+  backbone: resnet18        # resnet18|resnet50|x3d_xs|x3d_s
+  backbone_pretrained: true # usa pesi pre-addestrati per il backbone
   heatmap_stride: 4         # output 128x128 quando input 512
   use_aug: false            # puoi mettere true se serve
   temporal_T: 5             # numero di frame temporali (early fusion canali)

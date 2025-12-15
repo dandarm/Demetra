@@ -14,6 +14,7 @@ import yaml
 
 from cyclone_locator.datasets.temporal_utils import TemporalWindowSelector
 from cyclone_locator.models.simplebaseline import SimpleBaseline
+from cyclone_locator.models.x3d_backbone import X3DBackbone
 from cyclone_locator.utils.geometry import crop_square
 from cyclone_locator.utils.metric import peak_and_width
 from cyclone_locator import metrics as metrics_lib
@@ -360,8 +361,10 @@ class EvalDataset(Dataset):
             self.logger.warning("Channel mismatch in temporal fusion (%d vs expected %d)", fused.shape[2], ch * len(frames))
             self.warned_size = True
         tensor = torch.from_numpy(fused).permute(2, 0, 1)
+        video = torch.stack([torch.from_numpy(f).permute(2, 0, 1) for f in frames], dim=0).permute(1, 0, 2, 3)
         return {
             "image": tensor,
+            "video": video,
             "image_path": path,
             "manifest_idx": int(row["manifest_idx"])
         }
@@ -369,14 +372,19 @@ class EvalDataset(Dataset):
 
 def collate_batch(batch: List[Dict[str, torch.Tensor]]) -> Dict[str, torch.Tensor]:
     images = torch.stack([b["image"] for b in batch], dim=0)
+    videos = torch.stack([b["video"] for b in batch], dim=0)
     paths = [b["image_path"] for b in batch]
     manifest_idx = [b["manifest_idx"] for b in batch]
-    return {"image": images, "image_path": paths, "manifest_idx": manifest_idx}
+    return {"image": images, "video": videos, "image_path": paths, "manifest_idx": manifest_idx}
 
 
 def build_model(cfg: dict, checkpoint_path: str, device: torch.device, logger: logging.Logger, temporal_T: int) -> torch.nn.Module:
     backbone = cfg.get("train", {}).get("backbone", "resnet18")
-    model = SimpleBaseline(backbone=backbone, temporal_T=temporal_T)
+    pretrained = bool(cfg.get("train", {}).get("backbone_pretrained", True))
+    if backbone.startswith("x3d"):
+        model = X3DBackbone(backbone=backbone, pretrained=pretrained)
+    else:
+        model = SimpleBaseline(backbone=backbone, temporal_T=temporal_T, pretrained=pretrained)
     state = torch.load(checkpoint_path, map_location="cpu")
     weights = state.get("model", state)
     model.load_state_dict(weights, strict=True)
@@ -431,7 +439,8 @@ def run_inference(
     total = 0
     with torch.no_grad():
         for batch in data_loader:
-            images = batch["image"].to(device)
+            input_key = "video" if getattr(model, "input_is_video", False) else "image"
+            images = batch[input_key].to(device)
             with torch.cuda.amp.autocast(enabled=autocast_enabled):
                 heatmaps_pred, logits = model(images)
             probs_raw = torch.sigmoid(logits).squeeze(1)
