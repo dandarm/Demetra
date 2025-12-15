@@ -36,6 +36,7 @@ def parse_args():
     ap.add_argument("--num_workers", type=int, help="Override dataloader workers (use 0 to debug NCCL stalls)")
     ap.add_argument("--dataloader_timeout_s", type=int, help="Timeout (s) for DataLoader get_batch to avoid deadlocks")
     ap.add_argument("--persistent_workers", type=int, choices=[0,1], help="Set persistent_workers (1=keep workers alive between epochs)")
+    ap.add_argument("--heatmap_neg_multiplier", type=float, help="Scale factor for heatmap loss on negative samples")
     return ap.parse_args()
 
 def set_seed(sd):
@@ -205,6 +206,8 @@ def main():
         cfg["train"]["heatmap_stride"] = args.heatmap_stride
     if args.heatmap_sigma_px:
         cfg["loss"]["heatmap_sigma_px"] = args.heatmap_sigma_px
+    if args.heatmap_neg_multiplier is not None:
+        cfg["loss"]["heatmap_neg_multiplier"] = args.heatmap_neg_multiplier
     if args.backbone:
         cfg["train"]["backbone"] = args.backbone
     if args.temporal_T:
