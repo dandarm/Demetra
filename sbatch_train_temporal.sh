@@ -53,4 +53,4 @@ mpirun --map-by socket:PE=${CPUS_PER_TASK} --report-bindings \
     --temporal_T "$TEMPORAL_T" \
     --temporal_stride "$TEMPORAL_STRIDE" \
     --num_workers "$CPUS_PER_TASK" \
-    --dataloader_timeout_s 30
+    --dataloader_timeout_s 130
