@@ -17,308 +17,158 @@ Temporal window: T=5, stride=4
 [INFO] rank 0/16 device=cuda:0
 [INFO] batch_size per GPU=64 (global=1024)
 [INFO] lr scaled from 0.0005 to 0.008 for world_size=16
-Logging metrics to outputs/runs/exp_x3d_4/training_log.csv
-[Epoch 1] train: L=4.4711 (hm=3.4216, pr=0.1049, peak=3.2190)
-[Epoch 1] elapsed: 52.0s
-[Epoch 2] train: L=0.4082 (hm=0.0722, pr=0.0336, peak=1.1576)
-          val:  L=1.8063 (hm=0.0354, pr=0.1771)
+Logging metrics to outputs/runs/exp_x3d_5/training_log.csv
+[Epoch 1] train: L=4.3238 (hm=3.2559, pr=0.1068, peak=3.5583)
+[Epoch 1] elapsed: 52.1s
+[Epoch 2] train: L=0.6590 (hm=0.0876, pr=0.0571, peak=2.8734)
+          val:  L=26.4311 (hm=3.7219, pr=2.2709)
 [Epoch 2] checkpoint skip: epoch < best_ckpt_start_epoch (5)
-[Epoch 2] elapsed: 56.5s
-[Epoch 3] train: L=0.0886 (hm=0.0119, pr=0.0077, peak=0.2258)
-[Epoch 3] elapsed: 24.2s
-[Epoch 4] train: L=0.0600 (hm=0.0039, pr=0.0056, peak=0.1987)
-          val:  L=11.0491 (hm=0.0049, pr=1.1044)
+[Epoch 2] elapsed: 56.6s
+[Epoch 3] train: L=0.2459 (hm=0.0200, pr=0.0226, peak=1.5213)
+[Epoch 3] elapsed: 24.7s
+[Epoch 4] train: L=0.0809 (hm=0.0065, pr=0.0074, peak=0.5422)
+          val:  L=16.2158 (hm=0.1015, pr=1.6114)
 [Epoch 4] checkpoint skip: epoch < best_ckpt_start_epoch (5)
-[Epoch 4] elapsed: 35.4s
-[Epoch 5] train: L=0.0422 (hm=0.0025, pr=0.0040, peak=0.1656)
-[Epoch 5] elapsed: 22.0s
-[Epoch 6] train: L=0.0380 (hm=0.0021, pr=0.0036, peak=0.1437)
-          val:  L=4.0204 (hm=0.0031, pr=0.4017)
-[Epoch 6] saving BEST checkpoint to outputs/runs/exp_x3d_4/best.ckpt ...
+[Epoch 4] elapsed: 35.0s
+[Epoch 5] train: L=0.0393 (hm=0.0029, pr=0.0036, peak=0.2802)
+[Epoch 5] elapsed: 22.2s
+[Epoch 6] train: L=0.0310 (hm=0.0021, pr=0.0029, peak=0.1542)
+          val:  L=4.8648 (hm=0.0041, pr=0.4861)
+[Epoch 6] saving BEST checkpoint to outputs/runs/exp_x3d_5/best.ckpt ...
 [Epoch 6] best checkpoint saved in 0.06s
-[Epoch 6] elapsed: 35.7s
-[Epoch 7] train: L=0.0397 (hm=0.0016, pr=0.0038, peak=0.1248)
-[Epoch 7] elapsed: 22.6s
-[Epoch 8] train: L=0.0361 (hm=0.0017, pr=0.0034, peak=0.1187)
-          val:  L=7.9067 (hm=0.0020, pr=0.7905)
-[Epoch 8] no val improvement (7.9067 >= 4.0204); checkpoint not saved
-[Epoch 8] elapsed: 34.3s
-[Epoch 9] train: L=0.0323 (hm=0.0014, pr=0.0031, peak=0.0926)
-[Epoch 9] elapsed: 24.4s
-[Epoch 10] train: L=0.0284 (hm=0.0013, pr=0.0027, peak=0.0827)
-          val:  L=9.8280 (hm=0.0015, pr=0.9827)
-[Epoch 10] no val improvement (9.8280 >= 4.0204); checkpoint not saved
-[Epoch 10] elapsed: 33.7s
-[Epoch 11] train: L=0.0275 (hm=0.0013, pr=0.0026, peak=0.0709)
-[Epoch 11] elapsed: 24.2s
-[Epoch 12] train: L=0.0205 (hm=0.0012, pr=0.0019, peak=0.0604)
-          val:  L=6.1793 (hm=0.0013, pr=0.6178)
-[Epoch 12] no val improvement (6.1793 >= 4.0204); checkpoint not saved
-[Epoch 12] elapsed: 36.1s
-[Epoch 13] train: L=0.0250 (hm=0.0012, pr=0.0024, peak=0.0577)
-[Epoch 13] elapsed: 22.4s
-[Epoch 14] train: L=0.0170 (hm=0.0012, pr=0.0016, peak=0.0530)
-          val:  L=9.2657 (hm=0.0012, pr=0.9265)
-[Epoch 14] no val improvement (9.2657 >= 4.0204); checkpoint not saved
-[Epoch 14] elapsed: 33.9s
-[Epoch 15] train: L=0.0186 (hm=0.0011, pr=0.0018, peak=0.0453)
-[Epoch 15] elapsed: 22.7s
-[Epoch 16] train: L=0.0195 (hm=0.0012, pr=0.0018, peak=0.0492)
-          val:  L=7.5695 (hm=0.0012, pr=0.7568)
-[Epoch 16] no val improvement (7.5695 >= 4.0204); checkpoint not saved
-[Epoch 16] elapsed: 34.5s
-[Epoch 17] train: L=0.0169 (hm=0.0011, pr=0.0016, peak=0.0404)
+[Epoch 6] elapsed: 34.8s
+[Epoch 7] train: L=0.0307 (hm=0.0021, pr=0.0029, peak=0.1744)
+[Epoch 7] elapsed: 24.5s
+[Epoch 8] train: L=0.0267 (hm=0.0020, pr=0.0025, peak=0.1649)
+          val:  L=10.8622 (hm=0.0029, pr=1.0859)
+[Epoch 8] no val improvement (10.8622 >= 4.8648); checkpoint not saved
+[Epoch 8] elapsed: 34.6s
+[Epoch 9] train: L=0.0211 (hm=0.0017, pr=0.0019, peak=0.1252)
+[Epoch 9] elapsed: 22.4s
+[Epoch 10] train: L=0.0208 (hm=0.0016, pr=0.0019, peak=0.1021)
+          val:  L=7.1733 (hm=0.0020, pr=0.7171)
+[Epoch 10] no val improvement (7.1733 >= 4.8648); checkpoint not saved
+[Epoch 10] elapsed: 33.9s
+[Epoch 11] train: L=0.0256 (hm=0.0016, pr=0.0024, peak=0.1058)
+[Epoch 11] elapsed: 22.5s
+[Epoch 12] train: L=0.0218 (hm=0.0015, pr=0.0020, peak=0.0849)
+          val:  L=3.4434 (hm=0.0018, pr=0.3442)
+[Epoch 12] saving BEST checkpoint to outputs/runs/exp_x3d_5/best.ckpt ...
+[Epoch 12] best checkpoint saved in 0.06s
+[Epoch 12] elapsed: 34.7s
+[Epoch 13] train: L=0.0167 (hm=0.0015, pr=0.0015, peak=0.0782)
+[Epoch 13] elapsed: 22.7s
+[Epoch 14] train: L=0.0146 (hm=0.0015, pr=0.0013, peak=0.0746)
+          val:  L=2.7951 (hm=0.0017, pr=0.2793)
+[Epoch 14] saving BEST checkpoint to outputs/runs/exp_x3d_5/best.ckpt ...
+[Epoch 14] best checkpoint saved in 0.06s
+[Epoch 14] elapsed: 34.4s
+[Epoch 15] train: L=0.0130 (hm=0.0014, pr=0.0012, peak=0.0668)
+[Epoch 15] elapsed: 22.3s
+[Epoch 16] train: L=0.0135 (hm=0.0014, pr=0.0012, peak=0.0638)
+          val:  L=7.0902 (hm=0.0018, pr=0.7088)
+[Epoch 16] no val improvement (7.0902 >= 2.7951); checkpoint not saved
+[Epoch 16] elapsed: 36.5s
+[Epoch 17] train: L=0.0210 (hm=0.0014, pr=0.0020, peak=0.0704)
 [Epoch 17] elapsed: 22.7s
-[Epoch 18] train: L=0.0236 (hm=0.0011, pr=0.0022, peak=0.0424)
-          val:  L=4.0026 (hm=0.0012, pr=0.4001)
-[Epoch 18] saving BEST checkpoint to outputs/runs/exp_x3d_4/best.ckpt ...
-[Epoch 18] best checkpoint saved in 0.06s
-[Epoch 18] elapsed: 34.5s
-[Epoch 19] train: L=0.0153 (hm=0.0011, pr=0.0014, peak=0.0515)
-[Epoch 19] elapsed: 24.0s
-[Epoch 20] train: L=0.0143 (hm=0.0011, pr=0.0013, peak=0.0355)
-          val:  L=5.5721 (hm=0.0011, pr=0.5571)
-[Epoch 20] no val improvement (5.5721 >= 4.0026); checkpoint not saved
-[Epoch 20] elapsed: 35.2s
-[Epoch 21] train: L=0.0103 (hm=0.0011, pr=0.0009, peak=0.0330)
-[Epoch 21] elapsed: 22.1s
-[Epoch 22] train: L=0.0130 (hm=0.0011, pr=0.0012, peak=0.0315)
-          val:  L=8.6349 (hm=0.0011, pr=0.8634)
-[Epoch 22] no val improvement (8.6349 >= 4.0026); checkpoint not saved
-[Epoch 22] elapsed: 34.6s
-[Epoch 23] train: L=0.0110 (hm=0.0011, pr=0.0010, peak=0.0320)
-[Epoch 23] elapsed: 22.9s
-[Epoch 24] train: L=0.0108 (hm=0.0011, pr=0.0010, peak=0.0307)
-          val:  L=2.3049 (hm=0.0011, pr=0.2304)
-[Epoch 24] saving BEST checkpoint to outputs/runs/exp_x3d_4/best.ckpt ...
-[Epoch 24] best checkpoint saved in 0.06s
-[Epoch 24] elapsed: 34.2s
-[Epoch 25] train: L=0.0110 (hm=0.0011, pr=0.0010, peak=0.0313)
-[Epoch 25] elapsed: 22.9s
-[Epoch 26] train: L=0.0115 (hm=0.0011, pr=0.0010, peak=0.0321)
-          val:  L=3.6431 (hm=0.0011, pr=0.3642)
-[Epoch 26] no val improvement (3.6431 >= 2.3049); checkpoint not saved
-[Epoch 26] elapsed: 34.3s
-[Epoch 27] train: L=0.0088 (hm=0.0011, pr=0.0008, peak=0.0276)
-[Epoch 27] elapsed: 22.7s
-[Epoch 28] train: L=0.0067 (hm=0.0011, pr=0.0006, peak=0.0261)
-          val:  L=5.3011 (hm=0.0011, pr=0.5300)
-[Epoch 28] no val improvement (5.3011 >= 2.3049); checkpoint not saved
-[Epoch 28] elapsed: 34.6s
-[Epoch 29] train: L=0.0090 (hm=0.0011, pr=0.0008, peak=0.0251)
-[Epoch 29] elapsed: 23.0s
-[Epoch 30] train: L=0.0095 (hm=0.0011, pr=0.0008, peak=0.0247)
-          val:  L=4.8682 (hm=0.0011, pr=0.4867)
-[Epoch 30] no val improvement (4.8682 >= 2.3049); checkpoint not saved
-[Epoch 30] elapsed: 34.8s
-[Epoch 31] train: L=0.0088 (hm=0.0011, pr=0.0008, peak=0.0244)
-[Epoch 31] elapsed: 22.5s
-[Epoch 32] train: L=0.0100 (hm=0.0011, pr=0.0009, peak=0.0249)
-          val:  L=6.6605 (hm=0.0011, pr=0.6659)
-[Epoch 32] no val improvement (6.6605 >= 2.3049); checkpoint not saved
-[Epoch 32] elapsed: 35.0s
-[Epoch 33] train: L=0.0079 (hm=0.0011, pr=0.0007, peak=0.0249)
+[Epoch 18] train: L=0.0236 (hm=0.0014, pr=0.0022, peak=0.0627)
+          val:  L=5.4307 (hm=0.0015, pr=0.5429)
+[Epoch 18] no val improvement (5.4307 >= 2.7951); checkpoint not saved
+[Epoch 18] elapsed: 36.7s
+[Epoch 19] train: L=0.0208 (hm=0.0014, pr=0.0019, peak=0.0660)
+[Epoch 19] elapsed: 22.6s
+[Epoch 20] train: L=0.0272 (hm=0.0014, pr=0.0026, peak=0.0739)
+          val:  L=12.7586 (hm=0.0017, pr=1.2757)
+[Epoch 20] no val improvement (12.7586 >= 2.7951); checkpoint not saved
+[Epoch 20] elapsed: 34.3s
+[Epoch 21] train: L=0.0177 (hm=0.0014, pr=0.0016, peak=0.0777)
+[Epoch 21] elapsed: 22.2s
+[Epoch 22] train: L=0.0146 (hm=0.0014, pr=0.0013, peak=0.0579)
+          val:  L=5.5652 (hm=0.0014, pr=0.5564)
+[Epoch 22] no val improvement (5.5652 >= 2.7951); checkpoint not saved
+[Epoch 22] elapsed: 34.9s
+[Epoch 23] train: L=0.0183 (hm=0.0013, pr=0.0017, peak=0.0477)
+[Epoch 23] elapsed: 22.8s
+[Epoch 24] train: L=0.0204 (hm=0.0013, pr=0.0019, peak=0.0540)
+          val:  L=5.1470 (hm=0.0015, pr=0.5146)
+[Epoch 24] no val improvement (5.1470 >= 2.7951); checkpoint not saved
+[Epoch 24] elapsed: 34.8s
+[Epoch 25] train: L=0.0179 (hm=0.0013, pr=0.0017, peak=0.0520)
+[Epoch 25] elapsed: 23.0s
+[Epoch 26] train: L=0.0110 (hm=0.0013, pr=0.0010, peak=0.0554)
+          val:  L=3.1730 (hm=0.0014, pr=0.3172)
+[Epoch 26] no val improvement (3.1730 >= 2.7951); checkpoint not saved
+[Epoch 26] elapsed: 35.5s
+[Epoch 27] train: L=0.0162 (hm=0.0013, pr=0.0015, peak=0.0500)
+[Epoch 27] elapsed: 22.4s
+[Epoch 28] train: L=0.0105 (hm=0.0013, pr=0.0009, peak=0.0450)
+          val:  L=4.5277 (hm=0.0014, pr=0.4526)
+[Epoch 28] no val improvement (4.5277 >= 2.7951); checkpoint not saved
+[Epoch 28] elapsed: 34.3s
+[Epoch 29] train: L=0.0098 (hm=0.0013, pr=0.0008, peak=0.0401)
+[Epoch 29] elapsed: 23.1s
+[Epoch 30] train: L=0.0097 (hm=0.0013, pr=0.0008, peak=0.0401)
+          val:  L=8.3456 (hm=0.0014, pr=0.8344)
+[Epoch 30] no val improvement (8.3456 >= 2.7951); checkpoint not saved
+[Epoch 30] elapsed: 34.7s
+[Epoch 31] train: L=0.0123 (hm=0.0013, pr=0.0011, peak=0.0431)
+[Epoch 31] elapsed: 22.4s
+[Epoch 32] train: L=0.0094 (hm=0.0013, pr=0.0008, peak=0.0471)
+          val:  L=5.1976 (hm=0.0014, pr=0.5196)
+[Epoch 32] no val improvement (5.1976 >= 2.7951); checkpoint not saved
+[Epoch 32] elapsed: 35.1s
+[Epoch 33] train: L=0.0077 (hm=0.0013, pr=0.0006, peak=0.0435)
 [Epoch 33] elapsed: 22.7s
-[Epoch 34] train: L=0.0093 (hm=0.0011, pr=0.0008, peak=0.0245)
-          val:  L=2.7586 (hm=0.0011, pr=0.2758)
-[Epoch 34] no val improvement (2.7586 >= 2.3049); checkpoint not saved
-[Epoch 34] elapsed: 35.2s
-[Epoch 35] train: L=0.0096 (hm=0.0011, pr=0.0009, peak=0.0237)
-[Epoch 35] elapsed: 22.2s
-[Epoch 36] train: L=0.0109 (hm=0.0011, pr=0.0010, peak=0.0240)
-          val:  L=6.1590 (hm=0.0011, pr=0.6158)
-[Epoch 36] no val improvement (6.1590 >= 2.3049); checkpoint not saved
-[Epoch 36] elapsed: 34.9s
-[Epoch 37] train: L=0.0120 (hm=0.0011, pr=0.0011, peak=0.0244)
-[Epoch 37] elapsed: 21.7s
-[Epoch 38] train: L=0.0125 (hm=0.0011, pr=0.0011, peak=0.0278)
-          val:  L=7.0310 (hm=0.0011, pr=0.7030)
-[Epoch 38] no val improvement (7.0310 >= 2.3049); checkpoint not saved
-[Epoch 38] elapsed: 34.2s
-[Epoch 39] train: L=0.0127 (hm=0.0011, pr=0.0012, peak=0.0216)
-[Epoch 39] elapsed: 22.9s
-[Epoch 40] train: L=0.0156 (hm=0.0011, pr=0.0015, peak=0.0209)
-          val:  L=6.4163 (hm=0.0010, pr=0.6415)
-[Epoch 40] no val improvement (6.4163 >= 2.3049); checkpoint not saved
-[Epoch 40] elapsed: 34.6s
-[Epoch 41] train: L=0.0181 (hm=0.0011, pr=0.0017, peak=0.0205)
-[Epoch 41] elapsed: 22.5s
-[Epoch 42] train: L=0.0190 (hm=0.0011, pr=0.0018, peak=0.0226)
-          val:  L=4.3320 (hm=0.0010, pr=0.4331)
-[Epoch 42] no val improvement (4.3320 >= 2.3049); checkpoint not saved
-[Epoch 42] elapsed: 34.6s
-[Epoch 43] train: L=0.0206 (hm=0.0011, pr=0.0020, peak=0.0372)
+[Epoch 34] train: L=0.0112 (hm=0.0013, pr=0.0010, peak=0.0437)
+          val:  L=9.3873 (hm=0.0015, pr=0.9386)
+[Epoch 34] no val improvement (9.3873 >= 2.7951); checkpoint not saved
+[Epoch 34] elapsed: 34.4s
+[Epoch 35] train: L=0.0115 (hm=0.0013, pr=0.0010, peak=0.0481)
+[Epoch 35] elapsed: 23.5s
+[Epoch 36] train: L=0.0111 (hm=0.0013, pr=0.0010, peak=0.0432)
+          val:  L=2.9100 (hm=0.0014, pr=0.2909)
+[Epoch 36] no val improvement (2.9100 >= 2.7951); checkpoint not saved
+[Epoch 36] elapsed: 34.8s
+[Epoch 37] train: L=0.0093 (hm=0.0013, pr=0.0008, peak=0.0420)
+[Epoch 37] elapsed: 23.0s
+[Epoch 38] train: L=0.0103 (hm=0.0013, pr=0.0009, peak=0.0391)
+          val:  L=8.6052 (hm=0.0014, pr=0.8604)
+[Epoch 38] no val improvement (8.6052 >= 2.7951); checkpoint not saved
+[Epoch 38] elapsed: 35.0s
+[Epoch 39] train: L=0.0091 (hm=0.0013, pr=0.0008, peak=0.0393)
+[Epoch 39] elapsed: 22.8s
+[Epoch 40] train: L=0.0674 (hm=0.0014, pr=0.0066, peak=0.0803)
+          val:  L=16.4039 (hm=0.0022, pr=1.6402)
+[Epoch 40] no val improvement (16.4039 >= 2.7951); checkpoint not saved
+[Epoch 40] elapsed: 34.5s
+[Epoch 41] train: L=0.0395 (hm=0.0013, pr=0.0038, peak=0.1160)
+[Epoch 41] elapsed: 22.3s
+[Epoch 42] train: L=0.0316 (hm=0.0013, pr=0.0030, peak=0.0899)
+          val:  L=11.8191 (hm=0.0015, pr=1.1818)
+[Epoch 42] no val improvement (11.8191 >= 2.7951); checkpoint not saved
+[Epoch 42] elapsed: 35.2s
+[Epoch 43] train: L=0.0334 (hm=0.0013, pr=0.0032, peak=0.0704)
 [Epoch 43] elapsed: 22.8s
-[Epoch 44] train: L=0.0290 (hm=0.0011, pr=0.0028, peak=0.0317)
-          val:  L=14.3638 (hm=0.0013, pr=1.4363)
-[Epoch 44] no val improvement (14.3638 >= 2.3049); checkpoint not saved
-[Epoch 44] elapsed: 34.0s
-[Epoch 45] train: L=0.0465 (hm=0.0011, pr=0.0045, peak=0.0807)
-[Epoch 45] elapsed: 22.1s
-[Epoch 46] train: L=0.0361 (hm=0.0011, pr=0.0035, peak=0.0487)
-          val:  L=4.7338 (hm=0.0011, pr=0.4733)
-[Epoch 46] no val improvement (4.7338 >= 2.3049); checkpoint not saved
-[Epoch 46] elapsed: 34.6s
-[Epoch 47] train: L=0.0207 (hm=0.0011, pr=0.0020, peak=0.0465)
-[Epoch 47] elapsed: 22.9s
-[Epoch 48] train: L=0.0229 (hm=0.0011, pr=0.0022, peak=0.0365)
-          val:  L=5.1300 (hm=0.0011, pr=0.5129)
-[Epoch 48] no val improvement (5.1300 >= 2.3049); checkpoint not saved
-[Epoch 48] elapsed: 34.3s
-[Epoch 49] train: L=0.0143 (hm=0.0011, pr=0.0013, peak=0.0326)
-[Epoch 49] elapsed: 23.4s
-[Epoch 50] train: L=0.0193 (hm=0.0011, pr=0.0018, peak=0.0321)
-          val:  L=4.5976 (hm=0.0011, pr=0.4597)
-[Epoch 50] no val improvement (4.5976 >= 2.3049); checkpoint not saved
-[Epoch 50] elapsed: 35.0s
-[Epoch 51] train: L=0.0114 (hm=0.0011, pr=0.0010, peak=0.0378)
-[Epoch 51] elapsed: 23.3s
-[Epoch 52] train: L=0.0093 (hm=0.0010, pr=0.0008, peak=0.0257)
-          val:  L=5.7669 (hm=0.0010, pr=0.5766)
-[Epoch 52] no val improvement (5.7669 >= 2.3049); checkpoint not saved
-[Epoch 52] elapsed: 35.1s
-[Epoch 53] train: L=0.0139 (hm=0.0010, pr=0.0013, peak=0.0210)
-[Epoch 53] elapsed: 21.9s
-[Epoch 54] train: L=0.0121 (hm=0.0010, pr=0.0011, peak=0.0238)
-          val:  L=2.6117 (hm=0.0010, pr=0.2611)
-[Epoch 54] no val improvement (2.6117 >= 2.3049); checkpoint not saved
-[Epoch 54] elapsed: 34.3s
-[Epoch 55] train: L=0.0101 (hm=0.0010, pr=0.0009, peak=0.0264)
-[Epoch 55] elapsed: 22.7s
-[Epoch 56] train: L=0.0084 (hm=0.0010, pr=0.0007, peak=0.0273)
-          val:  L=7.5384 (hm=0.0011, pr=0.7537)
-[Epoch 56] no val improvement (7.5384 >= 2.3049); checkpoint not saved
-[Epoch 56] elapsed: 33.7s
-[Epoch 57] train: L=0.0096 (hm=0.0010, pr=0.0009, peak=0.0244)
-[Epoch 57] elapsed: 22.9s
-[Epoch 58] train: L=0.0091 (hm=0.0010, pr=0.0008, peak=0.0230)
-          val:  L=4.1625 (hm=0.0010, pr=0.4161)
-[Epoch 58] no val improvement (4.1625 >= 2.3049); checkpoint not saved
-[Epoch 58] elapsed: 34.7s
-[Epoch 59] train: L=0.0071 (hm=0.0010, pr=0.0006, peak=0.0283)
-[Epoch 59] elapsed: 22.5s
-[Epoch 60] train: L=0.0063 (hm=0.0010, pr=0.0005, peak=0.0255)
-          val:  L=7.4450 (hm=0.0010, pr=0.7444)
-[Epoch 60] no val improvement (7.4450 >= 2.3049); checkpoint not saved
-[Epoch 60] elapsed: 34.0s
-[Epoch 61] train: L=0.0061 (hm=0.0010, pr=0.0005, peak=0.0206)
-[Epoch 61] elapsed: 22.5s
-[Epoch 62] train: L=0.0060 (hm=0.0010, pr=0.0005, peak=0.0195)
-          val:  L=7.0990 (hm=0.0010, pr=0.7098)
-[Epoch 62] no val improvement (7.0990 >= 2.3049); checkpoint not saved
-[Epoch 62] elapsed: 34.6s
-[Epoch 63] train: L=0.0060 (hm=0.0010, pr=0.0005, peak=0.0184)
-[Epoch 63] elapsed: 22.5s
-[Epoch 64] train: L=0.0060 (hm=0.0010, pr=0.0005, peak=0.0183)
-          val:  L=6.7654 (hm=0.0010, pr=0.6764)
-[Epoch 64] no val improvement (6.7654 >= 2.3049); checkpoint not saved
-[Epoch 64] elapsed: 34.6s
-[Epoch 65] train: L=0.0060 (hm=0.0010, pr=0.0005, peak=0.0174)
-[Epoch 65] elapsed: 23.4s
-[Epoch 66] train: L=0.0060 (hm=0.0010, pr=0.0005, peak=0.0174)
-          val:  L=6.9463 (hm=0.0010, pr=0.6945)
-[Epoch 66] no val improvement (6.9463 >= 2.3049); checkpoint not saved
-[Epoch 66] elapsed: 34.5s
-[Epoch 67] train: L=0.0077 (hm=0.0010, pr=0.0007, peak=0.0167)
-[Epoch 67] elapsed: 22.7s
-[Epoch 68] train: L=0.0064 (hm=0.0010, pr=0.0005, peak=0.0179)
-          val:  L=6.4462 (hm=0.0010, pr=0.6445)
-[Epoch 68] no val improvement (6.4462 >= 2.3049); checkpoint not saved
-[Epoch 68] elapsed: 35.5s
-[Epoch 69] train: L=0.0061 (hm=0.0010, pr=0.0005, peak=0.0180)
-[Epoch 69] elapsed: 23.1s
-[Epoch 70] train: L=0.0060 (hm=0.0010, pr=0.0005, peak=0.0168)
-          val:  L=6.6112 (hm=0.0010, pr=0.6610)
-[Epoch 70] no val improvement (6.6112 >= 2.3049); checkpoint not saved
-[Epoch 70] elapsed: 34.7s
-[Epoch 71] train: L=0.0060 (hm=0.0010, pr=0.0005, peak=0.0165)
-[Epoch 71] elapsed: 22.8s
-[Epoch 72] train: L=0.0060 (hm=0.0010, pr=0.0005, peak=0.0162)
-          val:  L=7.0745 (hm=0.0010, pr=0.7073)
-[Epoch 72] no val improvement (7.0745 >= 2.3049); checkpoint not saved
-[Epoch 72] elapsed: 33.9s
-[Epoch 73] train: L=0.0062 (hm=0.0010, pr=0.0005, peak=0.0170)
-[Epoch 73] elapsed: 23.1s
-[Epoch 74] train: L=0.0069 (hm=0.0010, pr=0.0006, peak=0.0182)
-          val:  L=7.9482 (hm=0.0010, pr=0.7947)
-[Epoch 74] no val improvement (7.9482 >= 2.3049); checkpoint not saved
-[Epoch 74] elapsed: 33.9s
-[Epoch 75] train: L=0.0086 (hm=0.0010, pr=0.0008, peak=0.0214)
-[Epoch 75] elapsed: 22.1s
-[Epoch 76] train: L=0.0072 (hm=0.0010, pr=0.0006, peak=0.0222)
-          val:  L=7.2327 (hm=0.0010, pr=0.7232)
-[Epoch 76] no val improvement (7.2327 >= 2.3049); checkpoint not saved
-[Epoch 76] elapsed: 34.4s
-[Epoch 77] train: L=0.0063 (hm=0.0010, pr=0.0005, peak=0.0198)
-[Epoch 77] elapsed: 22.6s
-[Epoch 78] train: L=0.0061 (hm=0.0010, pr=0.0005, peak=0.0174)
-          val:  L=6.8033 (hm=0.0010, pr=0.6802)
-[Epoch 78] no val improvement (6.8033 >= 2.3049); checkpoint not saved
-[Epoch 78] elapsed: 34.7s
-[Epoch 79] train: L=0.0083 (hm=0.0010, pr=0.0007, peak=0.0171)
-[Epoch 79] elapsed: 23.7s
-[Epoch 80] train: L=0.0078 (hm=0.0010, pr=0.0007, peak=0.0194)
-          val:  L=8.1670 (hm=0.0010, pr=0.8166)
-[Epoch 80] no val improvement (8.1670 >= 2.3049); checkpoint not saved
-[Epoch 80] elapsed: 34.0s
-[Epoch 81] train: L=0.0118 (hm=0.0010, pr=0.0011, peak=0.0226)
-[Epoch 81] elapsed: 22.8s
-[Epoch 82] train: L=0.0107 (hm=0.0010, pr=0.0010, peak=0.0296)
-          val:  L=5.0047 (hm=0.0010, pr=0.5004)
-[Epoch 82] no val improvement (5.0047 >= 2.3049); checkpoint not saved
-[Epoch 82] elapsed: 34.3s
-[Epoch 83] train: L=0.0112 (hm=0.0010, pr=0.0010, peak=0.0198)
-[Epoch 83] elapsed: 22.3s
-[Epoch 84] train: L=0.0127 (hm=0.0010, pr=0.0012, peak=0.0166)
-          val:  L=9.8563 (hm=0.0010, pr=0.9855)
-[Epoch 84] no val improvement (9.8563 >= 2.3049); checkpoint not saved
-[Epoch 84] elapsed: 34.8s
-[Epoch 85] train: L=0.0088 (hm=0.0010, pr=0.0008, peak=0.0159)
-[Epoch 85] elapsed: 22.2s
-[Epoch 86] train: L=0.0094 (hm=0.0010, pr=0.0008, peak=0.0174)
-          val:  L=4.5596 (hm=0.0010, pr=0.4559)
-[Epoch 86] no val improvement (4.5596 >= 2.3049); checkpoint not saved
-[Epoch 86] elapsed: 34.6s
-[Epoch 87] train: L=0.0077 (hm=0.0010, pr=0.0007, peak=0.0158)
-[Epoch 87] elapsed: 22.2s
-[Epoch 88] train: L=0.0139 (hm=0.0010, pr=0.0013, peak=0.0144)
-          val:  L=4.5303 (hm=0.0010, pr=0.4529)
-[Epoch 88] no val improvement (4.5303 >= 2.3049); checkpoint not saved
-[Epoch 88] elapsed: 35.4s
-[Epoch 89] train: L=0.0151 (hm=0.0010, pr=0.0014, peak=0.0232)
-[Epoch 89] elapsed: 22.8s
-[Epoch 90] train: L=0.0126 (hm=0.0010, pr=0.0012, peak=0.0241)
-          val:  L=8.1176 (hm=0.0010, pr=0.8117)
-[Epoch 90] no val improvement (8.1176 >= 2.3049); checkpoint not saved
-[Epoch 90] elapsed: 35.6s
-[Epoch 91] train: L=0.0168 (hm=0.0010, pr=0.0016, peak=0.0234)
-[Epoch 91] elapsed: 23.3s
-[Epoch 92] train: L=0.0145 (hm=0.0010, pr=0.0013, peak=0.0241)
-          val:  L=10.7632 (hm=0.0010, pr=1.0762)
-[Epoch 92] no val improvement (10.7632 >= 2.3049); checkpoint not saved
-[Epoch 92] elapsed: 34.5s
-[Epoch 93] train: L=0.0134 (hm=0.0010, pr=0.0012, peak=0.0222)
-[Epoch 93] elapsed: 22.9s
-[Epoch 94] train: L=0.0170 (hm=0.0010, pr=0.0016, peak=0.0224)
-          val:  L=3.8185 (hm=0.0010, pr=0.3817)
-[Epoch 94] no val improvement (3.8185 >= 2.3049); checkpoint not saved
-[Epoch 94] elapsed: 35.7s
-[Epoch 95] train: L=0.0147 (hm=0.0010, pr=0.0014, peak=0.0196)
-[Epoch 95] elapsed: 23.0s
-[Epoch 96] train: L=0.0164 (hm=0.0010, pr=0.0015, peak=0.0163)
-          val:  L=3.2228 (hm=0.0010, pr=0.3222)
-[Epoch 96] no val improvement (3.2228 >= 2.3049); checkpoint not saved
-[Epoch 96] elapsed: 34.2s
-[Epoch 97] train: L=0.0088 (hm=0.0010, pr=0.0008, peak=0.0165)
-[Epoch 97] elapsed: 22.9s
-[Epoch 98] train: L=0.0131 (hm=0.0010, pr=0.0012, peak=0.0162)
-          val:  L=17.2873 (hm=0.0010, pr=1.7286)
-[Epoch 98] no val improvement (17.2873 >= 2.3049); checkpoint not saved
-[Epoch 98] elapsed: 34.8s
-[Epoch 99] train: L=0.0104 (hm=0.0010, pr=0.0009, peak=0.0202)
-[Epoch 99] elapsed: 23.1s
-[Epoch 100] train: L=0.0115 (hm=0.0010, pr=0.0010, peak=0.0153)
-          val:  L=2.9754 (hm=0.0010, pr=0.2974)
-[Epoch 100] no val improvement (2.9754 >= 2.3049); checkpoint not saved
-[Epoch 100] elapsed: 35.0s
-Done. Best: outputs/runs/exp_x3d_4/best.ckpt
+[Epoch 44] train: L=0.0209 (hm=0.0013, pr=0.0020, peak=0.0779)
+          val:  L=6.9159 (hm=0.0014, pr=0.6915)
+[Epoch 44] no val improvement (6.9159 >= 2.7951); checkpoint not saved
+[Epoch 44] elapsed: 34.1s
+[Epoch 45] train: L=0.0250 (hm=0.0013, pr=0.0024, peak=0.0818)
+[Epoch 45] elapsed: 22.7s
+[Epoch 46] train: L=0.0203 (hm=0.0013, pr=0.0019, peak=0.0979)
+          val:  L=11.1681 (hm=0.0015, pr=1.1167)
+[Epoch 46] no val improvement (11.1681 >= 2.7951); checkpoint not saved
+[Epoch 46] elapsed: 34.1s
+[Epoch 47] train: L=0.0156 (hm=0.0013, pr=0.0014, peak=0.0842)
+[Epoch 47] elapsed: 22.4s
+[Epoch 48] train: L=0.0167 (hm=0.0013, pr=0.0015, peak=0.0815)
+          val:  L=9.2937 (hm=0.0015, pr=0.9292)
+[Epoch 48] no val improvement (9.2937 >= 2.7951); checkpoint not saved
+[Epoch 48] elapsed: 33.5s
+[Epoch 49] train: L=0.0123 (hm=0.0013, pr=0.0011, peak=0.0899)
+[Epoch 49] elapsed: 22.1s
+[Epoch 50] train: L=0.0100 (hm=0.0013, pr=0.0009, peak=0.0747)
+          val:  L=7.9846 (hm=0.0014, pr=0.7983)
+[Epoch 50] no val improvement (7.9846 >= 2.7951); checkpoint not saved
+[Epoch 50] elapsed: 34.9s
+Done. Best: outputs/runs/exp_x3d_5/best.ckpt
