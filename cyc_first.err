@@ -1,19 +1,19 @@
-[lrdn0267.leonardo.local:1208722] MCW rank 0 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]], socket 0[core 4[hwt 0]], socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]]: [B/B/B/B/B/B/B/B/./././././././././././././././././././././././.]
-[lrdn0267.leonardo.local:1208722] MCW rank 1 bound to socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]], socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]], socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]], socket 0[core 15[hwt 0]]: [././././././././B/B/B/B/B/B/B/B/./././././././././././././././.]
-[lrdn0267.leonardo.local:1208722] MCW rank 2 bound to socket 0[core 16[hwt 0]], socket 0[core 17[hwt 0]], socket 0[core 18[hwt 0]], socket 0[core 19[hwt 0]], socket 0[core 20[hwt 0]], socket 0[core 21[hwt 0]], socket 0[core 22[hwt 0]], socket 0[core 23[hwt 0]]: [././././././././././././././././B/B/B/B/B/B/B/B/./././././././.]
-[lrdn0267.leonardo.local:1208722] MCW rank 3 bound to socket 0[core 24[hwt 0]], socket 0[core 25[hwt 0]], socket 0[core 26[hwt 0]], socket 0[core 27[hwt 0]], socket 0[core 28[hwt 0]], socket 0[core 29[hwt 0]], socket 0[core 30[hwt 0]], socket 0[core 31[hwt 0]]: [././././././././././././././././././././././././B/B/B/B/B/B/B/B]
-[lrdn0415.leonardo.local:741345] MCW rank 12 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]], socket 0[core 4[hwt 0]], socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]]: [B/B/B/B/B/B/B/B/./././././././././././././././././././././././.]
-[lrdn0415.leonardo.local:741345] MCW rank 13 bound to socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]], socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]], socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]], socket 0[core 15[hwt 0]]: [././././././././B/B/B/B/B/B/B/B/./././././././././././././././.]
-[lrdn0415.leonardo.local:741345] MCW rank 14 bound to socket 0[core 16[hwt 0]], socket 0[core 17[hwt 0]], socket 0[core 18[hwt 0]], socket 0[core 19[hwt 0]], socket 0[core 20[hwt 0]], socket 0[core 21[hwt 0]], socket 0[core 22[hwt 0]], socket 0[core 23[hwt 0]]: [././././././././././././././././B/B/B/B/B/B/B/B/./././././././.]
-[lrdn0415.leonardo.local:741345] MCW rank 15 bound to socket 0[core 24[hwt 0]], socket 0[core 25[hwt 0]], socket 0[core 26[hwt 0]], socket 0[core 27[hwt 0]], socket 0[core 28[hwt 0]], socket 0[core 29[hwt 0]], socket 0[core 30[hwt 0]], socket 0[core 31[hwt 0]]: [././././././././././././././././././././././././B/B/B/B/B/B/B/B]
-[lrdn0407.leonardo.local:3771396] MCW rank 8 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]], socket 0[core 4[hwt 0]], socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]]: [B/B/B/B/B/B/B/B/./././././././././././././././././././././././.]
-[lrdn0407.leonardo.local:3771396] MCW rank 9 bound to socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]], socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]], socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]], socket 0[core 15[hwt 0]]: [././././././././B/B/B/B/B/B/B/B/./././././././././././././././.]
-[lrdn0407.leonardo.local:3771396] MCW rank 10 bound to socket 0[core 16[hwt 0]], socket 0[core 17[hwt 0]], socket 0[core 18[hwt 0]], socket 0[core 19[hwt 0]], socket 0[core 20[hwt 0]], socket 0[core 21[hwt 0]], socket 0[core 22[hwt 0]], socket 0[core 23[hwt 0]]: [././././././././././././././././B/B/B/B/B/B/B/B/./././././././.]
-[lrdn0407.leonardo.local:3771396] MCW rank 11 bound to socket 0[core 24[hwt 0]], socket 0[core 25[hwt 0]], socket 0[core 26[hwt 0]], socket 0[core 27[hwt 0]], socket 0[core 28[hwt 0]], socket 0[core 29[hwt 0]], socket 0[core 30[hwt 0]], socket 0[core 31[hwt 0]]: [././././././././././././././././././././././././B/B/B/B/B/B/B/B]
-[lrdn0296.leonardo.local:3347157] MCW rank 4 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]], socket 0[core 4[hwt 0]], socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]]: [B/B/B/B/B/B/B/B/./././././././././././././././././././././././.]
-[lrdn0296.leonardo.local:3347157] MCW rank 5 bound to socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]], socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]], socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]], socket 0[core 15[hwt 0]]: [././././././././B/B/B/B/B/B/B/B/./././././././././././././././.]
-[lrdn0296.leonardo.local:3347157] MCW rank 6 bound to socket 0[core 16[hwt 0]], socket 0[core 17[hwt 0]], socket 0[core 18[hwt 0]], socket 0[core 19[hwt 0]], socket 0[core 20[hwt 0]], socket 0[core 21[hwt 0]], socket 0[core 22[hwt 0]], socket 0[core 23[hwt 0]]: [././././././././././././././././B/B/B/B/B/B/B/B/./././././././.]
-[lrdn0296.leonardo.local:3347157] MCW rank 7 bound to socket 0[core 24[hwt 0]], socket 0[core 25[hwt 0]], socket 0[core 26[hwt 0]], socket 0[core 27[hwt 0]], socket 0[core 28[hwt 0]], socket 0[core 29[hwt 0]], socket 0[core 30[hwt 0]], socket 0[core 31[hwt 0]]: [././././././././././././././././././././././././B/B/B/B/B/B/B/B]
+[lrdn0055.leonardo.local:1423203] MCW rank 0 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]], socket 0[core 4[hwt 0]], socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]]: [B/B/B/B/B/B/B/B/./././././././././././././././././././././././.]
+[lrdn0055.leonardo.local:1423203] MCW rank 1 bound to socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]], socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]], socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]], socket 0[core 15[hwt 0]]: [././././././././B/B/B/B/B/B/B/B/./././././././././././././././.]
+[lrdn0055.leonardo.local:1423203] MCW rank 2 bound to socket 0[core 16[hwt 0]], socket 0[core 17[hwt 0]], socket 0[core 18[hwt 0]], socket 0[core 19[hwt 0]], socket 0[core 20[hwt 0]], socket 0[core 21[hwt 0]], socket 0[core 22[hwt 0]], socket 0[core 23[hwt 0]]: [././././././././././././././././B/B/B/B/B/B/B/B/./././././././.]
+[lrdn0055.leonardo.local:1423203] MCW rank 3 bound to socket 0[core 24[hwt 0]], socket 0[core 25[hwt 0]], socket 0[core 26[hwt 0]], socket 0[core 27[hwt 0]], socket 0[core 28[hwt 0]], socket 0[core 29[hwt 0]], socket 0[core 30[hwt 0]], socket 0[core 31[hwt 0]]: [././././././././././././././././././././././././B/B/B/B/B/B/B/B]
+[lrdn0476.leonardo.local:886577] MCW rank 4 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]], socket 0[core 4[hwt 0]], socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]]: [B/B/B/B/B/B/B/B/./././././././././././././././././././././././.]
+[lrdn0476.leonardo.local:886577] MCW rank 5 bound to socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]], socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]], socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]], socket 0[core 15[hwt 0]]: [././././././././B/B/B/B/B/B/B/B/./././././././././././././././.]
+[lrdn0476.leonardo.local:886577] MCW rank 6 bound to socket 0[core 16[hwt 0]], socket 0[core 17[hwt 0]], socket 0[core 18[hwt 0]], socket 0[core 19[hwt 0]], socket 0[core 20[hwt 0]], socket 0[core 21[hwt 0]], socket 0[core 22[hwt 0]], socket 0[core 23[hwt 0]]: [././././././././././././././././B/B/B/B/B/B/B/B/./././././././.]
+[lrdn0476.leonardo.local:886577] MCW rank 7 bound to socket 0[core 24[hwt 0]], socket 0[core 25[hwt 0]], socket 0[core 26[hwt 0]], socket 0[core 27[hwt 0]], socket 0[core 28[hwt 0]], socket 0[core 29[hwt 0]], socket 0[core 30[hwt 0]], socket 0[core 31[hwt 0]]: [././././././././././././././././././././././././B/B/B/B/B/B/B/B]
+[lrdn0484.leonardo.local:1817539] MCW rank 8 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]], socket 0[core 4[hwt 0]], socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]]: [B/B/B/B/B/B/B/B/./././././././././././././././././././././././.]
+[lrdn0484.leonardo.local:1817539] MCW rank 9 bound to socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]], socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]], socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]], socket 0[core 15[hwt 0]]: [././././././././B/B/B/B/B/B/B/B/./././././././././././././././.]
+[lrdn0484.leonardo.local:1817539] MCW rank 10 bound to socket 0[core 16[hwt 0]], socket 0[core 17[hwt 0]], socket 0[core 18[hwt 0]], socket 0[core 19[hwt 0]], socket 0[core 20[hwt 0]], socket 0[core 21[hwt 0]], socket 0[core 22[hwt 0]], socket 0[core 23[hwt 0]]: [././././././././././././././././B/B/B/B/B/B/B/B/./././././././.]
+[lrdn0484.leonardo.local:1817539] MCW rank 11 bound to socket 0[core 24[hwt 0]], socket 0[core 25[hwt 0]], socket 0[core 26[hwt 0]], socket 0[core 27[hwt 0]], socket 0[core 28[hwt 0]], socket 0[core 29[hwt 0]], socket 0[core 30[hwt 0]], socket 0[core 31[hwt 0]]: [././././././././././././././././././././././././B/B/B/B/B/B/B/B]
+[lrdn0489.leonardo.local:2994281] MCW rank 12 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]], socket 0[core 4[hwt 0]], socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]]: [B/B/B/B/B/B/B/B/./././././././././././././././././././././././.]
+[lrdn0489.leonardo.local:2994281] MCW rank 13 bound to socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]], socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]], socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]], socket 0[core 15[hwt 0]]: [././././././././B/B/B/B/B/B/B/B/./././././././././././././././.]
+[lrdn0489.leonardo.local:2994281] MCW rank 14 bound to socket 0[core 16[hwt 0]], socket 0[core 17[hwt 0]], socket 0[core 18[hwt 0]], socket 0[core 19[hwt 0]], socket 0[core 20[hwt 0]], socket 0[core 21[hwt 0]], socket 0[core 22[hwt 0]], socket 0[core 23[hwt 0]]: [././././././././././././././././B/B/B/B/B/B/B/B/./././././././.]
+[lrdn0489.leonardo.local:2994281] MCW rank 15 bound to socket 0[core 24[hwt 0]], socket 0[core 25[hwt 0]], socket 0[core 26[hwt 0]], socket 0[core 27[hwt 0]], socket 0[core 28[hwt 0]], socket 0[core 29[hwt 0]], socket 0[core 30[hwt 0]], socket 0[core 31[hwt 0]]: [././././././././././././././././././././././././B/B/B/B/B/B/B/B]
 /leonardo/prod/opt/libraries/cineca-ai/4.3.0/none/cineca-ai-env/lib/python3.11/site-packages/transformers/utils/generic.py:462: UserWarning: torch.utils._pytree._register_pytree_node is deprecated. Please use torch.utils._pytree.register_pytree_node instead.
   _torch_pytree._register_pytree_node(
 /leonardo/prod/opt/libraries/cineca-ai/4.3.0/none/cineca-ai-env/lib/python3.11/site-packages/transformers/utils/generic.py:462: UserWarning: torch.utils._pytree._register_pytree_node is deprecated. Please use torch.utils._pytree.register_pytree_node instead.
@@ -46,3 +46,254 @@
   _torch_pytree._register_pytree_node(
 /leonardo/prod/opt/libraries/cineca-ai/4.3.0/none/cineca-ai-env/lib/python3.11/site-packages/transformers/utils/generic.py:462: UserWarning: torch.utils._pytree._register_pytree_node is deprecated. Please use torch.utils._pytree.register_pytree_node instead.
   _torch_pytree._register_pytree_node(
+Traceback (most recent call last):
+  File "/leonardo/home/userexternal/ddarmien/cyc-firstpass/src/cyclone_locator/models/x3d_backbone.py", line 6, in <module>
+Traceback (most recent call last):
+  File "/leonardo/home/userexternal/ddarmien/cyc-firstpass/src/cyclone_locator/models/x3d_backbone.py", line 6, in <module>
+    from torchvision.models.video import (
+ImportError: cannot import name 'x3d_s' from 'torchvision.models.video' (/leonardo/prod/build/libraries/cineca-ai/4.3.0/none/BA_WORK/cineca-ai-4.3.0/work-dir/000002/000000_cineca-ai/work/sources/vision/torchvision/models/video/__init__.py)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/leonardo/home/userexternal/ddarmien/cyc-firstpass/src/cyclone_locator/train.py", line 10, in <module>
+    from cyclone_locator.models.x3d_backbone import X3DBackbone
+    from torchvision.models.video import (
+ImportError: cannot import name 'x3d_s' from 'torchvision.models.video' (/leonardo/prod/build/libraries/cineca-ai/4.3.0/none/BA_WORK/cineca-ai-4.3.0/work-dir/000002/000000_cineca-ai/work/sources/vision/torchvision/models/video/__init__.py)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "/leonardo/home/userexternal/ddarmien/cyc-firstpass/src/cyclone_locator/models/x3d_backbone.py", line 13, in <module>
+  File "<frozen runpy>", line 88, in _run_code
+  File "/leonardo/home/userexternal/ddarmien/cyc-firstpass/src/cyclone_locator/train.py", line 10, in <module>
+Traceback (most recent call last):
+  File "/leonardo/home/userexternal/ddarmien/cyc-firstpass/src/cyclone_locator/models/x3d_backbone.py", line 6, in <module>
+    raise ImportError("torchvision with video models is required for X3D backbones") from exc
+    from cyclone_locator.models.x3d_backbone import X3DBackbone
+ImportError: torchvision with video models is required for X3D backbones
+  File "/leonardo/home/userexternal/ddarmien/cyc-firstpass/src/cyclone_locator/models/x3d_backbone.py", line 13, in <module>
+    from torchvision.models.video import (
+ImportError: cannot import name 'x3d_s' from 'torchvision.models.video' (/leonardo/prod/build/libraries/cineca-ai/4.3.0/none/BA_WORK/cineca-ai-4.3.0/work-dir/000002/000000_cineca-ai/work/sources/vision/torchvision/models/video/__init__.py)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/leonardo/home/userexternal/ddarmien/cyc-firstpass/src/cyclone_locator/train.py", line 10, in <module>
+Traceback (most recent call last):
+  File "/leonardo/home/userexternal/ddarmien/cyc-firstpass/src/cyclone_locator/models/x3d_backbone.py", line 6, in <module>
+    raise ImportError("torchvision with video models is required for X3D backbones") from exc
+ImportError: torchvision with video models is required for X3D backbones
+    from torchvision.models.video import (
+ImportError: cannot import name 'x3d_s' from 'torchvision.models.video' (/leonardo/prod/build/libraries/cineca-ai/4.3.0/none/BA_WORK/cineca-ai-4.3.0/work-dir/000002/000000_cineca-ai/work/sources/vision/torchvision/models/video/__init__.py)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/leonardo/home/userexternal/ddarmien/cyc-firstpass/src/cyclone_locator/train.py", line 10, in <module>
+    from cyclone_locator.models.x3d_backbone import X3DBackbone
+  File "/leonardo/home/userexternal/ddarmien/cyc-firstpass/src/cyclone_locator/models/x3d_backbone.py", line 13, in <module>
+    from cyclone_locator.models.x3d_backbone import X3DBackbone
+  File "/leonardo/home/userexternal/ddarmien/cyc-firstpass/src/cyclone_locator/models/x3d_backbone.py", line 13, in <module>
+    raise ImportError("torchvision with video models is required for X3D backbones") from exc
+ImportError: torchvision with video models is required for X3D backbones
+    raise ImportError("torchvision with video models is required for X3D backbones") from exc
+ImportError: torchvision with video models is required for X3D backbones
+Traceback (most recent call last):
+  File "/leonardo/home/userexternal/ddarmien/cyc-firstpass/src/cyclone_locator/models/x3d_backbone.py", line 6, in <module>
+Traceback (most recent call last):
+  File "/leonardo/home/userexternal/ddarmien/cyc-firstpass/src/cyclone_locator/models/x3d_backbone.py", line 6, in <module>
+Traceback (most recent call last):
+  File "/leonardo/home/userexternal/ddarmien/cyc-firstpass/src/cyclone_locator/models/x3d_backbone.py", line 6, in <module>
+Traceback (most recent call last):
+  File "/leonardo/home/userexternal/ddarmien/cyc-firstpass/src/cyclone_locator/models/x3d_backbone.py", line 6, in <module>
+    from torchvision.models.video import (
+    from torchvision.models.video import (
+    from torchvision.models.video import (
+ImportError: cannot import name 'x3d_s' from 'torchvision.models.video' (/leonardo/prod/build/libraries/cineca-ai/4.3.0/none/BA_WORK/cineca-ai-4.3.0/work-dir/000002/000000_cineca-ai/work/sources/vision/torchvision/models/video/__init__.py)
+
+The above exception was the direct cause of the following exception:
+
+ImportError: cannot import name 'x3d_s' from 'torchvision.models.video' (/leonardo/prod/build/libraries/cineca-ai/4.3.0/none/BA_WORK/cineca-ai-4.3.0/work-dir/000002/000000_cineca-ai/work/sources/vision/torchvision/models/video/__init__.py)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+ImportError: cannot import name 'x3d_s' from 'torchvision.models.video' (/leonardo/prod/build/libraries/cineca-ai/4.3.0/none/BA_WORK/cineca-ai-4.3.0/work-dir/000002/000000_cineca-ai/work/sources/vision/torchvision/models/video/__init__.py)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/leonardo/home/userexternal/ddarmien/cyc-firstpass/src/cyclone_locator/train.py", line 10, in <module>
+  File "<frozen runpy>", line 88, in _run_code
+  File "/leonardo/home/userexternal/ddarmien/cyc-firstpass/src/cyclone_locator/train.py", line 10, in <module>
+  File "/leonardo/home/userexternal/ddarmien/cyc-firstpass/src/cyclone_locator/train.py", line 10, in <module>
+    from torchvision.models.video import (
+ImportError: cannot import name 'x3d_s' from 'torchvision.models.video' (/leonardo/prod/build/libraries/cineca-ai/4.3.0/none/BA_WORK/cineca-ai-4.3.0/work-dir/000002/000000_cineca-ai/work/sources/vision/torchvision/models/video/__init__.py)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/leonardo/home/userexternal/ddarmien/cyc-firstpass/src/cyclone_locator/train.py", line 10, in <module>
+    from cyclone_locator.models.x3d_backbone import X3DBackbone
+    from cyclone_locator.models.x3d_backbone import X3DBackbone
+    from cyclone_locator.models.x3d_backbone import X3DBackbone
+  File "/leonardo/home/userexternal/ddarmien/cyc-firstpass/src/cyclone_locator/models/x3d_backbone.py", line 13, in <module>
+  File "/leonardo/home/userexternal/ddarmien/cyc-firstpass/src/cyclone_locator/models/x3d_backbone.py", line 13, in <module>
+  File "/leonardo/home/userexternal/ddarmien/cyc-firstpass/src/cyclone_locator/models/x3d_backbone.py", line 13, in <module>
+    from cyclone_locator.models.x3d_backbone import X3DBackbone
+  File "/leonardo/home/userexternal/ddarmien/cyc-firstpass/src/cyclone_locator/models/x3d_backbone.py", line 13, in <module>
+    raise ImportError("torchvision with video models is required for X3D backbones") from exc
+    raise ImportError("torchvision with video models is required for X3D backbones") from exc
+    raise ImportError("torchvision with video models is required for X3D backbones") from exc
+ImportError: torchvision with video models is required for X3D backbones
+ImportError: torchvision with video models is required for X3D backbones
+ImportError: torchvision with video models is required for X3D backbones
+    raise ImportError("torchvision with video models is required for X3D backbones") from exc
+ImportError: torchvision with video models is required for X3D backbones
+Traceback (most recent call last):
+  File "/leonardo/home/userexternal/ddarmien/cyc-firstpass/src/cyclone_locator/models/x3d_backbone.py", line 6, in <module>
+Traceback (most recent call last):
+  File "/leonardo/home/userexternal/ddarmien/cyc-firstpass/src/cyclone_locator/models/x3d_backbone.py", line 6, in <module>
+Traceback (most recent call last):
+  File "/leonardo/home/userexternal/ddarmien/cyc-firstpass/src/cyclone_locator/models/x3d_backbone.py", line 6, in <module>
+Traceback (most recent call last):
+  File "/leonardo/home/userexternal/ddarmien/cyc-firstpass/src/cyclone_locator/models/x3d_backbone.py", line 6, in <module>
+    from torchvision.models.video import (
+    from torchvision.models.video import (
+ImportError: cannot import name 'x3d_s' from 'torchvision.models.video' (/leonardo/prod/build/libraries/cineca-ai/4.3.0/none/BA_WORK/cineca-ai-4.3.0/work-dir/000002/000000_cineca-ai/work/sources/vision/torchvision/models/video/__init__.py)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/leonardo/home/userexternal/ddarmien/cyc-firstpass/src/cyclone_locator/train.py", line 10, in <module>
+ImportError: cannot import name 'x3d_s' from 'torchvision.models.video' (/leonardo/prod/build/libraries/cineca-ai/4.3.0/none/BA_WORK/cineca-ai-4.3.0/work-dir/000002/000000_cineca-ai/work/sources/vision/torchvision/models/video/__init__.py)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/leonardo/home/userexternal/ddarmien/cyc-firstpass/src/cyclone_locator/train.py", line 10, in <module>
+    from torchvision.models.video import (
+ImportError: cannot import name 'x3d_s' from 'torchvision.models.video' (/leonardo/prod/build/libraries/cineca-ai/4.3.0/none/BA_WORK/cineca-ai-4.3.0/work-dir/000002/000000_cineca-ai/work/sources/vision/torchvision/models/video/__init__.py)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/leonardo/home/userexternal/ddarmien/cyc-firstpass/src/cyclone_locator/train.py", line 10, in <module>
+    from torchvision.models.video import (
+ImportError: cannot import name 'x3d_s' from 'torchvision.models.video' (/leonardo/prod/build/libraries/cineca-ai/4.3.0/none/BA_WORK/cineca-ai-4.3.0/work-dir/000002/000000_cineca-ai/work/sources/vision/torchvision/models/video/__init__.py)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/leonardo/home/userexternal/ddarmien/cyc-firstpass/src/cyclone_locator/train.py", line 10, in <module>
+    from cyclone_locator.models.x3d_backbone import X3DBackbone
+    from cyclone_locator.models.x3d_backbone import X3DBackbone
+    from cyclone_locator.models.x3d_backbone import X3DBackbone
+  File "/leonardo/home/userexternal/ddarmien/cyc-firstpass/src/cyclone_locator/models/x3d_backbone.py", line 13, in <module>
+  File "/leonardo/home/userexternal/ddarmien/cyc-firstpass/src/cyclone_locator/models/x3d_backbone.py", line 13, in <module>
+  File "/leonardo/home/userexternal/ddarmien/cyc-firstpass/src/cyclone_locator/models/x3d_backbone.py", line 13, in <module>
+    from cyclone_locator.models.x3d_backbone import X3DBackbone
+  File "/leonardo/home/userexternal/ddarmien/cyc-firstpass/src/cyclone_locator/models/x3d_backbone.py", line 13, in <module>
+    raise ImportError("torchvision with video models is required for X3D backbones") from exc
+    raise ImportError("torchvision with video models is required for X3D backbones") from exc
+    raise ImportError("torchvision with video models is required for X3D backbones") from exc
+ImportError: torchvision with video models is required for X3D backbones
+ImportError: torchvision with video models is required for X3D backbones
+ImportError: torchvision with video models is required for X3D backbones
+    raise ImportError("torchvision with video models is required for X3D backbones") from exc
+ImportError: torchvision with video models is required for X3D backbones
+Traceback (most recent call last):
+  File "/leonardo/home/userexternal/ddarmien/cyc-firstpass/src/cyclone_locator/models/x3d_backbone.py", line 6, in <module>
+Traceback (most recent call last):
+  File "/leonardo/home/userexternal/ddarmien/cyc-firstpass/src/cyclone_locator/models/x3d_backbone.py", line 6, in <module>
+Traceback (most recent call last):
+  File "/leonardo/home/userexternal/ddarmien/cyc-firstpass/src/cyclone_locator/models/x3d_backbone.py", line 6, in <module>
+Traceback (most recent call last):
+  File "/leonardo/home/userexternal/ddarmien/cyc-firstpass/src/cyclone_locator/models/x3d_backbone.py", line 6, in <module>
+    from torchvision.models.video import (
+    from torchvision.models.video import (
+ImportError: cannot import name 'x3d_s' from 'torchvision.models.video' (/leonardo/prod/build/libraries/cineca-ai/4.3.0/none/BA_WORK/cineca-ai-4.3.0/work-dir/000002/000000_cineca-ai/work/sources/vision/torchvision/models/video/__init__.py)
+
+The above exception was the direct cause of the following exception:
+    from torchvision.models.video import (
+ImportError: ImportError: cannot import name 'x3d_s' from 'torchvision.models.video' (/leonardo/prod/build/libraries/cineca-ai/4.3.0/none/BA_WORK/cineca-ai-4.3.0/work-dir/000002/000000_cineca-ai/work/sources/vision/torchvision/models/video/__init__.py)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/leonardo/home/userexternal/ddarmien/cyc-firstpass/src/cyclone_locator/train.py", line 10, in <module>
+
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/leonardo/home/userexternal/ddarmien/cyc-firstpass/src/cyclone_locator/train.py", line 10, in <module>
+cannot import name 'x3d_s' from 'torchvision.models.video' (/leonardo/prod/build/libraries/cineca-ai/4.3.0/none/BA_WORK/cineca-ai-4.3.0/work-dir/000002/000000_cineca-ai/work/sources/vision/torchvision/models/video/__init__.py)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/leonardo/home/userexternal/ddarmien/cyc-firstpass/src/cyclone_locator/train.py", line 10, in <module>
+    from torchvision.models.video import (
+ImportError: cannot import name 'x3d_s' from 'torchvision.models.video' (/leonardo/prod/build/libraries/cineca-ai/4.3.0/none/BA_WORK/cineca-ai-4.3.0/work-dir/000002/000000_cineca-ai/work/sources/vision/torchvision/models/video/__init__.py)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/leonardo/home/userexternal/ddarmien/cyc-firstpass/src/cyclone_locator/train.py", line 10, in <module>
+    from cyclone_locator.models.x3d_backbone import X3DBackbone
+    from cyclone_locator.models.x3d_backbone import X3DBackbone
+    from cyclone_locator.models.x3d_backbone import X3DBackbone
+  File "/leonardo/home/userexternal/ddarmien/cyc-firstpass/src/cyclone_locator/models/x3d_backbone.py", line 13, in <module>
+  File "/leonardo/home/userexternal/ddarmien/cyc-firstpass/src/cyclone_locator/models/x3d_backbone.py", line 13, in <module>
+  File "/leonardo/home/userexternal/ddarmien/cyc-firstpass/src/cyclone_locator/models/x3d_backbone.py", line 13, in <module>
+    from cyclone_locator.models.x3d_backbone import X3DBackbone
+  File "/leonardo/home/userexternal/ddarmien/cyc-firstpass/src/cyclone_locator/models/x3d_backbone.py", line 13, in <module>
+    raise ImportError("torchvision with video models is required for X3D backbones") from exc
+ImportError: torchvision with video models is required for X3D backbones
+    raise ImportError("torchvision with video models is required for X3D backbones") from exc
+    raise ImportError("torchvision with video models is required for X3D backbones") from exc
+ImportError: torchvision with video models is required for X3D backbones
+ImportError: torchvision with video models is required for X3D backbones
+    raise ImportError("torchvision with video models is required for X3D backbones") from exc
+ImportError: torchvision with video models is required for X3D backbones
+--------------------------------------------------------------------------
+Primary job  terminated normally, but 1 process returned
+a non-zero exit code. Per user-direction, the job has been aborted.
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+mpirun detected that one or more processes exited with non-zero status, thus causing
+the job to be terminated. The first process to do so was:
+
+  Process name: [[43556,1],5]
+  Exit code:    1
+--------------------------------------------------------------------------
