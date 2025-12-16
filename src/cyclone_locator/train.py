@@ -409,7 +409,8 @@ def main():
             model,
             device_ids=[local_rank] if device.type == "cuda" else None,
             output_device=local_rank if device.type == "cuda" else None,
-            broadcast_buffers=False
+            broadcast_buffers=False,
+            find_unused_parameters=presence_from_peak  # presence head non usata se si usa solo il picco
         )
     model_to_save = model.module if distributed else model
     input_key = "video" if getattr(model_to_save, "input_is_video", False) else "image"
