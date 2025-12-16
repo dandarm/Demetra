@@ -53,3 +53,32 @@ Logging metrics to outputs/runs/exp_x3d_7/training_log.csv
 [Epoch 10] elapsed: 34.0s
 [Epoch 11] train: L=0.0006 (hm=0.0006, pr=0.6963, peak=0.0329)
 [Epoch 11] elapsed: 21.8s
+[Epoch 12] train: L=0.0006 (hm=0.0006, pr=0.6963, peak=0.0325)
+          val:  L=0.0007 (hm=0.0007, pr=0.6932)
+[Epoch 12] saving BEST checkpoint to outputs/runs/exp_x3d_7/best.ckpt ...
+[Epoch 12] best checkpoint saved in 0.06s
+[Epoch 12] elapsed: 33.4s
+[Epoch 13] train: L=0.0006 (hm=0.0006, pr=0.6963, peak=0.0322)
+[Epoch 13] elapsed: 23.4s
+[Epoch 14] train: L=0.0006 (hm=0.0006, pr=0.6962, peak=0.0318)
+          val:  L=0.0007 (hm=0.0007, pr=0.6932)
+[Epoch 14] saving BEST checkpoint to outputs/runs/exp_x3d_7/best.ckpt ...
+[Epoch 14] best checkpoint saved in 0.06s
+[Epoch 14] elapsed: 34.0s
+[Epoch 15] train: L=0.0006 (hm=0.0006, pr=0.6962, peak=0.0315)
+[Epoch 15] elapsed: 22.8s
+[Epoch 16] train: L=0.0006 (hm=0.0006, pr=0.6962, peak=0.0312)
+          val:  L=0.0007 (hm=0.0007, pr=0.6932)
+[Epoch 16] saving BEST checkpoint to outputs/runs/exp_x3d_7/best.ckpt ...
+[Epoch 16] best checkpoint saved in 0.06s
+[Epoch 16] elapsed: 33.4s
+[Epoch 17] train: L=0.0006 (hm=0.0006, pr=0.6961, peak=0.0310)
+[Epoch 17] elapsed: 22.4s
+[Epoch 18] train: L=0.0006 (hm=0.0006, pr=0.6961, peak=0.0307)
+          val:  L=0.0007 (hm=0.0007, pr=0.6932)
+[Epoch 18] saving BEST checkpoint to outputs/runs/exp_x3d_7/best.ckpt ...
+[Epoch 18] best checkpoint saved in 0.06s
+[Epoch 18] elapsed: 34.5s
+[Epoch 19] train: L=0.0006 (hm=0.0006, pr=0.6961, peak=0.0304)
+[Epoch 19] elapsed: 22.3s
+[Epoch 20] train: L=0.0006 (hm=0.0006, pr=0.6960, peak=0.0301)
