@@ -14,3 +14,82 @@ Temporal window: T=5, stride=4
 Temporal window: T=5, stride=4
 Temporal window: T=5, stride=4
 Temporal window: T=5, stride=4
+[INFO] rank 0/16 device=cuda:0
+[INFO] batch_size per GPU=64 (global=1024)
+[INFO] lr scaled from 0.0005 to 0.008 for world_size=16
+Logging metrics to outputs/runs/exp_x3d_6/training_log.csv
+[Epoch 1] train: L=3.6089 (hm=3.6089, pr=0.0000, peak=2.7210)
+[Epoch 1] elapsed: 49.2s
+[Epoch 2] train: L=0.0698 (hm=0.0698, pr=0.0000, peak=0.6551)
+          val:  L=0.0503 (hm=0.0503, pr=0.0000)
+[Epoch 2] checkpoint skip: epoch < best_ckpt_start_epoch (5)
+[Epoch 2] elapsed: 55.7s
+[Epoch 3] train: L=0.0118 (hm=0.0118, pr=0.0000, peak=0.3470)
+[Epoch 3] elapsed: 22.9s
+[Epoch 4] train: L=0.0033 (hm=0.0033, pr=0.0000, peak=0.1507)
+          val:  L=0.0016 (hm=0.0016, pr=0.0000)
+[Epoch 4] checkpoint skip: epoch < best_ckpt_start_epoch (5)
+[Epoch 4] elapsed: 36.1s
+[Epoch 5] train: L=0.0011 (hm=0.0011, pr=0.0000, peak=0.0755)
+[Epoch 5] elapsed: 23.3s
+[Epoch 6] train: L=0.0007 (hm=0.0007, pr=0.0000, peak=0.0395)
+          val:  L=0.0008 (hm=0.0008, pr=0.0000)
+[Epoch 6] saving BEST checkpoint to outputs/runs/exp_x3d_6/best.ckpt ...
+[Epoch 6] best checkpoint saved in 0.06s
+[Epoch 6] elapsed: 36.3s
+[Epoch 7] train: L=0.0006 (hm=0.0006, pr=0.0000, peak=0.0332)
+[Epoch 7] elapsed: 23.7s
+[Epoch 8] train: L=0.0006 (hm=0.0006, pr=0.0000, peak=0.0325)
+          val:  L=0.0007 (hm=0.0007, pr=0.0000)
+[Epoch 8] saving BEST checkpoint to outputs/runs/exp_x3d_6/best.ckpt ...
+[Epoch 8] best checkpoint saved in 0.06s
+[Epoch 8] elapsed: 34.2s
+[Epoch 9] train: L=0.0006 (hm=0.0006, pr=0.0000, peak=0.0337)
+[Epoch 9] elapsed: 23.6s
+[Epoch 10] train: L=0.0006 (hm=0.0006, pr=0.0000, peak=0.0330)
+          val:  L=0.0007 (hm=0.0007, pr=0.0000)
+[Epoch 10] saving BEST checkpoint to outputs/runs/exp_x3d_6/best.ckpt ...
+[Epoch 10] best checkpoint saved in 0.06s
+[Epoch 10] elapsed: 35.6s
+[Epoch 11] train: L=0.0006 (hm=0.0006, pr=0.0000, peak=0.0329)
+[Epoch 11] elapsed: 22.9s
+[Epoch 12] train: L=0.0006 (hm=0.0006, pr=0.0000, peak=0.0325)
+          val:  L=0.0007 (hm=0.0007, pr=0.0000)
+[Epoch 12] saving BEST checkpoint to outputs/runs/exp_x3d_6/best.ckpt ...
+[Epoch 12] best checkpoint saved in 0.06s
+[Epoch 12] elapsed: 34.8s
+[Epoch 13] train: L=0.0006 (hm=0.0006, pr=0.0000, peak=0.0322)
+[Epoch 13] elapsed: 22.8s
+[Epoch 14] train: L=0.0006 (hm=0.0006, pr=0.0000, peak=0.0318)
+          val:  L=0.0007 (hm=0.0007, pr=0.0000)
+[Epoch 14] saving BEST checkpoint to outputs/runs/exp_x3d_6/best.ckpt ...
+[Epoch 14] best checkpoint saved in 0.06s
+[Epoch 14] elapsed: 34.5s
+[Epoch 15] train: L=0.0006 (hm=0.0006, pr=0.0000, peak=0.0315)
+[Epoch 15] elapsed: 22.8s
+[Epoch 16] train: L=0.0006 (hm=0.0006, pr=0.0000, peak=0.0312)
+          val:  L=0.0007 (hm=0.0007, pr=0.0000)
+[Epoch 16] saving BEST checkpoint to outputs/runs/exp_x3d_6/best.ckpt ...
+[Epoch 16] best checkpoint saved in 0.06s
+[Epoch 16] elapsed: 34.1s
+[Epoch 17] train: L=0.0006 (hm=0.0006, pr=0.0000, peak=0.0310)
+[Epoch 17] elapsed: 22.7s
+[Epoch 18] train: L=0.0006 (hm=0.0006, pr=0.0000, peak=0.0307)
+          val:  L=0.0007 (hm=0.0007, pr=0.0000)
+[Epoch 18] saving BEST checkpoint to outputs/runs/exp_x3d_6/best.ckpt ...
+[Epoch 18] best checkpoint saved in 0.06s
+[Epoch 18] elapsed: 34.8s
+[Epoch 19] train: L=0.0006 (hm=0.0006, pr=0.0000, peak=0.0304)
+[Epoch 19] elapsed: 22.4s
+[Epoch 20] train: L=0.0006 (hm=0.0006, pr=0.0000, peak=0.0301)
+          val:  L=0.0007 (hm=0.0007, pr=0.0000)
+[Epoch 20] saving BEST checkpoint to outputs/runs/exp_x3d_6/best.ckpt ...
+[Epoch 20] best checkpoint saved in 0.06s
+[Epoch 20] elapsed: 35.2s
+[Epoch 21] train: L=0.0006 (hm=0.0006, pr=0.0000, peak=0.0299)
+[Epoch 21] elapsed: 24.7s
+[Epoch 22] train: L=0.0006 (hm=0.0006, pr=0.0000, peak=0.0296)
+          val:  L=0.0007 (hm=0.0007, pr=0.0000)
+[Epoch 22] saving BEST checkpoint to outputs/runs/exp_x3d_6/best.ckpt ...
+[Epoch 22] best checkpoint saved in 0.06s
+[Epoch 22] elapsed: 35.4s
