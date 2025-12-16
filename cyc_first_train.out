@@ -14,7 +14,3 @@ Temporal window: T=5, stride=4
 Temporal window: T=5, stride=4
 Temporal window: T=5, stride=4
 Temporal window: T=5, stride=4
-[INFO] rank 0/16 device=cuda:0
-[INFO] batch_size per GPU=64 (global=1024)
-[INFO] lr scaled from 0.0005 to 0.008 for world_size=16
-Logging metrics to outputs/runs/exp_x3d_6/training_log.csv
