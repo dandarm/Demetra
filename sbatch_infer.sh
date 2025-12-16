@@ -17,7 +17,7 @@ source $HOME/videomae/bin/activate
 
 export PYTHONUNBUFFERED=1
 
-OUT_DIR="outputs/runs/exp_x3d_5"
+OUT_DIR="outputs/runs/exp_x3d_6"
 
 CONFIG_PATH="config/default.yml"
 LETTERBOX_META="manifests/letterbox_meta.csv"
@@ -31,7 +31,7 @@ ROI_BASE_RADIUS_PX="128"
 ROI_SIGMA_MULTIPLIER="2.0"
 PRESENCE_FROM_PEAK="true"
 BACKBONE="x3d_xs"
-PEAK_THRESHOLD="0.15"
+PEAK_THRESHOLD=""
 
 CHECKPOINT_PATH="$OUT_DIR/best.ckpt"
 MANIFEST_CSV="manifests/test.csv"
