@@ -155,9 +155,13 @@ def evaluate_loader(model, loader, hm_loss, amp_enabled, loss_weights, device, r
                 weight = pos_mask + neg_mult * neg_mask
                 L_hm = (hm_per * weight).sum() / torch.clamp(weight.sum(), min=1.0)
                 if presence_from_peak:
-                    L_pr = torch.tensor(0.0, device=device, dtype=hm_p.dtype)
-                    comb_prob = torch.clamp(hm_p.amax(dim=[-1, -2]), 1e-6, 1 - 1e-6)
-                    L_pr_comb = nn.functional.binary_cross_entropy(comb_prob, pres_smooth.view_as(comb_prob)) if log_combined_presence else torch.tensor(0.0, device=device)
+                    peak = hm_p.amax(dim=[-1, -2])
+                    peak_prob = torch.sigmoid(peak)
+                    L_pr = nn.functional.binary_cross_entropy(peak_prob, pres_smooth.view_as(peak_prob))
+                    if log_combined_presence:
+                        L_pr_comb = nn.functional.binary_cross_entropy(peak_prob, pres_smooth.view_as(peak_prob))
+                    else:
+                        L_pr_comb = torch.tensor(0.0, device=device)
                 else:
                     L_pr = presence_loss_fn(pres_logit, pres_smooth) if presence_loss_fn else bce_logits(pres_logit, pres_smooth)
                     if log_combined_presence:
@@ -495,8 +499,9 @@ def main():
                     weight = pos_mask + neg_mult * neg_mask
                     L_hm = (hm_per * weight).sum() / torch.clamp(weight.sum(), min=1.0)
                     if presence_from_peak:
-                        # salta la head presence: perdita nulla, presence logit non usato
-                        L_pr = torch.tensor(0.0, device=device, dtype=L_hm.dtype)
+                        peak = hm_p.amax(dim=[-1, -2])
+                        peak_prob = torch.sigmoid(peak)
+                        L_pr = nn.functional.binary_cross_entropy(peak_prob, pres_smooth.view_as(peak_prob))
                     else:
                         L_pr = presence_loss_fn(pres_logit, pres_smooth)
                     _, _, L = combine_losses(L_hm, L_pr, loss_weights)
