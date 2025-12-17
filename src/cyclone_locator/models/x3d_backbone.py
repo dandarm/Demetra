@@ -3,10 +3,18 @@ from pathlib import Path
 import torch
 import torch.nn as nn
 
-try:
-    from pytorchvideo.models.hub import x3d_s, x3d_xs
-except ImportError as exc:  # pragma: no cover - handled at runtime
-    raise ImportError("pytorchvideo is required for X3D backbones (install pytorchvideo>=0.1).") from exc
+def _get_x3d_builders():
+    try:
+        from pytorchvideo.models.hub import x3d_s, x3d_xs
+        try:
+            from pytorchvideo.models.hub import x3d_m  # type: ignore
+        except ImportError:  # pragma: no cover - depends on pytorchvideo version
+            x3d_m = None
+    except ImportError as exc:  # pragma: no cover - handled at runtime
+        raise ImportError(
+            "pytorchvideo is required for X3D backbones (install pytorchvideo>=0.1)."
+        ) from exc
+    return x3d_xs, x3d_s, x3d_m
 
 
 def _load_local_checkpoint(base: nn.Module, weights_path: Path):
@@ -22,6 +30,10 @@ def _resolve_weights_path(variant: str, weights_path: str | None):
     root-level checkpoint matching the variant.
     """
     if weights_path == "auto":
+        if variant == "x3d_m":
+            candidate = Path(__file__).resolve().parents[3] / "X3D_M.pyth"
+            if candidate.exists():
+                return candidate
         if variant == "x3d_xs":
             candidate = Path(__file__).resolve().parents[3] / "X3D_XS.pyth"
             if candidate.exists():
@@ -32,6 +44,7 @@ def _resolve_weights_path(variant: str, weights_path: str | None):
 
 def _build_backbone(variant: str, pretrained: bool, weights_path: str | None):
     resolved_path = _resolve_weights_path(variant, weights_path)
+    x3d_xs, x3d_s, x3d_m = _get_x3d_builders()
 
     if variant == "x3d_xs":
         base = x3d_xs(pretrained=pretrained and resolved_path is None)
@@ -41,8 +54,16 @@ def _build_backbone(variant: str, pretrained: bool, weights_path: str | None):
         base = x3d_s(pretrained=pretrained and resolved_path is None)
         if resolved_path:
             _load_local_checkpoint(base, resolved_path)
+    elif variant == "x3d_m":
+        if x3d_m is None:  # pragma: no cover - depends on pytorchvideo version
+            raise ImportError(
+                "Your pytorchvideo installation does not expose x3d_m; upgrade pytorchvideo."
+            )
+        base = x3d_m(pretrained=pretrained and resolved_path is None)
+        if resolved_path:
+            _load_local_checkpoint(base, resolved_path)
     else:
-        raise ValueError("variant must be x3d_xs|x3d_s")
+        raise ValueError("variant must be x3d_xs|x3d_s|x3d_m")
 
     # Drop the classification head and keep only the feature extractor blocks.
     stem = nn.Sequential(*list(base.blocks[:-1]))

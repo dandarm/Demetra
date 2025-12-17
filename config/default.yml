@@ -9,13 +9,13 @@ data:
   cy_col: cy
 
   use_pre_letterboxed: true
-  letterbox_meta_csv: letterbox_meta.csv  # prodotto dallo script
-  letterbox_size_assert: 384   # per sicurezza: deve coincidere con out_size nel CSV
+  letterbox_meta_csv: manifests/letterbox_meta.csv  # prodotto dallo script
+  letterbox_size_assert: 224   # per sicurezza: deve coincidere con out_size nel CSV
 
 train:
-  image_size: 384
+  image_size: 224
   batch_size: 64   # per GPU; global = batch_size * world_size
-  num_workers: 0
+  num_workers: 30
   dataloader_timeout_s: 60   # >0 per evitare deadlock: solleva eccezione se il dataloader si blocca
   persistent_workers: true   # disattiva (false) se sospetti deadlock dei worker tra le epoche
   epochs: 30
@@ -27,12 +27,12 @@ train:
   save_dir: checkpoints
   val_every: 2
   best_ckpt_start_epoch: 5
-  backbone: resnet18        # resnet18|resnet50|x3d_xs|x3d_s
+  backbone: x3d_m        # resnet18|resnet50|x3d_xs|x3d_s|x3d_m
   backbone_pretrained: true # usa pesi pre-addestrati per il backbone
   heatmap_stride: 4         # output 128x128 quando input 512
   use_aug: false            # puoi mettere true se serve
-  temporal_T: 5             # numero di frame temporali (early fusion canali)
-  temporal_stride: 6        # salto tra frame temporali (>=1)
+  temporal_T: 16             # numero di frame temporali (early fusion canali)
+  temporal_stride: 4        # salto tra frame temporali (>=1)
   presence_dropout: 0.2     # dropout tra GAP e FC della testa presenza
   presence_from_peak: true # se true, usa solo il picco heatmap per la presenza (head disattivata)
 

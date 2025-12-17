@@ -76,13 +76,18 @@ class MedFullBasinDataset(Dataset):
 
     def _meta_for_path_abs(self, abs_path: str) -> dict:
         if self.letterboxed_manifest:
-            return dict(scale=1.0, pad_x=0.0, pad_y=0.0,
+            return dict(scale=1.0, scale_x=1.0, scale_y=1.0, pad_x=0.0, pad_y=0.0,
                         out_size=self.image_size, orig_w=self.image_size, orig_h=self.image_size)
         if self.use_pre_lb:
             r = self.meta_map.get(abs_path, None)
             if r is None:
                 raise KeyError(f"no letterbox meta for {abs_path}")
-            return dict(scale=float(r["scale"]),
+            scale = float(r["scale"])
+            scale_x = float(r["scale_x"]) if "scale_x" in r else scale
+            scale_y = float(r["scale_y"]) if "scale_y" in r else scale
+            return dict(scale=scale,
+                        scale_x=scale_x,
+                        scale_y=scale_y,
                         pad_x=float(r["pad_x"]),
                         pad_y=float(r["pad_y"]),
                         out_size=int(r["out_size"]),
@@ -207,7 +212,12 @@ class MedFullBasinDataset(Dataset):
         img = cv2.imread(r["resized_path"], cv2.IMREAD_UNCHANGED)
         if img is None:
             raise FileNotFoundError(r["resized_path"])
-        meta = dict(scale=float(r["scale"]),
+        scale = float(r["scale"])
+        scale_x = float(r["scale_x"]) if "scale_x" in r else scale
+        scale_y = float(r["scale_y"]) if "scale_y" in r else scale
+        meta = dict(scale=scale,
+                    scale_x=scale_x,
+                    scale_y=scale_y,
                     pad_x=float(r["pad_x"]),
                     pad_y=float(r["pad_y"]),
                     out_size=int(r["out_size"]),
@@ -217,8 +227,10 @@ class MedFullBasinDataset(Dataset):
 
     @staticmethod
     def _forward_map_xy(x_orig, y_orig, meta):
-        xg = meta["scale"] * x_orig + meta["pad_x"]
-        yg = meta["scale"] * y_orig + meta["pad_y"]
+        sx = float(meta.get("scale_x", meta["scale"]))
+        sy = float(meta.get("scale_y", meta["scale"]))
+        xg = sx * x_orig + meta["pad_x"]
+        yg = sy * y_orig + meta["pad_y"]
         return xg, yg
 
     def _load_letterboxed(self, abs_path):
@@ -226,7 +238,7 @@ class MedFullBasinDataset(Dataset):
             lb = cv2.imread(abs_path, cv2.IMREAD_UNCHANGED)
             if lb is None:
                 raise FileNotFoundError(abs_path)
-            meta = dict(scale=1.0, pad_x=0.0, pad_y=0.0,
+            meta = dict(scale=1.0, scale_x=1.0, scale_y=1.0, pad_x=0.0, pad_y=0.0,
                         out_size=self.image_size, orig_w=self.image_size, orig_h=self.image_size)
         elif self.use_pre_lb:
             lb, meta = self._load_resized_and_meta(abs_path)
@@ -316,6 +328,8 @@ class MedFullBasinDataset(Dataset):
             "presence": torch.tensor([presence_prob], dtype=torch.float32),
             # meta serve solo in inferenza; in training teniamo lo stretto necessario
             "meta_scale": meta["scale"],
+            "meta_scale_x": meta.get("scale_x", meta["scale"]),
+            "meta_scale_y": meta.get("scale_y", meta["scale"]),
             "meta_pad_x": meta["pad_x"],
             "meta_pad_y": meta["pad_y"],
             "orig_w": meta["orig_w"],

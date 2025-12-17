@@ -25,11 +25,11 @@ VAL_CSV="manifests/val.csv"
 LOG_DIR="outputs/runs/exp_resnet_problabels_9"
 mkdir -p "$LOG_DIR"
 
-TEMPORAL_T="5"
-TEMPORAL_STRIDE="6" 
+TEMPORAL_T="16"
+TEMPORAL_STRIDE="4" 
 
 # Argomenti attivi per il nuovo modello 3D X3D
-BACKBONE="resnet18"  #"x3d_xs"
+BACKBONE="x3d_m"  #"x3d_xs"
 HEATMAP_NEG_MULT="1.0"
 
 #export NCCL_DEBUG=INFO

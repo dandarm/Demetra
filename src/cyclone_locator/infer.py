@@ -189,18 +189,28 @@ def load_manifest(manifest_csv: str, logger: logging.Logger) -> pd.DataFrame:
 
 
 def load_letterbox_meta(meta_csv: str) -> Dict[str, Dict[str, float]]:
-    required = {"orig_path", "resized_path", "scale", "pad_x", "pad_y", "orig_w", "orig_h", "out_size"}
+    required_base = {"orig_path", "resized_path", "pad_x", "pad_y", "orig_w", "orig_h", "out_size"}
     meta_df = pd.read_csv(meta_csv)
-    missing = required - set(meta_df.columns)
+    cols = set(meta_df.columns)
+    missing = required_base - cols
     if missing:
         raise ValueError(f"letterbox meta missing columns: {sorted(missing)}")
+    has_scale = "scale" in cols
+    has_scale_xy = {"scale_x", "scale_y"}.issubset(cols)
+    if not (has_scale or has_scale_xy):
+        raise ValueError("letterbox meta must include either 'scale' or ('scale_x' and 'scale_y')")
     base_dir = os.path.dirname(os.path.abspath(meta_csv))
     meta_map: Dict[str, Dict[str, float]] = {}
     for _, row in meta_df.iterrows():
+        scale_x = float(row["scale_x"]) if "scale_x" in row else float(row["scale"])
+        scale_y = float(row["scale_y"]) if "scale_y" in row else float(row["scale"])
+        scale = float(row["scale"]) if "scale" in row and np.isfinite(row["scale"]) else float(scale_x)
         entry = {
             "orig_path": normalize_path(row["orig_path"], base_dir),
             "resized_path": normalize_path(row["resized_path"], base_dir),
-            "scale": float(row["scale"]),
+            "scale": float(scale),  # legacy scalar (use scale_x/scale_y for non-uniform resizes)
+            "scale_x": float(scale_x),
+            "scale_y": float(scale_y),
             "pad_x": float(row["pad_x"]),
             "pad_y": float(row["pad_y"]),
             "orig_w": int(row["orig_w"]),
@@ -213,8 +223,10 @@ def load_letterbox_meta(meta_csv: str) -> Dict[str, Dict[str, float]]:
 
 
 def _convert_letterbox_to_original(x_lb: float, y_lb: float, meta: Dict[str, float]) -> Tuple[float, float]:
-    x_orig = (x_lb - meta["pad_x"]) / meta["scale"]
-    y_orig = (y_lb - meta["pad_y"]) / meta["scale"]
+    sx = float(meta.get("scale_x", meta["scale"]))
+    sy = float(meta.get("scale_y", meta["scale"]))
+    x_orig = (x_lb - meta["pad_x"]) / sx
+    y_orig = (y_lb - meta["pad_y"]) / sy
     return float(x_orig), float(y_orig)
 
 
