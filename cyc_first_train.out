@@ -100,3 +100,23 @@ Logging metrics to outputs/runs/exp_resnet_problabels_9/training_log.csv
 [Epoch 24] elapsed: 32.0s
 [Epoch 25] train: L=0.0006 (hm=0.0006, pr=0.6945, peak=0.0101)
 [Epoch 25] elapsed: 19.4s
+[Epoch 26] train: L=0.0006 (hm=0.0006, pr=0.6944, peak=0.0095)
+          val:  L=0.0007 (hm=0.0007, pr=0.6933)
+[Epoch 26] saving BEST checkpoint to outputs/runs/exp_resnet_problabels_9/best.ckpt ...
+[Epoch 26] best checkpoint saved in 0.18s
+[Epoch 26] elapsed: 32.0s
+[Epoch 27] train: L=0.0006 (hm=0.0006, pr=0.6944, peak=0.0093)
+[Epoch 27] elapsed: 19.4s
+[Epoch 28] train: L=0.0006 (hm=0.0006, pr=0.6944, peak=0.0089)
+          val:  L=0.0007 (hm=0.0007, pr=0.6933)
+[Epoch 28] saving BEST checkpoint to outputs/runs/exp_resnet_problabels_9/best.ckpt ...
+[Epoch 28] best checkpoint saved in 0.08s
+[Epoch 28] elapsed: 32.0s
+[Epoch 29] train: L=0.0006 (hm=0.0006, pr=0.6944, peak=0.0088)
+[Epoch 29] elapsed: 19.4s
+[Epoch 30] train: L=0.0006 (hm=0.0006, pr=0.6943, peak=0.0084)
+          val:  L=0.0007 (hm=0.0007, pr=0.6933)
+[Epoch 30] saving BEST checkpoint to outputs/runs/exp_resnet_problabels_9/best.ckpt ...
+[Epoch 30] best checkpoint saved in 0.09s
+[Epoch 30] elapsed: 31.9s
+Done. Best: outputs/runs/exp_resnet_problabels_9/best.ckpt
