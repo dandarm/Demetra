@@ -22,14 +22,14 @@ export PYTHONUNBUFFERED=1
 CONFIG="config/default.yml"
 TRAIN_CSV="manifests/train.csv"
 VAL_CSV="manifests/val.csv"
-LOG_DIR="outputs/runs/exp_x3d_8_problabels"
+LOG_DIR="outputs/runs/exp_resnet_problabels_9"
 mkdir -p "$LOG_DIR"
 
 TEMPORAL_T="5"
-TEMPORAL_STRIDE="4" 
+TEMPORAL_STRIDE="6" 
 
 # Argomenti attivi per il nuovo modello 3D X3D
-BACKBONE="x3d_xs"
+BACKBONE="resnet18"  #"x3d_xs"
 HEATMAP_NEG_MULT="1.0"
 
 #export NCCL_DEBUG=INFO
