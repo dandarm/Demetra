@@ -17,9 +17,14 @@ source $HOME/videomae/bin/activate
 export PYTHONUNBUFFERED=1
 export OMP_NUM_THREADS="${SLURM_CPUS_PER_TASK:-1}"
 
-# Stessi parametri di make_letterboxed_copies.sh (modifica qui se serve)
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-cd "$SCRIPT_DIR"
+# Nota: nei job Slurm lo script viene copiato in `/var/spool/...`, quindi
+# `BASH_SOURCE[0]` non punta al repo. Usiamo la submit dir come root del repo.
+REPO_DIR="${SLURM_SUBMIT_DIR:-$PWD}"
+cd "$REPO_DIR"
+if [[ ! -d "scripts" ]]; then
+  echo "ERROR: directory 'scripts/' non trovata in $(pwd). Lancia 'sbatch' dalla root del repo (o imposta SLURM_SUBMIT_DIR correttamente)." >&2
+  exit 2
+fi
 
 WINDOWS_CSV="mini_data_input/medicanes_new_windows.csv"
 SRC_DIR="/media/fenrir/disk1/danieleda/download_EUMETSAT_data/from_gcloud"
@@ -62,4 +67,3 @@ srun python -u scripts/make_letterboxed_copies.py \
   --buffer-hours "$BUFFER_HOURS" \
   --workers "$WORKERS" \
   "${EXTRA_ARGS[@]}"
-
