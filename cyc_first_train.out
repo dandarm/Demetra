@@ -93,3 +93,32 @@ Logging metrics to outputs/runs/exp_x3dm_heatmapfocal/training_log.csv
 [Epoch 20] elapsed: 78.7s
 [Epoch 21] train: L=0.0021 (hm=0.0021, pr=0.4097, peak=-1.1753)
 [Epoch 21] elapsed: 51.2s
+[Epoch 22] train: L=0.0021 (hm=0.0021, pr=0.4060, peak=-1.2112)
+          val:  L=0.0100 (hm=0.0100, pr=0.7336)
+[Epoch 22] no val improvement (0.0100 >= 0.0082); checkpoint not saved
+[Epoch 22] elapsed: 75.8s
+[Epoch 23] train: L=0.0021 (hm=0.0021, pr=0.4023, peak=-1.2417)
+[Epoch 23] elapsed: 51.8s
+[Epoch 24] train: L=0.0021 (hm=0.0021, pr=0.4007, peak=-1.2603)
+          val:  L=0.0106 (hm=0.0106, pr=0.7209)
+[Epoch 24] no val improvement (0.0106 >= 0.0082); checkpoint not saved
+[Epoch 24] elapsed: 79.4s
+[Epoch 25] train: L=0.0021 (hm=0.0021, pr=0.3987, peak=-1.2785)
+[Epoch 25] elapsed: 52.1s
+[Epoch 26] train: L=0.0020 (hm=0.0020, pr=0.3965, peak=-1.2971)
+          val:  L=0.0092 (hm=0.0092, pr=0.7239)
+[Epoch 26] no val improvement (0.0092 >= 0.0082); checkpoint not saved
+[Epoch 26] elapsed: 75.0s
+[Epoch 27] train: L=0.0020 (hm=0.0020, pr=0.3958, peak=-1.2964)
+[Epoch 27] elapsed: 51.3s
+[Epoch 28] train: L=0.0020 (hm=0.0020, pr=0.3932, peak=-1.3059)
+          val:  L=0.0091 (hm=0.0091, pr=0.7259)
+[Epoch 28] no val improvement (0.0091 >= 0.0082); checkpoint not saved
+[Epoch 28] elapsed: 68.9s
+[Epoch 29] train: L=0.0020 (hm=0.0020, pr=0.3916, peak=-1.3190)
+[Epoch 29] elapsed: 53.1s
+[Epoch 30] train: L=0.0020 (hm=0.0020, pr=0.3899, peak=-1.3430)
+          val:  L=0.0092 (hm=0.0092, pr=0.7196)
+[Epoch 30] no val improvement (0.0092 >= 0.0082); checkpoint not saved
+[Epoch 30] elapsed: 69.9s
+Done. Best: outputs/runs/exp_x3dm_heatmapfocal/best.ckpt
