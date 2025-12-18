@@ -27,8 +27,8 @@ if [[ ! -d "scripts" ]]; then
 fi
 
 WINDOWS_CSV="mini_data_input/medicanes_new_windows.csv"
-SRC_DIR="/media/fenrir/disk1/danieleda/download_EUMETSAT_data/from_gcloud"
-OUT_DIR="/media/fenrir/disk1/danieleda/resized-stretched"
+SRC_DIR="/leonardo_scratch/fast/IscrC_SAME-D/Medicanes_Data/from_gcloud"
+OUT_DIR="/leonardo_scratch/fast/IscrC_SAME-D/Medicanes_Data/from_gcloud/resized-stretched"
 META_CSV="manifests/letterbox_meta.csv"
 IMAGE_SIZE="224"
 RESIZE_MODE="stretch" # letterbox|stretch

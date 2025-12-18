@@ -1,122 +1,114 @@
-Temporal window: T=5, stride=6
-Temporal window: T=5, stride=6
-Temporal window: T=5, stride=6
-Temporal window: T=5, stride=6
-Temporal window: T=5, stride=6
-Temporal window: T=5, stride=6
-Temporal window: T=5, stride=6
-Temporal window: T=5, stride=6
-Temporal window: T=5, stride=6
-Temporal window: T=5, stride=6
-Temporal window: T=5, stride=6
-Temporal window: T=5, stride=6
-Temporal window: T=5, stride=6
-Temporal window: T=5, stride=6
-Temporal window: T=5, stride=6
-Temporal window: T=5, stride=6
+Temporal window: T=16, stride=4
+Temporal window: T=16, stride=4
+Temporal window: T=16, stride=4
+Temporal window: T=16, stride=4
+Temporal window: T=16, stride=4
+Temporal window: T=16, stride=4
+Temporal window: T=16, stride=4
+Temporal window: T=16, stride=4
+Temporal window: T=16, stride=4
+Temporal window: T=16, stride=4
+Temporal window: T=16, stride=4
+Temporal window: T=16, stride=4
+Temporal window: T=16, stride=4
+Temporal window: T=16, stride=4
+Temporal window: T=16, stride=4
+Temporal window: T=16, stride=4
 [INFO] rank 0/16 device=cuda:0
 [INFO] batch_size per GPU=64 (global=1024)
 [INFO] lr scaled from 0.0005 to 0.008 for world_size=16
-Logging metrics to outputs/runs/exp_resnet_problabels_9/training_log.csv
-[Epoch 1] train: L=3.2363 (hm=3.2363, pr=3.9086, peak=5.6729)
-[Epoch 1] elapsed: 45.7s
-[Epoch 2] train: L=0.0270 (hm=0.0270, pr=0.7180, peak=0.0490)
-          val:  L=9.7674 (hm=9.7674, pr=1.1463)
+Logging metrics to outputs/runs/exp_x3dm_1/training_log.csv
+[Epoch 1] train: L=3.5834 (hm=3.5834, pr=1.7869, peak=2.8091)
+[Epoch 1] elapsed: 64.0s
+[Epoch 2] train: L=0.0551 (hm=0.0551, pr=0.7480, peak=0.3184)
+          val:  L=0.1852 (hm=0.1852, pr=0.6903)
 [Epoch 2] checkpoint skip: epoch < best_ckpt_start_epoch (5)
-[Epoch 2] elapsed: 56.9s
-[Epoch 3] train: L=0.0046 (hm=0.0046, pr=0.7587, peak=0.1897)
-[Epoch 3] elapsed: 19.3s
-[Epoch 4] train: L=0.0014 (hm=0.0014, pr=0.6975, peak=0.0217)
-          val:  L=0.0008 (hm=0.0008, pr=0.6936)
+[Epoch 2] elapsed: 79.5s
+[Epoch 3] train: L=0.0152 (hm=0.0152, pr=0.6935, peak=0.0475)
+[Epoch 3] elapsed: 38.2s
+[Epoch 4] train: L=0.0037 (hm=0.0037, pr=0.6916, peak=0.0568)
+          val:  L=0.4501 (hm=0.4501, pr=0.6177)
 [Epoch 4] checkpoint skip: epoch < best_ckpt_start_epoch (5)
-[Epoch 4] elapsed: 31.5s
-[Epoch 5] train: L=0.0008 (hm=0.0008, pr=0.7029, peak=0.0463)
-[Epoch 5] elapsed: 19.3s
-[Epoch 6] train: L=0.0006 (hm=0.0006, pr=0.6956, peak=0.0214)
-          val:  L=0.0007 (hm=0.0007, pr=0.6936)
-[Epoch 6] saving BEST checkpoint to outputs/runs/exp_resnet_problabels_9/best.ckpt ...
-[Epoch 6] best checkpoint saved in 0.08s
-[Epoch 6] elapsed: 31.5s
-[Epoch 7] train: L=0.0006 (hm=0.0006, pr=0.6962, peak=0.0233)
-[Epoch 7] elapsed: 18.9s
-[Epoch 8] train: L=0.0006 (hm=0.0006, pr=0.6954, peak=0.0202)
-          val:  L=0.0007 (hm=0.0007, pr=0.6934)
-[Epoch 8] saving BEST checkpoint to outputs/runs/exp_resnet_problabels_9/best.ckpt ...
-[Epoch 8] best checkpoint saved in 0.08s
-[Epoch 8] elapsed: 32.0s
-[Epoch 9] train: L=0.0006 (hm=0.0006, pr=0.6954, peak=0.0201)
-[Epoch 9] elapsed: 19.1s
-[Epoch 10] train: L=0.0006 (hm=0.0006, pr=0.6953, peak=0.0189)
-          val:  L=0.0007 (hm=0.0007, pr=0.6934)
-[Epoch 10] saving BEST checkpoint to outputs/runs/exp_resnet_problabels_9/best.ckpt ...
-[Epoch 10] best checkpoint saved in 0.08s
-[Epoch 10] elapsed: 31.8s
-[Epoch 11] train: L=0.0006 (hm=0.0006, pr=0.6951, peak=0.0179)
-[Epoch 11] elapsed: 22.5s
-[Epoch 12] train: L=0.0006 (hm=0.0006, pr=0.6951, peak=0.0179)
-          val:  L=0.0007 (hm=0.0007, pr=0.6934)
-[Epoch 12] saving BEST checkpoint to outputs/runs/exp_resnet_problabels_9/best.ckpt ...
-[Epoch 12] best checkpoint saved in 0.08s
-[Epoch 12] elapsed: 32.1s
-[Epoch 13] train: L=0.0006 (hm=0.0006, pr=0.6951, peak=0.0166)
-[Epoch 13] elapsed: 19.3s
-[Epoch 14] train: L=0.0006 (hm=0.0006, pr=0.6950, peak=0.0158)
-          val:  L=0.0007 (hm=0.0007, pr=0.6934)
-[Epoch 14] saving BEST checkpoint to outputs/runs/exp_resnet_problabels_9/best.ckpt ...
-[Epoch 14] best checkpoint saved in 0.08s
-[Epoch 14] elapsed: 31.8s
-[Epoch 15] train: L=0.0006 (hm=0.0006, pr=0.6949, peak=0.0153)
-[Epoch 15] elapsed: 19.5s
-[Epoch 16] train: L=0.0006 (hm=0.0006, pr=0.6949, peak=0.0143)
-          val:  L=0.0007 (hm=0.0007, pr=0.6934)
-[Epoch 16] saving BEST checkpoint to outputs/runs/exp_resnet_problabels_9/best.ckpt ...
-[Epoch 16] best checkpoint saved in 0.09s
-[Epoch 16] elapsed: 31.9s
-[Epoch 17] train: L=0.0006 (hm=0.0006, pr=0.6948, peak=0.0141)
-[Epoch 17] elapsed: 19.6s
-[Epoch 18] train: L=0.0006 (hm=0.0006, pr=0.6947, peak=0.0129)
-          val:  L=0.0007 (hm=0.0007, pr=0.6934)
-[Epoch 18] saving BEST checkpoint to outputs/runs/exp_resnet_problabels_9/best.ckpt ...
-[Epoch 18] best checkpoint saved in 0.08s
-[Epoch 18] elapsed: 33.1s
-[Epoch 19] train: L=0.0006 (hm=0.0006, pr=0.6947, peak=0.0129)
-[Epoch 19] elapsed: 19.1s
-[Epoch 20] train: L=0.0006 (hm=0.0006, pr=0.6947, peak=0.0127)
-          val:  L=0.0007 (hm=0.0007, pr=0.6934)
-[Epoch 20] no val improvement (0.0007 >= 0.0007); checkpoint not saved
-[Epoch 20] elapsed: 31.4s
-[Epoch 21] train: L=0.0006 (hm=0.0006, pr=0.6946, peak=0.0113)
-[Epoch 21] elapsed: 19.9s
-[Epoch 22] train: L=0.0006 (hm=0.0006, pr=0.6946, peak=0.0115)
-          val:  L=0.0007 (hm=0.0007, pr=0.6933)
-[Epoch 22] no val improvement (0.0007 >= 0.0007); checkpoint not saved
-[Epoch 22] elapsed: 34.8s
-[Epoch 23] train: L=0.0006 (hm=0.0006, pr=0.6945, peak=0.0105)
-[Epoch 23] elapsed: 19.6s
-[Epoch 24] train: L=0.0006 (hm=0.0006, pr=0.6944, peak=0.0103)
-          val:  L=0.0007 (hm=0.0007, pr=0.6933)
-[Epoch 24] saving BEST checkpoint to outputs/runs/exp_resnet_problabels_9/best.ckpt ...
-[Epoch 24] best checkpoint saved in 0.08s
-[Epoch 24] elapsed: 32.0s
-[Epoch 25] train: L=0.0006 (hm=0.0006, pr=0.6945, peak=0.0101)
-[Epoch 25] elapsed: 19.4s
-[Epoch 26] train: L=0.0006 (hm=0.0006, pr=0.6944, peak=0.0095)
-          val:  L=0.0007 (hm=0.0007, pr=0.6933)
-[Epoch 26] saving BEST checkpoint to outputs/runs/exp_resnet_problabels_9/best.ckpt ...
-[Epoch 26] best checkpoint saved in 0.18s
-[Epoch 26] elapsed: 32.0s
-[Epoch 27] train: L=0.0006 (hm=0.0006, pr=0.6944, peak=0.0093)
-[Epoch 27] elapsed: 19.4s
-[Epoch 28] train: L=0.0006 (hm=0.0006, pr=0.6944, peak=0.0089)
-          val:  L=0.0007 (hm=0.0007, pr=0.6933)
-[Epoch 28] saving BEST checkpoint to outputs/runs/exp_resnet_problabels_9/best.ckpt ...
-[Epoch 28] best checkpoint saved in 0.08s
-[Epoch 28] elapsed: 32.0s
-[Epoch 29] train: L=0.0006 (hm=0.0006, pr=0.6944, peak=0.0088)
-[Epoch 29] elapsed: 19.4s
-[Epoch 30] train: L=0.0006 (hm=0.0006, pr=0.6943, peak=0.0084)
-          val:  L=0.0007 (hm=0.0007, pr=0.6933)
-[Epoch 30] saving BEST checkpoint to outputs/runs/exp_resnet_problabels_9/best.ckpt ...
-[Epoch 30] best checkpoint saved in 0.09s
-[Epoch 30] elapsed: 31.9s
-Done. Best: outputs/runs/exp_resnet_problabels_9/best.ckpt
+[Epoch 4] elapsed: 57.3s
+[Epoch 5] train: L=0.0022 (hm=0.0022, pr=0.6906, peak=0.0473)
+[Epoch 5] elapsed: 37.4s
+[Epoch 6] train: L=0.0018 (hm=0.0018, pr=0.6935, peak=0.0242)
+          val:  L=0.0331 (hm=0.0331, pr=0.6241)
+[Epoch 6] saving BEST checkpoint to outputs/runs/exp_x3dm_1/best.ckpt ...
+[Epoch 6] best checkpoint saved in 0.06s
+[Epoch 6] elapsed: 56.8s
+[Epoch 7] train: L=0.0017 (hm=0.0017, pr=0.6939, peak=0.0249)
+[Epoch 7] elapsed: 38.6s
+[Epoch 8] train: L=0.0017 (hm=0.0017, pr=0.6940, peak=0.0254)
+          val:  L=0.0021 (hm=0.0021, pr=0.6930)
+[Epoch 8] saving BEST checkpoint to outputs/runs/exp_x3dm_1/best.ckpt ...
+[Epoch 8] best checkpoint saved in 0.06s
+[Epoch 8] elapsed: 56.7s
+[Epoch 9] train: L=0.0016 (hm=0.0016, pr=0.6931, peak=0.0256)
+[Epoch 9] elapsed: 37.5s
+[Epoch 10] train: L=0.0016 (hm=0.0016, pr=0.6920, peak=0.0255)
+          val:  L=0.0021 (hm=0.0021, pr=0.6929)
+[Epoch 10] saving BEST checkpoint to outputs/runs/exp_x3dm_1/best.ckpt ...
+[Epoch 10] best checkpoint saved in 0.06s
+[Epoch 10] elapsed: 56.9s
+[Epoch 11] train: L=0.0016 (hm=0.0016, pr=0.6909, peak=0.0294)
+[Epoch 11] elapsed: 37.2s
+[Epoch 12] train: L=0.0015 (hm=0.0015, pr=0.6892, peak=0.0299)
+          val:  L=0.0021 (hm=0.0021, pr=0.6932)
+[Epoch 12] no val improvement (0.0021 >= 0.0021); checkpoint not saved
+[Epoch 12] elapsed: 55.4s
+[Epoch 13] train: L=0.0015 (hm=0.0015, pr=0.6880, peak=0.0287)
+[Epoch 13] elapsed: 38.5s
+[Epoch 14] train: L=0.0015 (hm=0.0015, pr=0.6873, peak=0.0286)
+          val:  L=0.0021 (hm=0.0021, pr=0.6930)
+[Epoch 14] no val improvement (0.0021 >= 0.0021); checkpoint not saved
+[Epoch 14] elapsed: 60.7s
+[Epoch 15] train: L=0.0015 (hm=0.0015, pr=0.6866, peak=0.0284)
+[Epoch 15] elapsed: 38.6s
+[Epoch 16] train: L=0.0015 (hm=0.0015, pr=0.6863, peak=0.0292)
+          val:  L=0.0021 (hm=0.0021, pr=0.6931)
+[Epoch 16] no val improvement (0.0021 >= 0.0021); checkpoint not saved
+[Epoch 16] elapsed: 60.3s
+[Epoch 17] train: L=0.0015 (hm=0.0015, pr=0.6859, peak=0.0288)
+[Epoch 17] elapsed: 38.6s
+[Epoch 18] train: L=0.0015 (hm=0.0015, pr=0.6857, peak=0.0291)
+          val:  L=0.0021 (hm=0.0021, pr=0.6931)
+[Epoch 18] no val improvement (0.0021 >= 0.0021); checkpoint not saved
+[Epoch 18] elapsed: 56.4s
+[Epoch 19] train: L=0.0015 (hm=0.0015, pr=0.6853, peak=0.0297)
+[Epoch 19] elapsed: 38.3s
+[Epoch 20] train: L=0.0015 (hm=0.0015, pr=0.6849, peak=0.0299)
+          val:  L=0.0021 (hm=0.0021, pr=0.6927)
+[Epoch 20] no val improvement (0.0021 >= 0.0021); checkpoint not saved
+[Epoch 20] elapsed: 56.7s
+[Epoch 21] train: L=0.0015 (hm=0.0015, pr=0.6849, peak=0.0308)
+[Epoch 21] elapsed: 39.0s
+[Epoch 22] train: L=0.0015 (hm=0.0015, pr=0.6848, peak=0.0318)
+          val:  L=0.0021 (hm=0.0021, pr=0.6931)
+[Epoch 22] no val improvement (0.0021 >= 0.0021); checkpoint not saved
+[Epoch 22] elapsed: 56.6s
+[Epoch 23] train: L=0.0014 (hm=0.0014, pr=0.6844, peak=0.0322)
+[Epoch 23] elapsed: 37.1s
+[Epoch 24] train: L=0.0014 (hm=0.0014, pr=0.6843, peak=0.0336)
+          val:  L=0.0021 (hm=0.0021, pr=0.6931)
+[Epoch 24] no val improvement (0.0021 >= 0.0021); checkpoint not saved
+[Epoch 24] elapsed: 60.0s
+[Epoch 25] train: L=0.0014 (hm=0.0014, pr=0.6840, peak=0.0348)
+[Epoch 25] elapsed: 37.4s
+[Epoch 26] train: L=0.0014 (hm=0.0014, pr=0.6836, peak=0.0358)
+          val:  L=0.0021 (hm=0.0021, pr=0.6927)
+[Epoch 26] no val improvement (0.0021 >= 0.0021); checkpoint not saved
+[Epoch 26] elapsed: 56.6s
+[Epoch 27] train: L=0.0014 (hm=0.0014, pr=0.6830, peak=0.0367)
+[Epoch 27] elapsed: 43.5s
+[Epoch 28] train: L=0.0014 (hm=0.0014, pr=0.6825, peak=0.0373)
+          val:  L=0.0021 (hm=0.0021, pr=0.6931)
+[Epoch 28] no val improvement (0.0021 >= 0.0021); checkpoint not saved
+[Epoch 28] elapsed: 56.4s
+[Epoch 29] train: L=0.0014 (hm=0.0014, pr=0.6821, peak=0.0385)
+[Epoch 29] elapsed: 38.4s
+[Epoch 30] train: L=0.0014 (hm=0.0014, pr=0.6817, peak=0.0397)
+          val:  L=0.0021 (hm=0.0021, pr=0.6932)
+[Epoch 30] no val improvement (0.0021 >= 0.0021); checkpoint not saved
+[Epoch 30] elapsed: 56.9s
+Done. Best: outputs/runs/exp_x3dm_1/best.ckpt
