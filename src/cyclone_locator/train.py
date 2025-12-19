@@ -1,4 +1,5 @@
 import os, argparse, yaml, time, csv, random
+from contextlib import nullcontext
 import numpy as np
 import torch, torch.nn as nn
 import torch.distributed as dist
@@ -33,6 +34,7 @@ def parse_args():
     ap.add_argument("--lr", type=float)
     ap.add_argument("--log_dir")
     ap.add_argument("--best_ckpt_start_epoch", type=int)
+    ap.add_argument("--grad_accum_steps", type=int, help="Gradient accumulation steps (effective batch = bs * steps)")
     ap.add_argument("--num_workers", type=int, help="Override dataloader workers (use 0 to debug NCCL stalls)")
     ap.add_argument("--dataloader_timeout_s", type=int, help="Timeout (s) for DataLoader get_batch to avoid deadlocks")
     ap.add_argument("--persistent_workers", type=int, choices=[0,1], help="Set persistent_workers (1=keep workers alive between epochs)")
@@ -80,6 +82,47 @@ def focal_loss_with_logits(logits, targets, gamma: float = 2.0, alpha: float = N
         alpha_t = alpha * targets + (1 - alpha) * (1 - targets)
         ce = ce * alpha_t
     return (focal_factor * ce).mean()
+
+def estimate_conv3d_max_batch(model: nn.Module, temporal_T: int, image_size: int, device: torch.device) -> int | None:
+    """Estimate max per-process batch size before Conv3d hits int32 indexing limits.
+
+    PyTorch can raise `RuntimeError: Input tensor is too large.` inside conv3d when
+    intermediate activation tensors exceed ~2^31 elements (implementation-dependent).
+
+    Returns:
+        An integer batch size limit, or None if the model has no Conv3d modules.
+    """
+    conv3d_modules = [m for m in model.modules() if isinstance(m, nn.Conv3d)]
+    if not conv3d_modules:
+        return None
+
+    max_in_numel = 0
+
+    def hook_fn(module, inputs, output):
+        nonlocal max_in_numel
+        if not inputs:
+            return
+        x = inputs[0]
+        if isinstance(x, torch.Tensor):
+            max_in_numel = max(max_in_numel, int(x.numel()))
+
+    hooks = [m.register_forward_hook(hook_fn) for m in conv3d_modules]
+    was_training = model.training
+    try:
+        model.eval()
+        with torch.no_grad():
+            dummy = torch.zeros((1, 3, int(temporal_T), int(image_size), int(image_size)), device=device)
+            _ = model(dummy)
+    finally:
+        for h in hooks:
+            h.remove()
+        model.train(was_training)
+
+    # Conservative int32 element indexing limit used by several CUDA kernels.
+    int32_max = 2**31 - 1
+    if max_in_numel <= 0:
+        return None
+    return max(1, int32_max // max_in_numel)
 
 
 def combine_presence_probs(logits: torch.Tensor, heatmap: torch.Tensor) -> torch.Tensor:
@@ -236,6 +279,8 @@ def main():
         cfg["train"]["save_dir"] = args.log_dir
     if args.best_ckpt_start_epoch is not None:
         cfg["train"]["best_ckpt_start_epoch"] = args.best_ckpt_start_epoch
+    if args.grad_accum_steps is not None:
+        cfg["train"]["grad_accum_steps"] = args.grad_accum_steps
     if args.num_workers is not None:
         cfg["train"]["num_workers"] = args.num_workers
     if args.dataloader_timeout_s is not None:
@@ -409,6 +454,30 @@ def main():
             pretrained=pretrained_backbone,
         )
     model = model.to(device)
+
+    # Preflight: avoid opaque conv3d "Input tensor is too large" crashes (common with large per-GPU batches).
+    if backbone_name.startswith("x3d"):
+        max_bs = None
+        if is_main_process(rank):
+            try:
+                max_bs = estimate_conv3d_max_batch(model, temporal_T=temporal_T, image_size=cfg["train"]["image_size"], device=device)
+            except Exception as exc:
+                print(f"[WARN] could not estimate Conv3d safe batch size; continuing (reason: {exc})")
+                max_bs = None
+        if distributed:
+            max_bs_t = torch.tensor([-1 if max_bs is None else int(max_bs)], device=device, dtype=torch.int64)
+            dist.broadcast(max_bs_t, src=0)
+            max_bs = None if int(max_bs_t.item()) < 0 else int(max_bs_t.item())
+
+        if max_bs is not None and int(cfg["train"]["batch_size"]) > max_bs:
+            if is_main_process(rank):
+                print(
+                    f"[ERROR] x3d backbone conv3d activations exceed int32 indexing limits with batch_size={cfg['train']['batch_size']}.\n"
+                    f"        Estimated max batch_size per process: {max_bs} (for T={temporal_T}, image_size={cfg['train']['image_size']}).\n"
+                    f"        Fix: reduce `train.batch_size` (or `temporal_T` / `image_size`), or add grad accumulation."
+                )
+            raise ValueError("batch_size too large for Conv3d kernels (see log above)")
+
     if distributed:
         model = torch.nn.parallel.DistributedDataParallel(
             model,
@@ -471,6 +540,9 @@ def main():
 
     best_val = 1e9; best_path = None
     best_start_epoch = cfg["train"].get("best_ckpt_start_epoch", 1)
+    grad_accum_steps = int(cfg["train"].get("grad_accum_steps", 1) or 1)
+    if grad_accum_steps < 1:
+        grad_accum_steps = 1
 
     log_file = None
     writer = None
@@ -487,7 +559,9 @@ def main():
 
             model.train()
             losses = []; hm_losses = []; pres_losses = []; peak_preds = []
-            for batch in tr_loader:
+            opt.zero_grad(set_to_none=True)
+            last_micro_step = -1
+            for batch_idx, batch in enumerate(tr_loader):
                 #log_batch_temporal_samples(batch, ds_tr.temporal_selector, tag=f"train batch ", max_samples=3)   #{batch_idx}
                 img = batch[input_key].to(device, non_blocking=True)
                 hm_t = batch["heatmap"].to(device, non_blocking=True)
@@ -495,30 +569,42 @@ def main():
                 pres_smooth = smooth_targets(pres, presence_smoothing)
                 pres_raw = pres.squeeze(1)
 
-                opt.zero_grad(set_to_none=True)
-                with autocast(enabled=cfg["train"]["amp"]):
-                    hm_p, pres_logit = model(img)
-                    hm_per = hm_loss(hm_p, hm_t, reduction="none")
-                    pos_mask = (pres_raw > 0.5).float()
-                    neg_mask = 1.0 - pos_mask
-                    neg_mult = float(cfg["loss"].get("heatmap_neg_multiplier", 1.0) or 1.0)
-                    weight = pos_mask + neg_mult * neg_mask
-                    L_hm = (hm_per * weight).sum() / torch.clamp(weight.sum(), min=1.0)
-                    if presence_from_peak:
-                        peak = hm_p.amax(dim=[-1, -2])
-                        L_pr = nn.functional.binary_cross_entropy_with_logits(peak, pres_smooth.view_as(peak))
-                    else:
-                        L_pr = presence_loss_fn(pres_logit, pres_smooth)
-                    _, _, L = combine_losses(L_hm, L_pr, loss_weights)
+                micro_step = batch_idx % grad_accum_steps
+                last_micro_step = micro_step
+                sync_ctx = nullcontext()
+                if distributed and micro_step != (grad_accum_steps - 1):
+                    sync_ctx = model.no_sync()  # type: ignore[attr-defined]
+
+                with sync_ctx:
+                    with autocast(enabled=cfg["train"]["amp"]):
+                        hm_p, pres_logit = model(img)
+                        hm_per = hm_loss(hm_p, hm_t, reduction="none")
+                        pos_mask = (pres_raw > 0.5).float()
+                        neg_mask = 1.0 - pos_mask
+                        neg_mult = float(cfg["loss"].get("heatmap_neg_multiplier", 1.0) or 1.0)
+                        weight = pos_mask + neg_mult * neg_mask
+                        L_hm = (hm_per * weight).sum() / torch.clamp(weight.sum(), min=1.0)
+                        if presence_from_peak:
+                            peak = hm_p.amax(dim=[-1, -2])
+                            L_pr = nn.functional.binary_cross_entropy_with_logits(peak, pres_smooth.view_as(peak))
+                        else:
+                            L_pr = presence_loss_fn(pres_logit, pres_smooth)
+                        _, _, L = combine_losses(L_hm, L_pr, loss_weights)
                 if not torch.isfinite(L):
                     if is_main_process(rank):
                         print(f"[ERROR] non-finite train loss at epoch {epoch}; aborting to avoid hang.")
                     raise RuntimeError("Non-finite training loss")
-                scaler.scale(L).backward()
-                scaler.step(opt); scaler.update()
+                scaler.scale(L / grad_accum_steps).backward()
+                if micro_step == (grad_accum_steps - 1):
+                    scaler.step(opt); scaler.update()
+                    opt.zero_grad(set_to_none=True)
 
                 losses.append(L.item()); hm_losses.append(L_hm.item()); pres_losses.append(L_pr.item())
                 peak_preds.append(hm_p.detach().amax(dim=[-1, -2]).mean().item())
+
+            if last_micro_step != -1 and last_micro_step != (grad_accum_steps - 1):
+                scaler.step(opt); scaler.update()
+                opt.zero_grad(set_to_none=True)
 
             tr_loss = float(np.mean(losses)) if losses else 0.0
             tr_hm = float(np.mean(hm_losses)) if hm_losses else 0.0
