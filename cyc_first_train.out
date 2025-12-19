@@ -26,6 +26,18 @@ Temporal window: T=16, stride=4
 Temporal window: T=16, stride=4
 Temporal window: T=16, stride=4
 [INFO] rank 0/16 device=cuda:0
-[INFO] batch_size per GPU=256 (global=4096)
+[INFO] batch_size per GPU=128 (global=2048)
 [INFO] lr scaled from 0.0005 to 0.008 for world_size=16
 Logging metrics to outputs/runs/exp_x3dm_heatmapfocal_2/training_log.csv
+[Epoch 1] train: L=0.1176 (hm=0.1176, pr=0.8887, peak=-0.0755)
+[Epoch 1] elapsed: 79.3s
+[Epoch 2] train: L=0.0121 (hm=0.0121, pr=0.7823, peak=-1.3744)
+[Epoch 2] elapsed: 45.1s
+[Epoch 3] train: L=0.0091 (hm=0.0091, pr=0.7492, peak=-1.2022)
+[Epoch 3] elapsed: 45.2s
+[Epoch 4] train: L=0.0076 (hm=0.0076, pr=0.7472, peak=-1.2057)
+[Epoch 4] elapsed: 43.4s
+[Epoch 5] train: L=0.0069 (hm=0.0069, pr=0.7525, peak=-1.2358)
+[Epoch 5] elapsed: 47.0s
+[Epoch 6] train: L=0.0064 (hm=0.0064, pr=0.7378, peak=-1.1932)
+[Epoch 6] elapsed: 47.1s
