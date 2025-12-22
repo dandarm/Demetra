@@ -31,3 +31,47 @@ Temporal window: T=16, stride=4
 Logging metrics to outputs/runs/exp_x3dm_heatmapfocal_BCE_3/training_log.csv
 [Epoch 1] train: L=1.9355 (hm=0.3235, pr=1.0747, peak=1.1538)
 [Epoch 1] elapsed: 89.9s
+[Epoch 2] train: L=1.0533 (hm=0.0373, pr=0.6774, peak=-0.7223)
+[Epoch 2] elapsed: 50.0s
+[Epoch 3] train: L=0.9194 (hm=0.0355, pr=0.5893, peak=-0.7863)
+[Epoch 3] elapsed: 50.1s
+[Epoch 4] train: L=0.7515 (hm=0.0332, pr=0.4788, peak=-1.1651)
+[Epoch 4] elapsed: 47.4s
+[Epoch 5] train: L=0.6417 (hm=0.0308, pr=0.4073, peak=-1.5341)
+[Epoch 5] elapsed: 49.4s
+[Epoch 6] train: L=0.6079 (hm=0.0291, pr=0.3859, peak=-1.7710)
+[Epoch 6] elapsed: 48.7s
+[Epoch 7] train: L=0.5910 (hm=0.0280, pr=0.3753, peak=-1.8680)
+[Epoch 7] elapsed: 50.0s
+[Epoch 8] train: L=0.5709 (hm=0.0268, pr=0.3627, peak=-1.8769)
+[Epoch 8] elapsed: 49.2s
+[Epoch 9] train: L=0.5479 (hm=0.0254, pr=0.3483, peak=-1.8244)
+[Epoch 9] elapsed: 48.5s
+[Epoch 10] train: L=0.5171 (hm=0.0243, pr=0.3286, peak=-1.7631)
+          val:  L=2.1546 (hm=0.0407, pr=1.4093)
+[Epoch 10] saving BEST checkpoint to outputs/runs/exp_x3dm_heatmapfocal_BCE_3/best.ckpt ...
+[Epoch 10] best checkpoint saved in 0.06s
+[Epoch 10] elapsed: 94.2s
+[Epoch 11] train: L=0.4776 (hm=0.0235, pr=0.3027, peak=-1.6288)
+[Epoch 11] elapsed: 50.7s
+[Epoch 12] train: L=0.4232 (hm=0.0232, pr=0.2667, peak=-1.4395)
+[Epoch 12] elapsed: 48.4s
+[Epoch 13] train: L=0.3616 (hm=0.0237, pr=0.2253, peak=-1.2110)
+[Epoch 13] elapsed: 49.2s
+[Epoch 14] train: L=0.3129 (hm=0.0243, pr=0.1924, peak=-0.9877)
+[Epoch 14] elapsed: 46.9s
+[Epoch 15] train: L=0.2876 (hm=0.0240, pr=0.1758, peak=-0.8220)
+[Epoch 15] elapsed: 49.0s
+[Epoch 16] train: L=0.2787 (hm=0.0223, pr=0.1710, peak=-0.7182)
+[Epoch 16] elapsed: 48.3s
+[Epoch 17] train: L=0.2751 (hm=0.0199, pr=0.1701, peak=-0.6502)
+[Epoch 17] elapsed: 46.5s
+[Epoch 18] train: L=0.2734 (hm=0.0178, pr=0.1704, peak=-0.6598)
+[Epoch 18] elapsed: 47.7s
+[Epoch 19] train: L=0.2703 (hm=0.0161, pr=0.1695, peak=-0.6339)
+[Epoch 19] elapsed: 47.3s
+[Epoch 20] train: L=0.2691 (hm=0.0150, pr=0.1694, peak=-0.6336)
+          val:  L=2.1164 (hm=0.0308, pr=1.3904)
+[Epoch 20] saving BEST checkpoint to outputs/runs/exp_x3dm_heatmapfocal_BCE_3/best.ckpt ...
+[Epoch 20] best checkpoint saved in 0.06s
+[Epoch 20] elapsed: 69.6s
