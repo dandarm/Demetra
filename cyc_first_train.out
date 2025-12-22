@@ -75,3 +75,43 @@ Logging metrics to outputs/runs/exp_x3dm_heatmapfocal_BCE_3/training_log.csv
 [Epoch 20] saving BEST checkpoint to outputs/runs/exp_x3dm_heatmapfocal_BCE_3/best.ckpt ...
 [Epoch 20] best checkpoint saved in 0.06s
 [Epoch 20] elapsed: 69.6s
+[Epoch 21] train: L=0.2688 (hm=0.0141, pr=0.1698, peak=-0.6561)
+[Epoch 21] elapsed: 48.0s
+[Epoch 22] train: L=0.2678 (hm=0.0134, pr=0.1696, peak=-0.6566)
+[Epoch 22] elapsed: 48.9s
+[Epoch 23] train: L=0.2662 (hm=0.0126, pr=0.1691, peak=-0.6727)
+[Epoch 23] elapsed: 46.6s
+[Epoch 24] train: L=0.2660 (hm=0.0119, pr=0.1694, peak=-0.6575)
+[Epoch 24] elapsed: 47.8s
+[Epoch 25] train: L=0.2652 (hm=0.0112, pr=0.1693, peak=-0.6650)
+[Epoch 25] elapsed: 46.6s
+[Epoch 26] train: L=0.2645 (hm=0.0108, pr=0.1691, peak=-0.6657)
+[Epoch 26] elapsed: 48.4s
+[Epoch 27] train: L=0.2643 (hm=0.0103, pr=0.1693, peak=-0.6613)
+[Epoch 27] elapsed: 51.4s
+[Epoch 28] train: L=0.2632 (hm=0.0099, pr=0.1689, peak=-0.6828)
+[Epoch 28] elapsed: 47.6s
+[Epoch 29] train: L=0.2629 (hm=0.0095, pr=0.1690, peak=-0.6755)
+[Epoch 29] elapsed: 48.5s
+[Epoch 30] train: L=0.2631 (hm=0.0092, pr=0.1693, peak=-0.6721)
+          val:  L=2.2012 (hm=0.0255, pr=1.4504)
+[Epoch 30] no val improvement (2.2012 >= 2.1164); checkpoint not saved
+[Epoch 30] elapsed: 69.3s
+[Epoch 31] train: L=0.2624 (hm=0.0088, pr=0.1691, peak=-0.6788)
+[Epoch 31] elapsed: 47.3s
+[Epoch 32] train: L=0.2624 (hm=0.0085, pr=0.1693, peak=-0.6679)
+[Epoch 32] elapsed: 46.5s
+[Epoch 33] train: L=0.2621 (hm=0.0081, pr=0.1693, peak=-0.6819)
+[Epoch 33] elapsed: 47.7s
+[Epoch 34] train: L=0.2618 (hm=0.0078, pr=0.1693, peak=-0.6788)
+[Epoch 34] elapsed: 47.5s
+[Epoch 35] train: L=0.2613 (hm=0.0075, pr=0.1692, peak=-0.6799)
+[Epoch 35] elapsed: 48.9s
+[Epoch 36] train: L=0.2616 (hm=0.0073, pr=0.1695, peak=-0.6862)
+[Epoch 36] elapsed: 47.7s
+[Epoch 37] train: L=0.2611 (hm=0.0072, pr=0.1692, peak=-0.6794)
+[Epoch 37] elapsed: 47.5s
+[Epoch 38] train: L=0.2606 (hm=0.0069, pr=0.1691, peak=-0.6938)
+[Epoch 38] elapsed: 47.3s
+[Epoch 39] train: L=0.2605 (hm=0.0066, pr=0.1692, peak=-0.6875)
+[Epoch 39] elapsed: 47.1s
