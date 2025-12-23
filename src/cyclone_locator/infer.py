@@ -191,6 +191,10 @@ def load_manifest(manifest_csv: str, logger: logging.Logger) -> pd.DataFrame:
 def load_letterbox_meta(meta_csv: str) -> Dict[str, Dict[str, float]]:
     required_base = {"orig_path", "resized_path", "pad_x", "pad_y", "orig_w", "orig_h", "out_size"}
     meta_df = pd.read_csv(meta_csv)
+    before = len(meta_df)
+    meta_df = meta_df.dropna(subset=list(required_base))
+    if len(meta_df) < before:
+        logging.getLogger(LOGGER_NAME).warning("Dropped %d rows with NaN in letterbox meta %s", before - len(meta_df), meta_csv)
     cols = set(meta_df.columns)
     missing = required_base - cols
     if missing:
