@@ -408,3 +408,57 @@ Logging metrics to outputs/runs/exp_x3dm_heatmapfocal_BCE_3/training_log.csv
 [Epoch 168] elapsed: 50.1s
 [Epoch 169] train: L=0.2574 (hm=0.0036, pr=0.1691, peak=-0.6969)
 [Epoch 169] elapsed: 48.0s
+[Epoch 170] train: L=0.2570 (hm=0.0036, pr=0.1689, peak=-0.6885)
+          val:  L=1.7965 (hm=0.0178, pr=1.1858)
+[Epoch 170] no val improvement (1.7965 >= 1.7051); checkpoint not saved
+[Epoch 170] elapsed: 72.7s
+[Epoch 171] train: L=0.2569 (hm=0.0036, pr=0.1689, peak=-0.6955)
+[Epoch 171] elapsed: 46.6s
+[Epoch 172] train: L=0.2571 (hm=0.0036, pr=0.1690, peak=-0.6943)
+[Epoch 172] elapsed: 48.0s
+[Epoch 173] train: L=0.2565 (hm=0.0036, pr=0.1686, peak=-0.6932)
+[Epoch 173] elapsed: 47.4s
+[Epoch 174] train: L=0.2570 (hm=0.0036, pr=0.1689, peak=-0.6940)
+[Epoch 174] elapsed: 47.8s
+[Epoch 175] train: L=0.2571 (hm=0.0036, pr=0.1690, peak=-0.6905)
+[Epoch 175] elapsed: 50.3s
+[Epoch 176] train: L=0.2568 (hm=0.0036, pr=0.1688, peak=-0.6946)
+[Epoch 176] elapsed: 47.4s
+[Epoch 177] train: L=0.2573 (hm=0.0036, pr=0.1691, peak=-0.6956)
+[Epoch 177] elapsed: 50.0s
+[Epoch 178] train: L=0.2569 (hm=0.0036, pr=0.1689, peak=-0.6978)
+[Epoch 178] elapsed: 47.9s
+[Epoch 179] train: L=0.2570 (hm=0.0036, pr=0.1689, peak=-0.6961)
+[Epoch 179] elapsed: 48.1s
+[Epoch 180] train: L=0.2574 (hm=0.0036, pr=0.1692, peak=-0.6885)
+          val:  L=1.7402 (hm=0.0172, pr=1.1487)
+[Epoch 180] no val improvement (1.7402 >= 1.7051); checkpoint not saved
+[Epoch 180] elapsed: 71.1s
+[Epoch 181] train: L=0.2574 (hm=0.0036, pr=0.1692, peak=-0.6895)
+[Epoch 181] elapsed: 48.3s
+[Epoch 182] train: L=0.2570 (hm=0.0036, pr=0.1689, peak=-0.6984)
+[Epoch 182] elapsed: 49.0s
+[Epoch 183] train: L=0.2571 (hm=0.0036, pr=0.1690, peak=-0.6907)
+[Epoch 183] elapsed: 48.3s
+[Epoch 184] train: L=0.2570 (hm=0.0036, pr=0.1689, peak=-0.6967)
+[Epoch 184] elapsed: 45.6s
+[Epoch 185] train: L=0.2569 (hm=0.0036, pr=0.1689, peak=-0.6991)
+[Epoch 185] elapsed: 47.6s
+[Epoch 186] train: L=0.2566 (hm=0.0036, pr=0.1687, peak=-0.6907)
+[Epoch 186] elapsed: 48.7s
+[Epoch 187] train: L=0.2571 (hm=0.0036, pr=0.1690, peak=-0.6916)
+[Epoch 187] elapsed: 48.0s
+[Epoch 188] train: L=0.2574 (hm=0.0036, pr=0.1692, peak=-0.6989)
+[Epoch 188] elapsed: 48.8s
+[Epoch 189] train: L=0.2571 (hm=0.0036, pr=0.1690, peak=-0.6853)
+[Epoch 189] elapsed: 47.8s
+[Epoch 190] train: L=0.2571 (hm=0.0036, pr=0.1690, peak=-0.6957)
+          val:  L=1.7077 (hm=0.0173, pr=1.1269)
+[Epoch 190] no val improvement (1.7077 >= 1.7051); checkpoint not saved
+[Epoch 190] elapsed: 77.3s
+[Epoch 191] train: L=0.2570 (hm=0.0036, pr=0.1689, peak=-0.6929)
+[Epoch 191] elapsed: 52.2s
+[Epoch 192] train: L=0.2575 (hm=0.0036, pr=0.1693, peak=-0.6946)
+[Epoch 192] elapsed: 49.4s
+[Epoch 193] train: L=0.2575 (hm=0.0037, pr=0.1693, peak=-0.6948)
+[Epoch 193] elapsed: 50.1s
