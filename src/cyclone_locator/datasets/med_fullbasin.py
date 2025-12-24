@@ -34,6 +34,8 @@ class MedFullBasinDataset(Dataset):
         yy, xx = np.mgrid[0 : self.Ho, 0 : self.Wo]
         self._hm_xx = xx.astype(np.float32)
         self._hm_yy = yy.astype(np.float32)
+        self._hm_xx_t = torch.from_numpy(self._hm_xx)
+        self._hm_yy_t = torch.from_numpy(self._hm_yy)
 
         self.df["image_path"] = self.df["image_path"].astype(str)
 
@@ -346,11 +348,23 @@ class MedFullBasinDataset(Dataset):
         else:
             hm = torch.zeros((self.Ho, self.Wo), dtype=torch.float32)
 
+        hm_sum = float(hm.sum().item())
+        if hm_sum > 0.0:
+            x_hm = float((hm * self._hm_xx_t).sum().item() / hm_sum)
+            y_hm = float((hm * self._hm_yy_t).sum().item() / hm_sum)
+            target_xy_valid = 1.0
+        else:
+            x_hm = -1.0
+            y_hm = -1.0
+            target_xy_valid = 0.0
+
         sample = {
             "image": img_t,                        # (C,H,W) float32 (temporal early fusion)
             "video": video_t,                      # (C,T,H,W) float32 (explicit temporal dim)
             "heatmap": hm.unsqueeze(0),            # (1,Ho,Wo)
             "presence": torch.tensor([presence_prob], dtype=torch.float32),
+            "target_xy_hm": torch.tensor([x_hm, y_hm], dtype=torch.float32),
+            "target_xy_valid": torch.tensor([target_xy_valid], dtype=torch.float32),
             # meta serve solo in inferenza; in training teniamo lo stretto necessario
             "meta_scale": meta["scale"],
             "meta_scale_x": meta.get("scale_x", meta["scale"]),

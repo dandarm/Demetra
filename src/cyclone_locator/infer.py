@@ -57,6 +57,8 @@ def parse_args() -> argparse.Namespace:
                         help="Abilita autocast AMP in inferenza")
     parser.add_argument("--soft-argmax", action="store_true",
                         help="Usa soft-argmax per decodificare il centro (default argmax)")
+    parser.add_argument("--soft-argmax-tau", type=float, default=None,
+                        help="Temperatura τ per soft-argmax/DSNT (più alta -> più smooth)")
     parser.add_argument("--oracle-localization", action="store_true",
                         help="Valuta l'errore centro su tutti i GT positivi (ignora decisione binaria)")
     parser.add_argument("--center-thresholds-px", type=float, nargs="+", default=[8, 16, 24, 32])
@@ -415,9 +417,11 @@ def build_model(cfg: dict, checkpoint_path: str, device: torch.device, logger: l
     return model
 
 
-def decode_heatmap(hm: np.ndarray, stride: int, soft: bool = False) -> Tuple[float, float]:
+def decode_heatmap(hm: np.ndarray, stride: int, soft: bool = False, tau: float = 1.0) -> Tuple[float, float]:
     if soft:
-        logits = hm - hm.max()
+        if tau <= 0:
+            raise ValueError("tau must be > 0")
+        logits = (hm - hm.max()) / float(tau)
         weights = np.exp(logits)
         total = weights.sum()
         if total == 0:
@@ -452,6 +456,7 @@ def run_inference(
     device: torch.device,
     stride: int,
     soft_argmax: bool,
+    soft_argmax_tau: float,
     amp: bool,
     presence_from_peak: bool = False,
 ) -> List[Dict[str, float]]:
@@ -483,7 +488,7 @@ def run_inference(
             manifest_idx_batch = batch["manifest_idx"]
             for i, path in enumerate(batch["image_path"]):
                 hm = heatmaps_np[i]
-                x_g, y_g = decode_heatmap(hm, stride=stride, soft=soft_argmax)
+                x_g, y_g = decode_heatmap(hm, stride=stride, soft=soft_argmax, tau=float(soft_argmax_tau))
                 _, _, _, width = peak_and_width(hm)
                 predictions.append({
                     "image_path": path,
@@ -618,7 +623,21 @@ def main():
     )
 
     model = build_model(cfg, args.checkpoint, device, logger, temporal_T=temporal_T)
-    preds = run_inference(model, loader, device, stride, args.soft_argmax, args.amp, presence_from_peak=presence_from_peak)
+    center_tau_default = cfg.get("infer", {}).get("center_tau", None)
+    if center_tau_default is None:
+        center_tau_default = cfg.get("loss", {}).get("dsnt_tau", 1.0)
+    soft_argmax_tau = float(args.soft_argmax_tau) if args.soft_argmax_tau is not None else float(center_tau_default or 1.0)
+
+    preds = run_inference(
+        model,
+        loader,
+        device,
+        stride,
+        args.soft_argmax,
+        soft_argmax_tau,
+        args.amp,
+        presence_from_peak=presence_from_peak,
+    )
     preds_df = pd.DataFrame(preds).sort_values("manifest_idx").reset_index(drop=True)
     if args.threshold is not None or args.peak_threshold is not None:
         tau = args.peak_threshold if args.presence_from_peak and args.peak_threshold is not None else args.threshold

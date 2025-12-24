@@ -10,6 +10,7 @@ from cyclone_locator.datasets.med_fullbasin import MedFullBasinDataset
 from cyclone_locator.models.simplebaseline import SimpleBaseline
 from cyclone_locator.models.x3d_backbone import X3DBackbone
 from cyclone_locator.losses.heatmap_loss import HeatmapMSE, HeatmapFocal
+from cyclone_locator.utils.dsnt import dsnt_expectation, spatial_softmax_2d
 from cyclone_locator.utils.distributed import (
     cleanup_distributed,
     get_resources,
@@ -83,6 +84,21 @@ def focal_loss_with_logits(logits, targets, gamma: float = 2.0, alpha: float = N
         alpha_t = alpha * targets + (1 - alpha) * (1 - targets)
         ce = ce * alpha_t
     return (focal_factor * ce).mean()
+
+
+def coord_loss_per_sample(pred_xy: torch.Tensor, target_xy: torch.Tensor, loss_type: str) -> torch.Tensor:
+    """
+    pred_xy, target_xy: (B,2) in heatmap pixel coordinates.
+    Returns: (B,) per-sample loss.
+    """
+    if pred_xy.shape != target_xy.shape or pred_xy.ndim != 2 or pred_xy.shape[1] != 2:
+        raise ValueError(f"Expected pred_xy/target_xy shape (B,2), got {pred_xy.shape} vs {target_xy.shape}")
+    loss_type = str(loss_type).lower().strip()
+    if loss_type in {"l1", "mae"}:
+        return (pred_xy - target_xy).abs().sum(dim=1)
+    if loss_type in {"l2", "mse"}:
+        return ((pred_xy - target_xy) ** 2).sum(dim=1)
+    raise ValueError(f"Unknown dsnt_coord_loss: {loss_type}")
 
 def estimate_conv3d_max_batch(model: nn.Module, temporal_T: int, image_size: int, device: torch.device) -> int | None:
     """Estimate max per-process batch size before Conv3d hits int32 indexing limits.
@@ -175,7 +191,10 @@ def evaluate_loader(model, loader, hm_loss, amp_enabled, loss_weights, device, r
                     presence_loss_fn=None,
                     log_combined_presence: bool = False,
                     input_key: str = "image",
-                    presence_from_peak: bool = False):
+                    presence_from_peak: bool = False,
+                    heatmap_loss_type: str = "mse",
+                    dsnt_tau: float = 1.0,
+                    dsnt_coord_loss: str = "l1"):
     #vL, vHm, vPr = [], [], []
     sum_L, sum_hm, sum_pr, sum_pr_comb = 0.0, 0.0, 0.0, 0.0
     bad_batches = 0
@@ -192,13 +211,24 @@ def evaluate_loader(model, loader, hm_loss, amp_enabled, loss_weights, device, r
                 hm_p, pres_logit = model(img)
                 hm_p = torch.nan_to_num(hm_p, nan=0.0, posinf=1e4, neginf=-1e4)
                 pres_logit = torch.nan_to_num(pres_logit, nan=0.0, posinf=50.0, neginf=-50.0)
-                hm_per = hm_loss(hm_p, hm_t, reduction="none")
-                pos_mask = (pres.squeeze(1) > 0.5).float()
-                neg_mask = 1.0 - pos_mask
-                neg_mult = float(loss_weights.get("heatmap_neg_multiplier", 1.0) or 1.0)
-                pos_mult = float(loss_weights.get("heatmap_pos_multiplier", 1.0) or 1.0)
-                weight = pos_mult * pos_mask + neg_mult * neg_mask
-                L_hm = (hm_per * weight).sum() / torch.clamp(weight.sum(), min=1.0)
+                if str(heatmap_loss_type).lower().strip() == "dsnt":
+                    target_xy = batch["target_xy_hm"].to(device, non_blocking=True)
+                    valid = batch["target_xy_valid"].to(device, non_blocking=True).squeeze(1)
+                    pres_w = pres.squeeze(1).clamp(0.0, 1.0)
+                    prob = spatial_softmax_2d(hm_p, tau=float(dsnt_tau))
+                    pred_xy = dsnt_expectation(prob)
+                    hm_per = coord_loss_per_sample(pred_xy, target_xy, dsnt_coord_loss)
+                    pos_mult = float(loss_weights.get("heatmap_pos_multiplier", 1.0) or 1.0)
+                    weight = pos_mult * valid * pres_w
+                    L_hm = (hm_per * weight).sum() / torch.clamp(weight.sum(), min=1.0)
+                else:
+                    hm_per = hm_loss(hm_p, hm_t, reduction="none")
+                    pos_mask = (pres.squeeze(1) > 0.5).float()
+                    neg_mask = 1.0 - pos_mask
+                    neg_mult = float(loss_weights.get("heatmap_neg_multiplier", 1.0) or 1.0)
+                    pos_mult = float(loss_weights.get("heatmap_pos_multiplier", 1.0) or 1.0)
+                    weight = pos_mult * pos_mask + neg_mult * neg_mask
+                    L_hm = (hm_per * weight).sum() / torch.clamp(weight.sum(), min=1.0)
                 if presence_from_peak:
                     peak = hm_p.amax(dim=[-1, -2])
                     L_pr = nn.functional.binary_cross_entropy_with_logits(peak, pres_smooth.view_as(peak))
@@ -503,7 +533,11 @@ def main():
     opt = torch.optim.AdamW(model.parameters(), lr=scaled_lr, weight_decay=cfg["train"]["weight_decay"])
     scaler = GradScaler(enabled=cfg["train"]["amp"] and device.type == "cuda")
     heatmap_loss_type = cfg["loss"].get("heatmap_loss", "mse")
-    if heatmap_loss_type == "focal":
+    dsnt_tau = float(cfg["loss"].get("dsnt_tau", 1.0) or 1.0)
+    dsnt_coord_loss = str(cfg["loss"].get("dsnt_coord_loss", "l1") or "l1")
+    if str(heatmap_loss_type).lower().strip() == "dsnt":
+        hm_loss = None
+    elif heatmap_loss_type == "focal":
         hm_loss = HeatmapFocal(
             alpha=float(cfg["loss"].get("heatmap_focal_alpha", 2.0) or 2.0),
             beta=float(cfg["loss"].get("heatmap_focal_beta", 4.0) or 4.0),
@@ -585,13 +619,24 @@ def main():
                 with sync_ctx:
                     with autocast(enabled=cfg["train"]["amp"]):
                         hm_p, pres_logit = model(img)
-                        hm_per = hm_loss(hm_p, hm_t, reduction="none")
-                        pos_mask = (pres_raw > 0.5).float()
-                        neg_mask = 1.0 - pos_mask
-                        neg_mult = float(cfg["loss"].get("heatmap_neg_multiplier", 1.0) or 1.0)
-                        pos_mult = float(cfg["loss"].get("heatmap_pos_multiplier", 1.0) or 1.0)
-                        weight = pos_mult * pos_mask + neg_mult * neg_mask
-                        L_hm = (hm_per * weight).sum() / torch.clamp(weight.sum(), min=1.0)
+                        if str(heatmap_loss_type).lower().strip() == "dsnt":
+                            target_xy = batch["target_xy_hm"].to(device, non_blocking=True)
+                            valid = batch["target_xy_valid"].to(device, non_blocking=True).squeeze(1)
+                            pres_w = pres_raw.clamp(0.0, 1.0)
+                            prob = spatial_softmax_2d(hm_p, tau=float(dsnt_tau))
+                            pred_xy = dsnt_expectation(prob)
+                            hm_per = coord_loss_per_sample(pred_xy, target_xy, dsnt_coord_loss)
+                            pos_mult = float(cfg["loss"].get("heatmap_pos_multiplier", 1.0) or 1.0)
+                            weight = pos_mult * valid * pres_w
+                            L_hm = (hm_per * weight).sum() / torch.clamp(weight.sum(), min=1.0)
+                        else:
+                            hm_per = hm_loss(hm_p, hm_t, reduction="none")
+                            pos_mask = (pres_raw > 0.5).float()
+                            neg_mask = 1.0 - pos_mask
+                            neg_mult = float(cfg["loss"].get("heatmap_neg_multiplier", 1.0) or 1.0)
+                            pos_mult = float(cfg["loss"].get("heatmap_pos_multiplier", 1.0) or 1.0)
+                            weight = pos_mult * pos_mask + neg_mult * neg_mask
+                            L_hm = (hm_per * weight).sum() / torch.clamp(weight.sum(), min=1.0)
                         if presence_from_peak:
                             peak = hm_p.amax(dim=[-1, -2])
                             L_pr = nn.functional.binary_cross_entropy_with_logits(peak, pres_smooth.view_as(peak))
@@ -643,7 +688,10 @@ def main():
                     presence_loss_fn=presence_loss_fn,
                     log_combined_presence=False,
                     input_key=input_key,
-                    presence_from_peak=presence_from_peak
+                    presence_from_peak=presence_from_peak,
+                    heatmap_loss_type=heatmap_loss_type,
+                    dsnt_tau=dsnt_tau,
+                    dsnt_coord_loss=dsnt_coord_loss,
                 )
                 if test_loader is not None:
                     test_metrics = evaluate_loader(
@@ -653,7 +701,10 @@ def main():
                         presence_loss_fn=presence_loss_fn,
                         log_combined_presence=True,
                         input_key=input_key,
-                        presence_from_peak=presence_from_peak
+                        presence_from_peak=presence_from_peak,
+                        heatmap_loss_type=heatmap_loss_type,
+                        dsnt_tau=dsnt_tau,
+                        dsnt_coord_loss=dsnt_coord_loss,
                     )
                 eval_model.train()
 
