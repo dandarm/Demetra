@@ -45,10 +45,12 @@ loss:
   dsnt_coord_loss: l2          # l1|l2 (loss sulle coordinate DSNT in spazio heatmap)
   peak_pool: logsumexp               # max|logsumexp (pooling spaziale per presence_from_peak)
   peak_tau: 0.5                # τ per logsumexp (più piccolo -> più simile a max)
+  w_heatmap_focal_reg: 1.0     # regolarizzatore extra: aggiunge una HeatmapFocal debole su DSNT (0=off)
+  heatmap_focal_reg_neg_multiplier: 0.1  # peso relativo del regolarizzatore sui negativi (0=solo positivi)
   w_heatmap: 1.5               # peso della loss della head heatmap
   w_presence: 0.0              # peso della loss della head presence (se usata)
   w_peak_bce: 1.0              # peso BCE-with-logits sul picco heatmap (quando presence_from_peak=true)
-  heatmap_neg_multiplier: 0.2   # fattore di peso per la heatmap dei negativi (0=ignora, 1=pari ai positivi)
+  heatmap_neg_multiplier: 0.4   # fattore di peso per la heatmap dei negativi (0=ignora, 1=pari ai positivi)
   heatmap_pos_multiplier: 1.2   # fattore di peso per la heatmap dei positivi
   presence_loss: focal       # focal|bce (per la testa presenza)
   presence_focal_gamma: 1.5

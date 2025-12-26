@@ -32,6 +32,8 @@ def parse_args():
     ap.add_argument("--dsnt_coord_loss", choices=["l1", "l2"], help="Coordinate loss for DSNT")
     ap.add_argument("--peak_pool", choices=["max", "logsumexp"], help="Pooling for presence_from_peak (default: max)")
     ap.add_argument("--peak_tau", type=float, help="Temperature tau for peak_pool=logsumexp")
+    ap.add_argument("--w_heatmap_focal_reg", type=float, help="Extra focal heatmap regularizer weight (adds to DSNT+BCE)")
+    ap.add_argument("--heatmap_focal_reg_neg_multiplier", type=float, help="Negative multiplier for focal heatmap regularizer (default 0=positives only)")
     ap.add_argument("--backbone")
     ap.add_argument("--temporal_T", type=int)
     ap.add_argument("--temporal_stride", type=int)
@@ -245,6 +247,13 @@ def evaluate_loader(model, loader, hm_loss, amp_enabled, loss_weights, device, r
     sum_L, sum_hm, sum_pr, sum_pr_comb = 0.0, 0.0, 0.0, 0.0
     sum_mae_px = 0.0
     n_mae = 0.0
+    sum_pred_x = 0.0
+    sum_pred_y = 0.0
+    sum_pred_x2 = 0.0
+    sum_pred_y2 = 0.0
+    n_pred = 0.0
+    sum_hm_focal_reg_num = 0.0
+    sum_hm_focal_reg_den = 0.0
     bad_batches = 0
     total_batches = 0
     with torch.no_grad():
@@ -259,6 +268,8 @@ def evaluate_loader(model, loader, hm_loss, amp_enabled, loss_weights, device, r
                 hm_p, pres_logit = model(img)
                 hm_p = torch.nan_to_num(hm_p, nan=0.0, posinf=1e4, neginf=-1e4)
                 pres_logit = torch.nan_to_num(pres_logit, nan=0.0, posinf=50.0, neginf=-50.0)
+                w_reg = float(loss_weights.get("w_heatmap_focal_reg", 0.0) or 0.0)
+                L_reg = torch.tensor(0.0, device=device)
                 if str(heatmap_loss_type).lower().strip() == "dsnt":
                     target_xy = batch["target_xy_hm"].to(device, non_blocking=True)
                     valid = batch["target_xy_valid"].to(device, non_blocking=True).squeeze(1)
@@ -270,6 +281,32 @@ def evaluate_loader(model, loader, hm_loss, amp_enabled, loss_weights, device, r
                     weight = pos_mult * valid * pres_w
                     L_hm = (hm_per * weight).sum() / torch.clamp(weight.sum(), min=1.0)
                     mae_px = center_mae_px(pred_xy, target_xy, valid, heatmap_stride)
+
+                    mask = valid > 0.5
+                    if mask.any():
+                        pred_xy_px = pred_xy * float(heatmap_stride)
+                        px = pred_xy_px[:, 0][mask]
+                        py = pred_xy_px[:, 1][mask]
+                        sum_pred_x += float(px.sum().item())
+                        sum_pred_y += float(py.sum().item())
+                        sum_pred_x2 += float((px ** 2).sum().item())
+                        sum_pred_y2 += float((py ** 2).sum().item())
+                        n_pred += float(mask.sum().item())
+
+                    if w_reg > 0.0:
+                        hm_focal_reg = HeatmapFocal(
+                            alpha=float(loss_weights.get("heatmap_focal_alpha", 2.0) or 2.0),
+                            beta=float(loss_weights.get("heatmap_focal_beta", 4.0) or 4.0),
+                        )
+                        focal_per = hm_focal_reg(hm_p, hm_t, reduction="none")  # (B,)
+                        neg_mult_reg = float(loss_weights.get("heatmap_focal_reg_neg_multiplier", 0.0) or 0.0)
+                        reg_w = valid * pres_w + neg_mult_reg * (1.0 - valid)
+                        reg_w_sum = float(reg_w.sum().item())
+                        if reg_w_sum > 0.0:
+                            reg_num = float((focal_per * reg_w).sum().item())
+                            sum_hm_focal_reg_num += reg_num
+                            sum_hm_focal_reg_den += reg_w_sum
+                            L_reg = (focal_per * reg_w).sum() / torch.clamp(reg_w.sum(), min=1.0)
                 else:
                     hm_per = hm_loss(hm_p, hm_t, reduction="none")
                     pos_mask = (pres.squeeze(1) > 0.5).float()
@@ -296,7 +333,7 @@ def evaluate_loader(model, loader, hm_loss, amp_enabled, loss_weights, device, r
                 hm_w = float(loss_weights.get("w_heatmap", 1.0) or 1.0)
                 pr_w_key = "w_peak_bce" if presence_from_peak else "w_presence"
                 pr_w = float(loss_weights.get(pr_w_key, 1.0) or 1.0)
-                L = hm_w * L_hm + pr_w * L_pr
+                L = hm_w * L_hm + pr_w * L_pr + w_reg * L_reg
             if not torch.isfinite(L):
                 bad_batches += 1
                 if bad_batches <= 3 and rank == 0:
@@ -308,26 +345,50 @@ def evaluate_loader(model, loader, hm_loss, amp_enabled, loss_weights, device, r
                 n_mae += 1.0
 
     totals = torch.tensor(
-        [sum_L, sum_hm, sum_pr, sum_pr_comb, sum_mae_px, n_mae, float(total_batches), float(bad_batches)],
+        [
+            sum_L, sum_hm, sum_pr, sum_pr_comb,
+            sum_mae_px, n_mae,
+            sum_pred_x, sum_pred_y, sum_pred_x2, sum_pred_y2, n_pred,
+            sum_hm_focal_reg_num, sum_hm_focal_reg_den,
+            float(total_batches), float(bad_batches),
+        ],
         device=device
     )
     if distributed:
         dist.all_reduce(totals, op=dist.ReduceOp.SUM)
-    sum_L, sum_hm, sum_pr, sum_pr_comb, sum_mae_px, n_mae, total_batches, bad_batches = totals.tolist()
+    (
+        sum_L, sum_hm, sum_pr, sum_pr_comb,
+        sum_mae_px, n_mae,
+        sum_pred_x, sum_pred_y, sum_pred_x2, sum_pred_y2, n_pred,
+        sum_hm_focal_reg_num, sum_hm_focal_reg_den,
+        total_batches, bad_batches,
+    ) = totals.tolist()
     if total_batches - bad_batches > 0:
         mean_L = sum_L / (total_batches - bad_batches)
         mean_hm = sum_hm / (total_batches - bad_batches)
         mean_pr = sum_pr / (total_batches - bad_batches)
         mean_pr_comb = sum_pr_comb / (total_batches - bad_batches)
         mean_mae_px = (sum_mae_px / n_mae) if n_mae > 0 else float("nan")
+        pred_x_mean = (sum_pred_x / n_pred) if n_pred > 0 else float("nan")
+        pred_y_mean = (sum_pred_y / n_pred) if n_pred > 0 else float("nan")
+        pred_x_var = (sum_pred_x2 / n_pred - pred_x_mean ** 2) if n_pred > 0 else float("nan")
+        pred_y_var = (sum_pred_y2 / n_pred - pred_y_mean ** 2) if n_pred > 0 else float("nan")
+        hm_focal_reg = (sum_hm_focal_reg_num / sum_hm_focal_reg_den) if sum_hm_focal_reg_den > 0 else float("nan")
     else:
         mean_L = mean_hm = mean_pr = mean_pr_comb = mean_mae_px = float("nan")
+        pred_x_mean = pred_y_mean = pred_x_var = pred_y_var = float("nan")
+        hm_focal_reg = float("nan")
     return {
         "loss": float(mean_L),
         "hm": float(mean_hm),
         "presence": float(mean_pr),
         "presence_combined": float(mean_pr_comb) if log_combined_presence else None,
         "center_mae_px": float(mean_mae_px),
+        "pred_x_mean_px": float(pred_x_mean),
+        "pred_x_var_px": float(pred_x_var),
+        "pred_y_mean_px": float(pred_y_mean),
+        "pred_y_var_px": float(pred_y_var),
+        "heatmap_focal_reg": float(hm_focal_reg),
         "bad_batches": int(bad_batches),
         "total_batches": int(total_batches)
     }
@@ -359,6 +420,10 @@ def main():
         cfg["loss"]["peak_pool"] = str(args.peak_pool)
     if args.peak_tau is not None:
         cfg["loss"]["peak_tau"] = float(args.peak_tau)
+    if args.w_heatmap_focal_reg is not None:
+        cfg["loss"]["w_heatmap_focal_reg"] = float(args.w_heatmap_focal_reg)
+    if args.heatmap_focal_reg_neg_multiplier is not None:
+        cfg["loss"]["heatmap_focal_reg_neg_multiplier"] = float(args.heatmap_focal_reg_neg_multiplier)
     if args.heatmap_neg_multiplier is not None:
         cfg["loss"]["heatmap_neg_multiplier"] = args.heatmap_neg_multiplier
     if args.heatmap_pos_multiplier is not None:
@@ -612,6 +677,12 @@ def main():
     else:
         hm_loss = HeatmapMSE()
     loss_weights = cfg["loss"]
+    hm_focal_struct = HeatmapFocal(
+        alpha=float(cfg["loss"].get("heatmap_focal_alpha", 2.0) or 2.0),
+        beta=float(cfg["loss"].get("heatmap_focal_beta", 4.0) or 4.0),
+    )
+    w_hm_focal_reg = float(cfg["loss"].get("w_heatmap_focal_reg", 0.0) or 0.0)
+    hm_focal_reg_neg_mult = float(cfg["loss"].get("heatmap_focal_reg_neg_multiplier", 0.0) or 0.0)
     presence_smoothing = float(cfg["loss"].get("presence_label_smoothing", 0.0) or 0.0)
     presence_loss_type = cfg["loss"].get("presence_loss", "bce")
     focal_gamma = float(cfg["loss"].get("presence_focal_gamma", 2.0) or 2.0)
@@ -637,11 +708,18 @@ def main():
         "epoch",
         "train_loss", "train_heatmap_loss", "train_presence_loss",
         "train_center_mae_px",
+        "train_heatmap_focal_reg",
         "val_loss", "val_heatmap_loss", "val_presence_loss",
         "val_center_mae_px",
+        "val_heatmap_focal_reg",
         "test_loss", "test_heatmap_loss", "test_presence_loss", "test_presence_combined_loss"
     ]
     log_fields.append("test_center_mae_px")
+    log_fields.append("test_heatmap_focal_reg")
+    log_fields += [
+        "val_pred_x_mean_px", "val_pred_x_var_px", "val_pred_y_mean_px", "val_pred_y_var_px",
+        "test_pred_x_mean_px", "test_pred_x_var_px", "test_pred_y_mean_px", "test_pred_y_var_px",
+    ]
     if is_main_process(rank):
         print(f"[INFO] rank {rank}/{world_size} device={device}")
         print(f"[INFO] batch_size per GPU={cfg['train']['batch_size']} (global={cfg['train']['batch_size'] * world_size})")
@@ -669,7 +747,7 @@ def main():
                 train_sampler.set_epoch(epoch)
 
             model.train()
-            losses = []; hm_losses = []; pres_losses = []; peak_preds = []; mae_center_px = []
+            losses = []; hm_losses = []; pres_losses = []; peak_preds = []; mae_center_px = []; hm_reg_losses = []
             opt.zero_grad(set_to_none=True)
             last_micro_step = -1
             for batch_idx, batch in enumerate(tr_loader):
@@ -700,6 +778,12 @@ def main():
                             weight = pos_mult * valid * pres_w
                             L_hm = (hm_per * weight).sum() / torch.clamp(weight.sum(), min=1.0)
                             mae_px = center_mae_px(pred_xy, target_xy, valid, cfg["train"]["heatmap_stride"])
+                            L_reg = torch.tensor(0.0, device=device)
+                            if w_hm_focal_reg > 0.0:
+                                focal_per = hm_focal_struct(hm_p, hm_t, reduction="none")
+                                reg_w = valid * pres_w + hm_focal_reg_neg_mult * (1.0 - valid)
+                                if float(reg_w.sum().item()) > 0.0:
+                                    L_reg = (focal_per * reg_w).sum() / torch.clamp(reg_w.sum(), min=1.0)
                         else:
                             hm_per = hm_loss(hm_p, hm_t, reduction="none")
                             pos_mask = (pres_raw > 0.5).float()
@@ -709,6 +793,7 @@ def main():
                             weight = pos_mult * pos_mask + neg_mult * neg_mask
                             L_hm = (hm_per * weight).sum() / torch.clamp(weight.sum(), min=1.0)
                             mae_px = torch.tensor(float("nan"), device=device)
+                            L_reg = torch.tensor(0.0, device=device)
                         if presence_from_peak:
                             peak = spatial_peak_pool(hm_p, pool=peak_pool, tau=float(peak_tau))
                             L_pr = nn.functional.binary_cross_entropy_with_logits(peak, pres_smooth.view_as(peak))
@@ -717,7 +802,7 @@ def main():
                         hm_w = float(loss_weights.get("w_heatmap", 1.0) or 1.0)
                         pr_w_key = "w_peak_bce" if presence_from_peak else "w_presence"
                         pr_w = float(loss_weights.get(pr_w_key, 1.0) or 1.0)
-                        L = hm_w * L_hm + pr_w * L_pr
+                        L = hm_w * L_hm + pr_w * L_pr + float(w_hm_focal_reg) * L_reg
                 if not torch.isfinite(L):
                     if is_main_process(rank):
                         print(f"[ERROR] non-finite train loss at epoch {epoch}; aborting to avoid hang.")
@@ -731,6 +816,8 @@ def main():
                 peak_preds.append(spatial_peak_pool(hm_p.detach(), pool=peak_pool, tau=float(peak_tau)).mean().item())
                 if torch.isfinite(mae_px):
                     mae_center_px.append(float(mae_px.item()))
+                if torch.isfinite(L_reg) and float(w_hm_focal_reg) > 0.0:
+                    hm_reg_losses.append(float(L_reg.item()))
 
             if last_micro_step != -1 and last_micro_step != (grad_accum_steps - 1):
                 scaler.step(opt); scaler.update()
@@ -741,15 +828,18 @@ def main():
             tr_pr = float(np.mean(pres_losses)) if pres_losses else 0.0
             tr_peak = float(np.mean(peak_preds)) if peak_preds else 0.0
             tr_mae_px = float(np.mean(mae_center_px)) if mae_center_px else float("nan")
+            tr_hm_reg = float(np.mean(hm_reg_losses)) if hm_reg_losses else float("nan")
 
-            metrics_tensor = torch.tensor([tr_loss, tr_hm, tr_pr, tr_peak, tr_mae_px], device=device)
+            metrics_tensor = torch.tensor([tr_loss, tr_hm, tr_pr, tr_peak, tr_mae_px, tr_hm_reg], device=device)
             metrics_tensor = reduce_mean(metrics_tensor)
-            tr_loss, tr_hm, tr_pr, tr_peak, tr_mae_px = [float(x) for x in metrics_tensor.tolist()]
+            tr_loss, tr_hm, tr_pr, tr_peak, tr_mae_px, tr_hm_reg = [float(x) for x in metrics_tensor.tolist()]
 
             if is_main_process(rank):
                 msg = f"[Epoch {epoch}] train: L={tr_loss:.4f} (hm={tr_hm:.4f}, pr={tr_pr:.4f}, peak={tr_peak:.4f})"
                 if np.isfinite(tr_mae_px):
                     msg += f", mae_px={tr_mae_px:.2f}"
+                if np.isfinite(tr_hm_reg) and w_hm_focal_reg > 0.0:
+                    msg += f", hm_reg={tr_hm_reg:.4f}"
                 print(msg)
 
             val_metrics = None; test_metrics = None
@@ -808,7 +898,19 @@ def main():
                     msg = f"          val:  L={val_score:.4f} (hm={val_metrics['hm']:.4f}, pr={val_metrics['presence']:.4f})"
                     if np.isfinite(val_metrics.get('center_mae_px', float('nan'))):
                         msg += f", mae_px={val_metrics['center_mae_px']:.2f}"
+                    if np.isfinite(val_metrics.get("heatmap_focal_reg", float("nan"))) and w_hm_focal_reg > 0.0:
+                        msg += f", hm_reg={val_metrics['heatmap_focal_reg']:.4f}"
                     print(msg)
+                    if np.isfinite(val_metrics.get("pred_x_mean_px", float("nan"))):
+                        print(
+                            f"          val:  pred_xy mean=({val_metrics['pred_x_mean_px']:.2f}, {val_metrics['pred_y_mean_px']:.2f}) "
+                            f"var=({val_metrics['pred_x_var_px']:.2f}, {val_metrics['pred_y_var_px']:.2f}) px"
+                        )
+                    if test_metrics is not None and np.isfinite(test_metrics.get("pred_x_mean_px", float("nan"))):
+                        print(
+                            f"          test: pred_xy mean=({test_metrics['pred_x_mean_px']:.2f}, {test_metrics['pred_y_mean_px']:.2f}) "
+                            f"var=({test_metrics['pred_x_var_px']:.2f}, {test_metrics['pred_y_var_px']:.2f}) px"
+                        )
 
                     if epoch < best_start_epoch:
                         print(f"[Epoch {epoch}] checkpoint skip: epoch < best_ckpt_start_epoch ({best_start_epoch})")
@@ -830,15 +932,26 @@ def main():
                     "train_heatmap_loss": tr_hm,
                     "train_presence_loss": tr_pr,
                     "train_center_mae_px": "" if not np.isfinite(tr_mae_px) else tr_mae_px,
+                    "train_heatmap_focal_reg": "" if not np.isfinite(tr_hm_reg) else tr_hm_reg,
                     "val_loss": val_metrics["loss"] if val_metrics else "",
                     "val_heatmap_loss": val_metrics["hm"] if val_metrics else "",
                     "val_presence_loss": val_metrics["presence"] if val_metrics else "",
                     "val_center_mae_px": val_metrics.get("center_mae_px", "") if val_metrics else "",
+                    "val_heatmap_focal_reg": val_metrics.get("heatmap_focal_reg", "") if val_metrics else "",
                     "test_loss": test_metrics["loss"] if test_metrics else "",
                     "test_heatmap_loss": test_metrics["hm"] if test_metrics else "",
                     "test_presence_loss": test_metrics["presence"] if test_metrics else "",
                     "test_presence_combined_loss": test_metrics["presence_combined"] if test_metrics else "",
                     "test_center_mae_px": test_metrics.get("center_mae_px", "") if test_metrics else "",
+                    "test_heatmap_focal_reg": test_metrics.get("heatmap_focal_reg", "") if test_metrics else "",
+                    "val_pred_x_mean_px": val_metrics.get("pred_x_mean_px", "") if val_metrics else "",
+                    "val_pred_x_var_px": val_metrics.get("pred_x_var_px", "") if val_metrics else "",
+                    "val_pred_y_mean_px": val_metrics.get("pred_y_mean_px", "") if val_metrics else "",
+                    "val_pred_y_var_px": val_metrics.get("pred_y_var_px", "") if val_metrics else "",
+                    "test_pred_x_mean_px": test_metrics.get("pred_x_mean_px", "") if test_metrics else "",
+                    "test_pred_x_var_px": test_metrics.get("pred_x_var_px", "") if test_metrics else "",
+                    "test_pred_y_mean_px": test_metrics.get("pred_y_mean_px", "") if test_metrics else "",
+                    "test_pred_y_var_px": test_metrics.get("pred_y_var_px", "") if test_metrics else "",
                 }
                 writer.writerow(row); log_file.flush()
 
