@@ -28,227 +28,228 @@ Temporal window: T=16, stride=4
 [INFO] rank 0/16 device=cuda:0
 [INFO] batch_size per GPU=128 (global=2048)
 [INFO] lr scaled from 0.0005 to 0.008 for world_size=16
-Logging metrics to outputs/runs/exp_x3dm_dsnt_3/training_log.csv
-[Epoch 1] train: L=66.8343 (hm=64.3569, pr=2.4775, peak=4.1559)
-[Epoch 1] elapsed: 102.3s
-[Epoch 2] train: L=62.4186 (hm=60.0605, pr=2.3581, peak=3.9307)
-[Epoch 2] elapsed: 56.6s
-[Epoch 3] train: L=6.6338 (hm=4.6604, pr=1.9734, peak=3.2535)
-[Epoch 3] elapsed: 53.1s
-[Epoch 4] train: L=2.7343 (hm=0.9793, pr=1.7550, peak=2.8687)
-[Epoch 4] elapsed: 51.0s
-[Epoch 5] train: L=1.9121 (hm=0.3712, pr=1.5409, peak=2.4833)
-[Epoch 5] elapsed: 50.5s
-[Epoch 6] train: L=1.5500 (hm=0.2366, pr=1.3135, peak=2.0261)
-[Epoch 6] elapsed: 52.1s
-[Epoch 7] train: L=1.2103 (hm=0.1189, pr=1.0914, peak=1.5306)
-[Epoch 7] elapsed: 52.1s
-[Epoch 8] train: L=0.9865 (hm=0.1030, pr=0.8836, peak=0.9673)
-[Epoch 8] elapsed: 52.3s
-[Epoch 9] train: L=0.8185 (hm=0.0878, pr=0.7307, peak=0.3755)
-[Epoch 9] elapsed: 51.0s
-[Epoch 10] train: L=0.7194 (hm=0.0593, pr=0.6601, peak=-0.1522)
-          val:  L=19.3094 (hm=18.6394, pr=0.6700)
-[Epoch 10] saving BEST checkpoint to outputs/runs/exp_x3dm_dsnt_3/best.ckpt ...
-[Epoch 10] best checkpoint saved in 0.06s
-[Epoch 10] elapsed: 107.2s
-[Epoch 11] train: L=0.6988 (hm=0.0518, pr=0.6471, peak=-0.4765)
-[Epoch 11] elapsed: 51.6s
-[Epoch 12] train: L=0.6871 (hm=0.0457, pr=0.6414, peak=-0.5684)
-[Epoch 12] elapsed: 52.9s
-[Epoch 13] train: L=0.6672 (hm=0.0384, pr=0.6288, peak=-0.5084)
-[Epoch 13] elapsed: 50.6s
-[Epoch 14] train: L=0.6589 (hm=0.0439, pr=0.6150, peak=-0.4174)
-[Epoch 14] elapsed: 50.5s
-[Epoch 15] train: L=0.6385 (hm=0.0388, pr=0.5997, peak=-0.3683)
-[Epoch 15] elapsed: 51.7s
-[Epoch 16] train: L=0.6260 (hm=0.0446, pr=0.5814, peak=-0.3668)
-[Epoch 16] elapsed: 51.0s
-[Epoch 17] train: L=0.5932 (hm=0.0363, pr=0.5569, peak=-0.3953)
-[Epoch 17] elapsed: 51.1s
-[Epoch 18] train: L=0.5835 (hm=0.0553, pr=0.5282, peak=-0.4302)
-[Epoch 18] elapsed: 50.8s
-[Epoch 19] train: L=0.5532 (hm=0.0548, pr=0.4984, peak=-0.4583)
-[Epoch 19] elapsed: 51.1s
-[Epoch 20] train: L=0.5259 (hm=0.0596, pr=0.4664, peak=-0.4779)
-          val:  L=16.3205 (hm=15.6947, pr=0.6259)
-[Epoch 20] saving BEST checkpoint to outputs/runs/exp_x3dm_dsnt_3/best.ckpt ...
-[Epoch 20] best checkpoint saved in 0.05s
-[Epoch 20] elapsed: 74.3s
-[Epoch 21] train: L=0.5026 (hm=0.0703, pr=0.4322, peak=-0.5128)
-[Epoch 21] elapsed: 49.1s
-[Epoch 22] train: L=0.4473 (hm=0.0508, pr=0.3966, peak=-0.5547)
-[Epoch 22] elapsed: 51.7s
-[Epoch 23] train: L=0.4178 (hm=0.0559, pr=0.3620, peak=-0.6014)
-[Epoch 23] elapsed: 52.0s
-[Epoch 24] train: L=0.3807 (hm=0.0495, pr=0.3312, peak=-0.6401)
-[Epoch 24] elapsed: 53.2s
-[Epoch 25] train: L=0.3596 (hm=0.0525, pr=0.3072, peak=-0.6769)
-[Epoch 25] elapsed: 50.0s
-[Epoch 26] train: L=0.3312 (hm=0.0470, pr=0.2842, peak=-0.7279)
-[Epoch 26] elapsed: 50.3s
-[Epoch 27] train: L=0.3042 (hm=0.0385, pr=0.2657, peak=-0.7793)
-[Epoch 27] elapsed: 51.1s
-[Epoch 28] train: L=0.2958 (hm=0.0440, pr=0.2519, peak=-0.8215)
-[Epoch 28] elapsed: 51.0s
-[Epoch 29] train: L=0.2837 (hm=0.0437, pr=0.2401, peak=-0.8328)
-[Epoch 29] elapsed: 49.2s
-[Epoch 30] train: L=0.2719 (hm=0.0394, pr=0.2325, peak=-0.8662)
-          val:  L=18.8398 (hm=18.2092, pr=0.6306)
-[Epoch 30] no val improvement (18.8398 >= 16.3205); checkpoint not saved
-[Epoch 30] elapsed: 73.5s
-[Epoch 31] train: L=0.2728 (hm=0.0493, pr=0.2236, peak=-0.9000)
-[Epoch 31] elapsed: 50.3s
-[Epoch 32] train: L=0.2475 (hm=0.0294, pr=0.2181, peak=-0.9108)
-[Epoch 32] elapsed: 51.1s
-[Epoch 33] train: L=0.2430 (hm=0.0309, pr=0.2121, peak=-0.9560)
-[Epoch 33] elapsed: 50.8s
-[Epoch 34] train: L=0.2378 (hm=0.0299, pr=0.2080, peak=-0.9583)
-[Epoch 34] elapsed: 51.3s
-[Epoch 35] train: L=0.2307 (hm=0.0271, pr=0.2036, peak=-0.9704)
-[Epoch 35] elapsed: 51.7s
-[Epoch 36] train: L=0.2241 (hm=0.0229, pr=0.2011, peak=-0.9673)
-[Epoch 36] elapsed: 50.7s
-[Epoch 37] train: L=0.2187 (hm=0.0205, pr=0.1982, peak=-0.9750)
-[Epoch 37] elapsed: 50.1s
-[Epoch 38] train: L=0.2109 (hm=0.0156, pr=0.1953, peak=-0.9863)
-[Epoch 38] elapsed: 51.3s
-[Epoch 39] train: L=0.2077 (hm=0.0139, pr=0.1938, peak=-0.9973)
-[Epoch 39] elapsed: 50.1s
-[Epoch 40] train: L=0.2023 (hm=0.0100, pr=0.1923, peak=-0.9914)
-          val:  L=18.6558 (hm=18.0488, pr=0.6069)
-[Epoch 40] no val improvement (18.6558 >= 16.3205); checkpoint not saved
-[Epoch 40] elapsed: 73.1s
-[Epoch 41] train: L=0.2100 (hm=0.0201, pr=0.1899, peak=-1.0049)
-[Epoch 41] elapsed: 49.3s
-[Epoch 42] train: L=0.2127 (hm=0.0225, pr=0.1902, peak=-0.9804)
-[Epoch 42] elapsed: 48.9s
-[Epoch 43] train: L=0.2137 (hm=0.0248, pr=0.1888, peak=-0.9536)
-[Epoch 43] elapsed: 50.3s
-[Epoch 44] train: L=0.2027 (hm=0.0148, pr=0.1878, peak=-0.9611)
-[Epoch 44] elapsed: 50.0s
-[Epoch 45] train: L=0.2009 (hm=0.0152, pr=0.1857, peak=-0.9691)
-[Epoch 45] elapsed: 50.5s
-[Epoch 46] train: L=0.1996 (hm=0.0144, pr=0.1852, peak=-0.9804)
-[Epoch 46] elapsed: 50.7s
-[Epoch 47] train: L=0.2004 (hm=0.0165, pr=0.1839, peak=-0.9724)
-[Epoch 47] elapsed: 51.4s
-[Epoch 48] train: L=0.1970 (hm=0.0135, pr=0.1835, peak=-0.9755)
-[Epoch 48] elapsed: 50.8s
-[Epoch 49] train: L=0.1932 (hm=0.0100, pr=0.1833, peak=-0.9712)
-[Epoch 49] elapsed: 54.1s
-[Epoch 50] train: L=0.1907 (hm=0.0084, pr=0.1823, peak=-0.9789)
-          val:  L=18.1256 (hm=17.5184, pr=0.6072)
-[Epoch 50] no val improvement (18.1256 >= 16.3205); checkpoint not saved
-[Epoch 50] elapsed: 76.1s
-[Epoch 51] train: L=0.1901 (hm=0.0083, pr=0.1818, peak=-0.9884)
-[Epoch 51] elapsed: 53.5s
-[Epoch 52] train: L=0.1889 (hm=0.0073, pr=0.1816, peak=-0.9770)
-[Epoch 52] elapsed: 53.7s
-[Epoch 53] train: L=0.1883 (hm=0.0077, pr=0.1806, peak=-0.9800)
-[Epoch 53] elapsed: 54.0s
-[Epoch 54] train: L=0.1911 (hm=0.0110, pr=0.1801, peak=-0.9683)
-[Epoch 54] elapsed: 52.3s
-[Epoch 55] train: L=0.1895 (hm=0.0101, pr=0.1794, peak=-0.9680)
-[Epoch 55] elapsed: 54.7s
-[Epoch 56] train: L=0.1902 (hm=0.0109, pr=0.1793, peak=-0.9557)
-[Epoch 56] elapsed: 53.3s
-[Epoch 57] train: L=0.1879 (hm=0.0090, pr=0.1789, peak=-0.9463)
-[Epoch 57] elapsed: 54.0s
-[Epoch 58] train: L=0.1870 (hm=0.0086, pr=0.1784, peak=-0.9516)
-[Epoch 58] elapsed: 52.4s
-[Epoch 59] train: L=0.1864 (hm=0.0085, pr=0.1779, peak=-0.9477)
-[Epoch 59] elapsed: 52.7s
-[Epoch 60] train: L=0.1860 (hm=0.0080, pr=0.1780, peak=-0.9349)
-          val:  L=18.3729 (hm=17.7805, pr=0.5924)
-[Epoch 60] no val improvement (18.3729 >= 16.3205); checkpoint not saved
-[Epoch 60] elapsed: 76.2s
-[Epoch 61] train: L=0.1855 (hm=0.0079, pr=0.1776, peak=-0.9414)
-[Epoch 61] elapsed: 53.8s
-[Epoch 62] train: L=0.1967 (hm=0.0194, pr=0.1772, peak=-0.9313)
-[Epoch 62] elapsed: 53.6s
-[Epoch 63] train: L=0.1971 (hm=0.0197, pr=0.1774, peak=-0.9176)
-[Epoch 63] elapsed: 52.4s
-[Epoch 64] train: L=0.1938 (hm=0.0167, pr=0.1771, peak=-0.9160)
-[Epoch 64] elapsed: 53.0s
-[Epoch 65] train: L=0.1916 (hm=0.0148, pr=0.1768, peak=-0.9053)
-[Epoch 65] elapsed: 53.5s
-[Epoch 66] train: L=0.1848 (hm=0.0084, pr=0.1764, peak=-0.9142)
-[Epoch 66] elapsed: 53.5s
-[Epoch 67] train: L=0.1854 (hm=0.0091, pr=0.1763, peak=-0.9251)
-[Epoch 67] elapsed: 53.2s
-[Epoch 68] train: L=0.1859 (hm=0.0099, pr=0.1760, peak=-0.9185)
-[Epoch 68] elapsed: 53.1s
-[Epoch 69] train: L=0.1848 (hm=0.0088, pr=0.1760, peak=-0.9109)
-[Epoch 69] elapsed: 53.3s
-[Epoch 70] train: L=0.1835 (hm=0.0080, pr=0.1754, peak=-0.9104)
-          val:  L=17.6705 (hm=17.0586, pr=0.6119)
-[Epoch 70] no val improvement (17.6705 >= 16.3205); checkpoint not saved
-[Epoch 70] elapsed: 76.3s
-[Epoch 71] train: L=0.1847 (hm=0.0094, pr=0.1753, peak=-0.9115)
-[Epoch 71] elapsed: 52.6s
-[Epoch 72] train: L=0.1844 (hm=0.0090, pr=0.1754, peak=-0.9110)
-[Epoch 72] elapsed: 52.2s
-[Epoch 73] train: L=0.1811 (hm=0.0060, pr=0.1751, peak=-0.9096)
-[Epoch 73] elapsed: 53.1s
-[Epoch 74] train: L=0.1816 (hm=0.0065, pr=0.1750, peak=-0.9027)
-[Epoch 74] elapsed: 52.1s
-[Epoch 75] train: L=0.1801 (hm=0.0057, pr=0.1744, peak=-0.8980)
-[Epoch 75] elapsed: 53.8s
-[Epoch 76] train: L=0.1792 (hm=0.0050, pr=0.1742, peak=-0.9099)
-[Epoch 76] elapsed: 53.3s
-[Epoch 77] train: L=0.1802 (hm=0.0060, pr=0.1741, peak=-0.9010)
-[Epoch 77] elapsed: 51.2s
-[Epoch 78] train: L=0.1795 (hm=0.0059, pr=0.1737, peak=-0.8975)
-[Epoch 78] elapsed: 53.0s
-[Epoch 79] train: L=0.1787 (hm=0.0047, pr=0.1739, peak=-0.8809)
-[Epoch 79] elapsed: 53.4s
-[Epoch 80] train: L=0.1777 (hm=0.0044, pr=0.1733, peak=-0.8914)
-          val:  L=18.0851 (hm=17.4772, pr=0.6079)
-[Epoch 80] no val improvement (18.0851 >= 16.3205); checkpoint not saved
-[Epoch 80] elapsed: 73.7s
-[Epoch 81] train: L=0.1796 (hm=0.0062, pr=0.1734, peak=-0.8886)
-[Epoch 81] elapsed: 53.1s
-[Epoch 82] train: L=0.1794 (hm=0.0062, pr=0.1732, peak=-0.8797)
-[Epoch 82] elapsed: 52.5s
-[Epoch 83] train: L=0.1781 (hm=0.0047, pr=0.1734, peak=-0.8717)
-[Epoch 83] elapsed: 52.7s
-[Epoch 84] train: L=0.1799 (hm=0.0067, pr=0.1732, peak=-0.8742)
-[Epoch 84] elapsed: 51.3s
-[Epoch 85] train: L=0.1807 (hm=0.0076, pr=0.1731, peak=-0.8693)
-[Epoch 85] elapsed: 53.3s
-[Epoch 86] train: L=0.1793 (hm=0.0065, pr=0.1728, peak=-0.8718)
-[Epoch 86] elapsed: 52.2s
-[Epoch 87] train: L=0.1792 (hm=0.0061, pr=0.1732, peak=-0.8541)
-[Epoch 87] elapsed: 53.7s
-[Epoch 88] train: L=0.1775 (hm=0.0049, pr=0.1726, peak=-0.8647)
-[Epoch 88] elapsed: 53.2s
-[Epoch 89] train: L=0.1789 (hm=0.0064, pr=0.1725, peak=-0.8737)
-[Epoch 89] elapsed: 51.8s
-[Epoch 90] train: L=0.1788 (hm=0.0063, pr=0.1725, peak=-0.8599)
-          val:  L=18.7148 (hm=18.1023, pr=0.6125)
-[Epoch 90] no val improvement (18.7148 >= 16.3205); checkpoint not saved
-[Epoch 90] elapsed: 75.7s
-[Epoch 91] train: L=0.1778 (hm=0.0054, pr=0.1724, peak=-0.8540)
-[Epoch 91] elapsed: 51.8s
-[Epoch 92] train: L=0.1770 (hm=0.0048, pr=0.1722, peak=-0.8536)
-[Epoch 92] elapsed: 53.0s
-[Epoch 93] train: L=0.1766 (hm=0.0045, pr=0.1721, peak=-0.8613)
-[Epoch 93] elapsed: 53.2s
-[Epoch 94] train: L=0.1764 (hm=0.0043, pr=0.1721, peak=-0.8618)
-[Epoch 94] elapsed: 53.1s
-[Epoch 95] train: L=0.1751 (hm=0.0032, pr=0.1719, peak=-0.8478)
-[Epoch 95] elapsed: 53.6s
-[Epoch 96] train: L=0.1750 (hm=0.0035, pr=0.1716, peak=-0.8419)
-[Epoch 96] elapsed: 51.5s
-[Epoch 97] train: L=0.1752 (hm=0.0035, pr=0.1717, peak=-0.8450)
-[Epoch 97] elapsed: 52.9s
-[Epoch 98] train: L=0.1748 (hm=0.0035, pr=0.1714, peak=-0.8449)
-[Epoch 98] elapsed: 52.0s
-[Epoch 99] train: L=0.1757 (hm=0.0041, pr=0.1716, peak=-0.8390)
-[Epoch 99] elapsed: 53.4s
-[Epoch 100] train: L=0.1782 (hm=0.0065, pr=0.1717, peak=-0.8214)
-          val:  L=18.7563 (hm=18.1245, pr=0.6318)
-[Epoch 100] no val improvement (18.7563 >= 16.3205); checkpoint not saved
-[Epoch 100] elapsed: 76.0s
-Done. Best: outputs/runs/exp_x3dm_dsnt_3/best.ckpt
+Logging metrics to outputs/runs/exp_x3dm_dsnt_4/training_log.csv
+[Epoch 1] train: L=20.0431 (hm=11.6066, pr=2.6332, peak=4.4248), mae_px=23.24
+[Epoch 1] elapsed: 100.4s
+[Epoch 2] train: L=11.0341 (hm=6.1056, pr=1.8757, peak=3.0881), mae_px=12.42
+[Epoch 2] elapsed: 62.7s
+[Epoch 3] train: L=4.3343 (hm=1.9132, pr=1.4646, peak=2.3407), mae_px=4.04
+[Epoch 3] elapsed: 64.1s
+[Epoch 4] train: L=2.6829 (hm=1.0483, pr=1.1104, peak=1.5930), mae_px=2.24
+[Epoch 4] elapsed: 64.9s
+[Epoch 5] train: L=1.8208 (hm=0.6743, pr=0.8094, peak=0.7609), mae_px=1.48
+[Epoch 5] elapsed: 63.2s
+[Epoch 6] train: L=1.4347 (hm=0.5110, pr=0.6682, peak=0.0273), mae_px=1.12
+[Epoch 6] elapsed: 63.9s
+[Epoch 7] train: L=1.4677 (hm=0.5524, pr=0.6391, peak=-0.4571), mae_px=1.18
+[Epoch 7] elapsed: 64.3s
+[Epoch 8] train: L=1.5162 (hm=0.5832, pr=0.6414, peak=-0.5345), mae_px=1.22
+[Epoch 8] elapsed: 63.0s
+[Epoch 9] train: L=1.4188 (hm=0.5216, pr=0.6364, peak=-0.4030), mae_px=1.09
+[Epoch 9] elapsed: 62.4s
+[Epoch 10] train: L=1.1470 (hm=0.3410, pr=0.6355, peak=-0.2956), mae_px=0.73
+          val:  L=7.3289 (hm=4.4385, pr=0.6712), mae_px=8.89
+[Epoch 10] saving BEST checkpoint to outputs/runs/exp_x3dm_dsnt_4/best.ckpt ...
+[Epoch 10] best checkpoint saved in 0.10s
+[Epoch 10] elapsed: 111.4s
+[Epoch 11] train: L=1.1410 (hm=0.3380, pr=0.6340, peak=-0.2784), mae_px=0.72
+[Epoch 11] elapsed: 64.6s
+[Epoch 12] train: L=1.1236 (hm=0.3285, pr=0.6308, peak=-0.2935), mae_px=0.71
+[Epoch 12] elapsed: 63.3s
+[Epoch 13] train: L=1.1352 (hm=0.3403, pr=0.6247, peak=-0.3387), mae_px=0.72
+[Epoch 13] elapsed: 63.6s
+[Epoch 14] train: L=1.0843 (hm=0.3077, pr=0.6227, peak=-0.3455), mae_px=0.65
+[Epoch 14] elapsed: 63.5s
+[Epoch 15] train: L=1.1960 (hm=0.3846, pr=0.6191, peak=-0.3500), mae_px=0.79
+[Epoch 15] elapsed: 63.2s
+[Epoch 16] train: L=1.0505 (hm=0.2900, pr=0.6155, peak=-0.3376), mae_px=0.61
+[Epoch 16] elapsed: 62.7s
+[Epoch 17] train: L=0.9931 (hm=0.2547, pr=0.6110, peak=-0.3424), mae_px=0.54
+[Epoch 17] elapsed: 63.2s
+[Epoch 18] train: L=1.1474 (hm=0.3613, pr=0.6055, peak=-0.3555), mae_px=0.75
+[Epoch 18] elapsed: 62.9s
+[Epoch 19] train: L=1.0170 (hm=0.2787, pr=0.5990, peak=-0.3507), mae_px=0.58
+[Epoch 19] elapsed: 62.6s
+[Epoch 20] train: L=1.0185 (hm=0.2833, pr=0.5936, peak=-0.3595), mae_px=0.60
+          val:  L=7.0054 (hm=4.2235, pr=0.6701), mae_px=8.70
+[Epoch 20] saving BEST checkpoint to outputs/runs/exp_x3dm_dsnt_4/best.ckpt ...
+[Epoch 20] best checkpoint saved in 0.06s
+[Epoch 20] elapsed: 89.8s
+[Epoch 21] train: L=0.9857 (hm=0.2643, pr=0.5892, peak=-0.3696), mae_px=0.56
+[Epoch 21] elapsed: 64.0s
+[Epoch 22] train: L=1.0268 (hm=0.2944, pr=0.5852, peak=-0.3739), mae_px=0.62
+[Epoch 22] elapsed: 63.7s
+[Epoch 23] train: L=0.9765 (hm=0.2638, pr=0.5809, peak=-0.3741), mae_px=0.55
+[Epoch 23] elapsed: 63.4s
+[Epoch 24] train: L=0.9299 (hm=0.2369, pr=0.5746, peak=-0.3716), mae_px=0.50
+[Epoch 24] elapsed: 62.8s
+[Epoch 25] train: L=0.8692 (hm=0.2004, pr=0.5687, peak=-0.3818), mae_px=0.43
+[Epoch 25] elapsed: 62.5s
+[Epoch 26] train: L=0.8698 (hm=0.2055, pr=0.5616, peak=-0.3866), mae_px=0.44
+[Epoch 26] elapsed: 63.3s
+[Epoch 27] train: L=0.9231 (hm=0.2449, pr=0.5557, peak=-0.3886), mae_px=0.51
+[Epoch 27] elapsed: 63.0s
+[Epoch 28] train: L=0.9701 (hm=0.2804, pr=0.5495, peak=-0.3960), mae_px=0.59
+[Epoch 28] elapsed: 62.3s
+[Epoch 29] train: L=0.9501 (hm=0.2672, pr=0.5493, peak=-0.3788), mae_px=0.56
+[Epoch 29] elapsed: 63.6s
+[Epoch 30] train: L=0.8420 (hm=0.1979, pr=0.5452, peak=-0.3736), mae_px=0.43
+          val:  L=7.4761 (hm=4.5320, pr=0.6781), mae_px=9.40
+[Epoch 30] no val improvement (7.4761 >= 7.0054); checkpoint not saved
+[Epoch 30] elapsed: 91.3s
+[Epoch 31] train: L=0.8018 (hm=0.1744, pr=0.5402, peak=-0.3740), mae_px=0.37
+[Epoch 31] elapsed: 62.0s
+[Epoch 32] train: L=0.7958 (hm=0.1776, pr=0.5294, peak=-0.3954), mae_px=0.39
+[Epoch 32] elapsed: 62.1s
+[Epoch 33] train: L=0.7937 (hm=0.1840, pr=0.5176, peak=-0.4342), mae_px=0.41
+[Epoch 33] elapsed: 63.1s
+[Epoch 34] train: L=0.7600 (hm=0.1679, pr=0.5081, peak=-0.4215), mae_px=0.37
+[Epoch 34] elapsed: 62.0s
+[Epoch 35] train: L=0.7656 (hm=0.1774, pr=0.4996, peak=-0.4064), mae_px=0.38
+[Epoch 35] elapsed: 63.9s
+[Epoch 36] train: L=0.7174 (hm=0.1511, pr=0.4907, peak=-0.3983), mae_px=0.34
+[Epoch 36] elapsed: 63.7s
+[Epoch 37] train: L=0.7778 (hm=0.1981, pr=0.4806, peak=-0.4109), mae_px=0.42
+[Epoch 37] elapsed: 63.9s
+[Epoch 38] train: L=0.7560 (hm=0.1903, pr=0.4705, peak=-0.4714), mae_px=0.43
+[Epoch 38] elapsed: 63.0s
+[Epoch 39] train: L=0.6831 (hm=0.1470, pr=0.4625, peak=-0.4510), mae_px=0.33
+[Epoch 39] elapsed: 63.7s
+[Epoch 40] train: L=0.6890 (hm=0.1579, pr=0.4521, peak=-0.4239), mae_px=0.35
+          val:  L=8.1665 (hm=4.9910, pr=0.6801), mae_px=10.38
+[Epoch 40] no val improvement (8.1665 >= 7.0054); checkpoint not saved
+[Epoch 40] elapsed: 92.0s
+[Epoch 41] train: L=0.7012 (hm=0.1783, pr=0.4338, peak=-0.4525), mae_px=0.40
+[Epoch 41] elapsed: 64.0s
+[Epoch 42] train: L=0.7373 (hm=0.2103, pr=0.4218, peak=-0.4627), mae_px=0.46
+[Epoch 42] elapsed: 64.5s
+[Epoch 43] train: L=0.6793 (hm=0.1772, pr=0.4135, peak=-0.4866), mae_px=0.40
+[Epoch 43] elapsed: 66.0s
+[Epoch 44] train: L=0.6345 (hm=0.1558, pr=0.4009, peak=-0.4861), mae_px=0.36
+[Epoch 44] elapsed: 65.7s
+[Epoch 45] train: L=0.6149 (hm=0.1531, pr=0.3853, peak=-0.5037), mae_px=0.37
+[Epoch 45] elapsed: 66.0s
+[Epoch 46] train: L=0.6057 (hm=0.1591, pr=0.3670, peak=-0.5274), mae_px=0.38
+[Epoch 46] elapsed: 65.1s
+[Epoch 47] train: L=0.5892 (hm=0.1579, pr=0.3523, peak=-0.5308), mae_px=0.37
+[Epoch 47] elapsed: 65.0s
+[Epoch 48] train: L=0.6468 (hm=0.2063, pr=0.3374, peak=-0.5594), mae_px=0.46
+[Epoch 48] elapsed: 65.6s
+[Epoch 49] train: L=0.6376 (hm=0.2079, pr=0.3257, peak=-0.5661), mae_px=0.48
+[Epoch 49] elapsed: 66.3s
+[Epoch 50] train: L=0.5581 (hm=0.1619, pr=0.3153, peak=-0.5607), mae_px=0.38
+          val:  L=10.1717 (hm=6.2827, pr=0.7476), mae_px=13.14
+[Epoch 50] no val improvement (10.1717 >= 7.0054); checkpoint not saved
+[Epoch 50] elapsed: 93.4s
+[Epoch 51] train: L=0.5542 (hm=0.1692, pr=0.3005, peak=-0.5893), mae_px=0.41
+[Epoch 51] elapsed: 64.1s
+[Epoch 52] train: L=0.5406 (hm=0.1692, pr=0.2868, peak=-0.6341), mae_px=0.40
+[Epoch 52] elapsed: 62.4s
+[Epoch 53] train: L=0.5145 (hm=0.1604, pr=0.2739, peak=-0.6976), mae_px=0.40
+[Epoch 53] elapsed: 64.0s
+[Epoch 54] train: L=0.4842 (hm=0.1466, pr=0.2643, peak=-0.7180), mae_px=0.37
+[Epoch 54] elapsed: 63.3s
+[Epoch 55] train: L=0.4778 (hm=0.1486, pr=0.2550, peak=-0.7347), mae_px=0.39
+[Epoch 55] elapsed: 63.6s
+[Epoch 56] train: L=0.4911 (hm=0.1580, pr=0.2541, peak=-0.7423), mae_px=0.40
+[Epoch 56] elapsed: 62.9s
+[Epoch 57] train: L=0.4831 (hm=0.1565, pr=0.2484, peak=-0.7849), mae_px=0.39
+[Epoch 57] elapsed: 62.7s
+[Epoch 58] train: L=0.5045 (hm=0.1750, pr=0.2420, peak=-0.8098), mae_px=0.43
+[Epoch 58] elapsed: 63.2s
+[Epoch 59] train: L=0.4610 (hm=0.1501, pr=0.2359, peak=-0.8365), mae_px=0.38
+[Epoch 59] elapsed: 63.3s
+[Epoch 60] train: L=0.4516 (hm=0.1462, pr=0.2323, peak=-0.8322), mae_px=0.37
+          val:  L=7.8492 (hm=4.6941, pr=0.8080), mae_px=9.85
+[Epoch 60] no val improvement (7.8492 >= 7.0054); checkpoint not saved
+[Epoch 60] elapsed: 90.6s
+[Epoch 61] train: L=0.4356 (hm=0.1393, pr=0.2267, peak=-0.8571), mae_px=0.38
+[Epoch 61] elapsed: 63.4s
+[Epoch 62] train: L=0.4140 (hm=0.1245, pr=0.2273, peak=-0.8550), mae_px=0.34
+[Epoch 62] elapsed: 63.2s
+[Epoch 63] train: L=0.4040 (hm=0.1195, pr=0.2247, peak=-0.8862), mae_px=0.33
+[Epoch 63] elapsed: 63.8s
+[Epoch 64] train: L=0.4179 (hm=0.1294, pr=0.2239, peak=-0.8660), mae_px=0.34
+[Epoch 64] elapsed: 61.4s
+[Epoch 65] train: L=0.4683 (hm=0.1664, pr=0.2187, peak=-0.8848), mae_px=0.41
+[Epoch 65] elapsed: 61.7s
+[Epoch 66] train: L=0.4552 (hm=0.1574, pr=0.2191, peak=-0.8574), mae_px=0.41
+[Epoch 66] elapsed: 63.9s
+[Epoch 67] train: L=0.4336 (hm=0.1446, pr=0.2167, peak=-0.8945), mae_px=0.41
+[Epoch 67] elapsed: 63.9s
+[Epoch 68] train: L=0.3967 (hm=0.1165, pr=0.2219, peak=-0.8604), mae_px=0.31
+[Epoch 68] elapsed: 63.3s
+[Epoch 69] train: L=0.3737 (hm=0.1029, pr=0.2194, peak=-0.8944), mae_px=0.29
+[Epoch 69] elapsed: 63.6s
+[Epoch 70] train: L=0.3662 (hm=0.1017, pr=0.2135, peak=-0.9359), mae_px=0.28
+          val:  L=8.4452 (hm=5.0101, pr=0.9300), mae_px=10.24
+[Epoch 70] no val improvement (8.4452 >= 7.0054); checkpoint not saved
+[Epoch 70] elapsed: 92.3s
+[Epoch 71] train: L=0.3546 (hm=0.0967, pr=0.2095, peak=-0.9496), mae_px=0.28
+[Epoch 71] elapsed: 62.3s
+[Epoch 72] train: L=0.3600 (hm=0.1005, pr=0.2092, peak=-0.9052), mae_px=0.28
+[Epoch 72] elapsed: 63.3s
+[Epoch 73] train: L=0.3493 (hm=0.0947, pr=0.2072, peak=-0.9058), mae_px=0.28
+[Epoch 73] elapsed: 64.4s
+[Epoch 74] train: L=0.3549 (hm=0.0986, pr=0.2071, peak=-0.8965), mae_px=0.28
+[Epoch 74] elapsed: 64.0s
+[Epoch 75] train: L=0.3595 (hm=0.1005, pr=0.2088, peak=-0.9101), mae_px=0.28
+[Epoch 75] elapsed: 64.6s
+[Epoch 76] train: L=0.3958 (hm=0.1264, pr=0.2063, peak=-0.9403), mae_px=0.33
+[Epoch 76] elapsed: 63.0s
+[Epoch 77] train: L=0.3651 (hm=0.1065, pr=0.2053, peak=-0.9205), mae_px=0.30
+[Epoch 77] elapsed: 64.9s
+[Epoch 78] train: L=0.3823 (hm=0.1157, pr=0.2087, peak=-0.9068), mae_px=0.32
+[Epoch 78] elapsed: 63.8s
+[Epoch 79] train: L=0.3909 (hm=0.1212, pr=0.2091, peak=-0.9113), mae_px=0.32
+[Epoch 79] elapsed: 63.8s
+[Epoch 80] train: L=0.3778 (hm=0.1151, pr=0.2052, peak=-0.9209), mae_px=0.31
+          val:  L=7.4131 (hm=4.3960, pr=0.8190), mae_px=9.08
+[Epoch 80] no val improvement (7.4131 >= 7.0054); checkpoint not saved
+[Epoch 80] elapsed: 94.1s
+[Epoch 81] train: L=0.3525 (hm=0.0991, pr=0.2038, peak=-0.9226), mae_px=0.28
+[Epoch 81] elapsed: 65.1s
+[Epoch 82] train: L=0.3427 (hm=0.0889, pr=0.2093, peak=-0.8851), mae_px=0.27
+[Epoch 82] elapsed: 63.7s
+[Epoch 83] train: L=0.3317 (hm=0.0833, pr=0.2068, peak=-0.9221), mae_px=0.26
+[Epoch 83] elapsed: 64.0s
+[Epoch 84] train: L=0.3314 (hm=0.0847, pr=0.2043, peak=-0.9419), mae_px=0.25
+[Epoch 84] elapsed: 64.7s
+[Epoch 85] train: L=0.3439 (hm=0.0956, pr=0.2005, peak=-0.9583), mae_px=0.28
+[Epoch 85] elapsed: 65.1s
+[Epoch 86] train: L=0.3323 (hm=0.0887, pr=0.1993, peak=-0.9017), mae_px=0.25
+[Epoch 86] elapsed: 63.2s
+[Epoch 87] train: L=0.3394 (hm=0.0922, pr=0.2011, peak=-0.8622), mae_px=0.27
+[Epoch 87] elapsed: 65.1s
+[Epoch 88] train: L=0.3320 (hm=0.0892, pr=0.1983, peak=-0.9203), mae_px=0.26
+[Epoch 88] elapsed: 64.3s
+[Epoch 89] train: L=0.3380 (hm=0.0937, pr=0.1974, peak=-0.9537), mae_px=0.28
+[Epoch 89] elapsed: 65.3s
+[Epoch 90] train: L=0.3408 (hm=0.0936, pr=0.2004, peak=-0.9138), mae_px=0.27
+          val:  L=7.5969 (hm=4.4132, pr=0.9772), mae_px=9.41
+[Epoch 90] no val improvement (7.5969 >= 7.0054); checkpoint not saved
+[Epoch 90] elapsed: 93.0s
+[Epoch 91] train: L=0.3765 (hm=0.1153, pr=0.2035, peak=-0.9260), mae_px=0.31
+[Epoch 91] elapsed: 64.5s
+[Epoch 92] train: L=0.4433 (hm=0.1604, pr=0.2027, peak=-0.9049), mae_px=0.41
+[Epoch 92] elapsed: 65.9s
+[Epoch 93] train: L=0.3915 (hm=0.1263, pr=0.2020, peak=-0.9434), mae_px=0.33
+[Epoch 93] elapsed: 65.4s
+[Epoch 94] train: L=0.3437 (hm=0.0952, pr=0.2009, peak=-0.9681), mae_px=0.26
+[Epoch 94] elapsed: 65.6s
+[Epoch 95] train: L=0.3159 (hm=0.0791, pr=0.1972, peak=-0.9447), mae_px=0.22
+[Epoch 95] elapsed: 65.4s
+[Epoch 96] train: L=0.3218 (hm=0.0851, pr=0.1943, peak=-0.9306), mae_px=0.24
+[Epoch 96] elapsed: 65.8s
+[Epoch 97] train: L=0.3279 (hm=0.0886, pr=0.1950, peak=-0.9082), mae_px=0.24
+[Epoch 97] elapsed: 65.3s
+[Epoch 98] train: L=0.3245 (hm=0.0862, pr=0.1951, peak=-0.8956), mae_px=0.25
+[Epoch 98] elapsed: 64.3s
+[Epoch 99] train: L=0.3121 (hm=0.0791, pr=0.1935, peak=-0.9270), mae_px=0.22
+[Epoch 99] elapsed: 64.8s
+[Epoch 100] train: L=0.3269 (hm=0.0870, pr=0.1964, peak=-0.9012), mae_px=0.24
+          val:  L=6.5669 (hm=3.8276, pr=0.8255), mae_px=7.69
+[Epoch 100] saving BEST checkpoint to outputs/runs/exp_x3dm_dsnt_4/best.ckpt ...
+[Epoch 100] best checkpoint saved in 0.06s
+[Epoch 100] elapsed: 94.0s
+Done. Best: outputs/runs/exp_x3dm_dsnt_4/best.ckpt
