@@ -45,12 +45,12 @@ loss:
   heatmap_loss: dsnt           # mse|focal|dsnt (dsnt: regressione coordinate via softmax2D + expectation)
   heatmap_focal_alpha: 1.2     # alpha (modulating) per focal heatmap
   heatmap_focal_beta: 2.0      # beta (penalizza i falsi picchi vicino al GT gaussian)
-  dsnt_tau: 0.7                # τ per softmax2D (dsnt); >1 rende la distribuzione più smooth
-  dsnt_coord_loss: l2          # l1|l2 (loss sulle coordinate DSNT in spazio heatmap)
+  dsnt_tau: 0.5                # τ per softmax2D (dsnt); >1 rende la distribuzione più smooth
+  dsnt_coord_loss: l1          # l1|l2 (loss sulle coordinate DSNT in spazio heatmap)
   peak_pool: logsumexp               # max|logsumexp (pooling spaziale per presence_from_peak)
   peak_tau: 0.25                # τ per logsumexp (più piccolo -> più simile a max)
-  w_heatmap_focal_reg: 1.0     # regolarizzatore extra: aggiunge una HeatmapFocal debole su DSNT (0=off)
-  heatmap_focal_reg_neg_multiplier: 0.2  # peso relativo del regolarizzatore sui negativi (0=solo positivi)
+  w_heatmap_focal_reg: 0.5     # regolarizzatore extra: aggiunge una HeatmapFocal debole su DSNT (0=off)
+  heatmap_focal_reg_neg_multiplier: 0.1  # peso relativo del regolarizzatore sui negativi (0=solo positivi)
   w_heatmap: 1.5               # peso della loss della head heatmap
   w_presence: 0.0              # peso della loss della head presence (se usata)
   w_peak_bce: 10.0              # peso BCE-with-logits sul picco heatmap (quando presence_from_peak=true)

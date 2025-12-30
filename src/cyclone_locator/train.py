@@ -716,6 +716,16 @@ def main():
     if distributed:
         dist.barrier()
 
+    # Save an exact snapshot of the effective config for this run (after CLI overrides).
+    if is_main_process(rank):
+        try:
+            cfg_path = os.path.join(save_dir, "config_used.yml")
+            with open(cfg_path, "w") as f:
+                yaml.safe_dump(cfg, f, sort_keys=False)
+            print(f"[INFO] Saved config snapshot to {cfg_path}")
+        except Exception as exc:
+            print(f"[WARN] could not write config snapshot in {save_dir}: {exc}")
+
     log_path = os.path.join(save_dir, "training_log.csv")
     log_fields = [
         "epoch",

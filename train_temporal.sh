@@ -13,15 +13,14 @@ HEATMAP_STRIDE="1"
 HEATMAP_SIGMA="9"
 
 #LOG_DIR="outputs/runs/exp13_temporalT${TEMPORAL_T}_bs${BATCH_SIZE}_buffer36_stride6"
-LOG_DIR="outputs/runs/exp_9_hm-upsample+conv_stride1"
+LOG_DIR="outputs/runs/exp_10_hm-upsample+conv_stride1"
 mkdir -p "$LOG_DIR"
 
 
-HEATMAP_NEG_MULT="0.7"
-HEATMAP_POS_MULT="2.5"
+HEATMAP_NEG_MULT="0.4"
+HEATMAP_POS_MULT="5"
 DSNT_TAU="0.7"            # temperatura per softmax2D (DSNT)
 DSNT_COORD_LOSS="l1"      # l1|l2
-PEAK_TAU="0.5"            # tau per logsumexp (più piccolo -> più simile a max)
 
 
 
