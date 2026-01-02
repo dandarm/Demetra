@@ -49,6 +49,8 @@ def parse_args():
     ap.add_argument("--heatmap_neg_multiplier", type=float, help="Scale factor for heatmap loss on negative samples")
     ap.add_argument("--heatmap_pos_multiplier", type=float, help="Scale factor for heatmap loss on positive samples")
     ap.add_argument("--presence_from_peak", type=int, choices=[0,1], help="If 1, disable presence head and use heatmap peak as presence prob")
+    ap.add_argument("--freeze_bn_stats", action="store_true",
+                    help="Freeze BatchNorm running stats (keep affine gamma/beta trainable)")
     return ap.parse_args()
 
 def set_seed(sd):
@@ -64,6 +66,19 @@ def seed_worker(worker_id):
     worker_seed = torch.initial_seed() % 2**32
     random.seed(worker_seed)
     np.random.seed(worker_seed)
+
+def freeze_batchnorm_running_stats(model: nn.Module) -> None:
+    """
+    Freeze BatchNorm running_mean/running_var updates by forcing BN modules to eval(),
+    while keeping affine parameters (gamma/beta) trainable.
+    """
+    for m in model.modules():
+        if isinstance(m, nn.modules.batchnorm._BatchNorm):
+            m.eval()
+            if m.weight is not None:
+                m.weight.requires_grad_(True)
+            if m.bias is not None:
+                m.bias.requires_grad_(True)
 
 def bce_logits(pred, target):
     return nn.functional.binary_cross_entropy_with_logits(pred, target)
@@ -452,6 +467,8 @@ def main():
         cfg["train"]["lr"] = args.lr
     if args.log_dir:
         cfg["train"]["save_dir"] = args.log_dir
+    if args.freeze_bn_stats:
+        cfg["train"]["freeze_bn_running_stats"] = True
     if args.best_ckpt_start_epoch is not None:
         cfg["train"]["best_ckpt_start_epoch"] = args.best_ckpt_start_epoch
     if args.grad_accum_steps is not None:
@@ -770,6 +787,8 @@ def main():
                 train_sampler.set_epoch(epoch)
 
             model.train()
+            if bool(cfg["train"].get("freeze_bn_running_stats", False)):
+                freeze_batchnorm_running_stats(model)
             losses = []; hm_losses = []; pres_losses = []; peak_preds = []; mae_center_px = []; hm_reg_losses = []
             opt.zero_grad(set_to_none=True)
             last_micro_step = -1
@@ -912,6 +931,8 @@ def main():
                         heatmap_stride=cfg["train"]["heatmap_stride"],
                     )
                 eval_model.train()
+                if bool(cfg["train"].get("freeze_bn_running_stats", False)):
+                    freeze_batchnorm_running_stats(eval_model)
 
                 if distributed:
                     dist.barrier()

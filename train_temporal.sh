@@ -9,17 +9,17 @@ CONFIG="config/default.yml"
 TRAIN_CSV="manifests/train.csv"
 VAL_CSV="manifests/val.csv"
 
-HEATMAP_STRIDE="1"
-HEATMAP_SIGMA="9"
+HEATMAP_STRIDE="2"
+HEATMAP_SIGMA="8"
 
 #LOG_DIR="outputs/runs/exp13_temporalT${TEMPORAL_T}_bs${BATCH_SIZE}_buffer36_stride6"
-LOG_DIR="outputs/runs/exp_10_hm-upsample+conv_stride1"
+LOG_DIR="outputs/runs/exp_13_hm-upsample+conv_stride2_peakpool_max"
 mkdir -p "$LOG_DIR"
 
 
 HEATMAP_NEG_MULT="0.4"
 HEATMAP_POS_MULT="5"
-DSNT_TAU="0.7"            # temperatura per softmax2D (DSNT)
+
 DSNT_COORD_LOSS="l1"      # l1|l2
 
 

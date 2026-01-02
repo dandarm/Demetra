@@ -50,6 +50,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--threshold", type=float, default=None,
                         help="Soglia presence τ per metriche/ROI")
     parser.add_argument("--batch-size", type=int, default=None)
+    parser.add_argument("--bs", type=int, default=None,
+                        help="Alias di --batch-size (come train.py)")
     parser.add_argument("--num-workers", type=int, default=4)
     parser.add_argument("--device", default=None,
                         help="cuda|cpu (default: cuda se disponibile altrimenti cpu)")
@@ -84,6 +86,7 @@ def parse_args() -> argparse.Namespace:
                         help="Pooling per presence-from-peak (default: infer.peak_pool o 'max')")
     parser.add_argument("--peak-tau", type=float, default=None,
                         help="Temperatura τ per peak-pool=logsumexp (default: infer.peak_tau o 1.0)")
+    
     return parser.parse_args()
 
 
@@ -629,7 +632,7 @@ def main():
     stride = args.heatmap_stride or cfg.get("train", {}).get("heatmap_stride", 4)
     temporal_T = max(1, int(args.temporal_T or cfg.get("train", {}).get("temporal_T", 1)))
     temporal_stride = max(1, int(args.temporal_stride or cfg.get("train", {}).get("temporal_stride", 1)))
-    batch_size = args.batch_size or cfg.get("train", {}).get("batch_size", 32)
+    batch_size = args.bs or args.batch_size or cfg.get("train", {}).get("batch_size", 32)
     presence_threshold_default = cfg.get("infer", {}).get("presence_threshold", 0.5)
     presence_from_peak = bool(args.presence_from_peak or cfg.get("infer", {}).get("presence_from_peak", False))
     peak_pool_default = cfg.get("infer", {}).get("peak_pool", "max")
@@ -761,7 +764,50 @@ def main():
         if "image_path_y" in joined.columns:
             joined = joined.rename(columns={"image_path_x": "image_path"})
             joined = joined.drop(columns=["image_path_y"])
-        y_true = joined["presence"].to_numpy()
+        # --- Presence GT handling (soft -> binary at 0.5) ---
+        # Training can use a probabilistic presence over the temporal span; mirror that here for evaluation by:
+        # 1) computing presence_gt_prob over the temporal window
+        # 2) binarizing it at 0.5 for PR/ROC/AUPRC.
+        def _build_presence_map(df: pd.DataFrame) -> dict[str, float]:
+            if "image_path" not in df.columns or "presence" not in df.columns:
+                return {}
+            out: dict[str, float] = {}
+            for r in df.itertuples(index=False):
+                try:
+                    p = os.path.abspath(getattr(r, "image_path"))
+                    out[p] = float(getattr(r, "presence"))
+                except Exception:
+                    continue
+            return out
+
+        def _presence_probability(window_paths: list[str], selector: TemporalWindowSelector, presence_map: dict[str, float], default_presence: float = 0.0) -> float:
+            if not window_paths:
+                return float(default_presence)
+            dir_path = os.path.dirname(window_paths[0])
+            selector._ensure_dir(dir_path)
+            files = selector._dir_cache.get(dir_path, [])
+            idx_map = selector._dir_index.get(dir_path, {})
+            indices = [idx_map.get(os.path.basename(p)) for p in window_paths if os.path.basename(p) in idx_map]
+            if not indices:
+                return float(default_presence)
+            start, end = min(indices), max(indices)
+            values = []
+            for i in range(start, end + 1):
+                abs_path = os.path.abspath(files[i])
+                values.append(presence_map.get(abs_path, default_presence))
+            if not values:
+                return float(default_presence)
+            return float(np.mean(values))
+
+        presence_map = _build_presence_map(manifest_df)
+        selector = TemporalWindowSelector(temporal_T=temporal_T, temporal_stride=temporal_stride)
+        presence_gt_prob = []
+        for p in joined["image_path"].tolist():
+            w = selector.get_window(p)
+            presence_gt_prob.append(_presence_probability(w, selector, presence_map, default_presence=0.0))
+        joined["presence_gt_prob"] = np.asarray(presence_gt_prob, dtype=float)
+        y_true = (joined["presence_gt_prob"].to_numpy() >= 0.5).astype(int)
+
         y_score_combined = joined["presence_prob"].to_numpy()
         y_score_logit = joined["presence_prob_raw"].to_numpy() if "presence_prob_raw" in joined.columns else None
         if {"x_pix_resized", "y_pix_resized"}.issubset(joined.columns):
@@ -782,6 +828,7 @@ def main():
                 "n_with_gt_presence": int(np.isfinite(y_true).sum()),
                 "n_with_gt_center": int(finite_centers.sum()),
                 "threshold_used": float(threshold_for_metrics) if threshold_for_metrics is not None else None,
+                "gt_presence_rule": "presence_gt_prob>=0.5 (temporal-span mean over window)",
             }
             metrics_payload["presence_metrics_combined"] = metrics_lib.presence_aggregate(
                 y_true,

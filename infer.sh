@@ -6,12 +6,13 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR"
 
 CONFIG_PATH="config/default.yml"
-RUN_DIR="outputs/runs/exp_x3dm_dsnt_6_notempstride"
+RUN_DIR="outputs/runs/exp_12_hm-upsample+conv_stride2_peakpool_max"
 OUT_DIR="$RUN_DIR/preds"
 LETTERBOX_META="manifests/letterbox_meta.csv"
 METRICS_OUT="$OUT_DIR/metrics.json"
 SWEEP_CURVES_DIR="$OUT_DIR/curves"
 ROI_DIR="$OUT_DIR/roi"
+
 EXPORT_ROI="false"
 CENTER_THRESHOLDS_KM=""
 PRESENCE_THRESHOLD="0.5"
@@ -28,6 +29,8 @@ SOFT_ARGMAX_TAU=""       # se vuoto usa infer.center_tau (o loss.dsnt_tau fallba
 CHECKPOINT_PATH="$RUN_DIR/best.ckpt"
 MANIFEST_CSV="manifests/test.csv"
 SAVE_PREDS="$RUN_DIR/preds_test.csv"
+
+BATCH_SIZE="40"
 
 mkdir -p "$OUT_DIR"
 mkdir -p "$SWEEP_CURVES_DIR"
@@ -63,4 +66,5 @@ exec python -m src.cyclone_locator.infer \
   --sweep-curves "$SWEEP_CURVES_DIR" \
   --roi-base-radius "$ROI_BASE_RADIUS_PX" \
   --roi-sigma-multiplier "$ROI_SIGMA_MULTIPLIER" \
+  --bs "$BATCH_SIZE" \
   "${EXTRA_ARGS[@]}"
