@@ -6,7 +6,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR"
 
 CONFIG_PATH="config/default.yml"
-RUN_DIR="outputs/runs/exp_12_hm-upsample+conv_stride2_peakpool_max"
+RUN_DIR="outputs/runs/exp_25_head-presence"
 OUT_DIR="$RUN_DIR/preds"
 LETTERBOX_META="manifests/letterbox_meta.csv"
 METRICS_OUT="$OUT_DIR/metrics.json"
@@ -20,15 +20,15 @@ ROI_BASE_RADIUS_PX="128"
 ROI_SIGMA_MULTIPLIER="2.0"
 PRESENCE_FROM_PEAK="true"
 BACKBONE=""              # se vuoto usa config.train.backbone
-PEAK_THRESHOLD=""
+PEAK_THRESHOLD="0.155"
 PEAK_POOL=""             # se vuoto usa infer.peak_pool
 PEAK_TAU=""              # se vuoto usa infer.peak_tau
 SOFT_ARGMAX="true"       # consigliato per modelli DSNT
 SOFT_ARGMAX_TAU=""       # se vuoto usa infer.center_tau (o loss.dsnt_tau fallback)
 
 CHECKPOINT_PATH="$RUN_DIR/best.ckpt"
-MANIFEST_CSV="manifests/test.csv"
-SAVE_PREDS="$RUN_DIR/preds_test.csv"
+MANIFEST_CSV="manifests/val.csv"
+SAVE_PREDS="$RUN_DIR/preds_val.csv"
 
 BATCH_SIZE="40"
 

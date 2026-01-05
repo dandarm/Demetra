@@ -86,6 +86,8 @@ def parse_args() -> argparse.Namespace:
                         help="Pooling per presence-from-peak (default: infer.peak_pool o 'max')")
     parser.add_argument("--peak-tau", type=float, default=None,
                         help="Temperatura τ per peak-pool=logsumexp (default: infer.peak_tau o 1.0)")
+    parser.add_argument("--presence-topk", type=int, default=None,
+                        help="Top-K per presence-from-peak con logsumexp (default: train.presence_topk o 0=all)")
     
     return parser.parse_args()
 
@@ -464,7 +466,12 @@ def combine_presence(presence_prob: torch.Tensor, heatmap: torch.Tensor) -> torc
     return 0.5 * presence_prob + 0.5 * peak
 
 
-def spatial_peak_pool(heatmap_logits: torch.Tensor, pool: str = "max", tau: float = 1.0) -> torch.Tensor:
+def spatial_peak_pool(
+    heatmap_logits: torch.Tensor,
+    pool: str = "max",
+    tau: float = 1.0,
+    topk: int | None = None,
+) -> torch.Tensor:
     """
     heatmap_logits: (B,H,W) or (B,1,H,W)
     Returns: (B,) pooled logits.
@@ -483,7 +490,13 @@ def spatial_peak_pool(heatmap_logits: torch.Tensor, pool: str = "max", tau: floa
             raise ValueError("tau must be > 0 for logsumexp pooling")
         # Do pooling in float32 for stability under AMP / small tau.
         x32 = (x / float(tau)).float()
-        pooled = torch.logsumexp(x32, dim=[-1, -2])
+        if topk is not None and int(topk) > 0:
+            k = min(int(topk), x32.shape[-1] * x32.shape[-2])
+            flat = x32.flatten(1)
+            vals, _ = torch.topk(flat, k=k, dim=1)
+            pooled = torch.logsumexp(vals, dim=1)
+        else:
+            pooled = torch.logsumexp(x32, dim=[-1, -2])
         return float(tau) * pooled
     raise ValueError(f"Unknown peak_pool: {pool}")
 
@@ -499,6 +512,7 @@ def run_inference(
     presence_from_peak: bool = False,
     peak_pool: str = "max",
     peak_tau: float = 1.0,
+    presence_topk: int | None = None,
 ) -> List[Dict[str, float]]:
     predictions: List[Dict[str, float]] = []
     autocast_enabled = amp and device.type == "cuda"
@@ -526,13 +540,19 @@ def run_inference(
                 checked_stride = True
             heatmaps = heatmaps_pred.squeeze(1)
             probs_raw = torch.sigmoid(logits).squeeze(1)
-            peaks = spatial_peak_pool(heatmaps_pred, pool=peak_pool, tau=float(peak_tau))
+            peaks = spatial_peak_pool(
+                heatmaps_pred,
+                pool=peak_pool,
+                tau=float(peak_tau),
+                topk=presence_topk,
+            )
             if presence_from_peak:
                 peaks = torch.sigmoid(peaks)
             if presence_from_peak:
                 combined_probs = torch.clamp(peaks, 1e-6, 1 - 1e-6)
             else:
-                combined_probs = combine_presence(probs_raw, heatmaps)
+                # When using the separate presence head, do not mix with heatmap peak.
+                combined_probs = torch.clamp(probs_raw, 1e-6, 1 - 1e-6)
 
             heatmaps_np = heatmaps.cpu().numpy()
             probs_np = combined_probs.cpu().numpy()
@@ -637,8 +657,11 @@ def main():
     presence_from_peak = bool(args.presence_from_peak or cfg.get("infer", {}).get("presence_from_peak", False))
     peak_pool_default = cfg.get("infer", {}).get("peak_pool", "max")
     peak_tau_default = cfg.get("infer", {}).get("peak_tau", 1.0)
+    presence_topk_default = cfg.get("train", {}).get("presence_topk", 0)
     peak_pool = str(args.peak_pool) if args.peak_pool is not None else str(peak_pool_default or "max")
     peak_tau = float(args.peak_tau) if args.peak_tau is not None else float(peak_tau_default or 1.0)
+    presence_topk_cfg = int(args.presence_topk) if args.presence_topk is not None else int(presence_topk_default or 0)
+    presence_topk = presence_topk_cfg if presence_topk_cfg > 0 else None
     peak_threshold_default = cfg.get("infer", {}).get("peak_threshold", None)
     if presence_from_peak and args.peak_threshold is not None:
         threshold_for_metrics = args.peak_threshold
@@ -697,6 +720,7 @@ def main():
         presence_from_peak=presence_from_peak,
         peak_pool=peak_pool,
         peak_tau=peak_tau,
+        presence_topk=presence_topk,
     )
     preds_df = pd.DataFrame(preds).sort_values("manifest_idx").reset_index(drop=True)
     if args.threshold is not None or args.peak_threshold is not None:
