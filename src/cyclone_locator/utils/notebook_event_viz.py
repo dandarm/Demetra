@@ -172,6 +172,14 @@ def _render_three_panel_frame(
     gt_xy_hm: Tuple[float, float],
     pr_xy_hm: Tuple[float, float],
     hm_pred_vmax: float = 1.0,
+    bottom_lines: Optional[Sequence[str]] = None,
+    status_text: Optional[str] = None,
+    status_color: Tuple[int, int, int] = (0, 255, 0),
+    series_vals: Optional[Sequence[float]] = None,
+    series_index: Optional[int] = None,
+    series_label: str = "",
+    series_color: Tuple[int, int, int] = (255, 255, 0),
+    series_marks: Optional[Sequence[Tuple[int, float]]] = None,
     dpi: int = 140,
 ) -> np.ndarray:
     fig = plt.figure(figsize=(12, 4), dpi=dpi)
@@ -218,6 +226,14 @@ def _render_three_panel_frame_cv2(
     center_xy_frame: Optional[Tuple[float, float]] = None,
     center_xy_hm: Optional[Tuple[float, float]] = None,
     hm_pred_vmax: float = 1.0,
+    bottom_lines: Optional[Sequence[str]] = None,
+    status_text: Optional[str] = None,
+    status_color: Tuple[int, int, int] = (0, 255, 0),
+    series_vals: Optional[Sequence[float]] = None,
+    series_index: Optional[int] = None,
+    series_label: str = "",
+    series_color: Tuple[int, int, int] = (255, 255, 0),
+    series_marks: Optional[Sequence[Tuple[int, float]]] = None,
     gt_alpha: float = 1.0,
     gt_mask_rel: float = 0.0,
     pad: int = 6,
@@ -238,6 +254,14 @@ def _render_three_panel_frame_cv2(
             gt_xy_hm=gt_xy_hm,
             pr_xy_hm=pr_xy_hm,
             hm_pred_vmax=hm_pred_vmax,
+            bottom_lines=bottom_lines,
+            status_text=status_text,
+            status_color=status_color,
+            series_vals=series_vals,
+            series_index=series_index,
+            series_label=series_label,
+            series_color=series_color,
+            series_marks=series_marks,
         )
 
     frame_u8 = _as_rgb_uint8(frame_rgb01)
@@ -310,15 +334,74 @@ def _render_three_panel_frame_cv2(
     pad_col = np.zeros((h, pad, 3), dtype=np.uint8)
     out = np.concatenate([frame_u8, pad_col, hm_pr_rgb], axis=1)
     # Title strip
-    strip_h = 54
+    strip_h = 78
     strip = np.zeros((strip_h, out.shape[1], 3), dtype=np.uint8)
     # Wrap title on 2 lines to avoid truncation
-    t1 = title[:120]
-    t2 = title[120:240] if len(title) > 120 else ""
+    t1 = title[:110]
+    t2 = title[110:220] if len(title) > 110 else ""
+    t3 = title[220:330] if len(title) > 220 else ""
     cv2.putText(strip, t1, (10, 22), cv2.FONT_HERSHEY_SIMPLEX, 0.55, (255, 255, 255), 1, cv2.LINE_AA)
     if t2:
         cv2.putText(strip, t2, (10, 44), cv2.FONT_HERSHEY_SIMPLEX, 0.55, (255, 255, 255), 1, cv2.LINE_AA)
-    out = np.concatenate([strip, out], axis=0)
+    if t3:
+        cv2.putText(strip, t3, (10, 66), cv2.FONT_HERSHEY_SIMPLEX, 0.55, (255, 255, 255), 1, cv2.LINE_AA)
+
+    bottom_lines = list(bottom_lines or [])
+    has_series = series_vals is not None and len(series_vals) > 1
+    bottom_h = 0
+    if bottom_lines or has_series:
+        bottom_h = 140
+        bottom = np.zeros((bottom_h, out.shape[1], 3), dtype=np.uint8)
+        y = 22
+        for line in bottom_lines[:3]:
+            cv2.putText(bottom, line, (10, y), cv2.FONT_HERSHEY_SIMPLEX, 0.55, (255, 255, 255), 1, cv2.LINE_AA)
+            y += 20
+        if status_text:
+            cv2.putText(bottom, status_text, (bottom.shape[1] - 180, bottom_h - 18),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.6, status_color, 2, cv2.LINE_AA)
+
+        if has_series:
+            vals = np.asarray(series_vals, dtype=np.float32)
+            finite = np.isfinite(vals)
+            if finite.any():
+                vmin = 0.0
+                vmax = 12.0
+                if vmax <= vmin:
+                    vmax = vmin + 1.0
+                plot_top = 60
+                plot_bottom = bottom_h - 12
+                plot_left = 10
+                plot_right = bottom.shape[1] - 10
+                xs = np.linspace(plot_left, plot_right, len(vals))
+                ys = plot_bottom - (vals - vmin) / (vmax - vmin) * float(plot_bottom - plot_top)
+                pts = np.stack([xs, ys], axis=1).astype(np.int32)
+                cv2.polylines(bottom, [pts], False, series_color, 1, cv2.LINE_AA)
+                if series_label:
+                    cv2.putText(bottom, series_label, (plot_left, plot_top - 8),
+                                cv2.FONT_HERSHEY_SIMPLEX, 0.5, (200, 200, 200), 1, cv2.LINE_AA)
+                if series_marks:
+                    for idx, val in series_marks:
+                        if 0 <= idx < len(vals) and np.isfinite(val):
+                            x = int(round(xs[idx]))
+                            yv = plot_bottom - (val - vmin) / (vmax - vmin) * float(plot_bottom - plot_top)
+                            yv = int(round(np.clip(yv, plot_top, plot_bottom)))
+                            cv2.line(bottom, (x, plot_top), (x, plot_bottom), (120, 120, 120), 1)
+                            dash = 6
+                            gap = 4
+                            xx = plot_left
+                            while xx < plot_right:
+                                cv2.line(bottom, (xx, yv), (min(xx + dash, plot_right), yv), (120, 120, 120), 1)
+                                xx += dash + gap
+                if series_index is not None:
+                    idx = int(series_index)
+                    if 0 <= idx < len(vals):
+                        x = int(round(xs[idx]))
+                        y = int(round(ys[idx]))
+                        cv2.line(bottom, (x, plot_top), (x, plot_bottom), (255, 0, 0), 1)
+                        cv2.circle(bottom, (x, y), 3, (255, 0, 0), -1)
+        out = np.concatenate([strip, out, bottom], axis=0)
+    else:
+        out = np.concatenate([strip, out], axis=0)
     return out
 
 
@@ -418,6 +501,9 @@ def export_event_videos_for_manifest(
     peak_tau = float(loss_cfg.get("peak_tau", 1.0))
     center_tau = float(infer_cfg.get("center_tau", 1.0))
     soft_argmax = True  # align with infer.sh default
+    presence_from_peak = bool(infer_cfg.get("presence_from_peak", train_cfg.get("presence_from_peak", False)))
+    presence_topk_cfg = int(train_cfg.get("presence_topk", 0) or 0)
+    presence_topk = presence_topk_cfg if presence_topk_cfg > 0 else None
     if presence_threshold is None:
         presence_threshold = float(infer_cfg.get("peak_threshold") or infer_cfg.get("presence_threshold") or 0.5)
     # Visual helper: fixed max so colors are comparable across runs.
@@ -523,6 +609,54 @@ def export_event_videos_for_manifest(
                 return s
 
         wrapped = _IdxWrap(ds, idxs)
+        loader_series = DataLoader(
+            wrapped,
+            batch_size=batch_size,
+            shuffle=False,
+            num_workers=num_workers,
+            pin_memory=(device.type == "cuda"),
+        )
+
+        peak_series = []
+        pred_prob_series = []
+        gt_prob_series = []
+        with torch.no_grad():
+            for batch in loader_series:
+                input_key = "video" if getattr(model, "input_is_video", False) else "image"
+                inp = batch[input_key].to(device, non_blocking=True)
+                hm_logits_b, pres_logit_b = model(inp)
+                hm_logits_b = hm_logits_b.squeeze(1).detach().float().cpu()
+                pres_logit_b = pres_logit_b.squeeze(1).detach().float().cpu()
+                peak_logit_pool = spatial_peak_pool(
+                    hm_logits_b,
+                    pool=peak_pool,
+                    tau=float(peak_tau),
+                    topk=presence_topk,
+                )
+                peak_logsumexp = spatial_peak_pool(
+                    hm_logits_b,
+                    pool="logsumexp",
+                    tau=float(peak_tau),
+                    topk=presence_topk,
+                )
+                if presence_from_peak:
+                    pred_prob = torch.sigmoid(peak_logit_pool).clamp(0.0, 1.0)
+                else:
+                    pred_prob = torch.sigmoid(pres_logit_b).clamp(0.0, 1.0)
+                peak_series.extend(peak_logsumexp.numpy().tolist())
+                pred_prob_series.extend(pred_prob.numpy().tolist())
+                gt_prob_series.extend(batch["presence"].squeeze(1).numpy().astype(np.float32).tolist())
+
+        series_marks = []
+        gt_pos_idx = [i for i, v in enumerate(gt_prob_series) if float(v) > 0.0]
+        if gt_pos_idx:
+            start_idx = gt_pos_idx[0]
+            end_idx = gt_pos_idx[-1]
+            if 0 <= start_idx < len(peak_series):
+                series_marks.append((start_idx, float(peak_series[start_idx])))
+            if 0 <= end_idx < len(peak_series):
+                series_marks.append((end_idx, float(peak_series[end_idx])))
+
         loader = DataLoader(
             wrapped,
             batch_size=batch_size,
@@ -543,7 +677,6 @@ def export_event_videos_for_manifest(
                 hm_logits_b = hm_logits_b.squeeze(1).detach().float().cpu()  # (B,Hh,Wh)
                 hm_pred_prob_b = torch.sigmoid(hm_logits_b).numpy()
                 hm_tgt_b = batch["heatmap"].squeeze(1).numpy()  # (B,Hh,Wh)
-                presence_gt_b = batch["presence"].squeeze(1).numpy().astype(np.float32)  # (B,)
                 video_b = batch["video"]  # (B,C,T,H,W) on CPU
 
                 tasks = []
@@ -559,25 +692,18 @@ def export_event_videos_for_manifest(
                     ty, tx = np.unravel_index(int(np.argmax(hm_tgt)), hm_tgt.shape)
                     py, px = np.unravel_index(int(np.argmax(hm_pred_prob)), hm_pred_prob.shape)
 
-                    hm_logits = hm_logits_b[bi]
-                    peak_logit = spatial_peak_pool(
-                        hm_logits.unsqueeze(0).unsqueeze(0),
-                        pool=peak_pool,
-                        tau=float(peak_tau),
-                    )[0]
-                    peak_prob = float(torch.sigmoid(peak_logit).clamp(0.0, 1.0).item())
-                    presence_gt = float(presence_gt_b[bi])
-                    pred_hard = 1 if peak_prob >= float(presence_threshold) else 0
-                    gt_hard = 1 if presence_gt >= 0.5 else 0
-
-                    # DSNT-like (soft-argmax) center for quick sanity check in title
-                    stride_real = float(frame.shape[0]) / float(hm_pred_prob.shape[0])
-                    x_dsnt, y_dsnt = decode_heatmap(
-                        hm_logits.numpy(),
-                        stride=int(round(stride_real)),
-                        soft=soft_argmax,
-                        tau=float(center_tau),
-                    )
+                    series_idx = frame_counter
+                    presence_gt = float(gt_prob_series[series_idx])
+                    pred_prob = float(pred_prob_series[series_idx])
+                    peak_logsumexp = float(peak_series[series_idx])
+                    gt_pos = presence_gt > 0.0
+                    pred_pos = pred_prob >= float(presence_threshold)
+                    if gt_pos:
+                        status_text = "detected" if pred_pos else "missed"
+                        status_color = (0, 255, 0) if status_text == "detected" else (255, 0, 0)
+                    else:
+                        status_text = None
+                        status_color = (0, 255, 0)
 
                     # Center-frame keypoint (if present) in letterbox pixels and heatmap coords
                     abs_path = str(batch["image_path_abs"][bi])
@@ -595,13 +721,13 @@ def export_event_videos_for_manifest(
 
                     ts = ts_map.get(str(batch["image_path_abs"][bi]), None)
                     ts_str = str(ts) if ts is not None else ""
-                    title = (
-                        f"event={ev} | idx={int(ds_idx)} | t={frame_counter+1}/{len(idxs)} | "
-                        f"gt_p={presence_gt:.3f} (gt={gt_hard}) | peak_p={peak_prob:.3f} thr={float(presence_threshold):.3f} (pred={pred_hard}) | "
-                        f"dsnt=({x_dsnt:.1f},{y_dsnt:.1f})"
-                    )
+                    title = f"id={ev} | idx={int(ds_idx)}"
                     if ts_str:
                         title += f" | {ts_str}"
+                    bottom_lines = [
+                        f"gt_p={presence_gt:.2f}  pred_p={pred_prob:.2f}",
+                        f"peak_logsumexp_topk={peak_logsumexp:.3f}",
+                    ]
 
                     if pool is None:
                         tasks.append(
@@ -615,6 +741,13 @@ def export_event_videos_for_manifest(
                                 center_xy_frame=(float(center_xy_lb[0]), float(center_xy_lb[1])) if center_xy_lb is not None else None,
                                 center_xy_hm=center_xy_hm,
                                 hm_pred_vmax=hm_pred_vmax,
+                                bottom_lines=bottom_lines,
+                                status_text=status_text,
+                                status_color=status_color,
+                                series_vals=peak_series,
+                                series_index=series_idx,
+                                series_label="",
+                                series_marks=series_marks,
                             )
                         )
                     else:
@@ -630,6 +763,13 @@ def export_event_videos_for_manifest(
                                 center_xy_frame=(float(center_xy_lb[0]), float(center_xy_lb[1])) if center_xy_lb is not None else None,
                                 center_xy_hm=center_xy_hm,
                                 hm_pred_vmax=hm_pred_vmax,
+                                bottom_lines=bottom_lines,
+                                status_text=status_text,
+                                status_color=status_color,
+                                series_vals=peak_series,
+                                series_index=series_idx,
+                                series_label="",
+                                series_marks=series_marks,
                             )
                         )
                     frame_counter += 1

@@ -40,6 +40,7 @@ train:
   temporal_stride: 1        # salto tra frame temporali (>=1)
   presence_dropout: 0.5     # dropout tra GAP e FC della testa presenza
   presence_from_peak: false # se true, usa solo il picco heatmap per la presenza (head disattivata)
+  presence_mode: both       # head|peak|both (se vuoto usa presence_from_peak)
   presence_topk: 50         # top-K per logsumexp (0=usa tutta la heatmap)
 
 loss:
@@ -51,11 +52,13 @@ loss:
   dsnt_coord_loss: l1          # l1|l2 (loss sulle coordinate DSNT in spazio heatmap)
   peak_pool: logsumexp               # max|logsumexp (pooling spaziale per presence_from_peak)
   peak_tau: 1.15                # τ per logsumexp (più piccolo -> più simile a max)
+  peak_logit_alpha: 0.5         # alpha per combinazione logit (head + alpha*peak) in mode=both
+  peak_logit_center: median       # none|logk|median|logk+median (recentering del logit peak)
   w_heatmap_focal_reg: 1.0     # regolarizzatore extra: aggiunge una HeatmapFocal debole su DSNT (0=off)
   heatmap_focal_reg_neg_multiplier: 0.9  # peso relativo del regolarizzatore sui negativi (0=solo positivi)
   w_heatmap: 1.5               # peso della loss della head heatmap
   w_presence: 1.0              # peso della loss della head presence (se usata)
-  w_peak_bce: 0.0              # peso BCE-with-logits sul picco heatmap (quando presence_from_peak=true)
+  w_peak_bce: 0.5              # peso BCE-with-logits sul picco heatmap (quando presence_from_peak=true)
   heatmap_neg_multiplier: 1.0   # fattore di peso per la heatmap dei negativi (0=ignora, 1=pari ai positivi)
   heatmap_pos_multiplier: 1.0   # fattore di peso per la heatmap dei positivi
   presence_loss: bce            # focal|bce (per la testa presenza)

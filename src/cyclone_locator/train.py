@@ -1,4 +1,4 @@
-import os, argparse, yaml, time, csv, random
+import os, argparse, yaml, time, csv, random, math
 from contextlib import nullcontext
 import numpy as np
 import torch, torch.nn as nn
@@ -50,6 +50,7 @@ def parse_args():
     ap.add_argument("--heatmap_neg_multiplier", type=float, help="Scale factor for heatmap loss on negative samples")
     ap.add_argument("--heatmap_pos_multiplier", type=float, help="Scale factor for heatmap loss on positive samples")
     ap.add_argument("--presence_from_peak", type=int, choices=[0,1], help="If 1, disable presence head and use heatmap peak as presence prob")
+    ap.add_argument("--presence_mode", choices=["head", "peak", "both"], help="Presence mode (overrides presence_from_peak)")
     ap.add_argument("--freeze_bn_stats", action="store_true",
                     help="Freeze BatchNorm running stats (keep affine gamma/beta trainable)")
     return ap.parse_args()
@@ -148,6 +149,37 @@ def spatial_peak_pool(logits: torch.Tensor, pool: str = "max", tau: float = 1.0,
             pooled = torch.logsumexp(x, dim=[-1, -2])
         return float(tau) * pooled
     raise ValueError(f"Unknown peak_pool: {pool}")
+
+def _recenter_peak_logit(
+    peak_logit: torch.Tensor,
+    logits: torch.Tensor,
+    topk: int | None,
+    mode: str,
+) -> torch.Tensor:
+    mode = str(mode or "none").lower().strip()
+    if mode in {"none", ""}:
+        return peak_logit
+    if mode in {"logk", "logk+median", "median+logk"}:
+        k = int(topk or (logits.shape[-1] * logits.shape[-2]))
+        if k > 0:
+            peak_logit = peak_logit - math.log(k)
+    if mode in {"median", "logk+median", "median+logk"}:
+        flat = logits.squeeze(1).flatten(1)
+        med = flat.median(dim=1).values
+        peak_logit = peak_logit - med.unsqueeze(1)
+    return peak_logit
+
+def compute_peak_logit(
+    logits: torch.Tensor,
+    pool: str,
+    tau: float,
+    topk: int | None,
+    center_mode: str,
+) -> torch.Tensor:
+    peak_logit = spatial_peak_pool(logits, pool=pool, tau=tau, topk=topk)
+    if str(pool).lower().strip() == "logsumexp":
+        peak_logit = _recenter_peak_logit(peak_logit, logits, topk, center_mode)
+    return peak_logit
 
 
 def center_mae_px(pred_xy_hm: torch.Tensor, target_xy_hm: torch.Tensor, valid: torch.Tensor, stride: int) -> torch.Tensor:
@@ -261,7 +293,7 @@ def evaluate_loader(model, loader, hm_loss, amp_enabled, loss_weights, device, r
                     presence_loss_fn=None,
                     log_combined_presence: bool = False,
                     input_key: str = "image",
-                    presence_from_peak: bool = False,
+                    presence_mode: str = "head",
                     heatmap_loss_type: str = "mse",
                     dsnt_tau: float = 1.0,
                     dsnt_coord_loss: str = "l1",
@@ -269,7 +301,9 @@ def evaluate_loader(model, loader, hm_loss, amp_enabled, loss_weights, device, r
                     peak_tau: float = 1.0,
                     presence_topk: int | None = None,
                     heatmap_stride: int = 4,
-                    presence_threshold: float = 0.5):
+                    presence_threshold: float = 0.5,
+                    peak_logit_alpha: float = 0.5,
+                    peak_logit_center: str = "none"):
     #vL, vHm, vPr = [], [], []
     sum_L, sum_hm, sum_pr, sum_pr_comb = 0.0, 0.0, 0.0, 0.0
     sum_mae_px = 0.0
@@ -352,27 +386,49 @@ def evaluate_loader(model, loader, hm_loss, amp_enabled, loss_weights, device, r
                     weight = pos_mult * pos_mask + neg_mult * neg_mask
                     L_hm = (hm_per * weight).sum() / torch.clamp(weight.sum(), min=1.0)
                     mae_px = torch.tensor(float("nan"), device=device)
-                if presence_from_peak:
-                    peak = spatial_peak_pool(hm_p, pool=peak_pool, tau=float(peak_tau), topk=presence_topk)
-                    L_pr = nn.functional.binary_cross_entropy_with_logits(peak, pres_smooth.view_as(peak))
+                presence_mode = str(presence_mode or "head").lower().strip()
+                use_head = presence_mode in {"head", "both"}
+                use_peak = presence_mode in {"peak", "both"}
+                peak_logit = None
+                if use_peak:
+                    peak_logit = compute_peak_logit(
+                        hm_p,
+                        pool=peak_pool,
+                        tau=float(peak_tau),
+                        topk=presence_topk,
+                        center_mode=peak_logit_center,
+                    )
+                head_logit = pres_logit if use_head else None
+                w_presence = float(loss_weights.get("w_presence", 1.0) or 1.0)
+                w_peak = float(loss_weights.get("w_peak_bce", 1.0) or 1.0)
+                L_pr = torch.tensor(0.0, device=device)
+                if use_head:
+                    L_head = presence_loss_fn(head_logit, pres_smooth) if presence_loss_fn else bce_logits(head_logit, pres_smooth)
+                    L_pr = L_pr + w_presence * L_head
+                if use_peak and peak_logit is not None:
+                    L_peak = nn.functional.binary_cross_entropy_with_logits(peak_logit, pres_smooth.view_as(peak_logit))
+                    L_pr = L_pr + w_peak * L_peak
+                if presence_mode == "both" and head_logit is not None and peak_logit is not None:
+                    comb_logit = head_logit + float(peak_logit_alpha) * peak_logit
                     if log_combined_presence:
-                        L_pr_comb = nn.functional.binary_cross_entropy_with_logits(peak, pres_smooth.view_as(peak))
+                        L_pr_comb = nn.functional.binary_cross_entropy_with_logits(comb_logit, pres_smooth.view_as(comb_logit))
                     else:
                         L_pr_comb = torch.tensor(0.0, device=device)
-                    presence_prob = torch.sigmoid(peak).squeeze(1)
+                    presence_prob = torch.sigmoid(comb_logit).squeeze(1)
+                elif use_peak and peak_logit is not None:
+                    if log_combined_presence:
+                        L_pr_comb = nn.functional.binary_cross_entropy_with_logits(peak_logit, pres_smooth.view_as(peak_logit))
+                    else:
+                        L_pr_comb = torch.tensor(0.0, device=device)
+                    presence_prob = torch.sigmoid(peak_logit).squeeze(1)
                 else:
-                    L_pr = presence_loss_fn(pres_logit, pres_smooth) if presence_loss_fn else bce_logits(pres_logit, pres_smooth)
                     if log_combined_presence:
-                        # When using the separate presence head, do not mix with heatmap peak.
-                        comb_prob = torch.sigmoid(pres_logit).squeeze(1)
-                        L_pr_comb = nn.functional.binary_cross_entropy(comb_prob, pres_smooth.view_as(comb_prob))
+                        L_pr_comb = nn.functional.binary_cross_entropy_with_logits(head_logit, pres_smooth.view_as(head_logit))
                     else:
                         L_pr_comb = torch.tensor(0.0, device=device)
-                    presence_prob = torch.sigmoid(pres_logit).squeeze(1)
+                    presence_prob = torch.sigmoid(head_logit).squeeze(1)
                 hm_w = float(loss_weights.get("w_heatmap", 1.0) or 1.0)
-                pr_w_key = "w_peak_bce" if presence_from_peak else "w_presence"
-                pr_w = float(loss_weights.get(pr_w_key, 1.0) or 1.0)
-                L = hm_w * L_hm + pr_w * L_pr + w_reg * L_reg
+                L = hm_w * L_hm + L_pr + w_reg * L_reg
             if not torch.isfinite(L):
                 bad_batches += 1
                 if bad_batches <= 3 and rank == 0:
@@ -487,6 +543,8 @@ def main():
         cfg["loss"]["heatmap_pos_multiplier"] = args.heatmap_pos_multiplier
     if args.presence_from_peak is not None:
         cfg["train"]["presence_from_peak"] = bool(args.presence_from_peak)
+    if args.presence_mode:
+        cfg["train"]["presence_mode"] = str(args.presence_mode)
     if args.backbone:
         cfg["train"]["backbone"] = args.backbone
     if args.temporal_T:
@@ -667,7 +725,14 @@ def main():
         worker_init_fn=seed_worker if num_workers > 0 else None
     )
 
-    presence_from_peak = bool(cfg["train"].get("presence_from_peak", False))
+    presence_mode = str(cfg["train"].get("presence_mode", "") or "").lower().strip()
+    if not presence_mode:
+        presence_mode = "peak" if bool(cfg["train"].get("presence_from_peak", False)) else "head"
+    if presence_mode not in {"head", "peak", "both"}:
+        raise ValueError(f"Invalid presence_mode: {presence_mode}")
+    use_head = presence_mode in {"head", "both"}
+    use_peak = presence_mode in {"peak", "both"}
+    presence_from_peak = use_peak and not use_head
     if presence_from_peak:
         presence_threshold_eval = cfg.get("infer", {}).get("peak_threshold", None)
         if presence_threshold_eval is None:
@@ -727,7 +792,7 @@ def main():
             device_ids=[local_rank] if device.type == "cuda" else None,
             output_device=local_rank if device.type == "cuda" else None,
             broadcast_buffers=False,
-            find_unused_parameters=presence_from_peak  # presence head non usata se si usa solo il picco
+            find_unused_parameters=not use_head  # presence head non usata se si usa solo il picco
         )
     model_to_save = model.module if distributed else model
     input_key = "video" if getattr(model_to_save, "input_is_video", False) else "image"
@@ -743,6 +808,8 @@ def main():
     dsnt_coord_loss = str(cfg["loss"].get("dsnt_coord_loss", "l1") or "l1")
     peak_pool = str(cfg["loss"].get("peak_pool", "max") or "max")
     peak_tau = float(cfg["loss"].get("peak_tau", 1.0) or 1.0)
+    peak_logit_alpha = float(cfg["loss"].get("peak_logit_alpha", 0.5) or 0.5)
+    peak_logit_center = str(cfg["loss"].get("peak_logit_center", "none") or "none")
     presence_topk_cfg = int(cfg["train"].get("presence_topk", 0) or 0)
     presence_topk = presence_topk_cfg if presence_topk_cfg > 0 else None
     if str(heatmap_loss_type).lower().strip() == "dsnt":
@@ -844,7 +911,7 @@ def main():
                 presence_loss_fn=presence_loss_fn,
                 log_combined_presence=False,
                 input_key=input_key,
-                presence_from_peak=presence_from_peak,
+                presence_mode=presence_mode,
                 heatmap_loss_type=heatmap_loss_type,
                 dsnt_tau=dsnt_tau,
                 dsnt_coord_loss=dsnt_coord_loss,
@@ -853,6 +920,8 @@ def main():
                 presence_topk=presence_topk,
                 heatmap_stride=cfg["train"]["heatmap_stride"],
                 presence_threshold=presence_threshold_eval,
+                peak_logit_alpha=peak_logit_alpha,
+                peak_logit_center=peak_logit_center,
             )
             val_metrics = evaluate_loader(
                 eval_model, va_loader, hm_loss, False, loss_weights, device,
@@ -861,7 +930,7 @@ def main():
                 presence_loss_fn=presence_loss_fn,
                 log_combined_presence=False,
                 input_key=input_key,
-                presence_from_peak=presence_from_peak,
+                presence_mode=presence_mode,
                 heatmap_loss_type=heatmap_loss_type,
                 dsnt_tau=dsnt_tau,
                 dsnt_coord_loss=dsnt_coord_loss,
@@ -870,6 +939,8 @@ def main():
                 presence_topk=presence_topk,
                 heatmap_stride=cfg["train"]["heatmap_stride"],
                 presence_threshold=presence_threshold_eval,
+                peak_logit_alpha=peak_logit_alpha,
+                peak_logit_center=peak_logit_center,
             )
             test_metrics = None
             if test_loader is not None:
@@ -880,7 +951,7 @@ def main():
                     presence_loss_fn=presence_loss_fn,
                     log_combined_presence=True,
                     input_key=input_key,
-                    presence_from_peak=presence_from_peak,
+                    presence_mode=presence_mode,
                     heatmap_loss_type=heatmap_loss_type,
                     dsnt_tau=dsnt_tau,
                     dsnt_coord_loss=dsnt_coord_loss,
@@ -889,6 +960,8 @@ def main():
                     presence_topk=presence_topk,
                     heatmap_stride=cfg["train"]["heatmap_stride"],
                     presence_threshold=presence_threshold_eval,
+                    peak_logit_alpha=peak_logit_alpha,
+                    peak_logit_center=peak_logit_center,
                 )
         eval_model.train()
         if bool(cfg["train"].get("freeze_bn_running_stats", False)):
@@ -996,17 +1069,34 @@ def main():
                             L_hm = (hm_per * weight).sum() / torch.clamp(weight.sum(), min=1.0)
                             mae_px = torch.tensor(float("nan"), device=device)
                             L_reg = torch.tensor(0.0, device=device)
-                        if presence_from_peak:
-                            peak = spatial_peak_pool(hm_p, pool=peak_pool, tau=float(peak_tau), topk=presence_topk)
-                            presence_prob = torch.sigmoid(peak).squeeze(1)
-                            L_pr = nn.functional.binary_cross_entropy_with_logits(peak, pres_smooth.view_as(peak))
+                        w_presence = float(loss_weights.get("w_presence", 1.0) or 1.0)
+                        w_peak = float(loss_weights.get("w_peak_bce", 1.0) or 1.0)
+                        peak_logit = None
+                        if use_peak:
+                            peak_logit = compute_peak_logit(
+                                hm_p,
+                                pool=peak_pool,
+                                tau=float(peak_tau),
+                                topk=presence_topk,
+                                center_mode=peak_logit_center,
+                            )
+                        head_logit = pres_logit if use_head else None
+                        L_pr = torch.tensor(0.0, device=device)
+                        if use_head:
+                            L_head = presence_loss_fn(head_logit, pres_smooth)
+                            L_pr = L_pr + w_presence * L_head
+                        if use_peak and peak_logit is not None:
+                            L_peak = nn.functional.binary_cross_entropy_with_logits(peak_logit, pres_smooth.view_as(peak_logit))
+                            L_pr = L_pr + w_peak * L_peak
+                        if presence_mode == "both" and head_logit is not None and peak_logit is not None:
+                            comb_logit = head_logit + float(peak_logit_alpha) * peak_logit
+                            presence_prob = torch.sigmoid(comb_logit).squeeze(1)
+                        elif use_peak and peak_logit is not None:
+                            presence_prob = torch.sigmoid(peak_logit).squeeze(1)
                         else:
-                            presence_prob = torch.sigmoid(pres_logit).squeeze(1)
-                            L_pr = presence_loss_fn(pres_logit, pres_smooth)
+                            presence_prob = torch.sigmoid(head_logit).squeeze(1)
                         hm_w = float(loss_weights.get("w_heatmap", 1.0) or 1.0)
-                        pr_w_key = "w_peak_bce" if presence_from_peak else "w_presence"
-                        pr_w = float(loss_weights.get(pr_w_key, 1.0) or 1.0)
-                        L = hm_w * L_hm + pr_w * L_pr + float(w_hm_focal_reg) * L_reg
+                        L = hm_w * L_hm + L_pr + float(w_hm_focal_reg) * L_reg
                 if not torch.isfinite(L):
                     if is_main_process(rank):
                         print(f"[ERROR] non-finite train loss at epoch {epoch}; aborting to avoid hang.")
@@ -1017,7 +1107,14 @@ def main():
                     opt.zero_grad(set_to_none=True)
 
                 losses.append(L.item()); hm_losses.append(L_hm.item()); pres_losses.append(L_pr.item())
-                peak_preds.append(spatial_peak_pool(hm_p.detach(), pool=peak_pool, tau=float(peak_tau), topk=presence_topk).mean().item())
+                peak_val = compute_peak_logit(
+                    hm_p.detach(),
+                    pool=peak_pool,
+                    tau=float(peak_tau),
+                    topk=presence_topk,
+                    center_mode=peak_logit_center,
+                )
+                peak_preds.append(peak_val.mean().item())
                 gt = (pres_raw >= 0.5)
                 pred = (presence_prob >= float(presence_threshold_eval))
                 train_tp += float((pred & gt).sum().item())
@@ -1074,7 +1171,7 @@ def main():
                         presence_loss_fn=presence_loss_fn,
                         log_combined_presence=False,
                         input_key=input_key,
-                        presence_from_peak=presence_from_peak,
+                        presence_mode=presence_mode,
                         heatmap_loss_type=heatmap_loss_type,
                         dsnt_tau=dsnt_tau,
                         dsnt_coord_loss=dsnt_coord_loss,
@@ -1083,6 +1180,8 @@ def main():
                         presence_topk=presence_topk,
                         heatmap_stride=cfg["train"]["heatmap_stride"],
                         presence_threshold=presence_threshold_eval,
+                        peak_logit_alpha=peak_logit_alpha,
+                        peak_logit_center=peak_logit_center,
                     )
                 if test_loader is not None:
                     test_metrics = evaluate_loader(
@@ -1092,7 +1191,7 @@ def main():
                             presence_loss_fn=presence_loss_fn,
                             log_combined_presence=True,
                             input_key=input_key,
-                            presence_from_peak=presence_from_peak,
+                            presence_mode=presence_mode,
                             heatmap_loss_type=heatmap_loss_type,
                             dsnt_tau=dsnt_tau,
                             dsnt_coord_loss=dsnt_coord_loss,
@@ -1101,6 +1200,8 @@ def main():
                             presence_topk=presence_topk,
                             heatmap_stride=cfg["train"]["heatmap_stride"],
                             presence_threshold=presence_threshold_eval,
+                            peak_logit_alpha=peak_logit_alpha,
+                            peak_logit_center=peak_logit_center,
                         )
                 eval_model.train()
                 if bool(cfg["train"].get("freeze_bn_running_stats", False)):
