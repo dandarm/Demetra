@@ -1,4 +1,5 @@
 import argparse
+import math
 import json
 import logging
 import os
@@ -15,6 +16,7 @@ import yaml
 from cyclone_locator.datasets.temporal_utils import TemporalWindowSelector
 from cyclone_locator.models.simplebaseline import SimpleBaseline
 from cyclone_locator.models.x3d_backbone import X3DBackbone
+from cyclone_locator.models.energy_fusion import EnergyFusion, compute_energy_features
 from cyclone_locator.utils.geometry import crop_square
 from cyclone_locator.utils.metric import peak_and_width
 from cyclone_locator import metrics as metrics_lib
@@ -80,6 +82,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--backbone", default=None, help="Override del backbone (default: config.train.backbone)")
     parser.add_argument("--presence-from-peak", action="store_true",
                         help="Usa solo il picco della heatmap come presenza (ignora la head presence)")
+    parser.add_argument("--presence-mode", choices=["head", "peak", "both", "energy"], default=None,
+                        help="Presence mode (override, default: infer.presence_mode/train.presence_mode)")
+    parser.add_argument("--peak-mode", choices=["logsumexp", "energy"], default=None,
+                        help="Peak mode override (default: loss.peak_mode)")
     parser.add_argument("--peak-threshold", type=float, default=None,
                         help="Soglia τ da usare quando presence-from-peak è attivo (default: --threshold o infer.presence_threshold)")
     parser.add_argument("--peak-pool", choices=["max", "logsumexp"], default=None,
@@ -417,6 +423,7 @@ def build_model(
     logger: logging.Logger,
     temporal_T: int,
     heatmap_stride: int,
+    use_energy_fusion: bool = False,
 ) -> torch.nn.Module:
     backbone = cfg.get("train", {}).get("backbone", "resnet18")
     pretrained = bool(cfg.get("train", {}).get("backbone_pretrained", True))
@@ -424,9 +431,23 @@ def build_model(
         model = X3DBackbone(backbone=backbone, pretrained=pretrained, heatmap_stride=int(heatmap_stride))
     else:
         model = SimpleBaseline(backbone=backbone, temporal_T=temporal_T, pretrained=pretrained, heatmap_stride=int(heatmap_stride))
+    if use_energy_fusion:
+        loss_cfg = cfg.get("loss", {})
+        energy_b0 = float(loss_cfg.get("energy_init_b0", 0.0) or 0.0)
+        energy_wE = float(loss_cfg.get("energy_init_wE", 1.0) or 1.0)
+        energy_wC = float(loss_cfg.get("energy_init_wC", 1.0) or 1.0)
+        energy_wH = float(loss_cfg.get("energy_init_wH", 1.0) or 1.0)
+        model.energy_fusion = EnergyFusion(b0=energy_b0, wE=energy_wE, wC=energy_wC, wH=energy_wH)
     state = torch.load(checkpoint_path, map_location="cpu")
     weights = state.get("model", state)
-    model.load_state_dict(weights, strict=True)
+    try:
+        model.load_state_dict(weights, strict=True)
+    except RuntimeError as exc:
+        if use_energy_fusion:
+            logger.warning("Energy fusion params missing in checkpoint; loading with strict=False. (%s)", exc)
+            model.load_state_dict(weights, strict=False)
+        else:
+            raise
     model.to(device)
     model.eval()
     logger.info("Loaded checkpoint %s with backbone=%s", checkpoint_path, backbone)
@@ -501,6 +522,43 @@ def spatial_peak_pool(
     raise ValueError(f"Unknown peak_pool: {pool}")
 
 
+def _recenter_peak_logit(
+    peak_logit: torch.Tensor,
+    logits: torch.Tensor,
+    topk: int | None,
+    mode: str,
+) -> torch.Tensor:
+    mode = str(mode or "none").lower().strip()
+    if peak_logit.ndim == 1:
+        peak_logit = peak_logit.unsqueeze(1)
+    if mode in {"none", ""}:
+        return peak_logit
+    if mode in {"logk", "logk+median", "median+logk"}:
+        k = int(topk or (logits.shape[-1] * logits.shape[-2]))
+        if k > 0:
+            peak_logit = peak_logit - math.log(k)
+    if mode in {"median", "logk+median", "median+logk"}:
+        flat = logits.squeeze(1).flatten(1)
+        med = flat.median(dim=1).values
+        peak_logit = peak_logit - med.unsqueeze(1)
+    return peak_logit
+
+
+def compute_peak_logit(
+    logits: torch.Tensor,
+    pool: str,
+    tau: float,
+    topk: int | None,
+    center_mode: str,
+) -> torch.Tensor:
+    peak_logit = spatial_peak_pool(logits, pool=pool, tau=tau, topk=topk)
+    if peak_logit.ndim == 1:
+        peak_logit = peak_logit.unsqueeze(1)
+    if str(pool).lower().strip() == "logsumexp":
+        peak_logit = _recenter_peak_logit(peak_logit, logits, topk, center_mode)
+    return peak_logit
+
+
 def run_inference(
     model: torch.nn.Module,
     data_loader: DataLoader,
@@ -509,10 +567,14 @@ def run_inference(
     soft_argmax: bool,
     soft_argmax_tau: float,
     amp: bool,
-    presence_from_peak: bool = False,
+    presence_mode: str = "head",
     peak_pool: str = "max",
     peak_tau: float = 1.0,
     presence_topk: int | None = None,
+    peak_logit_alpha: float = 0.5,
+    peak_logit_center: str = "none",
+    peak_mode: str = "logsumexp",
+    dsnt_tau: float = 1.0,
 ) -> List[Dict[str, float]]:
     predictions: List[Dict[str, float]] = []
     autocast_enabled = amp and device.type == "cuda"
@@ -540,24 +602,48 @@ def run_inference(
                 checked_stride = True
             heatmaps = heatmaps_pred.squeeze(1)
             probs_raw = torch.sigmoid(logits).squeeze(1)
-            peaks = spatial_peak_pool(
-                heatmaps_pred,
-                pool=peak_pool,
-                tau=float(peak_tau),
-                topk=presence_topk,
-            )
-            if presence_from_peak:
-                peaks = torch.sigmoid(peaks)
-            if presence_from_peak:
-                combined_probs = torch.clamp(peaks, 1e-6, 1 - 1e-6)
+            presence_mode = str(presence_mode or "head").lower().strip()
+            if presence_mode not in {"head", "peak", "both", "energy"}:
+                raise ValueError(f"Invalid presence_mode: {presence_mode}")
+            peak_mode = str(peak_mode or "logsumexp").lower().strip()
+            use_energy = presence_mode == "energy"
+            use_peak = presence_mode in {"peak", "both"}
+            if use_peak and peak_mode == "energy":
+                logging.getLogger(LOGGER_NAME).warning(
+                    "peak_mode=energy ignored because presence_mode is not energy; falling back to logsumexp."
+                )
+                peak_mode = "logsumexp"
+            peak_logit = None
+            if use_energy:
+                energy_fusion = getattr(model, "energy_fusion", None)
+                if energy_fusion is None:
+                    raise ValueError("energy_fusion module not found on model (presence_mode=energy)")
+                E, C = compute_energy_features(heatmaps_pred, dsnt_tau=float(dsnt_tau), topk=presence_topk)
+                peak_logit = energy_fusion(E, C, logits)
+            elif use_peak:
+                peak_logit = compute_peak_logit(
+                    heatmaps_pred,
+                    pool=peak_pool,
+                    tau=float(peak_tau),
+                    topk=presence_topk,
+                    center_mode=peak_logit_center,
+                )
+            if presence_mode == "both" and peak_logit is not None:
+                comb_logit = logits + float(peak_logit_alpha) * peak_logit
+                combined_probs = torch.sigmoid(comb_logit).squeeze(1)
+            elif use_energy and peak_logit is not None:
+                combined_probs = torch.sigmoid(peak_logit).squeeze(1)
+            elif use_peak and peak_logit is not None:
+                combined_probs = torch.sigmoid(peak_logit).squeeze(1)
             else:
-                # When using the separate presence head, do not mix with heatmap peak.
-                combined_probs = torch.clamp(probs_raw, 1e-6, 1 - 1e-6)
+                combined_probs = probs_raw
+            combined_probs = torch.clamp(combined_probs, 1e-6, 1 - 1e-6)
 
             heatmaps_np = heatmaps.cpu().numpy()
             probs_np = combined_probs.cpu().numpy()
             probs_raw_np = probs_raw.cpu().numpy()
-            peaks_np = peaks.cpu().numpy()
+            peak_prob = torch.sigmoid(peak_logit).squeeze(1) if peak_logit is not None else torch.sigmoid(logits).squeeze(1)
+            peaks_np = peak_prob.detach().cpu().numpy()
             logits_np = logits.squeeze(1).cpu().numpy()
             manifest_idx_batch = batch["manifest_idx"]
             for i, path in enumerate(batch["image_path"]):
@@ -654,9 +740,28 @@ def main():
     temporal_stride = max(1, int(args.temporal_stride or cfg.get("train", {}).get("temporal_stride", 1)))
     batch_size = args.bs or args.batch_size or cfg.get("train", {}).get("batch_size", 32)
     presence_threshold_default = cfg.get("infer", {}).get("presence_threshold", 0.5)
-    presence_from_peak = bool(args.presence_from_peak or cfg.get("infer", {}).get("presence_from_peak", False))
+    presence_mode_cfg = cfg.get("infer", {}).get("presence_mode") or cfg.get("train", {}).get("presence_mode")
+    if args.presence_mode:
+        presence_mode = str(args.presence_mode)
+    elif presence_mode_cfg:
+        presence_mode = str(presence_mode_cfg)
+    else:
+        presence_mode = "peak" if bool(cfg.get("infer", {}).get("presence_from_peak", False)) else "head"
+    presence_mode = str(presence_mode or "head").lower().strip()
+    if presence_mode not in {"head", "peak", "both", "energy"}:
+        raise ValueError(f"Invalid presence_mode: {presence_mode}")
+    presence_from_peak = presence_mode == "peak"
     peak_pool_default = cfg.get("infer", {}).get("peak_pool", "max")
     peak_tau_default = cfg.get("infer", {}).get("peak_tau", 1.0)
+    peak_mode_default = cfg.get("loss", {}).get("peak_mode", "logsumexp")
+    peak_mode = str(args.peak_mode) if args.peak_mode is not None else str(peak_mode_default or "logsumexp")
+    if peak_mode not in {"logsumexp", "energy"}:
+        raise ValueError(f"Invalid peak_mode: {peak_mode}")
+    if presence_mode != "energy" and peak_mode == "energy":
+        logger.warning("peak_mode=energy ignored because presence_mode is not energy; falling back to logsumexp.")
+        peak_mode = "logsumexp"
+    peak_logit_alpha = float(cfg.get("loss", {}).get("peak_logit_alpha", 0.5) or 0.5)
+    peak_logit_center = str(cfg.get("loss", {}).get("peak_logit_center", "none") or "none")
     presence_topk_default = cfg.get("train", {}).get("presence_topk", 0)
     peak_pool = str(args.peak_pool) if args.peak_pool is not None else str(peak_pool_default or "max")
     peak_tau = float(args.peak_tau) if args.peak_tau is not None else float(peak_tau_default or 1.0)
@@ -703,7 +808,16 @@ def main():
         collate_fn=collate_batch,
     )
 
-    model = build_model(cfg, args.checkpoint, device, logger, temporal_T=temporal_T, heatmap_stride=stride)
+    use_energy = presence_mode == "energy"
+    model = build_model(
+        cfg,
+        args.checkpoint,
+        device,
+        logger,
+        temporal_T=temporal_T,
+        heatmap_stride=stride,
+        use_energy_fusion=use_energy,
+    )
     center_tau_default = cfg.get("infer", {}).get("center_tau", None)
     if center_tau_default is None:
         center_tau_default = cfg.get("loss", {}).get("dsnt_tau", 1.0)
@@ -717,14 +831,18 @@ def main():
         args.soft_argmax,
         soft_argmax_tau,
         args.amp,
-        presence_from_peak=presence_from_peak,
+        presence_mode=presence_mode,
         peak_pool=peak_pool,
         peak_tau=peak_tau,
         presence_topk=presence_topk,
+        peak_logit_alpha=peak_logit_alpha,
+        peak_logit_center=peak_logit_center,
+        peak_mode=peak_mode,
+        dsnt_tau=float(cfg.get("loss", {}).get("dsnt_tau", 1.0)),
     )
     preds_df = pd.DataFrame(preds).sort_values("manifest_idx").reset_index(drop=True)
     if args.threshold is not None or args.peak_threshold is not None:
-        tau = args.peak_threshold if args.presence_from_peak and args.peak_threshold is not None else args.threshold
+        tau = args.peak_threshold if presence_from_peak and args.peak_threshold is not None else args.threshold
         preds_df["presence_pred"] = (preds_df["presence_prob"] >= tau).astype(int)
 
     meta_map = None

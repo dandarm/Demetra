@@ -9,6 +9,7 @@ from torch.cuda.amp import autocast, GradScaler
 from cyclone_locator.datasets.med_fullbasin import MedFullBasinDataset
 from cyclone_locator.models.simplebaseline import SimpleBaseline
 from cyclone_locator.models.x3d_backbone import X3DBackbone
+from cyclone_locator.models.energy_fusion import EnergyFusion, compute_energy_features
 from cyclone_locator.losses.heatmap_loss import HeatmapMSE, HeatmapFocal
 from cyclone_locator.utils.dsnt import dsnt_expectation, spatial_softmax_2d
 from cyclone_locator.utils.distributed import (
@@ -50,7 +51,7 @@ def parse_args():
     ap.add_argument("--heatmap_neg_multiplier", type=float, help="Scale factor for heatmap loss on negative samples")
     ap.add_argument("--heatmap_pos_multiplier", type=float, help="Scale factor for heatmap loss on positive samples")
     ap.add_argument("--presence_from_peak", type=int, choices=[0,1], help="If 1, disable presence head and use heatmap peak as presence prob")
-    ap.add_argument("--presence_mode", choices=["head", "peak", "both"], help="Presence mode (overrides presence_from_peak)")
+    ap.add_argument("--presence_mode", choices=["head", "peak", "both", "energy"], help="Presence mode (overrides presence_from_peak)")
     ap.add_argument("--freeze_bn_stats", action="store_true",
                     help="Freeze BatchNorm running stats (keep affine gamma/beta trainable)")
     return ap.parse_args()
@@ -157,6 +158,8 @@ def _recenter_peak_logit(
     mode: str,
 ) -> torch.Tensor:
     mode = str(mode or "none").lower().strip()
+    if peak_logit.ndim == 1:
+        peak_logit = peak_logit.unsqueeze(1)
     if mode in {"none", ""}:
         return peak_logit
     if mode in {"logk", "logk+median", "median+logk"}:
@@ -177,6 +180,8 @@ def compute_peak_logit(
     center_mode: str,
 ) -> torch.Tensor:
     peak_logit = spatial_peak_pool(logits, pool=pool, tau=tau, topk=topk)
+    if peak_logit.ndim == 1:
+        peak_logit = peak_logit.unsqueeze(1)
     if str(pool).lower().strip() == "logsumexp":
         peak_logit = _recenter_peak_logit(peak_logit, logits, topk, center_mode)
     return peak_logit
@@ -303,7 +308,8 @@ def evaluate_loader(model, loader, hm_loss, amp_enabled, loss_weights, device, r
                     heatmap_stride: int = 4,
                     presence_threshold: float = 0.5,
                     peak_logit_alpha: float = 0.5,
-                    peak_logit_center: str = "none"):
+                    peak_logit_center: str = "none",
+                    peak_mode: str = "logsumexp"):
     #vL, vHm, vPr = [], [], []
     sum_L, sum_hm, sum_pr, sum_pr_comb = 0.0, 0.0, 0.0, 0.0
     sum_mae_px = 0.0
@@ -319,6 +325,12 @@ def evaluate_loader(model, loader, hm_loss, amp_enabled, loss_weights, device, r
     sum_fp = 0.0
     sum_tn = 0.0
     sum_fn = 0.0
+    sum_E_pos = sum_E_neg = 0.0
+    sum_C_pos = sum_C_neg = 0.0
+    sum_zhead_pos = sum_zhead_neg = 0.0
+    sum_ztot_pos = sum_ztot_neg = 0.0
+    n_pos = n_neg = 0.0
+    energy_fusion = getattr(model, "energy_fusion", None)
     bad_batches = 0
     total_batches = 0
     with torch.no_grad():
@@ -387,10 +399,34 @@ def evaluate_loader(model, loader, hm_loss, amp_enabled, loss_weights, device, r
                     L_hm = (hm_per * weight).sum() / torch.clamp(weight.sum(), min=1.0)
                     mae_px = torch.tensor(float("nan"), device=device)
                 presence_mode = str(presence_mode or "head").lower().strip()
-                use_head = presence_mode in {"head", "both"}
+                if presence_mode not in {"head", "peak", "both", "energy"}:
+                    raise ValueError(f"Invalid presence_mode: {presence_mode}")
+                use_energy = presence_mode == "energy"
                 use_peak = presence_mode in {"peak", "both"}
+                peak_mode = str(peak_mode or "logsumexp").lower().strip()
+                if use_peak and peak_mode == "energy":
+                    if rank == 0:
+                        print("[WARN] peak_mode=energy ignored because presence_mode is not energy; falling back to logsumexp.")
+                    peak_mode = "logsumexp"
+                use_head_loss = presence_mode in {"head", "both"}
+                use_head_feature = use_head_loss or use_energy
+                if use_energy and energy_fusion is None:
+                    raise ValueError("energy_fusion module not found on model (presence_mode=energy)")
                 peak_logit = None
-                if use_peak:
+                head_logit = pres_logit if use_head_feature else None
+                w_presence = float(loss_weights.get("w_presence", 1.0) or 1.0)
+                w_peak = float(loss_weights.get("w_peak_bce", 1.0) or 1.0)
+                L_pr = torch.tensor(0.0, device=device)
+                if use_head_loss:
+                    L_head = presence_loss_fn(head_logit, pres_smooth) if presence_loss_fn else bce_logits(head_logit, pres_smooth)
+                    L_pr = L_pr + w_presence * L_head
+                if use_energy:
+                    E, C = compute_energy_features(hm_p, dsnt_tau=float(dsnt_tau), topk=presence_topk)
+                    z_tot = energy_fusion(E, C, head_logit)
+                    peak_logit = z_tot
+                    L_peak = nn.functional.binary_cross_entropy_with_logits(peak_logit, pres_smooth.view_as(peak_logit))
+                    L_pr = L_pr + w_peak * L_peak
+                elif use_peak:
                     peak_logit = compute_peak_logit(
                         hm_p,
                         pool=peak_pool,
@@ -398,14 +434,6 @@ def evaluate_loader(model, loader, hm_loss, amp_enabled, loss_weights, device, r
                         topk=presence_topk,
                         center_mode=peak_logit_center,
                     )
-                head_logit = pres_logit if use_head else None
-                w_presence = float(loss_weights.get("w_presence", 1.0) or 1.0)
-                w_peak = float(loss_weights.get("w_peak_bce", 1.0) or 1.0)
-                L_pr = torch.tensor(0.0, device=device)
-                if use_head:
-                    L_head = presence_loss_fn(head_logit, pres_smooth) if presence_loss_fn else bce_logits(head_logit, pres_smooth)
-                    L_pr = L_pr + w_presence * L_head
-                if use_peak and peak_logit is not None:
                     L_peak = nn.functional.binary_cross_entropy_with_logits(peak_logit, pres_smooth.view_as(peak_logit))
                     L_pr = L_pr + w_peak * L_peak
                 if presence_mode == "both" and head_logit is not None and peak_logit is not None:
@@ -415,6 +443,12 @@ def evaluate_loader(model, loader, hm_loss, amp_enabled, loss_weights, device, r
                     else:
                         L_pr_comb = torch.tensor(0.0, device=device)
                     presence_prob = torch.sigmoid(comb_logit).squeeze(1)
+                elif use_energy and peak_logit is not None:
+                    if log_combined_presence:
+                        L_pr_comb = nn.functional.binary_cross_entropy_with_logits(peak_logit, pres_smooth.view_as(peak_logit))
+                    else:
+                        L_pr_comb = torch.tensor(0.0, device=device)
+                    presence_prob = torch.sigmoid(peak_logit).squeeze(1)
                 elif use_peak and peak_logit is not None:
                     if log_combined_presence:
                         L_pr_comb = nn.functional.binary_cross_entropy_with_logits(peak_logit, pres_smooth.view_as(peak_logit))
@@ -441,6 +475,25 @@ def evaluate_loader(model, loader, hm_loss, amp_enabled, loss_weights, device, r
             sum_fp += float((pred & (~gt)).sum().item())
             sum_tn += float(((~pred) & (~gt)).sum().item())
             sum_fn += float(((~pred) & gt).sum().item())
+            if use_energy and peak_logit is not None:
+                pos = gt
+                neg = ~gt
+                e = E.squeeze(1)
+                c = C.squeeze(1)
+                z_h = head_logit.squeeze(1)
+                z_t = peak_logit.squeeze(1)
+                if pos.any():
+                    sum_E_pos += float(e[pos].sum().item())
+                    sum_C_pos += float(c[pos].sum().item())
+                    sum_zhead_pos += float(z_h[pos].sum().item())
+                    sum_ztot_pos += float(z_t[pos].sum().item())
+                    n_pos += float(pos.sum().item())
+                if neg.any():
+                    sum_E_neg += float(e[neg].sum().item())
+                    sum_C_neg += float(c[neg].sum().item())
+                    sum_zhead_neg += float(z_h[neg].sum().item())
+                    sum_ztot_neg += float(z_t[neg].sum().item())
+                    n_neg += float(neg.sum().item())
             if torch.isfinite(mae_px):
                 sum_mae_px += float(mae_px.item())
                 n_mae += 1.0
@@ -450,10 +503,13 @@ def evaluate_loader(model, loader, hm_loss, amp_enabled, loss_weights, device, r
             sum_L, sum_hm, sum_pr, sum_pr_comb,
             sum_mae_px, n_mae,
             sum_pred_x, sum_pred_y, sum_pred_x2, sum_pred_y2, n_pred,
-            sum_hm_focal_reg_num, sum_hm_focal_reg_den,
-            sum_tp, sum_fp, sum_tn, sum_fn,
-            float(total_batches), float(bad_batches),
-        ],
+        sum_hm_focal_reg_num, sum_hm_focal_reg_den,
+        sum_tp, sum_fp, sum_tn, sum_fn,
+        sum_E_pos, sum_E_neg, sum_C_pos, sum_C_neg,
+        sum_zhead_pos, sum_zhead_neg, sum_ztot_pos, sum_ztot_neg,
+        n_pos, n_neg,
+        float(total_batches), float(bad_batches),
+    ],
         device=device
     )
     if distributed:
@@ -464,6 +520,9 @@ def evaluate_loader(model, loader, hm_loss, amp_enabled, loss_weights, device, r
         sum_pred_x, sum_pred_y, sum_pred_x2, sum_pred_y2, n_pred,
         sum_hm_focal_reg_num, sum_hm_focal_reg_den,
         sum_tp, sum_fp, sum_tn, sum_fn,
+        sum_E_pos, sum_E_neg, sum_C_pos, sum_C_neg,
+        sum_zhead_pos, sum_zhead_neg, sum_ztot_pos, sum_ztot_neg,
+        n_pos, n_neg,
         total_batches, bad_batches,
     ) = totals.tolist()
     if total_batches - bad_batches > 0:
@@ -481,11 +540,21 @@ def evaluate_loader(model, loader, hm_loss, amp_enabled, loss_weights, device, r
         acc = (sum_tp + sum_tn) / denom if denom > 0 else float("nan")
         prec = sum_tp / (sum_tp + sum_fp) if (sum_tp + sum_fp) > 0 else float("nan")
         rec = sum_tp / (sum_tp + sum_fn) if (sum_tp + sum_fn) > 0 else float("nan")
+        e_pos = (sum_E_pos / n_pos) if n_pos > 0 else float("nan")
+        e_neg = (sum_E_neg / n_neg) if n_neg > 0 else float("nan")
+        c_pos = (sum_C_pos / n_pos) if n_pos > 0 else float("nan")
+        c_neg = (sum_C_neg / n_neg) if n_neg > 0 else float("nan")
+        z_head_pos = (sum_zhead_pos / n_pos) if n_pos > 0 else float("nan")
+        z_head_neg = (sum_zhead_neg / n_neg) if n_neg > 0 else float("nan")
+        z_tot_pos = (sum_ztot_pos / n_pos) if n_pos > 0 else float("nan")
+        z_tot_neg = (sum_ztot_neg / n_neg) if n_neg > 0 else float("nan")
     else:
         mean_L = mean_hm = mean_pr = mean_pr_comb = mean_mae_px = float("nan")
         pred_x_mean = pred_y_mean = pred_x_var = pred_y_var = float("nan")
         hm_focal_reg = float("nan")
         acc = prec = rec = float("nan")
+        e_pos = e_neg = c_pos = c_neg = float("nan")
+        z_head_pos = z_head_neg = z_tot_pos = z_tot_neg = float("nan")
     return {
         "loss": float(mean_L),
         "hm": float(mean_hm),
@@ -497,6 +566,14 @@ def evaluate_loader(model, loader, hm_loss, amp_enabled, loss_weights, device, r
         "pred_y_mean_px": float(pred_y_mean),
         "pred_y_var_px": float(pred_y_var),
         "heatmap_focal_reg": float(hm_focal_reg),
+        "energy_E_pos": float(e_pos),
+        "energy_E_neg": float(e_neg),
+        "energy_C_pos": float(c_pos),
+        "energy_C_neg": float(c_neg),
+        "energy_zhead_pos": float(z_head_pos),
+        "energy_zhead_neg": float(z_head_neg),
+        "energy_ztot_pos": float(z_tot_pos),
+        "energy_ztot_neg": float(z_tot_neg),
         "accuracy": float(acc),
         "precision": float(prec),
         "recall": float(rec),
@@ -728,11 +805,20 @@ def main():
     presence_mode = str(cfg["train"].get("presence_mode", "") or "").lower().strip()
     if not presence_mode:
         presence_mode = "peak" if bool(cfg["train"].get("presence_from_peak", False)) else "head"
-    if presence_mode not in {"head", "peak", "both"}:
+    if presence_mode not in {"head", "peak", "both", "energy"}:
         raise ValueError(f"Invalid presence_mode: {presence_mode}")
-    use_head = presence_mode in {"head", "both"}
+    peak_mode = str(cfg["loss"].get("peak_mode", "logsumexp") or "logsumexp").lower().strip()
+    if peak_mode not in {"logsumexp", "energy"}:
+        raise ValueError(f"Invalid peak_mode: {peak_mode}")
+    use_energy = presence_mode == "energy"
     use_peak = presence_mode in {"peak", "both"}
-    presence_from_peak = use_peak and not use_head
+    if use_peak and peak_mode == "energy":
+        if is_main_process(rank):
+            print("[WARN] peak_mode=energy ignored because presence_mode is not energy; falling back to logsumexp.")
+        peak_mode = "logsumexp"
+    use_head_loss = presence_mode in {"head", "both"}
+    use_head_feature = use_head_loss or use_energy
+    presence_from_peak = presence_mode == "peak"
     if presence_from_peak:
         presence_threshold_eval = cfg.get("infer", {}).get("peak_threshold", None)
         if presence_threshold_eval is None:
@@ -762,6 +848,13 @@ def main():
             heatmap_stride=int(cfg["train"]["heatmap_stride"]),
         )
     model = model.to(device)
+    if use_energy:
+        loss_cfg = cfg.get("loss", {})
+        energy_b0 = float(loss_cfg.get("energy_init_b0", 0.0) or 0.0)
+        energy_wE = float(loss_cfg.get("energy_init_wE", 1.0) or 1.0)
+        energy_wC = float(loss_cfg.get("energy_init_wC", 1.0) or 1.0)
+        energy_wH = float(loss_cfg.get("energy_init_wH", 1.0) or 1.0)
+        model.energy_fusion = EnergyFusion(b0=energy_b0, wE=energy_wE, wC=energy_wC, wH=energy_wH).to(device)
 
     # Preflight: avoid opaque conv3d "Input tensor is too large" crashes (common with large per-GPU batches).
     if backbone_name.startswith("x3d"):
@@ -792,9 +885,10 @@ def main():
             device_ids=[local_rank] if device.type == "cuda" else None,
             output_device=local_rank if device.type == "cuda" else None,
             broadcast_buffers=False,
-            find_unused_parameters=not use_head  # presence head non usata se si usa solo il picco
+            find_unused_parameters=not use_head_feature  # head non usata se non coinvolta
         )
     model_to_save = model.module if distributed else model
+    energy_fusion = getattr(model_to_save, "energy_fusion", None)
     input_key = "video" if getattr(model_to_save, "input_is_video", False) else "image"
 
 
@@ -865,15 +959,30 @@ def main():
         "train_center_mae_px",
         "train_heatmap_focal_reg",
         "train_accuracy", "train_precision", "train_recall",
+        "train_energy_E_pos", "train_energy_E_neg",
+        "train_energy_C_pos", "train_energy_C_neg",
+        "train_energy_zhead_pos", "train_energy_zhead_neg",
+        "train_energy_ztot_pos", "train_energy_ztot_neg",
         "val_loss", "val_heatmap_loss", "val_presence_loss",
         "val_center_mae_px",
         "val_heatmap_focal_reg",
         "val_accuracy", "val_precision", "val_recall",
+        "val_energy_E_pos", "val_energy_E_neg",
+        "val_energy_C_pos", "val_energy_C_neg",
+        "val_energy_zhead_pos", "val_energy_zhead_neg",
+        "val_energy_ztot_pos", "val_energy_ztot_neg",
         "test_loss", "test_heatmap_loss", "test_presence_loss", "test_presence_combined_loss"
     ]
     log_fields.append("test_center_mae_px")
     log_fields.append("test_heatmap_focal_reg")
     log_fields += ["test_accuracy", "test_precision", "test_recall"]
+    log_fields += [
+        "test_energy_E_pos", "test_energy_E_neg",
+        "test_energy_C_pos", "test_energy_C_neg",
+        "test_energy_zhead_pos", "test_energy_zhead_neg",
+        "test_energy_ztot_pos", "test_energy_ztot_neg",
+        "energy_wE", "energy_wC", "energy_wH", "energy_b0",
+    ]
     log_fields += [
         "val_pred_x_mean_px", "val_pred_x_var_px", "val_pred_y_mean_px", "val_pred_y_var_px",
         "test_pred_x_mean_px", "test_pred_x_var_px", "test_pred_y_mean_px", "test_pred_y_var_px",
@@ -922,6 +1031,7 @@ def main():
                 presence_threshold=presence_threshold_eval,
                 peak_logit_alpha=peak_logit_alpha,
                 peak_logit_center=peak_logit_center,
+                peak_mode=peak_mode,
             )
             val_metrics = evaluate_loader(
                 eval_model, va_loader, hm_loss, False, loss_weights, device,
@@ -941,6 +1051,7 @@ def main():
                 presence_threshold=presence_threshold_eval,
                 peak_logit_alpha=peak_logit_alpha,
                 peak_logit_center=peak_logit_center,
+                peak_mode=peak_mode,
             )
             test_metrics = None
             if test_loader is not None:
@@ -962,6 +1073,7 @@ def main():
                     presence_threshold=presence_threshold_eval,
                     peak_logit_alpha=peak_logit_alpha,
                     peak_logit_center=peak_logit_center,
+                    peak_mode=peak_mode,
                 )
         eval_model.train()
         if bool(cfg["train"].get("freeze_bn_running_stats", False)):
@@ -977,6 +1089,14 @@ def main():
                 "train_accuracy": tr_metrics.get("accuracy", ""),
                 "train_precision": tr_metrics.get("precision", ""),
                 "train_recall": tr_metrics.get("recall", ""),
+                "train_energy_E_pos": tr_metrics.get("energy_E_pos", ""),
+                "train_energy_E_neg": tr_metrics.get("energy_E_neg", ""),
+                "train_energy_C_pos": tr_metrics.get("energy_C_pos", ""),
+                "train_energy_C_neg": tr_metrics.get("energy_C_neg", ""),
+                "train_energy_zhead_pos": tr_metrics.get("energy_zhead_pos", ""),
+                "train_energy_zhead_neg": tr_metrics.get("energy_zhead_neg", ""),
+                "train_energy_ztot_pos": tr_metrics.get("energy_ztot_pos", ""),
+                "train_energy_ztot_neg": tr_metrics.get("energy_ztot_neg", ""),
                 "val_loss": val_metrics["loss"] if val_metrics else "",
                 "val_heatmap_loss": val_metrics["hm"] if val_metrics else "",
                 "val_presence_loss": val_metrics["presence"] if val_metrics else "",
@@ -985,6 +1105,14 @@ def main():
                 "val_accuracy": val_metrics.get("accuracy", "") if val_metrics else "",
                 "val_precision": val_metrics.get("precision", "") if val_metrics else "",
                 "val_recall": val_metrics.get("recall", "") if val_metrics else "",
+                "val_energy_E_pos": val_metrics.get("energy_E_pos", "") if val_metrics else "",
+                "val_energy_E_neg": val_metrics.get("energy_E_neg", "") if val_metrics else "",
+                "val_energy_C_pos": val_metrics.get("energy_C_pos", "") if val_metrics else "",
+                "val_energy_C_neg": val_metrics.get("energy_C_neg", "") if val_metrics else "",
+                "val_energy_zhead_pos": val_metrics.get("energy_zhead_pos", "") if val_metrics else "",
+                "val_energy_zhead_neg": val_metrics.get("energy_zhead_neg", "") if val_metrics else "",
+                "val_energy_ztot_pos": val_metrics.get("energy_ztot_pos", "") if val_metrics else "",
+                "val_energy_ztot_neg": val_metrics.get("energy_ztot_neg", "") if val_metrics else "",
                 "test_loss": test_metrics["loss"] if test_metrics else "",
                 "test_heatmap_loss": test_metrics["hm"] if test_metrics else "",
                 "test_presence_loss": test_metrics["presence"] if test_metrics else "",
@@ -994,6 +1122,18 @@ def main():
                 "test_accuracy": test_metrics.get("accuracy", "") if test_metrics else "",
                 "test_precision": test_metrics.get("precision", "") if test_metrics else "",
                 "test_recall": test_metrics.get("recall", "") if test_metrics else "",
+                "test_energy_E_pos": test_metrics.get("energy_E_pos", "") if test_metrics else "",
+                "test_energy_E_neg": test_metrics.get("energy_E_neg", "") if test_metrics else "",
+                "test_energy_C_pos": test_metrics.get("energy_C_pos", "") if test_metrics else "",
+                "test_energy_C_neg": test_metrics.get("energy_C_neg", "") if test_metrics else "",
+                "test_energy_zhead_pos": test_metrics.get("energy_zhead_pos", "") if test_metrics else "",
+                "test_energy_zhead_neg": test_metrics.get("energy_zhead_neg", "") if test_metrics else "",
+                "test_energy_ztot_pos": test_metrics.get("energy_ztot_pos", "") if test_metrics else "",
+                "test_energy_ztot_neg": test_metrics.get("energy_ztot_neg", "") if test_metrics else "",
+                "energy_wE": float(energy_fusion.wE.item()) if energy_fusion is not None else "",
+                "energy_wC": float(energy_fusion.wC.item()) if energy_fusion is not None else "",
+                "energy_wH": float(energy_fusion.wH.item()) if energy_fusion is not None else "",
+                "energy_b0": float(energy_fusion.b0.item()) if energy_fusion is not None else "",
                 "val_pred_x_mean_px": val_metrics.get("pred_x_mean_px", "") if val_metrics else "",
                 "val_pred_x_var_px": val_metrics.get("pred_x_var_px", "") if val_metrics else "",
                 "val_pred_y_mean_px": val_metrics.get("pred_y_mean_px", "") if val_metrics else "",
@@ -1015,6 +1155,11 @@ def main():
                 freeze_batchnorm_running_stats(model)
             losses = []; hm_losses = []; pres_losses = []; peak_preds = []; mae_center_px = []; hm_reg_losses = []
             train_tp = train_fp = train_tn = train_fn = 0.0
+            train_E_pos = train_E_neg = 0.0
+            train_C_pos = train_C_neg = 0.0
+            train_zhead_pos = train_zhead_neg = 0.0
+            train_ztot_pos = train_ztot_neg = 0.0
+            train_n_pos = train_n_neg = 0.0
             opt.zero_grad(set_to_none=True)
             last_micro_step = -1
             for batch_idx, batch in enumerate(tr_loader):
@@ -1072,7 +1217,17 @@ def main():
                         w_presence = float(loss_weights.get("w_presence", 1.0) or 1.0)
                         w_peak = float(loss_weights.get("w_peak_bce", 1.0) or 1.0)
                         peak_logit = None
-                        if use_peak:
+                        head_logit = pres_logit if use_head_feature else None
+                        L_pr = torch.tensor(0.0, device=device)
+                        if use_head_loss:
+                            L_head = presence_loss_fn(head_logit, pres_smooth)
+                            L_pr = L_pr + w_presence * L_head
+                        if use_energy:
+                            E, C = compute_energy_features(hm_p, dsnt_tau=float(dsnt_tau), topk=presence_topk)
+                            peak_logit = energy_fusion(E, C, head_logit)
+                            L_peak = nn.functional.binary_cross_entropy_with_logits(peak_logit, pres_smooth.view_as(peak_logit))
+                            L_pr = L_pr + w_peak * L_peak
+                        elif use_peak:
                             peak_logit = compute_peak_logit(
                                 hm_p,
                                 pool=peak_pool,
@@ -1080,21 +1235,36 @@ def main():
                                 topk=presence_topk,
                                 center_mode=peak_logit_center,
                             )
-                        head_logit = pres_logit if use_head else None
-                        L_pr = torch.tensor(0.0, device=device)
-                        if use_head:
-                            L_head = presence_loss_fn(head_logit, pres_smooth)
-                            L_pr = L_pr + w_presence * L_head
-                        if use_peak and peak_logit is not None:
                             L_peak = nn.functional.binary_cross_entropy_with_logits(peak_logit, pres_smooth.view_as(peak_logit))
                             L_pr = L_pr + w_peak * L_peak
                         if presence_mode == "both" and head_logit is not None and peak_logit is not None:
                             comb_logit = head_logit + float(peak_logit_alpha) * peak_logit
                             presence_prob = torch.sigmoid(comb_logit).squeeze(1)
+                        elif use_energy and peak_logit is not None:
+                            presence_prob = torch.sigmoid(peak_logit).squeeze(1)
                         elif use_peak and peak_logit is not None:
                             presence_prob = torch.sigmoid(peak_logit).squeeze(1)
                         else:
                             presence_prob = torch.sigmoid(head_logit).squeeze(1)
+                        if use_energy and peak_logit is not None:
+                            pos = pres_raw >= 0.5
+                            neg = ~pos
+                            e = E.squeeze(1)
+                            c = C.squeeze(1)
+                            z_h = head_logit.squeeze(1)
+                            z_t = peak_logit.squeeze(1)
+                            if pos.any():
+                                train_E_pos += float(e[pos].sum().item())
+                                train_C_pos += float(c[pos].sum().item())
+                                train_zhead_pos += float(z_h[pos].sum().item())
+                                train_ztot_pos += float(z_t[pos].sum().item())
+                                train_n_pos += float(pos.sum().item())
+                            if neg.any():
+                                train_E_neg += float(e[neg].sum().item())
+                                train_C_neg += float(c[neg].sum().item())
+                                train_zhead_neg += float(z_h[neg].sum().item())
+                                train_ztot_neg += float(z_t[neg].sum().item())
+                                train_n_neg += float(neg.sum().item())
                         hm_w = float(loss_weights.get("w_heatmap", 1.0) or 1.0)
                         L = hm_w * L_hm + L_pr + float(w_hm_focal_reg) * L_reg
                 if not torch.isfinite(L):
@@ -1107,13 +1277,16 @@ def main():
                     opt.zero_grad(set_to_none=True)
 
                 losses.append(L.item()); hm_losses.append(L_hm.item()); pres_losses.append(L_pr.item())
-                peak_val = compute_peak_logit(
-                    hm_p.detach(),
-                    pool=peak_pool,
-                    tau=float(peak_tau),
-                    topk=presence_topk,
-                    center_mode=peak_logit_center,
-                )
+                if use_energy and peak_logit is not None:
+                    peak_val = peak_logit.detach()
+                else:
+                    peak_val = compute_peak_logit(
+                        hm_p.detach(),
+                        pool=peak_pool,
+                        tau=float(peak_tau),
+                        topk=presence_topk,
+                        center_mode=peak_logit_center,
+                    )
                 peak_preds.append(peak_val.mean().item())
                 gt = (pres_raw >= 0.5)
                 pred = (presence_prob >= float(presence_threshold_eval))
@@ -1136,6 +1309,14 @@ def main():
             tr_peak = float(np.mean(peak_preds)) if peak_preds else 0.0
             tr_mae_px = float(np.mean(mae_center_px)) if mae_center_px else float("nan")
             tr_hm_reg = float(np.mean(hm_reg_losses)) if hm_reg_losses else float("nan")
+            tr_E_pos = (train_E_pos / train_n_pos) if train_n_pos > 0 else float("nan")
+            tr_E_neg = (train_E_neg / train_n_neg) if train_n_neg > 0 else float("nan")
+            tr_C_pos = (train_C_pos / train_n_pos) if train_n_pos > 0 else float("nan")
+            tr_C_neg = (train_C_neg / train_n_neg) if train_n_neg > 0 else float("nan")
+            tr_zhead_pos = (train_zhead_pos / train_n_pos) if train_n_pos > 0 else float("nan")
+            tr_zhead_neg = (train_zhead_neg / train_n_neg) if train_n_neg > 0 else float("nan")
+            tr_ztot_pos = (train_ztot_pos / train_n_pos) if train_n_pos > 0 else float("nan")
+            tr_ztot_neg = (train_ztot_neg / train_n_neg) if train_n_neg > 0 else float("nan")
 
             metrics_tensor = torch.tensor([tr_loss, tr_hm, tr_pr, tr_peak, tr_mae_px, tr_hm_reg], device=device)
             metrics_tensor = reduce_mean(metrics_tensor)
@@ -1144,6 +1325,15 @@ def main():
             if distributed:
                 dist.all_reduce(count_tensor, op=dist.ReduceOp.SUM)
             train_tp, train_fp, train_tn, train_fn = [float(x) for x in count_tensor.tolist()]
+            if distributed:
+                energy_tensor = torch.tensor(
+                    [train_E_pos, train_E_neg, train_C_pos, train_C_neg, train_zhead_pos, train_zhead_neg, train_ztot_pos, train_ztot_neg],
+                    device=device,
+                )
+                energy_tensor = reduce_mean(energy_tensor)
+                tr_E_pos, tr_E_neg, tr_C_pos, tr_C_neg, tr_zhead_pos, tr_zhead_neg, tr_ztot_pos, tr_ztot_neg = [
+                    float(x) for x in energy_tensor.tolist()
+                ]
             train_den = train_tp + train_fp + train_tn + train_fn
             tr_acc = (train_tp + train_tn) / train_den if train_den > 0 else float("nan")
             tr_prec = train_tp / (train_tp + train_fp) if (train_tp + train_fp) > 0 else float("nan")
@@ -1182,6 +1372,7 @@ def main():
                         presence_threshold=presence_threshold_eval,
                         peak_logit_alpha=peak_logit_alpha,
                         peak_logit_center=peak_logit_center,
+                        peak_mode=peak_mode,
                     )
                 if test_loader is not None:
                     test_metrics = evaluate_loader(
@@ -1202,6 +1393,7 @@ def main():
                             presence_threshold=presence_threshold_eval,
                             peak_logit_alpha=peak_logit_alpha,
                             peak_logit_center=peak_logit_center,
+                            peak_mode=peak_mode,
                         )
                 eval_model.train()
                 if bool(cfg["train"].get("freeze_bn_running_stats", False)):
@@ -1261,6 +1453,14 @@ def main():
                     "train_accuracy": "" if not np.isfinite(tr_acc) else tr_acc,
                     "train_precision": "" if not np.isfinite(tr_prec) else tr_prec,
                     "train_recall": "" if not np.isfinite(tr_rec) else tr_rec,
+                    "train_energy_E_pos": "" if not np.isfinite(tr_E_pos) else tr_E_pos,
+                    "train_energy_E_neg": "" if not np.isfinite(tr_E_neg) else tr_E_neg,
+                    "train_energy_C_pos": "" if not np.isfinite(tr_C_pos) else tr_C_pos,
+                    "train_energy_C_neg": "" if not np.isfinite(tr_C_neg) else tr_C_neg,
+                    "train_energy_zhead_pos": "" if not np.isfinite(tr_zhead_pos) else tr_zhead_pos,
+                    "train_energy_zhead_neg": "" if not np.isfinite(tr_zhead_neg) else tr_zhead_neg,
+                    "train_energy_ztot_pos": "" if not np.isfinite(tr_ztot_pos) else tr_ztot_pos,
+                    "train_energy_ztot_neg": "" if not np.isfinite(tr_ztot_neg) else tr_ztot_neg,
                     "val_loss": val_metrics["loss"] if val_metrics else "",
                     "val_heatmap_loss": val_metrics["hm"] if val_metrics else "",
                     "val_presence_loss": val_metrics["presence"] if val_metrics else "",
@@ -1269,6 +1469,14 @@ def main():
                     "val_accuracy": val_metrics.get("accuracy", "") if val_metrics else "",
                     "val_precision": val_metrics.get("precision", "") if val_metrics else "",
                     "val_recall": val_metrics.get("recall", "") if val_metrics else "",
+                    "val_energy_E_pos": val_metrics.get("energy_E_pos", "") if val_metrics else "",
+                    "val_energy_E_neg": val_metrics.get("energy_E_neg", "") if val_metrics else "",
+                    "val_energy_C_pos": val_metrics.get("energy_C_pos", "") if val_metrics else "",
+                    "val_energy_C_neg": val_metrics.get("energy_C_neg", "") if val_metrics else "",
+                    "val_energy_zhead_pos": val_metrics.get("energy_zhead_pos", "") if val_metrics else "",
+                    "val_energy_zhead_neg": val_metrics.get("energy_zhead_neg", "") if val_metrics else "",
+                    "val_energy_ztot_pos": val_metrics.get("energy_ztot_pos", "") if val_metrics else "",
+                    "val_energy_ztot_neg": val_metrics.get("energy_ztot_neg", "") if val_metrics else "",
                     "test_loss": test_metrics["loss"] if test_metrics else "",
                     "test_heatmap_loss": test_metrics["hm"] if test_metrics else "",
                     "test_presence_loss": test_metrics["presence"] if test_metrics else "",
@@ -1278,6 +1486,18 @@ def main():
                     "test_accuracy": test_metrics.get("accuracy", "") if test_metrics else "",
                     "test_precision": test_metrics.get("precision", "") if test_metrics else "",
                     "test_recall": test_metrics.get("recall", "") if test_metrics else "",
+                    "test_energy_E_pos": test_metrics.get("energy_E_pos", "") if test_metrics else "",
+                    "test_energy_E_neg": test_metrics.get("energy_E_neg", "") if test_metrics else "",
+                    "test_energy_C_pos": test_metrics.get("energy_C_pos", "") if test_metrics else "",
+                    "test_energy_C_neg": test_metrics.get("energy_C_neg", "") if test_metrics else "",
+                    "test_energy_zhead_pos": test_metrics.get("energy_zhead_pos", "") if test_metrics else "",
+                    "test_energy_zhead_neg": test_metrics.get("energy_zhead_neg", "") if test_metrics else "",
+                    "test_energy_ztot_pos": test_metrics.get("energy_ztot_pos", "") if test_metrics else "",
+                    "test_energy_ztot_neg": test_metrics.get("energy_ztot_neg", "") if test_metrics else "",
+                    "energy_wE": float(energy_fusion.wE.item()) if energy_fusion is not None else "",
+                    "energy_wC": float(energy_fusion.wC.item()) if energy_fusion is not None else "",
+                    "energy_wH": float(energy_fusion.wH.item()) if energy_fusion is not None else "",
+                    "energy_b0": float(energy_fusion.b0.item()) if energy_fusion is not None else "",
                     "val_pred_x_mean_px": val_metrics.get("pred_x_mean_px", "") if val_metrics else "",
                     "val_pred_x_var_px": val_metrics.get("pred_x_var_px", "") if val_metrics else "",
                     "val_pred_y_mean_px": val_metrics.get("pred_y_mean_px", "") if val_metrics else "",
