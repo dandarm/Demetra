@@ -495,7 +495,29 @@ def export_event_videos_for_manifest(
 
     logger = logging.getLogger("notebook_event_viz")
     logger.setLevel(logging.INFO)
-    model = build_model(cfg_run, str(checkpoint_path), device, logger, temporal_T=temporal_T, heatmap_stride=heatmap_stride_cfg)
+    presence_mode_cfg = infer_cfg.get("presence_mode") or train_cfg.get("presence_mode", "")
+    if not presence_mode_cfg:
+        presence_mode_cfg = "peak" if bool(train_cfg.get("presence_from_peak", False)) else "head"
+    presence_mode_cfg = str(presence_mode_cfg).lower().strip()
+    use_energy_fusion = presence_mode_cfg == "energy"
+
+    if not use_energy_fusion:
+        state = torch.load(checkpoint_path, map_location="cpu")
+        weights = state.get("model", state)
+        has_energy_keys = any(str(k).startswith("energy_fusion.") for k in weights.keys())
+        if has_energy_keys:
+            logger.warning("Checkpoint contains energy_fusion params; enabling energy_fusion for visualization.")
+            use_energy_fusion = True
+
+    model = build_model(
+        cfg_run,
+        str(checkpoint_path),
+        device,
+        logger,
+        temporal_T=temporal_T,
+        heatmap_stride=heatmap_stride_cfg,
+        use_energy_fusion=use_energy_fusion,
+    )
 
     peak_pool = str(loss_cfg.get("peak_pool", "max"))
     peak_tau = float(loss_cfg.get("peak_tau", 1.0))

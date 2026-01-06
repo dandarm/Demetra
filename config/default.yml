@@ -23,9 +23,9 @@ train:
   dataloader_timeout_s: 160   # >0 per evitare deadlock: solleva eccezione se il dataloader si blocca
   persistent_workers: true   # disattiva (false) se sospetti deadlock dei worker tra le epoche
   freeze_bn_running_stats: false  # congela running mean/var della BN (gamma/beta restano trainabili)
-  epochs: 30
-  lr: 5.0e-4
-  weight_decay: 1.0e-4
+  epochs: 100
+  lr: 1.0e-3
+  weight_decay: 1.0e-5
   amp: true
   scale_lr_by_world_size: true
   seed: 493
@@ -47,8 +47,8 @@ loss:
   heatmap_sigma_px: 10
   heatmap_loss: dsnt           # mse|focal|dsnt (dsnt: regressione coordinate via softmax2D + expectation)
   heatmap_focal_alpha: 1.7     # alpha (modulating) per focal heatmap
-  heatmap_focal_beta: 4.0      # beta (penalizza i falsi picchi vicino al GT gaussian)
-  dsnt_tau: 0.4                # τ per softmax2D (dsnt); >1 rende la distribuzione più smooth
+  heatmap_focal_beta: 3.0      # beta (penalizza i falsi picchi vicino al GT gaussian)
+  dsnt_tau: 0.8                # τ per softmax2D (dsnt); >1 rende la distribuzione più smooth
   dsnt_coord_loss: l1          # l1|l2 (loss sulle coordinate DSNT in spazio heatmap)
   peak_mode: energy         # logsumexp|energy (energy usata solo con presence_mode=energy)
   peak_pool: logsumexp               # max|logsumexp (pooling spaziale per presence_from_peak)
@@ -60,12 +60,13 @@ loss:
   energy_init_b0: 0.0
   energy_init_wE: 1.0
   energy_init_wC: 1.0
-  energy_init_wH: 1.0
+  energy_init_wH: 0.4
+
   w_heatmap_focal_reg: 1.0     # regolarizzatore extra: aggiunge una HeatmapFocal debole su DSNT (0=off)
-  heatmap_focal_reg_neg_multiplier: 1.9  # peso relativo del regolarizzatore sui negativi (0=solo positivi)
+  heatmap_focal_reg_neg_multiplier: 0.9  # peso relativo del regolarizzatore sui negativi (0=solo positivi)
   w_heatmap: 1.0               # peso della loss della head heatmap
   w_presence: 1.0              # peso della loss della head presence (se usata)
-  w_peak_bce: 0.5              # peso BCE-with-logits sul picco heatmap (quando presence_from_peak=true)
+  w_peak_bce: 1.5              # peso BCE-with-logits sul picco heatmap (quando presence_from_peak=true)
   heatmap_neg_multiplier: 1.0   # fattore di peso per la heatmap dei negativi (0=ignora, 1=pari ai positivi)
   heatmap_pos_multiplier: 1.0   # fattore di peso per la heatmap dei positivi
   presence_loss: bce            # focal|bce (per la testa presenza)
@@ -79,7 +80,7 @@ infer:
   batch_size: 40
   freeze_bn_running_stats: false
   presence_from_peak: false   # se true, usa il picco heatmap come presenza in inferenza
-  presence_mode: both        # head|peak|both|energy (se vuoto usa presence_from_peak o train.presence_mode)
+  presence_mode: energy        # head|peak|both|energy (se vuoto usa presence_from_peak o train.presence_mode)
   peak_threshold: 0.5        # soglia τ per il picco (se null usa presence_threshold)
   peak_pool: logsumexp              # max|logsumexp (pooling spaziale per presence_from_peak)
   peak_tau: 1.15               # τ per logsumexp (più piccolo -> più simile a max)

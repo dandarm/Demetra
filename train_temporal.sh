@@ -13,7 +13,7 @@ HEATMAP_STRIDE="2"
 HEATMAP_SIGMA="8"
 
 #LOG_DIR="outputs/runs/exp13_temporalT${TEMPORAL_T}_bs${BATCH_SIZE}_buffer36_stride6"
-LOG_DIR="outputs/runs/exp_28_both-presence" #    2_hm-upsample+conv_stride2_peakTopk"
+LOG_DIR="outputs/runs/exp_31_energy-presence_LR" #    2_hm-upsample+conv_stride2_peakTopk"
 mkdir -p "$LOG_DIR"
 
 
