@@ -1,0 +1,19 @@
+--extra-index-url https://download.pytorch.org/whl/cu113
+av
+decord
+deepspeed
+einops
+matplotlib
+numpy
+opencv-python
+pandas
+Pillow
+scipy
+scikit-learn
+basemap
+tensorboard==2.9.0
+timm==0.4.12
+torch==1.12.1+cu113
+torchaudio==0.12.1+cu113
+torchvision==0.13.1+cu113
+triton

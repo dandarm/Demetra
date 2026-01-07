@@ -1,0 +1,841 @@
+# --------------------------------------------------------
+# Based on BEiT, timm, DINO and DeiT code bases
+# https://github.com/microsoft/unilm/tree/master/beit
+# https://github.com/rwightman/pytorch-image-models/tree/master/timm
+# https://github.com/facebookresearch/deit
+# https://github.com/facebookresearch/dino
+# --------------------------------------------------------'
+import math
+import os
+os.environ["INDUCTOR_DISABLE_CUDAGRAPHS"] = "1"
+
+import sys
+from multiprocessing import Pool
+from glob import glob
+from typing import Iterable, Optional, Callable
+
+import numpy as np
+import torch
+import torch.distributed as dist
+from scipy.special import softmax
+from timm.data import Mixup
+from timm.utils import ModelEma, accuracy
+
+import utils
+
+
+def _unwrap_model(model: torch.nn.Module) -> torch.nn.Module:
+    """Return the underlying model, unwrapping DataParallel/DDP wrappers if present."""
+    return model.module if hasattr(model, 'module') else model
+
+
+def _forward_with_optional_features(model: torch.nn.Module,
+                                    images: torch.Tensor,
+                                    collect_features: bool):
+    """Run a forward pass and optionally return backbone features before the head."""
+    features = None
+    if collect_features:
+        base_model = _unwrap_model(model)
+        if hasattr(base_model, 'forward_features'):
+            features = base_model.forward_features(images)
+            forward_head = getattr(base_model, 'forward_head', None)
+            if callable(forward_head):
+                try:
+                    output = forward_head(features)
+                except TypeError:
+                    # Some implementations expect explicit pre_logits flag
+                    output = forward_head(features, pre_logits=False)
+            else:
+                logits_input = features
+                head_dropout = getattr(base_model, 'head_dropout', None)
+                if callable(head_dropout):
+                    logits_input = head_dropout(logits_input)
+                head = getattr(base_model, 'head', None)
+                if callable(head):
+                    output = head(logits_input)
+                else:
+                    # Fallback to full forward if head is unavailable
+                    features = None
+                    output = model(images)
+            return features, output
+    output = model(images)
+    return features, output
+
+
+def train_class_batch(model, samples, target, criterion):
+    outputs = model(samples)
+    loss = criterion(outputs, target)
+    return loss, outputs
+
+
+def get_loss_scale_for_deepspeed(model):
+    optimizer = model.optimizer
+    return optimizer.loss_scale if hasattr(
+        optimizer, "loss_scale") else optimizer.cur_scale
+
+def debug_tensor(t, name="tensor", n_vals=8):
+    """
+    Stampa forma, tipo, device, intervallo di valori e
+    i primi n_vals elementi (piatti) di un tensore PyTorch.
+    """
+    t_det = t.detach()            # stacca dal grafo
+    flat  = t_det.flatten()       # appiattisci: facile da stampare
+    print(f"\n{name}:")
+    print(f"  shape   → {tuple(t_det.shape)}")
+    print(f"  dtype   → {t_det.dtype}, device → {t_det.device}")
+    if torch.is_floating_point(t_det):
+        print(f"  range   → [{t_det.min():.4f}, {t_det.max():.4f}]")
+        print(f"  mean    → {t_det.mean():.4f}, std → {t_det.std():.4f}")
+    print(f"  first {n_vals} vals → {flat[:n_vals].cpu().tolist()}")
+
+
+
+def train_one_epoch(model: torch.nn.Module,
+                    criterion: torch.nn.Module,
+                    data_loader: Iterable,
+                    optimizer: torch.optim.Optimizer,
+                    device: torch.device,
+                    epoch: int,
+                    loss_scaler,
+                    max_norm: float = 0,
+                    model_ema: Optional[ModelEma] = None,
+                    mixup_fn: Optional[Mixup] = None,
+                    log_writer=None,
+                    start_steps=None,
+                    lr_schedule_values=None,
+                    wd_schedule_values=None,
+                    num_training_steps_per_epoch=None,
+                    update_freq=None):
+    
+    # importante per lo shuffle
+    data_loader.sampler.set_epoch(epoch) 
+    dataset_ref = getattr(data_loader, "dataset", None)
+    if dataset_ref is not None and hasattr(dataset_ref, "reset_epoch_skip_count"):
+        dataset_ref.reset_epoch_skip_count()
+
+    model.train(True)
+    metric_logger = utils.MetricLogger(delimiter="  ")
+    metric_logger.add_meter('lr', utils.SmoothedValue(window_size=1, fmt='{value:.6f}'))
+    #metric_logger.add_meter('min_lr', utils.SmoothedValue(window_size=1, fmt='{value:.6f}'))
+    header = 'Epoch: [{}]'.format(epoch)
+    print_freq = 20
+
+    if loss_scaler is None:
+        model.zero_grad()
+        model.micro_steps = 0
+    else:
+        optimizer.zero_grad()
+
+    for data_iter_step, (samples, targets, _) in enumerate(
+            metric_logger.log_every(data_loader, print_freq, header)):
+        step = data_iter_step // update_freq
+        if step >= num_training_steps_per_epoch:
+            continue
+        it = start_steps + step  # global training iteration
+        # Update LR & WD for the first acc
+        if lr_schedule_values is not None or wd_schedule_values is not None and data_iter_step % update_freq == 0:
+            for i, param_group in enumerate(optimizer.param_groups):
+                if lr_schedule_values is not None:
+                    param_group["lr"] = lr_schedule_values[it] * param_group["lr_scale"]
+                    #print(f"param group lr scale {param_group['lr_scale']}")
+                if wd_schedule_values is not None and param_group["weight_decay"] > 0:
+                    param_group["weight_decay"] = wd_schedule_values[it]
+
+        samples = samples.to(device, non_blocking=True)
+        targets_ondevice = targets.to(device, non_blocking=True)
+
+        if mixup_fn is not None:
+            # mixup handle 3th & 4th dimension
+            B, C, T, H, W = samples.shape
+            samples = samples.view(B, C * T, H, W)
+            samples, targets_ondevice = mixup_fn(samples, targets_ondevice)
+            samples = samples.view(B, C, T, H, W)
+
+        if loss_scaler is None:
+            samples = samples.half()
+            loss, output = train_class_batch(model, samples, targets_ondevice, criterion)
+        else:
+            if device.type == 'cuda':
+                with torch.cuda.amp.autocast(dtype=torch.bfloat16):
+                    loss, output = train_class_batch(model, samples, targets_ondevice, criterion)
+            else:
+                loss, output = train_class_batch(model, samples, targets_ondevice, criterion)
+
+        # debugging the output
+        #debug_tensor(output, name="output", n_vals=16)
+
+
+        loss_value = loss.item()
+
+        if not math.isfinite(loss_value):
+            print("Loss is {}, stopping training".format(loss_value))
+            sys.exit(1)
+
+        if loss_scaler is None:
+            loss /= update_freq
+            model.backward(loss)
+            grad_norm = model.get_global_grad_norm()
+
+            model.step()
+
+            if (data_iter_step + 1) % update_freq == 0:
+                # Deepspeed will call step() & model.zero_grad() automatic
+                if model_ema is not None:
+                    model_ema.update(model)
+            loss_scale_value = get_loss_scale_for_deepspeed(model)
+        else:
+            # this attribute is added by timm on one optimizer (adahessian)
+            is_second_order = hasattr(optimizer, 'is_second_order') and optimizer.is_second_order
+            loss /= update_freq
+            grad_norm = loss_scaler(
+                loss,
+                optimizer,
+                clip_grad=max_norm,
+                parameters=model.parameters(),
+                create_graph=is_second_order,
+                update_grad=(data_iter_step + 1) % update_freq == 0)
+            if (data_iter_step + 1) % update_freq == 0:
+                optimizer.zero_grad()
+                if model_ema is not None:
+                    model_ema.update(model)
+            scaler_state = loss_scaler.state_dict()
+            loss_scale_value = scaler_state.get("scale", scaler_state.get("_scale", 1.0))
+
+        if device.type == 'cuda':
+            torch.cuda.synchronize()
+
+        if mixup_fn is None:
+            class_acc = (output.max(-1)[-1] == targets_ondevice).float().mean()
+        else:
+            class_acc = None
+
+
+        metric_logger.update(loss=loss_value)
+        metric_logger.update(class_acc=class_acc)
+        metric_logger.update(loss_scale=loss_scale_value)
+        min_lr = 10.
+        max_lr = 0.
+        for group in optimizer.param_groups:
+            min_lr = min(min_lr, group["lr"])
+            max_lr = max(max_lr, group["lr"])
+
+        metric_logger.update(lr=max_lr)
+        metric_logger.update(min_lr=min_lr)
+        weight_decay_value = None
+        for group in optimizer.param_groups:
+            if group["weight_decay"] > 0:
+                weight_decay_value = group["weight_decay"]
+        metric_logger.update(weight_decay=weight_decay_value)
+        metric_logger.update(grad_norm=grad_norm)
+
+        if log_writer is not None:
+            log_writer.update(loss=loss_value, head="loss")
+            log_writer.update(class_acc=class_acc, head="loss")
+            log_writer.update(loss_scale=loss_scale_value, head="opt")
+            log_writer.update(lr=max_lr, head="opt")
+            #log_writer.update(min_lr=min_lr, head="opt")
+            #log_writer.update(weight_decay=weight_decay_value, head="opt")
+            #log_writer.update(grad_norm=grad_norm, head="opt")
+
+            log_writer.set_step()
+
+    # gather the stats from all processes
+    if dataset_ref is not None and hasattr(dataset_ref, "get_epoch_skip_count"):
+        skipped_epoch_local = dataset_ref.get_epoch_skip_count()
+        skipped_total_local = dataset_ref.get_total_skip_count()
+        device_for_reduce = device if isinstance(device, torch.device) else torch.device("cpu")
+        if device_for_reduce.type == "cuda":
+            skip_epoch_tensor = torch.tensor([skipped_epoch_local], dtype=torch.long, device=device_for_reduce)
+            skip_total_tensor = torch.tensor([skipped_total_local], dtype=torch.long, device=device_for_reduce)
+        else:
+            skip_epoch_tensor = torch.tensor([skipped_epoch_local], dtype=torch.long)
+            skip_total_tensor = torch.tensor([skipped_total_local], dtype=torch.long)
+
+        if dist.is_available() and dist.is_initialized():
+            dist.all_reduce(skip_epoch_tensor, op=dist.ReduceOp.SUM)
+            dist.all_reduce(skip_total_tensor, op=dist.ReduceOp.SUM)
+            global_rank = dist.get_rank()
+        else:
+            global_rank = 0
+
+        if global_rank == 0:
+            print(
+                f"[INFO][{dataset_ref.__class__.__name__}] Epoch {epoch}: "
+                f"skipped {skip_epoch_tensor.item()} samples "
+                f"(cumulative skipped: {skip_total_tensor.item()})."
+            )
+
+        if hasattr(dataset_ref, "reset_epoch_skip_count"):
+            dataset_ref.reset_epoch_skip_count()
+
+    metric_logger.synchronize_between_processes()
+    print("Averaged stats:", metric_logger)
+    return {k: meter.global_avg for k, meter in metric_logger.meters.items()}
+
+
+@torch.no_grad()
+def validation_one_epoch(data_loader, model, device, criterion: Optional[torch.nn.Module] = None):
+    return _validation_common(
+        data_loader=data_loader,
+        model=model,
+        device=device,
+        criterion=criterion,
+        on_batch=None,
+        header='Val:',
+        collect_features=False,
+    )
+
+
+@torch.no_grad()
+def validation_one_epoch_collect(
+    data_loader,
+    model,
+    device,
+    criterion: Optional[torch.nn.Module] = None,
+):
+    """
+    Same as validation_one_epoch, but also collects per-sample outputs:
+    - paths (if provided by the dataset as third element)
+    - predicted labels (argmax)
+    - ground-truth labels
+
+    Returns a tuple: (metrics_dict, all_paths, all_preds, all_labels)
+    """
+    all_paths: list = []
+    all_labels: list = []
+    all_preds: list = []
+
+    def on_batch(output, targets_ondevice, preds, batch_paths, loss, batch_size, **kwargs):
+        # Collect per-sample information
+        all_labels.extend(targets_ondevice.detach().cpu().numpy().tolist())
+        all_preds.extend(preds.detach().cpu().numpy().tolist())
+        if batch_paths is not None:
+            all_paths.extend(batch_paths)
+        else:
+            all_paths.extend([None] * batch_size)
+
+    stats = _validation_common(
+        data_loader=data_loader,
+        model=model,
+        device=device,
+        criterion=criterion,
+        on_batch=on_batch,
+        header='Val:',
+        collect_features=False,
+    )
+
+    # gather predictions/labels/paths across processes if distributed
+    if dist.is_available() and dist.is_initialized():
+        try:
+            world_size = dist.get_world_size()
+            gathered_paths = [None for _ in range(world_size)]
+            gathered_preds = [None for _ in range(world_size)]
+            gathered_labels = [None for _ in range(world_size)]
+            dist.all_gather_object(gathered_paths, all_paths)
+            dist.all_gather_object(gathered_preds, all_preds)
+            dist.all_gather_object(gathered_labels, all_labels)
+            # concatenate lists in rank order
+            all_paths = sum(gathered_paths, [])
+            all_preds = sum(gathered_preds, [])
+            all_labels = sum(gathered_labels, [])
+        except Exception as e:
+            print(f"Warning: could not all_gather predictions: {e}")
+
+    return stats, all_paths, all_preds, all_labels
+
+
+def _validation_common(
+    data_loader,
+    model,
+    device,
+    criterion: Optional[torch.nn.Module],
+    on_batch: Optional[
+        Callable[[torch.Tensor, torch.Tensor, torch.Tensor, Optional[list], torch.Tensor, int], None]
+    ] = None,
+    header: str = 'Val:',
+    collect_features: bool = False,
+):
+    """Core validation loop shared by collect/collect_logits/collect_embeddings.
+
+    on_batch receives positional arguments (output, targets_ondevice, preds,
+    batch_paths, loss, batch_size) and additional keyword arguments:
+      - features: backbone features if `collect_features` is True, else None
+      - images: the batch tensor on device
+      - model: the (possibly wrapped) model instance
+
+    Returns stats dict with globally reduced metrics.
+    """
+    criterion = criterion or torch.nn.CrossEntropyLoss()
+
+    metric_logger = utils.MetricLogger(delimiter="  ")
+    # switch to evaluation mode
+    model.eval()
+
+    def _safe_div(num, den):
+        num = float(num)
+        den = float(den)
+        return num / den if den != 0.0 else 0.0
+
+    confusion_total: Optional[torch.Tensor] = None
+    num_classes: Optional[int] = None
+    positive_idx = 1
+
+    for batch in metric_logger.log_every(data_loader, 10, header):
+        images = batch[0]
+        targets = batch[1]
+        batch_paths = batch[2] if len(batch) > 2 else None
+
+        images = images.to(device, non_blocking=True)
+        targets_ondevice = targets.to(device, non_blocking=True)
+
+        # compute output; align dtype with training (bfloat16 on CUDA)
+        if getattr(device, 'type', 'cpu') == 'cuda' and torch.cuda.is_available():
+            with torch.cuda.amp.autocast(dtype=torch.bfloat16):
+                features, output = _forward_with_optional_features(
+                    model, images, collect_features)
+                loss = criterion(output, targets_ondevice)
+        else:
+            features, output = _forward_with_optional_features(
+                model, images, collect_features)
+            loss = criterion(output, targets_ondevice)
+
+        preds = output.argmax(dim=1)
+        if num_classes is None:
+            num_classes = output.shape[1]
+            positive_idx = 1 if num_classes > 1 else 0
+            confusion_total = torch.zeros(
+                (num_classes, num_classes),
+                device=device,
+                dtype=torch.long,
+            )
+
+        targets_long = targets_ondevice.long()
+        preds_long = preds.long()
+        flat_indices = num_classes * targets_long + preds_long
+        batch_conf = torch.bincount(
+            flat_indices,
+            minlength=num_classes * num_classes,
+        ).reshape(num_classes, num_classes)
+        confusion_total += batch_conf
+
+        batch_size = images.shape[0]
+        accuracy = (preds_long == targets_long).float().mean().item()
+
+        per_class_totals = batch_conf.sum(dim=1)
+        diag = batch_conf.diag()
+        recall_per_class = torch.zeros_like(per_class_totals, dtype=torch.float32)
+        valid_mask = per_class_totals > 0
+        if valid_mask.any():
+            recall_per_class[valid_mask] = (
+                diag[valid_mask].float() / per_class_totals[valid_mask].float()
+            )
+        balanced_accuracy = recall_per_class.mean().item() if num_classes > 0 else 0.0
+
+        tp = batch_conf[positive_idx, positive_idx].item()
+        fn = batch_conf[positive_idx, :].sum().item() - tp
+        fp = batch_conf[:, positive_idx].sum().item() - tp
+        recall = _safe_div(tp, tp + fn)
+        far = _safe_div(fp, tp + fp)
+
+        metric_logger.update(loss=loss.item())
+        metric_logger.meters['acc'].update(accuracy, n=batch_size)
+        metric_logger.meters['bal_acc'].update(balanced_accuracy, n=batch_size)
+        metric_logger.meters['pod'].update(recall, n=batch_size)
+        metric_logger.meters['far'].update(far, n=batch_size)
+
+        if on_batch is not None:
+            on_batch(
+                output,
+                targets_ondevice,
+                preds,
+                batch_paths,
+                loss,
+                batch_size,
+                features=features,
+                images=images,
+                model=model)
+
+    if confusion_total is None:
+        num_classes = 1
+        positive_idx = 0
+        confusion_total = torch.zeros((1, 1), device=device, dtype=torch.long)
+
+    if dist.is_available() and dist.is_initialized():
+        dist.all_reduce(confusion_total, op=dist.ReduceOp.SUM)
+
+    confusion_cpu = confusion_total.cpu()
+    total_samples = confusion_cpu.sum().item()
+    diag_sum = confusion_cpu.diag().sum().item()
+    acc_global = _safe_div(diag_sum, total_samples)
+
+    per_class_totals = confusion_cpu.sum(dim=1)
+    diag = confusion_cpu.diag()
+    recall_per_class = torch.zeros_like(per_class_totals, dtype=torch.float64)
+    mask = per_class_totals > 0
+    if mask.any():
+        recall_per_class[mask] = diag[mask].double() / per_class_totals[mask].double()
+    bal_acc_global = recall_per_class.mean().item() if recall_per_class.numel() > 0 else 0.0
+
+    pos_idx = min(positive_idx, confusion_cpu.shape[0] - 1)
+    tp_total = confusion_cpu[pos_idx, pos_idx].item()
+    fn_total = confusion_cpu[pos_idx, :].sum().item() - tp_total
+    fp_total = confusion_cpu[:, pos_idx].sum().item() - tp_total
+    tn_total = total_samples - tp_total - fn_total - fp_total
+    recall_global = _safe_div(tp_total, tp_total + fn_total)
+    far_global = _safe_div(fp_total, tp_total + fp_total)
+
+    # gather the stats from all processes (logging meters)
+    metric_logger.synchronize_between_processes()
+    print('* Balanced Acc@1 {:.3f}  loss {losses.global_avg:.3f}'
+        .format(bal_acc_global, losses=metric_logger.loss))
+
+    stats = {k: meter.global_avg for k, meter in metric_logger.meters.items()}
+    # override meters-derived values with globally computed metrics
+    stats['acc'] = acc_global
+    stats['bal_acc'] = bal_acc_global
+    stats['pod'] = recall_global
+    stats['far'] = far_global
+    return stats
+
+@torch.no_grad()
+def validation_one_epoch_collect_logits(
+    data_loader,
+    model,
+    device,
+    save_dir: str,
+    criterion: Optional[torch.nn.Module] = None,
+    prefix: str = "val",
+):
+    """
+    Esegue validazione come `validation_one_epoch_collect`, raccogliendo anche i logits
+    per ogni sample (senza softmax) e salvando shard per-batch in file .npz compressi.
+
+    Scrive:
+      - Shard per-batch: `{prefix}_rank{rank}_part{idx:06d}.npz` in `save_dir`
+      - Merge per-rank:  `{prefix}_rank{rank}_merged.npz` in `save_dir`
+
+    Ritorno:
+      - `stats` (dict) con metriche globali.
+    """
+    criterion = criterion or torch.nn.CrossEntropyLoss()
+
+    os.makedirs(save_dir, exist_ok=True)
+
+    rank = dist.get_rank() if dist.is_available() and dist.is_initialized() else 0
+
+    shard_paths: list = []
+    part_idx = {'i': 0}
+    # Also collect like validation_one_epoch_collect
+    all_paths: list = []
+    all_labels: list = []
+    all_preds: list = []
+
+    def on_batch(output, targets_ondevice, preds, batch_paths, loss, batch_size, **kwargs):
+        # Prepare numpy payloads e salva shard per-batch
+        logits_np = output.detach().float().cpu().numpy()
+        labels_np = targets_ondevice.detach().cpu().numpy().astype(np.uint8)
+        preds_np = preds.detach().cpu().numpy().astype(np.uint8)
+        paths_list = batch_paths if batch_paths is not None else [None] * batch_size
+        paths_np = np.array(paths_list, dtype=object)
+        shard_path = os.path.join(save_dir, f"{prefix}_rank{rank}_part{part_idx['i']:06d}.npz")
+        np.savez_compressed(
+            shard_path,
+            logits=logits_np,
+            labels=labels_np,
+            preds=preds_np,
+            paths=paths_np,
+        )
+        shard_paths.append(shard_path)
+        part_idx['i'] += 1
+        # in-memory collections
+        all_labels.extend(labels_np.tolist())
+        all_preds.extend(preds_np.tolist())
+        if batch_paths is not None:
+            all_paths.extend(paths_list)
+        else:
+            all_paths.extend([None] * batch_size)
+
+    # Esegui core di validazione con callback di salvataggio shard
+    stats = _validation_common(
+        data_loader=data_loader,
+        model=model,
+        device=device,
+        criterion=criterion,
+        on_batch=on_batch,
+        header='Val:'
+    )
+
+    # Ensure all ranks finished writing shards
+    if dist.is_available() and dist.is_initialized():
+        dist.barrier()
+
+    # Merge local shards per-rank
+    merged_rank_path = os.path.join(save_dir, f"{prefix}_rank{rank}_merged.npz")
+    try:
+        _merge_npz_shards(shard_paths, merged_rank_path)
+        print(f"Saved merged (rank={rank}) to: {merged_rank_path}")
+    except Exception as e:
+        print(f"Warning: failed to merge rank {rank} shards: {e}")
+
+    # Gather predictions/labels/paths across processes if distributed
+    if dist.is_available() and dist.is_initialized():
+        try:
+            world_size = dist.get_world_size()
+            gathered_paths = [None for _ in range(world_size)]
+            gathered_preds = [None for _ in range(world_size)]
+            gathered_labels = [None for _ in range(world_size)]
+            dist.all_gather_object(gathered_paths, all_paths)
+            dist.all_gather_object(gathered_preds, all_preds)
+            dist.all_gather_object(gathered_labels, all_labels)
+            # concatenate lists in rank order
+            all_paths = sum(gathered_paths, [])
+            all_preds = sum(gathered_preds, [])
+            all_labels = sum(gathered_labels, [])
+        except Exception as e:
+            print(f"Warning: could not all_gather logits metadata: {e}")
+
+    # Non tentiamo il merge cross-rank: assumiamo FS non condiviso tra nodi
+    return stats, all_paths, all_preds, all_labels
+
+
+@torch.no_grad()
+def validation_one_epoch_collect_embeddings(
+    data_loader,
+    model,
+    device,
+    save_dir: str,
+    criterion: Optional[torch.nn.Module] = None,
+    prefix: str = "val",
+):
+    """Validation loop that stores backbone embeddings (pre-head features).
+
+    Each batch writes a shard with keys: embeddings, labels, preds, paths.
+    Returns stats dict plus gathered metadata (paths/preds/labels).
+    """
+    criterion = criterion or torch.nn.CrossEntropyLoss()
+
+    os.makedirs(save_dir, exist_ok=True)
+
+    rank = dist.get_rank() if dist.is_available() and dist.is_initialized() else 0
+
+    shard_paths: list = []
+    part_idx = {'i': 0}
+    all_paths: list = []
+    all_labels: list = []
+    all_preds: list = []
+
+    def on_batch(output, targets_ondevice, preds, batch_paths, loss, batch_size, **kwargs):
+        features = kwargs.get('features', None)
+        if features is None:
+            raise RuntimeError('Embeddings requested but `features` is None. '
+                               'Ensure the model exposes forward_features().')
+
+        embeddings_np = features.detach().float().cpu().numpy()
+        labels_np = targets_ondevice.detach().cpu().numpy().astype(np.uint8)
+        preds_np = preds.detach().cpu().numpy().astype(np.uint8)
+        paths_list = batch_paths if batch_paths is not None else [None] * batch_size
+        paths_np = np.array(paths_list, dtype=object)
+
+        shard_path = os.path.join(
+            save_dir, f"{prefix}_rank{rank}_part{part_idx['i']:06d}.npz")
+        np.savez_compressed(
+            shard_path,
+            embeddings=embeddings_np,
+            labels=labels_np,
+            preds=preds_np,
+            paths=paths_np,
+        )
+        shard_paths.append(shard_path)
+        part_idx['i'] += 1
+
+        all_labels.extend(labels_np.tolist())
+        all_preds.extend(preds_np.tolist())
+        if batch_paths is not None:
+            all_paths.extend(paths_list)
+        else:
+            all_paths.extend([None] * batch_size)
+
+    stats = _validation_common(
+        data_loader=data_loader,
+        model=model,
+        device=device,
+        criterion=criterion,
+        on_batch=on_batch,
+        header='Val:',
+        collect_features=True,
+    )
+
+    if dist.is_available() and dist.is_initialized():
+        dist.barrier()
+
+    merged_rank_path = os.path.join(save_dir, f"{prefix}_rank{rank}_merged.npz")
+    try:
+        _merge_npz_shards(shard_paths, merged_rank_path, array_key='embeddings')
+        print(f"Saved merged embeddings (rank={rank}) to: {merged_rank_path}")
+    except Exception as e:
+        print(f"Warning: failed to merge rank {rank} embedding shards: {e}")
+
+    if dist.is_available() and dist.is_initialized():
+        try:
+            world_size = dist.get_world_size()
+            gathered_paths = [None for _ in range(world_size)]
+            gathered_preds = [None for _ in range(world_size)]
+            gathered_labels = [None for _ in range(world_size)]
+            dist.all_gather_object(gathered_paths, all_paths)
+            dist.all_gather_object(gathered_preds, all_preds)
+            dist.all_gather_object(gathered_labels, all_labels)
+            all_paths = sum(gathered_paths, [])
+            all_preds = sum(gathered_preds, [])
+            all_labels = sum(gathered_labels, [])
+        except Exception as e:
+            print(f"Warning: could not all_gather embedding metadata: {e}")
+
+    return stats, all_paths, all_preds, all_labels
+
+
+def _merge_npz_shards(shard_paths, output_path, array_key: str = 'logits'):
+    """
+    Carica e concatena una lista di file .npz (con chiavi: array_key, labels, preds, paths),
+    e salva un unico file compresso `output_path`.
+    """
+    array_list = []
+    labels_list = []
+    preds_list = []
+    paths_list = []
+
+    for p in shard_paths:
+        with np.load(p, allow_pickle=True) as d:
+            array_list.append(d[array_key])
+            labels_list.append(d['labels'])
+            preds_list.append(d['preds'])
+            paths_list.append(d['paths'])
+
+    if len(array_list) == 0:
+        raise ValueError("No shards to merge.")
+
+    merged_array = np.concatenate(array_list, axis=0)
+    labels = np.concatenate(labels_list, axis=0)
+    preds = np.concatenate(preds_list, axis=0)
+    # paths è un array object; concat mantiene dtype=object
+    paths = np.concatenate(paths_list, axis=0)
+
+    np.savez_compressed(output_path,
+                        **{array_key: merged_array},
+                        labels=labels,
+                        preds=preds,
+                        paths=paths)
+    return output_path
+
+@torch.no_grad()
+def final_test(data_loader, model, device, file):
+    criterion = torch.nn.CrossEntropyLoss()
+
+    metric_logger = utils.MetricLogger(delimiter="  ")
+    header = 'Test:'
+
+    # switch to evaluation mode
+    model.eval()
+    final_result = []
+
+    for batch in metric_logger.log_every(data_loader, 10, header):
+        images = batch[0]
+        target = batch[1]
+        ids = batch[2]
+        chunk_nb = batch[3]
+        split_nb = batch[4]
+        images = images.to(device, non_blocking=True)
+        target = target.to(device, non_blocking=True)
+
+        # compute output
+        with torch.cuda.amp.autocast():
+            output = model(images)
+            loss = criterion(output, target)
+
+        for i in range(output.size(0)):
+            string = "{} {} {} {} {}\n".format(
+                ids[i], str(output.data[i].cpu().numpy().tolist()),
+                str(int(target[i].cpu().numpy())),
+                str(int(chunk_nb[i].cpu().numpy())),
+                str(int(split_nb[i].cpu().numpy())))
+            final_result.append(string)
+
+        acc1,  = accuracy(output, target, topk=(1, ))  # modificato: classificazione binaria
+
+        batch_size = images.shape[0]
+        metric_logger.update(loss=loss.item())
+        metric_logger.meters['acc1'].update(acc1.item(), n=batch_size)
+        #metric_logger.meters['acc5'].update(acc5.item(), n=batch_size)
+
+    if not os.path.exists(file):
+        os.mknod(file)
+    with open(file, 'w') as f:
+        #f.write("{}, {}\n".format(acc1, acc5))
+        f.write("{}\n".format(acc1))
+        for line in final_result:
+            f.write(line)
+    # gather the stats from all processes
+    metric_logger.synchronize_between_processes()
+    print(
+        '* Acc@1 {top1.global_avg:.3f} Acc@5 {top5.global_avg:.3f} loss {losses.global_avg:.3f}'
+        .format(
+            top1=metric_logger.acc1,
+            top5=metric_logger.acc5,
+            losses=metric_logger.loss))
+
+    return {k: meter.global_avg for k, meter in metric_logger.meters.items()}
+
+
+def merge(eval_path, num_tasks, method='prob'):
+    assert method in ['prob', 'score']
+    dict_feats = {}
+    dict_label = {}
+    dict_pos = {}
+    print("Reading individual output files")
+
+    for x in range(num_tasks):
+        file = os.path.join(eval_path, str(x) + '.txt')
+        lines = open(file, 'r').readlines()[1:]
+        for line in lines:
+            line = line.strip()
+            name = line.split('[')[0]
+            label = line.split(']')[1].split(' ')[1]
+            chunk_nb = line.split(']')[1].split(' ')[2]
+            split_nb = line.split(']')[1].split(' ')[3]
+            data = np.fromstring(
+                line.split('[')[1].split(']')[0], dtype=float, sep=',')
+            if name not in dict_feats:
+                dict_feats[name] = []
+                dict_label[name] = 0
+                dict_pos[name] = []
+            if chunk_nb + split_nb in dict_pos[name]:
+                continue
+            if method == 'prob':
+                dict_feats[name].append(softmax(data))
+            else:
+                dict_feats[name].append(data)
+            dict_pos[name].append(chunk_nb + split_nb)
+            dict_label[name] = label
+    print("Computing final results")
+
+    input_lst = []
+    for i, item in enumerate(dict_feats):
+        input_lst.append([i, item, dict_feats[item], dict_label[item]])
+    p = Pool(64)
+    # [pred, top1, top5, label]
+    ans = p.map(compute_video, input_lst)
+    top1 = [x[1] for x in ans]
+    top5 = [x[2] for x in ans]
+    label = [x[3] for x in ans]
+    final_top1, final_top5 = np.mean(top1), np.mean(top5)
+
+    return final_top1 * 100, final_top5 * 100
+
+
+def compute_video(lst):
+    i, video_id, data, label = lst
+    feat = [x for x in data]
+    feat = np.mean(feat, axis=0)
+    pred = np.argmax(feat)
+    top1 = (int(pred) == int(label)) * 1.0
+    top5 = (int(label) in np.argsort(-feat)[:5]) * 1.0
+    return [pred, top1, top5, int(label)]
