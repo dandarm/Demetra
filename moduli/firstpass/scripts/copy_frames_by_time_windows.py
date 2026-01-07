@@ -1,0 +1,247 @@
+#!/usr/bin/env python3
+"""
+Copy frames whose timestamp (parsed from filename) falls within cyclone time windows
+specified in a CSV (medicanes_new_windows.csv), optionally extended by a configurable
+number of days before/after each window. Produces an optional manifest CSV of what was
+copied and how it was labeled (core=positive, buffer=negative).
+
+OS: Linux/Windows/macOS
+Deps: stdlib only
+
+Usage example:
+  python scripts/copy_frames_by_windows.py \
+    --windows-csv data/medicanes_new_windows.csv \
+    --src /data/frames_src \
+    --dst /data/frames_dst \
+    --pre-days 2 --post-days 2 \
+    --recurse \
+    --preserve-structure \
+    --write-manifest /data/frames_dst/copied_manifest.csv \
+    --time-regex "\d{4}[-_]?(\d{2})[-_]?(\d{2})[T _-]?(\d{2})[-_:]?(\d{2})" \
+    --strptime yyyy-MM-ddTHH-mm yyyyMMdd_HHmm yyyyMMddHHmm
+
+Notes:
+- Timestamps are treated as naive (no timezone conversion). Ensure CSV and filenames
+  are in the same temporal convention.
+- If multiple windows overlap, label = max(labels) and event_ids are pipe-joined.
+- If a filename doesn't contain a recognizable timestamp, it's skipped with a message.
+"""
+from __future__ import annotations
+
+import argparse
+import csv
+import os
+import re
+import sys
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from datetime import timedelta
+from pathlib import Path
+from typing import Dict, Iterable, List, Optional, Sequence, Tuple
+import shutil
+
+from time_windows import (
+    CSV_ID_CANDIDATES,
+    DEFAULT_CSV_TIME_FORMATS,
+    DEFAULT_EXTS,
+    DEFAULT_FILENAME_FORMATS,
+    DEFAULT_TIME_REGEX,
+    load_windows,
+    parse_dt_from_filename,
+)
+
+# -----------------------------
+# Utilities
+# -----------------------------
+
+
+
+# -----------------------------
+# Copy helpers
+# -----------------------------
+
+def ensure_dir(p: Path) -> None:
+    p.mkdir(parents=True, exist_ok=True)
+
+
+def do_copy(src: Path, dst: Path, symlink: bool, dry_run: bool) -> Tuple[str, str]:
+    """Return (status, msg). status in {copied, exists, skipped, error}."""
+    if dst.exists():
+        return ("exists", "already exists")
+    if dry_run:
+        return ("copied", "dry-run")
+    try:
+        if symlink:
+            try:
+                # On Windows this may require privileges; fall back to copy on failure
+                os.symlink(src, dst)
+            except Exception:
+                shutil.copy2(src, dst)
+        else:
+            shutil.copy2(src, dst)
+        return ("copied", "ok")
+    except Exception as e:
+        return ("error", str(e))
+
+
+# -----------------------------
+# Main
+# -----------------------------
+
+def build_argparser() -> argparse.ArgumentParser:
+    p = argparse.ArgumentParser(
+        description="Copy frames whose timestamp falls within cyclone windows (with pre/post margins), and write a labeled manifest.")
+    p.add_argument("--windows-csv", required=True, type=Path)
+    p.add_argument("--src", required=True, type=Path)
+    p.add_argument("--dst", required=True, type=Path)
+    p.add_argument("--pre-days", type=int, default=0, help="Days before start_time to include as buffer (label=0)")
+    p.add_argument("--post-days", type=int, default=0, help="Days after end_time to include as buffer (label=0)")
+    p.add_argument("--recurse", action="store_true", help="Scan source recursively")
+    p.add_argument("--preserve-structure", action="store_true", help="Preserve directory tree under destination")
+    p.add_argument("--symlink", action="store_true", help="Create symlinks instead of copying when possible")
+    p.add_argument("--write-manifest", type=Path, default=None)
+    p.add_argument("--time-regex", type=str, default=DEFAULT_TIME_REGEX, help="Regex to extract a datetime-like token from filename")
+    p.add_argument("--strptime", nargs="*", default=list(DEFAULT_FILENAME_FORMATS), help="Filename datetime formats e.g. yyyy-MM-ddTHH-mm yyyyMMdd_HHmm")
+    p.add_argument("--csv-strptime", nargs="*", default=list(DEFAULT_CSV_TIME_FORMATS), help="CSV datetime formats if not ISO")
+    p.add_argument("--id-cols", nargs="*", default=list(CSV_ID_CANDIDATES), help="Candidate id columns in CSV")
+    p.add_argument("--ext", nargs="*", default=list(DEFAULT_EXTS), help="Extensions to include (lowercase)")
+    p.add_argument("--dry-run", action="store_true")
+    p.add_argument("--workers", type=int, default=1, help="Parallel copy workers (I/O-bound)")
+    return p
+
+
+def main(argv: Optional[Sequence[str]] = None) -> int:
+    args = build_argparser().parse_args(argv)
+
+    time_re = re.compile(args.time_regex)
+    fname_formats = list(args.strptime)
+    csv_formats = list(args.csv_strptime)
+    exts = set(e.lower() for e in args.ext)
+
+    # Load windows
+    windows = load_windows(
+        args.windows_csv,
+        timedelta(days=args.pre_days),
+        timedelta(days=args.post_days),
+        csv_formats,
+        args.id_cols,
+    )
+    if not windows:
+        print("No windows found in CSV.")
+        return 1
+
+    # Destination
+    ensure_dir(args.dst)
+
+    # Scan files
+    files: Iterable[Path]
+    if args.recurse:
+        files = (p for p in args.src.rglob("*") if p.is_file())
+    else:
+        files = (p for p in args.src.iterdir() if p.is_file())
+
+    # Prepare manifest
+    manifest_rows: List[Dict[str, str]] = []
+
+    # Copy executor
+    def plan_one(p: Path) -> Optional[Tuple[Path, Path, Dict[str, str]]]:
+        if p.suffix.lower() not in exts:
+            return None
+        dt = parse_dt_from_filename(p.name, time_re, fname_formats)
+        if dt is None:
+            # Unparsed timestamp; skip
+            return None
+        # Determine membership
+        in_ext_any = False
+        in_core_any = False
+        ids_ext: List[str] = []
+        ids_core: List[str] = []
+        for w in windows:
+            if w.start_ext <= dt <= w.end_ext:
+                in_ext_any = True
+                ids_ext.append(w.event_id)
+                if w.start_core <= dt <= w.end_core:
+                    in_core_any = True
+                    ids_core.append(w.event_id)
+        if not in_ext_any:
+            return None
+        label = 1 if in_core_any else 0
+        reason = "core" if label == 1 else "buffer"
+        event_ids = "|".join(sorted(set(ids_core if label == 1 else ids_ext)))
+
+        # Destination path
+        if args.preserve_structure:
+            rel = p.relative_to(args.src)
+            dst_path = args.dst / rel
+            ensure_dir(dst_path.parent)
+        else:
+            # Flat mode: reuse filename in destination and let do_copy skip if it already exists
+            dst_path = args.dst / p.name
+            ensure_dir(args.dst)
+
+        row = {
+            "src_path": str(p),
+            "dst_path": str(dst_path),
+            "datetime_iso": dt.isoformat(timespec="minutes"),
+            "label": str(label),
+            "in_core_window": "1" if in_core_any else "0",
+            "in_extended_window": "1",
+            "event_ids": event_ids,
+            "reason": reason,
+            # status filled after copy
+        }
+        return (p, dst_path, row)
+
+    plans: List[Tuple[Path, Path, Dict[str, str]]] = []
+    for p in files:
+        res = plan_one(p)
+        if res is not None:
+            plans.append(res)
+
+    # Execute copy
+    if args.workers > 1:
+        with ThreadPoolExecutor(max_workers=args.workers) as ex:
+            futs = {ex.submit(do_copy, src, dst, args.symlink, args.dry_run): (src, dst, row)
+                    for src, dst, row in plans}
+            for fut in as_completed(futs):
+                src, dst, row = futs[fut]
+                status, msg = fut.result()
+                row["status"] = status
+                row["status_msg"] = msg
+                manifest_rows.append(row)
+    else:
+        for src, dst, row in plans:
+            status, msg = do_copy(src, dst, args.symlink, args.dry_run)
+            row["status"] = status
+            row["status_msg"] = msg
+            manifest_rows.append(row)
+
+    # Write manifest
+    if args.write_manifest:
+        ensure_dir(args.write_manifest.parent)
+        fieldnames = [
+            "src_path", "dst_path", "datetime_iso", "label",
+            "in_core_window", "in_extended_window", "event_ids",
+            "reason", "status", "status_msg"
+        ]
+        with args.write_manifest.open("w", newline="", encoding="utf-8") as fh:
+            w = csv.DictWriter(fh, fieldnames=fieldnames)
+            w.writeheader()
+            w.writerows(manifest_rows)
+
+    # Summary
+    total = len(manifest_rows)
+    copied = sum(1 for r in manifest_rows if r.get("status") == "copied")
+    existed = sum(1 for r in manifest_rows if r.get("status") == "exists")
+    errors = sum(1 for r in manifest_rows if r.get("status") == "error")
+    pos = sum(1 for r in manifest_rows if r.get("label") == "1")
+    neg = total - pos
+    print(f"Planned {len(plans)}; wrote {total} manifest rows.")
+    print(f"Pos {pos} / Neg {neg}; copied {copied}, exists {existed}, errors {errors}.")
+    if args.dry_run:
+        print("[dry-run] No files were written.")
+
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
