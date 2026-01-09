@@ -222,6 +222,15 @@ def load_letterbox_meta(meta_csv: str) -> Dict[str, Dict[str, float]]:
         raise ValueError("letterbox meta must include either 'scale' or ('scale_x' and 'scale_y')")
     base_dir = os.path.dirname(os.path.abspath(meta_csv))
     meta_map: Dict[str, Dict[str, float]] = {}
+    def _add_key(meta_map: Dict[str, Dict[str, float]], key: str, entry: Dict[str, float]) -> None:
+        if not key:
+            return
+        meta_map[key] = entry
+        # Also index by realpath to avoid mismatches with symlinks/alternate mounts.
+        real_key = os.path.realpath(key)
+        if real_key:
+            meta_map[real_key] = entry
+
     for _, row in meta_df.iterrows():
         scale_x = float(row["scale_x"]) if "scale_x" in row else float(row["scale"])
         scale_y = float(row["scale_y"]) if "scale_y" in row else float(row["scale"])
@@ -238,8 +247,8 @@ def load_letterbox_meta(meta_csv: str) -> Dict[str, Dict[str, float]]:
             "orig_h": int(row["orig_h"]),
             "out_size": int(row["out_size"])
         }
-        meta_map[entry["orig_path"]] = entry
-        meta_map[entry["resized_path"]] = entry
+        _add_key(meta_map, entry["orig_path"], entry)
+        _add_key(meta_map, entry["resized_path"], entry)
     return meta_map
 
 
@@ -440,6 +449,12 @@ def build_model(
         model.energy_fusion = EnergyFusion(b0=energy_b0, wE=energy_wE, wC=energy_wC, wH=energy_wH)
     state = torch.load(checkpoint_path, map_location="cpu")
     weights = state.get("model", state)
+    if not use_energy_fusion:
+        drop_keys = [k for k in weights.keys() if str(k).startswith("energy_fusion.")]
+        if drop_keys:
+            for k in drop_keys:
+                weights.pop(k, None)
+            logger.warning("Dropped %d energy_fusion params from checkpoint (use_energy_fusion=False).", len(drop_keys))
     try:
         model.load_state_dict(weights, strict=True)
     except RuntimeError as exc:
