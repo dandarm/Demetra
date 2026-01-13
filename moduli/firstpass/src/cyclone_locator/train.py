@@ -42,6 +42,8 @@ def parse_args():
     ap.add_argument("--epochs", type=int)
     ap.add_argument("--bs", type=int)
     ap.add_argument("--lr", type=float)
+    ap.add_argument("--seed", type=int, help="Override training seed")
+    ap.add_argument("--manifest_stride", type=int, help="Override manifest stride in data config")
     ap.add_argument("--log_dir")
     ap.add_argument("--best_ckpt_start_epoch", type=int)
     ap.add_argument("--grad_accum_steps", type=int, help="Gradient accumulation steps (effective batch = bs * steps)")
@@ -634,6 +636,10 @@ def main():
         cfg["train"]["batch_size"] = args.bs
     if args.lr:
         cfg["train"]["lr"] = args.lr
+    if args.seed is not None:
+        cfg["train"]["seed"] = int(args.seed)
+    if args.manifest_stride is not None:
+        cfg["data"]["manifest_stride"] = int(args.manifest_stride)
     if args.log_dir:
         cfg["train"]["save_dir"] = args.log_dir
     if args.freeze_bn_stats:
@@ -1147,6 +1153,7 @@ def main():
 
         for epoch in range(1, cfg["train"]["epochs"]+1):
             epoch_start = time.time()
+            train_start = time.time()
             if train_sampler is not None:
                 train_sampler.set_epoch(epoch)
 
@@ -1346,12 +1353,15 @@ def main():
                 if np.isfinite(tr_hm_reg) and w_hm_focal_reg > 0.0:
                     msg += f", hm_reg={tr_hm_reg:.4f}"
                 print(msg)
+            train_elapsed = time.time() - train_start
 
             val_metrics = None; test_metrics = None
+            eval_elapsed = 0.0
             if epoch % cfg["train"]["val_every"] == 0:
                 if distributed:
                     dist.barrier()
 
+                eval_start = time.time()
                 eval_model = model.module if distributed else model
                 eval_model.eval()
                 val_metrics = evaluate_loader(
@@ -1402,6 +1412,7 @@ def main():
                 if distributed:
                     dist.barrier()
 
+                eval_elapsed = time.time() - eval_start
                 if is_main_process(rank) and val_metrics is not None:
                     val_score = val_metrics["loss"]
                     if val_metrics.get("bad_batches", 0) > 0:
@@ -1513,7 +1524,7 @@ def main():
                 dist.barrier()
             elapsed = time.time() - epoch_start
             if is_main_process(rank):
-                print(f"[Epoch {epoch}] elapsed: {elapsed:.1f}s")
+                print(f"[Epoch {epoch}] elapsed: {elapsed:.1f}s (train={train_elapsed:.1f}s, eval={eval_elapsed:.1f}s)")
     finally:
         if log_file is not None:
             log_file.close()
