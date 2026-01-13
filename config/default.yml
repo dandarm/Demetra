@@ -1,7 +1,7 @@
 data:
-  manifest_train: manifests/train.csv
+  manifest_train: manifests/train+test.csv
   manifest_val:   manifests/val.csv
-  manifest_test:  manifests/test.csv
+  #manifest_test:  manifests/test.csv
 
   # Subsampling dei "center frame" usati per costruire le clip (riduce ridondanza tra clip adiacenti)
   # Default: 1 (usa tutte le righe). Esempio: 4 -> usa 1 riga ogni 4 come center frame.
@@ -23,7 +23,7 @@ train:
   dataloader_timeout_s: 160   # >0 per evitare deadlock: solleva eccezione se il dataloader si blocca
   persistent_workers: true   # disattiva (false) se sospetti deadlock dei worker tra le epoche
   freeze_bn_running_stats: false  # congela running mean/var della BN (gamma/beta restano trainabili)
-  epochs: 100
+  epochs: 70
   lr: 1.0e-3
   weight_decay: 1.0e-5
   amp: true
@@ -32,7 +32,7 @@ train:
   save_dir: checkpoints
   val_every: 1
   best_ckpt_start_epoch: 1
-  backbone: x3d_m        # resnet18|resnet50|x3d_xs|x3d_s|x3d_m
+  backbone: x3d_m           # resnet18|resnet50|x3d_xs|x3d_s|x3d_m
   backbone_pretrained: true # usa pesi pre-addestrati per il backbone
   heatmap_stride: 2         # output 128x128 quando input 512
   use_aug: false            # puoi mettere true se serve

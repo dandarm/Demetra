@@ -13,7 +13,7 @@ HEATMAP_STRIDE="2"
 HEATMAP_SIGMA="8"
 
 #LOG_DIR="outputs/runs/exp13_temporalT${TEMPORAL_T}_bs${BATCH_SIZE}_buffer36_stride6"
-LOG_DIR="outputs/runs/exp_35_train+test_manifeststride14" #    2_hm-upsample+conv_stride2_peakTopk"
+LOG_DIR="outputs/runs/exp_35_train+test_manifeststride14_seed" #    2_hm-upsample+conv_stride2_peakTopk"
 mkdir -p "$LOG_DIR"
 
 
@@ -27,7 +27,7 @@ DSNT_COORD_LOSS="l1"      # l1|l2
 BATCH_SIZE="48"
 LR="1e-3"
 MANIFEST_STRIDE="14"
-SEED="493"
+SEED="4937742309"
 
 exec python -m src.cyclone_locator.train \
   --config "$CONFIG" \
