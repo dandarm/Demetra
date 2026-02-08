@@ -1,7 +1,7 @@
 data:
   manifest_train: manifests/train+test.csv
   manifest_val:   manifests/val.csv
-  #manifest_test:  manifests/test.csv
+  manifest_test:  manifests/test.csv
 
   # Subsampling dei "center frame" usati per costruire le clip (riduce ridondanza tra clip adiacenti)
   # Default: 1 (usa tutte le righe). Esempio: 4 -> usa 1 riga ogni 4 come center frame.
