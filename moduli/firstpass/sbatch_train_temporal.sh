@@ -23,7 +23,7 @@ export PYTHONUNBUFFERED=1
 CONFIG="config/default.yml"
 TRAIN_CSV="manifests/train.csv"
 VAL_CSV="manifests/val.csv"
-LOG_DIR="outputs/runs/exp_7_notempstride_hmupsample"
+LOG_DIR="outputs/runs/exp_36_16gpu"
 mkdir -p "$LOG_DIR"
 
 TEMPORAL_T="16"
