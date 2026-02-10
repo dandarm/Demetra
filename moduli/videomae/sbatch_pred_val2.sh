@@ -15,12 +15,12 @@ source $HOME/videomae/bin/activate
 export MASTER_ADDR=$(scontrol show hostnames $SLURM_JOB_NODELIST | head -n 1)
 export MASTER_PORT=12340
 
+export PYTHONWARNINGS=ignore
 
 mpirun --map-by socket:PE=4 --report-bindings python inference_classification.py \
     --on leonardo \
     --inference_model $FAST/checkpoint-best-lr-again2.pth \
     --csvfile val_manos_w_2400.csv \
-    --get_embeddings
     
 #srun --ntasks-per-node=4 \
 #python -m torch.distributed.run \

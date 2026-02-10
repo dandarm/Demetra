@@ -13,6 +13,8 @@ import numpy as np
 import pandas as pd
 from PIL import Image, ImageDraw, ImageFont
 from io import BytesIO
+if not os.environ.get("MPLBACKEND") and not os.environ.get("DISPLAY"):
+    matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from IPython.display import HTML
 import matplotlib.animation as animation
@@ -43,6 +45,7 @@ from timm.models import create_model
 # from timm.loss import LabelSmoothingCrossEntropy, SoftTargetCrossEntropy
 # from utils import NativeScalerWithGradNormCount as NativeScaler
 
+from ffmpeg_utils import resolve_ffmpeg_executable
 from medicane_utils.geo_const import latcorners, loncorners, create_basemap_obj
 from dataset.build_dataset import calc_tile_offsets
 from medicane_utils.load_files import extract_dates_pattern_airmass_rgb_20200101_0000
@@ -358,21 +361,6 @@ def create_gif_pil(image_paths, output_gif, duration=100, loop=0):
 
 
 
-##### l'ho usata per l'animazione della singola tile con play in jupyter
-
-def _resolve_ffmpeg_executable():
-    """Trova il binario ffmpeg nel PATH o nella cartella locale del progetto."""
-    found = shutil.which("ffmpeg")
-    if found:
-        return found
-
-    local_ffmpeg = Path(__file__).resolve().parent / "ffmpeg-7.0.2-amd64-static" / "ffmpeg"
-    if local_ffmpeg.exists():
-        return str(local_ffmpeg)
-
-    return None
-
-
 def display_video_clip(frames_tensors, interval=200, save_path=None):
     """Crea l'animazione e (opzionalmente) la salva su file.
 
@@ -403,7 +391,7 @@ def display_video_clip(frames_tensors, interval=200, save_path=None):
             if save_path.suffix.lower() == ".gif":
                 writer = animation.PillowWriter(fps=fps)
             else:
-                ffmpeg_exec = _resolve_ffmpeg_executable()
+                ffmpeg_exec = resolve_ffmpeg_executable()
                 if ffmpeg_exec is None:
                     raise RuntimeError(
                         "ffmpeg non è stato trovato nel PATH né in 'ffmpeg-7.0.2-amd64-static/'. "
@@ -712,6 +700,12 @@ def create_mediterranean_video(list_grouped_df, interval=200, dpi=96, width=1290
                 disable_tile_boxes = False
 
         is_tracking_view = 'track_pred_x' in group_df.columns or disable_tile_boxes
+        keep_tile_boxes = False
+        if 'keep_tile_boxes' in group_df.columns:
+            try:
+                keep_tile_boxes = bool(group_df['keep_tile_boxes'].iloc[0])
+            except Exception:
+                keep_tile_boxes = False
 
         if is_tracking_view:
             def _ensure_list_local(val):
@@ -752,23 +746,30 @@ def create_mediterranean_video(list_grouped_df, interval=200, dpi=96, width=1290
         )
 
         if is_tracking_view:
-            unique_points = {}
-            for centers in xy_source_list:
-                for cx_cy_src in centers:
-                    if len(cx_cy_src) != 3:
-                        continue
-                    src = cx_cy_src[2]
-                    if src not in unique_points:
-                        unique_points[src] = cx_cy_src
-            condensed = [[] for _ in range(len(xy_source_list))]
-            selected = [unique_points[key] for key in ['GT', 'PRED'] if key in unique_points]
-            if condensed:
-                condensed[0] = selected
-            xy_source_list = condensed
+            keep_all_tracks = False
+            if 'keep_all_tracks' in group_df.columns:
+                try:
+                    keep_all_tracks = bool(group_df['keep_all_tracks'].iloc[0])
+                except Exception:
+                    keep_all_tracks = False
+            if not keep_all_tracks:
+                unique_points = {}
+                for centers in xy_source_list:
+                    for cx_cy_src in centers:
+                        if len(cx_cy_src) != 3:
+                            continue
+                        src = cx_cy_src[2]
+                        if src not in unique_points:
+                            unique_points[src] = cx_cy_src
+                condensed = [[] for _ in range(len(xy_source_list))]
+                selected = [unique_points[key] for key in ['GT', 'PRED'] if key in unique_points]
+                if condensed:
+                    condensed[0] = selected
+                xy_source_list = condensed
 
         labeled_tiles_offsets = group_df['label'].values
 
-        if 'predictions' in group_df.columns and not is_tracking_view:
+        if 'predictions' in group_df.columns and (not is_tracking_view or keep_tile_boxes):
             predicted_tiles_offsets = group_df['predictions'].values
         else:
             predicted_tiles_offsets = None
@@ -779,11 +780,12 @@ def create_mediterranean_video(list_grouped_df, interval=200, dpi=96, width=1290
             to_be_filled_offsets = None
 
         neighboring_tiles = None
-        if not is_tracking_view and 'neighboring' in group_df.columns:
+        if (not is_tracking_view or keep_tile_boxes) and 'neighboring' in group_df.columns:
             neighboring_tiles = group_df['neighboring'].values
         
         offsets = list(group_df[['tile_offset_x', 'tile_offset_y']].value_counts().index.values)
 
+        show_tile_boxes = not is_tracking_view or keep_tile_boxes
         out_img = draw_tiles_and_center(
             img,
             offsets,
@@ -792,7 +794,7 @@ def create_mediterranean_video(list_grouped_df, interval=200, dpi=96, width=1290
             predicted_tiles=predicted_tiles_offsets,
             gray_offsets=to_be_filled_offsets,
             neighboring_tile=neighboring_tiles,
-            show_tile_boxes=not is_tracking_view
+            show_tile_boxes=show_tile_boxes
         )
 
         time_str = Path(path).name
@@ -875,6 +877,12 @@ def compose_image(frame_idx, list_grouped_df, debug=False):
             disable_tile_boxes = False
 
     is_tracking_view = 'track_pred_x' in group_df.columns or disable_tile_boxes
+    keep_tile_boxes = False
+    if 'keep_tile_boxes' in group_df.columns:
+        try:
+            keep_tile_boxes = bool(group_df['keep_tile_boxes'].iloc[0])
+        except Exception:
+            keep_tile_boxes = False
 
     if is_tracking_view:
         def _ensure_list_local(val):
@@ -914,19 +922,26 @@ def compose_image(frame_idx, list_grouped_df, debug=False):
         axis=1)        
 
     if is_tracking_view:
-        unique_points = {}
-        for centers in xy_source_list:
-            for cx_cy_src in centers:
-                if len(cx_cy_src) != 3:
-                    continue
-                src = cx_cy_src[2]
-                if src not in unique_points:
-                    unique_points[src] = cx_cy_src
-        condensed = [[] for _ in range(len(xy_source_list))]
-        selected = [unique_points[key] for key in ['GT', 'PRED'] if key in unique_points]
-        if condensed:
-            condensed[0] = selected
-        xy_source_list = condensed
+        keep_all_tracks = False
+        if 'keep_all_tracks' in group_df.columns:
+            try:
+                keep_all_tracks = bool(group_df['keep_all_tracks'].iloc[0])
+            except Exception:
+                keep_all_tracks = False
+        if not keep_all_tracks:
+            unique_points = {}
+            for centers in xy_source_list:
+                for cx_cy_src in centers:
+                    if len(cx_cy_src) != 3:
+                        continue
+                    src = cx_cy_src[2]
+                    if src not in unique_points:
+                        unique_points[src] = cx_cy_src
+            condensed = [[] for _ in range(len(xy_source_list))]
+            selected = [unique_points[key] for key in ['GT', 'PRED'] if key in unique_points]
+            if condensed:
+                condensed[0] = selected
+            xy_source_list = condensed
 
     labeled_tiles_offsets = group_df['label'].values # dovrebbe avere tanti valori quante sono le tiles
     # se ne ha di meno è perché stiamo guardando un sottoinsieme, es. il dataset di test
@@ -934,7 +949,7 @@ def compose_image(frame_idx, list_grouped_df, debug=False):
     if debug:
         print(f"labeled_tiles_offsets: {labeled_tiles_offsets}")
 
-    if 'predictions' in group_df.columns and not is_tracking_view:
+    if 'predictions' in group_df.columns and (not is_tracking_view or keep_tile_boxes):
         predicted_tiles_offsets = group_df['predictions'].values
     else:
         predicted_tiles_offsets = None
@@ -948,16 +963,17 @@ def compose_image(frame_idx, list_grouped_df, debug=False):
     offsets = [tuple(riga) for riga in group_df[['tile_offset_x','tile_offset_y']].values]
     
     neighboring_tiles = None
-    if not is_tracking_view and 'neighboring' in group_df.columns:
+    if (not is_tracking_view or keep_tile_boxes) and 'neighboring' in group_df.columns:
         neighboring_tiles = group_df['neighboring'].values
 
+    show_tile_boxes = not is_tracking_view or keep_tile_boxes
     out_img = draw_tiles_and_center(img, offsets,
         cyclone_centers=xy_source_list,
         labeled_tiles_offsets=labeled_tiles_offsets,
         predicted_tiles=predicted_tiles_offsets,
         gray_offsets=to_be_filled_offsets,
         neighboring_tile=neighboring_tiles,
-        show_tile_boxes=not is_tracking_view
+        show_tile_boxes=show_tile_boxes
     )
 
     # region add timestamp 
@@ -981,8 +997,7 @@ def compose_image(frame_idx, list_grouped_df, debug=False):
         print(f"limiti settati a {norm_array.shape}")
     return fig
 
-def render_and_save_frame(args, overwrite=False):    
-
+def render_and_save_frame(args, overwrite=False):
     frame_idx, list_grouped_df, output_folder = args
 
     # rapido check per non risalvare figure già esistenti:
@@ -992,7 +1007,7 @@ def render_and_save_frame(args, overwrite=False):
     output_file = os.path.join(output_folder, base)
     
     if os.path.isfile(output_file) and not overwrite:
-        return output_file
+        return frame_idx, output_file
 
     fig = compose_image(frame_idx, list_grouped_df)
 
@@ -1002,27 +1017,36 @@ def render_and_save_frame(args, overwrite=False):
     plt.close(fig)
 
     #print(f"Salvato frame {frame_idx} → {output_file}")
-    return output_file
+    return frame_idx, output_file
 
-def save_frames_parallel(df, output_folder):
+def save_frames_parallel(df, output_folder, print_every=50):
     grouped = df.groupby("path", dropna=False)
-    print(f" abbiamo {len(list(grouped))} gruppi", flush=True)
-
     list_grouped_df = list(grouped)
-    args = [(i, list_grouped_df, output_folder) for i in range(len(list_grouped_df))]
+    total = len(list_grouped_df)
+    print(f" abbiamo {total} gruppi", flush=True)
+
+    args = [(i, list_grouped_df, output_folder) for i in range(total)]
     
     num_processes = multiprocessing.cpu_count()
     start = time()
-    render_and_save_frame(args[0]) # cancellare dopo
+    results = [None] * total
     with Pool(processes=num_processes) as pool:
-        results = pool.map(render_and_save_frame, args)
+        done = 0
+        for frame_idx, output_path in pool.imap_unordered(render_and_save_frame, args, chunksize=1):
+            results[frame_idx] = output_path
+            done += 1
+            if done % print_every == 0 or done == total:
+                elapsed = max(time() - start, 1e-6)
+                rate = done / elapsed
+                remaining = total - done
+                eta_sec = remaining / rate if rate > 0 else float("inf")
+                eta_min = eta_sec / 60.0
+                print(f"{done}/{total} ETA {eta_min:.1f}m", end="\t", flush=True)
     end = time()
 
     # gestisco i file in modo numerico sequenziale per ffmpeg, 
     # poiché il nome dei file non contiene l'ordine sequenziale
-    idx_list = [a[0] for a in args]
-    # associo indici e percorsi, ordino e tengo solo i percorsi
-    ordered_paths = [p for _, p in sorted(zip(idx_list, results), key=lambda t: t[0])]
+    ordered_paths = results
     frames_txt = os.path.join(output_folder, 'frames.txt')
     dur = 1.0 / framerate
     with open(frames_txt, 'w') as f:
@@ -1047,7 +1071,13 @@ ffmpeg_command = lambda folder,nomefile : [
             '-pix_fmt', 'yuv420p',
             nomefile
         ]
-def make_animation_parallel_ffmpeg(df, id_cyc=None, output_folder = "./anim_frames", nomefile=None):    
+def make_animation_parallel_ffmpeg(
+    df,
+    id_cyc=None,
+    output_folder="./anim_frames",
+    nomefile=None,
+    only_video=False,
+):
     # Safety check: ensure grayed tiles column is present when rendering full Mediterranean frames
     assert filling_missing_tile in df.columns, (
         f"Manca la colonna '{filling_missing_tile}'. "
@@ -1063,11 +1093,29 @@ def make_animation_parallel_ffmpeg(df, id_cyc=None, output_folder = "./anim_fram
     
     #if not folder.exists():
     os.makedirs(folder, exist_ok=True)
-    print(f"\n>>> Generazione dei frame PNG in {folder}")
+    if not only_video:
+        print(f"\n>>> Generazione dei frame PNG in {folder}")
+        save_frames_parallel(df, folder)
+    else:
+        if not folder.exists():
+            raise RuntimeError(
+                f"Cartella frame non trovata: {folder}. "
+                "Rimuovi --only_video o genera prima i frame."
+            )
+        png_files = list(folder.glob("*.png"))
+        if not png_files:
+            raise RuntimeError(
+                f"Nessun frame PNG trovato in {folder}. "
+                "Rimuovi --only_video o genera prima i frame."
+            )
+        print(f"\n>>> Uso i frame PNG esistenti in {folder}")
 
-    save_frames_parallel(df, folder)    
-
-    print("\n>>> Creazione del video MP4 con ffmpeg...")       
+    print("\n>>> Creazione del video MP4 con ffmpeg...")
+    if shutil.which("ffmpeg") is None:
+        raise RuntimeError(
+            "ffmpeg non trovato nel PATH. "
+            "Passa --ffmpeg_path /percorso/ffmpeg oppure installa ffmpeg."
+        )
     subprocess.run(ffmpeg_command(folder,nomefile))
     print(f"\nVideo salvato: {nomefile}\n")
 

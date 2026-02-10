@@ -13,6 +13,7 @@ import io
 import json
 import math
 import os
+import sys
 import random
 import subprocess
 import time
@@ -23,11 +24,41 @@ import warnings
 import numpy as np
 import torch
 import torch.distributed as dist
+class _NullSummaryWriter:
+    def __init__(self, *args, **kwargs):
+        pass
+
+    def add_scalar(self, *args, **kwargs):
+        pass
+
+    def add_histogram(self, *args, **kwargs):
+        pass
+
+    def add_image(self, *args, **kwargs):
+        pass
+
+    def add_text(self, *args, **kwargs):
+        pass
+
+    def add_figure(self, *args, **kwargs):
+        pass
+
+    def flush(self):
+        pass
+
+    def close(self):
+        pass
+
+
 try:
     from tensorboardX import SummaryWriter
-except:
-    print("PRobabile errore di protobuf con tensorboardX -> carico tensorboard")
-    from torch.utils.tensorboard import SummaryWriter
+except Exception:
+    try:
+        print("TensorboardX non disponibile: provo torch.utils.tensorboard")
+        from torch.utils.tensorboard import SummaryWriter
+    except Exception:
+        print("Tensorboard non disponibile: logging disabilitato (SummaryWriter nullo)")
+        SummaryWriter = _NullSummaryWriter
 
 from timm.utils import get_state_dict
 from timm.models import create_model
@@ -271,7 +302,7 @@ def _load_checkpoint_for_ema(model_ema, checkpoint):
     model_ema._load_checkpoint(mem_file)
 
 
-def setup_for_distributed(is_master):
+def setup_for_distributed(is_master, silence_non_master=False):
     """
     This function disables printing when not in master process
     """
@@ -284,6 +315,15 @@ def setup_for_distributed(is_master):
             builtin_print(*args, **kwargs)
 
     __builtin__.print = print
+
+    if silence_non_master and not is_master:
+        try:
+            devnull = open(os.devnull, "w")
+            __builtin__.print = print  # keep print hook
+            sys.stdout = devnull
+            sys.stderr = devnull
+        except Exception:
+            pass
 
 
 def is_dist_avail_and_initialized():
@@ -439,14 +479,23 @@ def get_resources():
         if rank == 0:
             print("launch with torchrun")
 
-    elif os.environ.get("OMPI_COMMAND"):
+    elif os.environ.get("OMPI_COMM_WORLD_RANK"):
         # launched with mpirun
         rank = int(os.environ["OMPI_COMM_WORLD_RANK"])
-        local_rank = int(os.environ["OMPI_COMM_WORLD_LOCAL_RANK"])
-        world_size = int(os.environ["OMPI_COMM_WORLD_SIZE"])
-        local_size = int(os.environ["OMPI_COMM_WORLD_LOCAL_SIZE"])
+        local_rank = int(os.environ.get("OMPI_COMM_WORLD_LOCAL_RANK", os.environ.get("MPI_LOCALRANKID", 0)))
+        world_size = int(os.environ.get("OMPI_COMM_WORLD_SIZE", 1))
+        local_size = int(os.environ.get("OMPI_COMM_WORLD_LOCAL_SIZE", os.environ.get("MPI_LOCALNRANKS", 1)))
         if rank == 0:
             print("launch with mpirun")
+
+    elif os.environ.get("PMI_RANK") or os.environ.get("PMIX_RANK"):
+        # PMI/PMIx launchers
+        rank = int(os.environ.get("PMI_RANK", os.environ.get("PMIX_RANK", 0)))
+        local_rank = int(os.environ.get("PMI_LOCAL_RANK", os.environ.get("PMIX_LOCAL_RANK", 0)))
+        world_size = int(os.environ.get("PMI_SIZE", os.environ.get("PMIX_SIZE", 1)))
+        local_size = int(os.environ.get("PMI_LOCAL_SIZE", os.environ.get("PMIX_LOCAL_SIZE", 1)))
+        if rank == 0:
+            print("launch with pmi/pmix")
 
     elif os.environ.get("SLURM_PROCID"):
         # launched with srun (SLURM)
