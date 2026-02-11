@@ -43,6 +43,7 @@ Questo documento descrive lo script `scripts/predict_firstpass_and_track_from_fo
 - `output_dir/_tmp_firstpass_predictions.csv`
 - `output_dir/_tmp_firstpass_clip_candidates.csv`
 - `output_dir/firstpass_tiles/<DD-MM-YYYY_HHMM_offx_offy>/img_*.png`
+- `output_dir/firstpass_tiles_tracking_overlay/<DD-MM-YYYY_HHMM_offx_offy>/img_*.png` (stesse tile con dot rosso tracking su tutti i frame)
 - `output_dir/_tmp_tracking_inference_predictions_tiles.csv`
 - `output_dir/tracking_inference_predictions.csv` (finale timeframe)
 - `output_dir/<video_name>.mp4` (se `--make_video`)
@@ -70,3 +71,4 @@ python3 scripts/predict_firstpass_and_track_from_folder.py \
 - Nel CSV finale, `pred_lat/pred_lon` usano il tracking quando disponibile; se assente (es. `has_cyclone=0`) viene mantenuta la stima coarse first-pass.
 - Le copie stretched temporanee vengono mantenute in `output_dir/_tmp_firstpass_stretched`.
 - Caching automatico: se esistono i file tmp (`_tmp_firstpass_predictions.csv`, `_tmp_tracking_inference_predictions_tiles.csv`) non vengono ricalcolati.
+- Le tile originali in `firstpass_tiles` non vengono modificate: l'overlay tracking viene scritto in una cartella separata.

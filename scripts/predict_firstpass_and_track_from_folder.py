@@ -32,7 +32,7 @@ import numpy as np
 import pandas as pd
 import torch
 import torch.distributed as dist
-from PIL import Image
+from PIL import Image, ImageDraw
 from torch.utils.data import DataLoader, DistributedSampler
 
 import utils
@@ -522,6 +522,77 @@ def _create_tile_folders(
                 tile.save(out_name)
         created.append(folder)
     return created
+
+
+def _create_tiles_with_tracking_overlay(
+    tile_root: Path,
+    tracking_df: Optional[pd.DataFrame],
+    output_root: Path,
+    dot_radius: int = 4,
+) -> None:
+    if not tile_root.exists():
+        print(f"[WARN] Tile root non trovata, salto overlay tracking: {tile_root}")
+        return
+
+    if output_root.exists():
+        shutil.rmtree(output_root)
+    output_root.mkdir(parents=True, exist_ok=True)
+
+    pred_map: Dict[str, Tuple[float, float]] = {}
+    if tracking_df is not None and not tracking_df.empty and "path" in tracking_df.columns:
+        tdf = tracking_df.copy()
+        tdf["path_base"] = tdf["path"].astype(str).apply(lambda p: os.path.basename(str(p)).strip())
+        tdf["pred_x"] = pd.to_numeric(tdf.get("pred_x"), errors="coerce")
+        tdf["pred_y"] = pd.to_numeric(tdf.get("pred_y"), errors="coerce")
+        tdf = tdf.sort_values("path_base")
+        for _, row in tdf.iterrows():
+            px = row.get("pred_x")
+            py = row.get("pred_y")
+            if not (np.isfinite(px) and np.isfinite(py)):
+                continue
+            key = str(row.get("path_base", "")).strip()
+            if key:
+                pred_map[key] = (float(px), float(py))
+
+    tile_dirs = sorted([p for p in tile_root.iterdir() if p.is_dir()])
+    folders_total = 0
+    folders_with_pred = 0
+    frames_written = 0
+    frames_with_dot = 0
+
+    for folder in tile_dirs:
+        folders_total += 1
+        out_folder = output_root / folder.name
+        out_folder.mkdir(parents=True, exist_ok=True)
+        pred_xy = pred_map.get(folder.name)
+        if pred_xy is not None:
+            folders_with_pred += 1
+
+        frame_files = sorted([p for p in folder.iterdir() if p.is_file() and p.suffix.lower() in IMG_EXTS])
+        for frame_path in frame_files:
+            with Image.open(frame_path) as img:
+                img = img.convert("RGB")
+                if pred_xy is not None:
+                    draw = ImageDraw.Draw(img)
+                    x, y = pred_xy
+                    draw.ellipse(
+                        (
+                            x - dot_radius,
+                            y - dot_radius,
+                            x + dot_radius,
+                            y + dot_radius,
+                        ),
+                        fill=(255, 0, 0),
+                    )
+                    frames_with_dot += 1
+                img.save(out_folder / frame_path.name)
+                frames_written += 1
+
+    print(
+        f"[INFO] Tile overlay tracking salvate in {output_root} | "
+        f"folder: {folders_total}, con_pred: {folders_with_pred}, "
+        f"frame: {frames_written}, frame_con_dot: {frames_with_dot}"
+    )
 
 
 def _build_timeframe_csv_from_candidates(
@@ -1162,6 +1233,7 @@ def main() -> None:
     firstpass_preds_csv = output_dir / "_tmp_firstpass_predictions.csv"
     clip_candidates_csv = output_dir / "_tmp_firstpass_clip_candidates.csv"
     tile_root = output_dir / "firstpass_tiles"
+    tile_overlay_root = output_dir / "firstpass_tiles_tracking_overlay"
     track_tiles_csv = output_dir / "_tmp_tracking_inference_predictions_tiles.csv"
     final_time_csv = output_dir / "tracking_inference_predictions.csv"
 
@@ -1252,6 +1324,14 @@ def main() -> None:
             track_df = pd.read_csv(track_tiles_csv)
         else:
             track_df = pd.DataFrame([])
+
+        _create_tiles_with_tracking_overlay(
+            tile_root=tile_root,
+            tracking_df=track_df,
+            output_root=tile_overlay_root,
+            dot_radius=4,
+        )
+
         _build_timeframe_csv_from_candidates(
             candidates_df=clip_candidates,
             tracking_df=track_df,
