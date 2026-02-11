@@ -4,7 +4,7 @@ import os
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, Iterable, List, Optional, Tuple
+from typing import Dict, Iterable, List, Optional, Tuple, Union
 
 import numpy as np
 import pandas as pd
@@ -20,7 +20,7 @@ class EventWindow:
     end: pd.Timestamp
 
 
-def load_event_windows_csv(windows_csv: str | Path) -> List[EventWindow]:
+def load_event_windows_csv(windows_csv: Union[str, Path]) -> List[EventWindow]:
     """
     Parse medicanes_new_windows.csv and return unique event windows.
     Expected columns: start_time, end_time, and an id column (prefer id_final).
@@ -47,7 +47,7 @@ def load_event_windows_csv(windows_csv: str | Path) -> List[EventWindow]:
     return events
 
 
-def load_manifest_csv(manifest_csv: str | Path) -> pd.DataFrame:
+def load_manifest_csv(manifest_csv: Union[str, Path]) -> pd.DataFrame:
     """
     Load manifest and normalize image_path to absolute paths (relative resolved from manifest directory).
     Requires columns: image_path, presence.
@@ -171,8 +171,8 @@ def _pick_transition(df: pd.DataFrame, target: pd.Timestamp, hours: float = 12.0
 
 
 def representative_event_samples(
-    manifest_csv: str | Path,
-    windows_csv: str | Path,
+    manifest_csv: Union[str, Path],
+    windows_csv: Union[str, Path],
     *,
     temporal_T: int,
     temporal_stride: int,

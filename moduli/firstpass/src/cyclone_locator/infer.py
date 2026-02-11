@@ -4,7 +4,7 @@ import json
 import logging
 import os
 import time
-from typing import Dict, List, Optional, Sequence, Tuple
+from typing import Dict, List, Optional, Sequence, Tuple, Union
 
 import cv2
 import numpy as np
@@ -506,7 +506,7 @@ def spatial_peak_pool(
     heatmap_logits: torch.Tensor,
     pool: str = "max",
     tau: float = 1.0,
-    topk: int | None = None,
+    topk: Optional[int] = None,
 ) -> torch.Tensor:
     """
     heatmap_logits: (B,H,W) or (B,1,H,W)
@@ -540,7 +540,7 @@ def spatial_peak_pool(
 def _recenter_peak_logit(
     peak_logit: torch.Tensor,
     logits: torch.Tensor,
-    topk: int | None,
+    topk: Optional[int],
     mode: str,
 ) -> torch.Tensor:
     mode = str(mode or "none").lower().strip()
@@ -563,7 +563,7 @@ def compute_peak_logit(
     logits: torch.Tensor,
     pool: str,
     tau: float,
-    topk: int | None,
+    topk: Optional[int],
     center_mode: str,
 ) -> torch.Tensor:
     peak_logit = spatial_peak_pool(logits, pool=pool, tau=tau, topk=topk)
@@ -585,7 +585,7 @@ def run_inference(
     presence_mode: str = "head",
     peak_pool: str = "max",
     peak_tau: float = 1.0,
-    presence_topk: int | None = None,
+    presence_topk: Optional[int] = None,
     peak_logit_alpha: float = 0.5,
     peak_logit_center: str = "none",
     peak_mode: str = "logsumexp",

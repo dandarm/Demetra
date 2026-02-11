@@ -5,7 +5,7 @@ from bisect import bisect_left
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional, Sequence, Tuple
+from typing import Dict, List, Optional, Sequence, Tuple, Union
 
 import numpy as np
 import pandas as pd
@@ -84,7 +84,7 @@ class WindowsLabeling:
         self,
         intervals: Sequence[Tuple[pd.Timestamp, pd.Timestamp]],
         timestamp_keypoints: Dict[pd.Timestamp, Keypoint],
-        event_tracks: Sequence[EventTrack] | None = None,
+        event_tracks: Optional[Sequence[EventTrack]] = None,
     ) -> None:
         merged = self._merge_intervals(intervals)
         self._intervals: List[Tuple[pd.Timestamp, pd.Timestamp]] = merged
@@ -219,11 +219,11 @@ class WindowsLabeling:
         return cls(intervals, keypoints, track_objs)
 
     @classmethod
-    def from_csv(cls, csv_path: Path | str) -> "WindowsLabeling":
+    def from_csv(cls, csv_path: Union[Path, str]) -> "WindowsLabeling":
         df = pd.read_csv(csv_path, parse_dates=["time", "start_time", "end_time"], keep_default_na=True)
         return cls.from_dataframe(df)
 
-    def is_positive(self, timestamp: datetime | pd.Timestamp) -> bool:
+    def is_positive(self, timestamp: Union[datetime, pd.Timestamp]) -> bool:
         ts = pd.Timestamp(timestamp)
         for start, end in self._intervals:
             if ts < start:
@@ -232,7 +232,7 @@ class WindowsLabeling:
                 return True
         return False
 
-    def keypoint_for(self, timestamp: datetime | pd.Timestamp) -> Optional[Keypoint]:
+    def keypoint_for(self, timestamp: Union[datetime, pd.Timestamp]) -> Optional[Keypoint]:
         ts = pd.Timestamp(timestamp)
         direct = self._keypoints.get(ts, None)
         if direct is not None:
@@ -243,7 +243,7 @@ class WindowsLabeling:
                 return kp
         return None
 
-    def event_id_for(self, timestamp: datetime | pd.Timestamp) -> Optional[str]:
+    def event_id_for(self, timestamp: Union[datetime, pd.Timestamp]) -> Optional[str]:
         """Return the event/cyclone id owning this timestamp, if any."""
         ts = pd.Timestamp(timestamp)
         for track in self._event_tracks:
@@ -251,7 +251,7 @@ class WindowsLabeling:
                 return track.event_id
         return None
 
-    def nearest_event(self, timestamp: datetime | pd.Timestamp):
+    def nearest_event(self, timestamp: Union[datetime, pd.Timestamp]):
         """Return (event_id, time_gap) of the closest event track to the timestamp."""
         ts = pd.Timestamp(timestamp)
         best_id: Optional[str] = None

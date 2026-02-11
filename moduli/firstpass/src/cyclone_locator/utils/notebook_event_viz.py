@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, Iterable, Optional, Sequence, Tuple
+from typing import Dict, Iterable, Optional, Sequence, Tuple, Union
 
 import numpy as np
 import torch
@@ -89,7 +89,7 @@ def plot_event_samples_grid(
     device: torch.device,
     *,
     heatmap_stride: float,
-    save_dir: Optional[str | Path] = None,
+    save_dir: Optional[Union[str, Path]] = None,
     show: bool = True,
     mosaic_cols: int = 4,
 ):
@@ -408,9 +408,9 @@ def _render_three_panel_frame_cv2(
 def export_event_videos_for_manifest(
     *,
     cfg_run: dict,
-    checkpoint_path: str | Path,
-    manifest_csv: str | Path,
-    out_dir: str | Path,
+    checkpoint_path: Union[str, Path],
+    manifest_csv: Union[str, Path],
+    out_dir: Union[str, Path],
     device: torch.device,
     event_ids: Optional[Sequence[str]] = None,
     fps: int = 6,

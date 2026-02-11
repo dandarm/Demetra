@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import Optional
 
 import torch
 import torch.nn as nn
@@ -25,7 +26,7 @@ def _load_local_checkpoint(base: nn.Module, weights_path: Path):
     base.load_state_dict(state, strict=True)
 
 
-def _resolve_weights_path(variant: str, weights_path: str | None):
+def _resolve_weights_path(variant: str, weights_path: Optional[str]):
     """
     Returns a Path or None. If weights_path is "auto" (default), look for a
     root-level checkpoint matching the variant.
@@ -43,7 +44,7 @@ def _resolve_weights_path(variant: str, weights_path: str | None):
     return Path(weights_path) if weights_path else None
 
 
-def _build_backbone(variant: str, pretrained: bool, weights_path: str | None):
+def _build_backbone(variant: str, pretrained: bool, weights_path: Optional[str]):
     resolved_path = _resolve_weights_path(variant, weights_path)
     x3d_xs, x3d_s, x3d_m = _get_x3d_builders()
 
@@ -112,7 +113,7 @@ class X3DBackbone(nn.Module):
         out_heatmap_ch: int = 1,
         presence_dropout: float = 0.0,
         pretrained: bool = True,
-        weights_path: str | None = "auto",
+        weights_path: Optional[str] = "auto",
         heatmap_stride: int = 4,
     ):
         super().__init__()
