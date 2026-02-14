@@ -12,7 +12,7 @@ Questo documento descrive lo script `scripts/predict_firstpass_and_track_from_fo
 2. Crea copie stretched SxS temporanee per il first-pass.
 3. Esegue first-pass e ottiene `presence_prob`, `x_g`, `y_g`.
 4. Back-projecta il centro nello spazio originale (`x_orig`, `y_orig`).
-5. Costruisce clip da 16 frame (default: clip che terminano su ora intera).
+5. Costruisce clip da 16 frame con stride temporale di 15 minuti.
 6. Per ogni clip positiva (`presence_prob >= --firstpass_threshold`):
    - calcola offset tile centrato sul centro first-pass;
    - salva folder tile con nome `DD-MM-YYYY_HHMM_offsetX_offsetY`;
@@ -30,7 +30,6 @@ Questo documento descrive lo script `scripts/predict_firstpass_and_track_from_fo
 - `--firstpass_image_size`: lato immagini stretched per first-pass (default 224).
 - `--num_frames`: numero frame per clip/tile (default 16).
 - `--tile_size`: lato tile HR (default 224).
-- `--end_on_hour/--no-end_on_hour`: clip che finiscono su HH:00 (default true).
 - `--manos_file`: GT opzionale per tracking.
 - `--make_video`: genera anche il video ROI-firstpass finale.
 - `--only_video`: crea solo MP4 da frame già renderizzati (richiede `--make_video`).
@@ -67,6 +66,7 @@ python3 scripts/predict_firstpass_and_track_from_folder.py \
 - Lo script usa solo tile first-pass positive per il tracking HR.
 - Il naming tile e il formato frame sono compatibili con `track_from_folder.py`.
 - Il video `--make_video` non usa il mosaico 12 tile VideoMAE: renderizza il frame originale e disegna un solo riquadro rosso (ROI) quando la detection first-pass è positiva.
+- Il video viene renderizzato su **tutti** i frame disponibili in `input_dir` (es. ogni 5 minuti); tra due predizioni consecutive mantiene marker e stato dell'ultimo timestamp predetto.
 - Overlay marker nel video: rombo rosso = centro coarse first-pass, punto rosso = predizione tracking VideoMAE (globale), punto verde = GT da `manos_file` quando disponibile.
 - Nel CSV finale, `pred_lat/pred_lon` usano il tracking quando disponibile; se assente (es. `has_cyclone=0`) viene mantenuta la stima coarse first-pass.
 - Le copie stretched temporanee vengono mantenute in `output_dir/_tmp_firstpass_stretched`.

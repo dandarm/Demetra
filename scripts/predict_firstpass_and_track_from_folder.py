@@ -57,6 +57,7 @@ except ImportError:  # pragma: no cover
 
 IMG_EXTS = {".png"}
 TS_RE = re.compile(r"(\d{8})_(\d{4})")
+FIRSTPASS_CLIP_STRIDE_MINUTES = 15
 
 
 def parse_args() -> argparse.Namespace:
@@ -138,11 +139,12 @@ def parse_args() -> argparse.Namespace:
         default=60.0,
         help="Gap massimo per considerare contiguo un gruppo temporale.",
     )
+    # Compat: kept as hidden no-op to avoid breaking old command lines.
     parser.add_argument(
         "--end_on_hour",
         action=argparse.BooleanOptionalAction,
-        default=True,
-        help="Se true, crea clip che terminano su HH:00 (default true).",
+        default=None,
+        help=argparse.SUPPRESS,
     )
     parser.add_argument(
         "--manos_file",
@@ -414,7 +416,6 @@ def _build_clip_candidates(
     num_frames: int,
     tile_size: int,
     threshold: float,
-    end_on_hour: bool,
     max_gap_minutes: float,
 ) -> pd.DataFrame:
     fp = firstpass_df.copy()
@@ -429,9 +430,15 @@ def _build_clip_candidates(
         g = group.reset_index(drop=True).copy()
         if g.empty:
             continue
-        if end_on_hour:
-            end_idxs = g.index[g["datetime"] == g["datetime"].dt.floor("h")]
-        else:
+        base_ts = pd.Timestamp(g["datetime"].iloc[0])
+        delta_min = (g["datetime"] - base_ts).dt.total_seconds().div(60.0).to_numpy(dtype=float)
+        aligned = np.isclose(
+            np.mod(delta_min, float(FIRSTPASS_CLIP_STRIDE_MINUTES)),
+            0.0,
+            atol=1e-6,
+        )
+        end_idxs = g.index[aligned]
+        if len(end_idxs) == 0:
             end_idxs = g.index
         for end_idx in end_idxs:
             start_idx = int(end_idx) - (num_frames - 1)
@@ -936,6 +943,11 @@ def _run_tracking_inference(
         tile_infos.append((str(folder), dt_floor, off_x, off_y))
 
     gt_map = _build_gt_map_from_tracks(args_cli.manos_file, tile_infos)
+    if rank == 0:
+        print(
+            f"[INFO] GT match su tile tracking: {len(gt_map)}/{len(positive_folders)} "
+            f"(manos_file={args_cli.manos_file})"
+        )
     tmp_csv = output_dir / "_tmp_tracking_inference_dataset.csv"
     _build_tracking_csv_for_folders(positive_folders, gt_map, tmp_csv)
 
@@ -979,6 +991,7 @@ def _run_tracking_inference(
 
 
 def _render_firstpass_roi_frames(
+    frames_df: pd.DataFrame,
     candidates_df: pd.DataFrame,
     tracking_df: Optional[pd.DataFrame],
     manos_file: Optional[str],
@@ -992,11 +1005,24 @@ def _render_firstpass_roi_frames(
     cands = candidates_df.copy()
     cands["end_datetime"] = pd.to_datetime(cands["end_datetime"], errors="coerce")
     cands = cands[cands["end_datetime"].notna()].copy()
-    if cands.empty:
+    if cands.empty or frames_df is None or frames_df.empty:
+        return 0
+
+    timeline = frames_df.copy()
+    if "orig_path" not in timeline.columns or "datetime" not in timeline.columns:
+        raise RuntimeError("frames_df deve contenere colonne orig_path e datetime.")
+    timeline["datetime"] = pd.to_datetime(timeline["datetime"], errors="coerce")
+    timeline = timeline[timeline["datetime"].notna()].copy()
+    timeline["orig_path"] = timeline["orig_path"].astype(str).apply(lambda p: str(Path(p).resolve()))
+    timeline = timeline.sort_values(["datetime", "orig_path"]).drop_duplicates(
+        subset=["datetime", "orig_path"],
+        keep="last",
+    )
+    if timeline.empty:
         return 0
 
     track_by_tile, track_by_time = _build_tracking_lookups(tracking_df)
-    gt_maps = _build_gt_time_maps(_load_gt_points(manos_file))
+    gt_points = _load_gt_points(manos_file)
 
     def _candidate_has_tracking(row: pd.Series) -> int:
         folder = str(row.get("tile_folder", "")).strip()
@@ -1015,6 +1041,7 @@ def _render_firstpass_roi_frames(
         ascending=[True, False, False],
     ).drop_duplicates(subset=["end_datetime"], keep="first")
 
+    state_rows: List[Dict[str, object]] = []
     written = 0
     half = float(tile_size) / 2.0
     n_firstpass_marker = 0
@@ -1023,32 +1050,98 @@ def _render_firstpass_roi_frames(
     n_gt_from_tracking = 0
     n_gt_from_manos = 0
     for row in cands.itertuples(index=False):
-        img_path = Path(str(row.end_orig_path))
+        draw_box = int(row.is_positive) == 1
+        off_x = pd.to_numeric(row.tile_offset_x, errors="coerce")
+        off_y = pd.to_numeric(row.tile_offset_y, errors="coerce")
+        if draw_box and not (np.isfinite(off_x) and np.isfinite(off_y)):
+            cx = pd.to_numeric(row.firstpass_x_orig, errors="coerce")
+            cy = pd.to_numeric(row.firstpass_y_orig, errors="coerce")
+            if np.isfinite(cx) and np.isfinite(cy):
+                off_x = int(round(float(cx) - half))
+                off_y = int(round(float(cy) - half))
+
+        ts = pd.Timestamp(row.end_datetime)
+        folder_name = str(getattr(row, "tile_folder", "")).strip()
+        track_rec = track_by_tile.get(folder_name)
+        if track_rec is None:
+            track_rec = track_by_time.get(ts)
+        if track_rec is None:
+            track_rec = track_by_time.get(ts.round("h"))
+        track_x = np.nan if track_rec is None else pd.to_numeric(track_rec.get("pred_x_global"), errors="coerce")
+        track_y = np.nan if track_rec is None else pd.to_numeric(track_rec.get("pred_y_global"), errors="coerce")
+
+        gt_x = np.nan
+        gt_y = np.nan
+        gt_from_tracking = 0
+        if track_rec is not None:
+            gt_x = pd.to_numeric(track_rec.get("target_x_global"), errors="coerce")
+            gt_y = pd.to_numeric(track_rec.get("target_y_global"), errors="coerce")
+            gt_from_tracking = int(np.isfinite(gt_x) and np.isfinite(gt_y))
+
+        state_rows.append(
+            {
+                "state_time": ts,
+                "draw_box": int(draw_box),
+                "tile_offset_x": off_x,
+                "tile_offset_y": off_y,
+                "firstpass_x_orig": pd.to_numeric(getattr(row, "firstpass_x_orig", np.nan), errors="coerce"),
+                "firstpass_y_orig": pd.to_numeric(getattr(row, "firstpass_y_orig", np.nan), errors="coerce"),
+                "track_x": track_x,
+                "track_y": track_y,
+                "gt_x_track": gt_x,
+                "gt_y_track": gt_y,
+                "gt_from_tracking": gt_from_tracking,
+            }
+        )
+
+    state_df = pd.DataFrame(state_rows).sort_values("state_time")
+    state_df["state_time"] = pd.to_datetime(state_df["state_time"], errors="coerce")
+    state_df = state_df[state_df["state_time"].notna()].copy()
+
+    render_df = timeline.rename(columns={"orig_path": "frame_path"}).copy()
+    render_df = pd.merge_asof(
+        render_df.sort_values("datetime"),
+        state_df.sort_values("state_time"),
+        left_on="datetime",
+        right_on="state_time",
+        direction="backward",
+    )
+
+    if gt_points is not None and not gt_points.empty:
+        gt_src = gt_points.copy().sort_values("time").rename(columns={"time": "gt_time"})
+        gt_hold = pd.merge_asof(
+            render_df[["datetime"]].copy().sort_values("datetime"),
+            gt_src[["gt_time", "x_pix", "y_pix"]].sort_values("gt_time"),
+            left_on="datetime",
+            right_on="gt_time",
+            direction="backward",
+        )
+        render_df["gt_x_manos"] = pd.to_numeric(gt_hold["x_pix"], errors="coerce")
+        render_df["gt_y_manos"] = pd.to_numeric(gt_hold["y_pix"], errors="coerce")
+    else:
+        render_df["gt_x_manos"] = np.nan
+        render_df["gt_y_manos"] = np.nan
+
+    for row in render_df.itertuples(index=False):
+        img_path = Path(str(row.frame_path))
         if not img_path.exists():
             continue
         img = cv2.imread(str(img_path), cv2.IMREAD_COLOR)
         if img is None:
             continue
         h, w = img.shape[:2]
-        draw_box = int(row.is_positive) == 1
 
-        if draw_box:
-            off_x = pd.to_numeric(row.tile_offset_x, errors="coerce")
-            off_y = pd.to_numeric(row.tile_offset_y, errors="coerce")
-            if not (np.isfinite(off_x) and np.isfinite(off_y)):
-                cx = pd.to_numeric(row.firstpass_x_orig, errors="coerce")
-                cy = pd.to_numeric(row.firstpass_y_orig, errors="coerce")
-                if np.isfinite(cx) and np.isfinite(cy):
-                    off_x = int(round(float(cx) - half))
-                    off_y = int(round(float(cy) - half))
-            if np.isfinite(off_x) and np.isfinite(off_y):
-                x0 = int(np.clip(int(round(float(off_x))), 0, max(0, w - 1)))
-                y0 = int(np.clip(int(round(float(off_y))), 0, max(0, h - 1)))
-                x1 = int(np.clip(x0 + int(tile_size), 0, max(0, w - 1)))
-                y1 = int(np.clip(y0 + int(tile_size), 0, max(0, h - 1)))
-                cv2.rectangle(img, (x0, y0), (x1, y1), (0, 0, 255), 2)
+        draw_box_val = pd.to_numeric(getattr(row, "draw_box", 0), errors="coerce")
+        draw_box = bool(np.isfinite(draw_box_val) and int(draw_box_val) == 1)
+        off_x = pd.to_numeric(getattr(row, "tile_offset_x", np.nan), errors="coerce")
+        off_y = pd.to_numeric(getattr(row, "tile_offset_y", np.nan), errors="coerce")
+        if draw_box and np.isfinite(off_x) and np.isfinite(off_y):
+            x0 = int(np.clip(int(round(float(off_x))), 0, max(0, w - 1)))
+            y0 = int(np.clip(int(round(float(off_y))), 0, max(0, h - 1)))
+            x1 = int(np.clip(x0 + int(tile_size), 0, max(0, w - 1)))
+            y1 = int(np.clip(y0 + int(tile_size), 0, max(0, h - 1)))
+            cv2.rectangle(img, (x0, y0), (x1, y1), (0, 0, 255), 2)
 
-        # First-pass coarse center: red diamond.
         if _draw_marker_if_finite(
             img,
             getattr(row, "firstpass_x_orig", np.nan),
@@ -1060,31 +1153,21 @@ def _render_firstpass_roi_frames(
         ):
             n_firstpass_marker += 1
 
-        # Tracking prediction (global): red dot.
-        ts = pd.Timestamp(row.end_datetime)
-        folder_name = str(getattr(row, "tile_folder", "")).strip()
-        track_rec = track_by_tile.get(folder_name)
-        if track_rec is None:
-            track_rec = track_by_time.get(ts)
-        if track_rec is None:
-            track_rec = track_by_time.get(ts.round("h"))
-        track_x = np.nan if track_rec is None else pd.to_numeric(track_rec.get("pred_x_global"), errors="coerce")
-        track_y = np.nan if track_rec is None else pd.to_numeric(track_rec.get("pred_y_global"), errors="coerce")
+        track_x = pd.to_numeric(getattr(row, "track_x", np.nan), errors="coerce")
+        track_y = pd.to_numeric(getattr(row, "track_y", np.nan), errors="coerce")
         if np.isfinite(track_x) and np.isfinite(track_y):
             cv2.circle(img, (int(round(float(track_x))), int(round(float(track_y)))), 4, (0, 0, 255), -1)
             cv2.circle(img, (int(round(float(track_x))), int(round(float(track_y)))), 6, (255, 255, 255), 1)
             n_tracking_marker += 1
 
-        # GT from manos/tracking target: green dot.
-        gt_x = np.nan
-        gt_y = np.nan
-        gt_from_tracking = False
-        if track_rec is not None:
-            gt_x = pd.to_numeric(track_rec.get("target_x_global"), errors="coerce")
-            gt_y = pd.to_numeric(track_rec.get("target_y_global"), errors="coerce")
-            gt_from_tracking = bool(np.isfinite(gt_x) and np.isfinite(gt_y))
+        gt_x = pd.to_numeric(getattr(row, "gt_x_track", np.nan), errors="coerce")
+        gt_y = pd.to_numeric(getattr(row, "gt_y_track", np.nan), errors="coerce")
+        gt_from_tracking_val = pd.to_numeric(getattr(row, "gt_from_tracking", 0), errors="coerce")
+        gt_from_tracking = bool(np.isfinite(gt_from_tracking_val) and int(gt_from_tracking_val) == 1)
         if not (np.isfinite(gt_x) and np.isfinite(gt_y)):
-            gt_x, gt_y = _lookup_gt_xy(ts, gt_maps)
+            gt_x = pd.to_numeric(getattr(row, "gt_x_manos", np.nan), errors="coerce")
+            gt_y = pd.to_numeric(getattr(row, "gt_y_manos", np.nan), errors="coerce")
+            gt_from_tracking = False
         if np.isfinite(gt_x) and np.isfinite(gt_y):
             cv2.circle(img, (int(round(float(gt_x))), int(round(float(gt_y)))), 4, (0, 255, 0), -1)
             cv2.circle(img, (int(round(float(gt_x))), int(round(float(gt_y)))), 6, (255, 255, 255), 1)
@@ -1094,7 +1177,7 @@ def _render_firstpass_roi_frames(
             else:
                 n_gt_from_manos += 1
 
-        label = ts.strftime("%Y-%m-%d %H:%M")
+        label = pd.Timestamp(row.datetime).strftime("%Y-%m-%d %H:%M")
         cv2.putText(
             img,
             label,
@@ -1167,6 +1250,7 @@ def _encode_video_from_frames(
 
 def _make_firstpass_roi_video(
     args_cli: argparse.Namespace,
+    frames_df: pd.DataFrame,
     candidates_df: pd.DataFrame,
     tracking_df: Optional[pd.DataFrame],
     output_dir: Path,
@@ -1183,6 +1267,7 @@ def _make_firstpass_roi_video(
         if frames_dir.exists():
             shutil.rmtree(frames_dir)
         n_frames = _render_firstpass_roi_frames(
+            frames_df=frames_df,
             candidates_df=candidates_df,
             tracking_df=tracking_df,
             manos_file=args_cli.manos_file,
@@ -1203,6 +1288,11 @@ def _make_firstpass_roi_video(
 
 def main() -> None:
     args_cli = parse_args()
+    if args_cli.end_on_hour is not None:
+        print(
+            "[WARN] --end_on_hour/--no-end_on_hour e' deprecato e ignorato: "
+            f"la stride clip first-pass e' fissata a {FIRSTPASS_CLIP_STRIDE_MINUTES} minuti."
+        )
     if args_cli.only_video and not args_cli.make_video:
         raise RuntimeError("--only_video richiede --make_video.")
     output_dir = Path(args_cli.output_dir).resolve()
@@ -1275,7 +1365,6 @@ def main() -> None:
             num_frames=args_cli.num_frames,
             tile_size=args_cli.tile_size,
             threshold=args_cli.firstpass_threshold,
-            end_on_hour=bool(args_cli.end_on_hour),
             max_gap_minutes=float(args_cli.max_contiguous_gap_minutes),
         )
         clip_candidates.to_csv(clip_candidates_csv, index=False)
@@ -1287,7 +1376,8 @@ def main() -> None:
         n_pos = int((clip_candidates["is_positive"] == 1).sum())
         print(
             f"[INFO] Clip candidate: {len(clip_candidates)} | "
-            f"positive first-pass: {n_pos} | tile create: {len(created_folders)}"
+            f"positive first-pass: {n_pos} | tile create: {len(created_folders)} | "
+            f"stride: {FIRSTPASS_CLIP_STRIDE_MINUTES} minuti"
         )
 
     if dist.is_available() and dist.is_initialized():
@@ -1342,6 +1432,7 @@ def main() -> None:
         if args_cli.make_video:
             video_path = _make_firstpass_roi_video(
                 args_cli=args_cli,
+                frames_df=frames_df,
                 candidates_df=clip_candidates,
                 tracking_df=track_df,
                 output_dir=output_dir,
