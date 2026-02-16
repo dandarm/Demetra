@@ -58,6 +58,10 @@ except ImportError:  # pragma: no cover
 IMG_EXTS = {".png"}
 TS_RE = re.compile(r"(\d{8})_(\d{4})")
 FIRSTPASS_CLIP_STRIDE_MINUTES = 15
+STANDARD_TILE_STRIDE_X = 213
+STANDARD_TILE_STRIDE_Y = 196
+STANDARD_IMAGE_WIDTH = 1290
+STANDARD_IMAGE_HEIGHT = 420
 
 
 def parse_args() -> argparse.Namespace:
@@ -132,6 +136,14 @@ def parse_args() -> argparse.Namespace:
         type=int,
         default=224,
         help="Dimensione lato tile crop sull'immagine originale.",
+    )
+    parser.add_argument(
+        "--standard_tiling",
+        action="store_true",
+        help=(
+            "Se attivo, per ogni centro first-pass usa la tile della griglia standard "
+            "(stride default) che contiene il centro, invece del crop centrato."
+        ),
     )
     parser.add_argument(
         "--max_contiguous_gap_minutes",
@@ -417,6 +429,7 @@ def _build_clip_candidates(
     tile_size: int,
     threshold: float,
     max_gap_minutes: float,
+    standard_tiling: bool = False,
 ) -> pd.DataFrame:
     fp = firstpass_df.copy()
     fp["orig_path"] = fp["orig_path"].astype(str).apply(lambda p: str(Path(p).resolve()))
@@ -463,8 +476,17 @@ def _build_clip_candidates(
             tile_offset_y = np.nan
             tile_folder = ""
             if is_positive and np.isfinite(x_orig) and np.isfinite(y_orig):
-                tile_offset_x = int(round(x_orig - half))
-                tile_offset_y = int(round(y_orig - half))
+                if standard_tiling:
+                    std_offset = _select_standard_offset_for_center(
+                        x=float(x_orig),
+                        y=float(y_orig),
+                        tile_size=tile_size,
+                    )
+                    tile_offset_x = int(std_offset[0])
+                    tile_offset_y = int(std_offset[1])
+                else:
+                    tile_offset_x = int(round(x_orig - half))
+                    tile_offset_y = int(round(y_orig - half))
                 tile_folder = (
                     f"{pd.Timestamp(end_row['datetime']).strftime('%d-%m-%Y_%H%M')}"
                     f"_{int(tile_offset_x)}_{int(tile_offset_y)}"
@@ -489,6 +511,36 @@ def _build_clip_candidates(
     if candidates.empty:
         raise RuntimeError("Nessuna clip candidata generata. Verifica num_frames/input timeline.")
     return candidates
+
+
+def _standard_offsets(tile_size: int) -> List[Tuple[int, int]]:
+    offsets: List[Tuple[int, int]] = []
+    for oy in range(0, STANDARD_IMAGE_HEIGHT - tile_size + 1, STANDARD_TILE_STRIDE_Y):
+        for ox in range(0, STANDARD_IMAGE_WIDTH - tile_size + 1, STANDARD_TILE_STRIDE_X):
+            offsets.append((ox, oy))
+    return offsets
+
+
+def _select_standard_offset_for_center(x: float, y: float, tile_size: int) -> Tuple[int, int]:
+    """Return the standard-grid tile offset containing point (x, y)."""
+    offsets = _standard_offsets(tile_size=tile_size)
+
+    containing = [
+        (ox, oy)
+        for ox, oy in offsets
+        if (ox <= x < ox + tile_size) and (oy <= y < oy + tile_size)
+    ]
+    if containing:
+        # In overlap regions choose the tile whose center is closest to the point.
+        return min(
+            containing,
+            key=lambda off: (off[0] + tile_size / 2.0 - x) ** 2 + (off[1] + tile_size / 2.0 - y) ** 2,
+        )
+
+    # Defensive fallback for malformed coordinates: clamp centered crop in-bounds.
+    ox = int(np.clip(round(x - tile_size / 2.0), 0, STANDARD_IMAGE_WIDTH - tile_size))
+    oy = int(np.clip(round(y - tile_size / 2.0), 0, STANDARD_IMAGE_HEIGHT - tile_size))
+    return ox, oy
 
 
 def _create_tile_folders(
@@ -753,16 +805,16 @@ def _parse_datetime_series(values: pd.Series) -> pd.Series:
 
 def _load_gt_points(manos_file: Optional[str]) -> pd.DataFrame:
     if not manos_file:
-        return pd.DataFrame(columns=["time", "x_pix", "y_pix"])
+        return pd.DataFrame(columns=["time", "x_pix", "y_pix", "start_time", "end_time"])
     manos_path = Path(manos_file)
     if not manos_path.exists():
         print(f"[WARN] manos_file non trovato per overlay GT: {manos_file}")
-        return pd.DataFrame(columns=["time", "x_pix", "y_pix"])
+        return pd.DataFrame(columns=["time", "x_pix", "y_pix", "start_time", "end_time"])
     try:
         df = pd.read_csv(manos_path)
     except Exception as exc:
         print(f"[WARN] Impossibile leggere manos_file per overlay GT ({manos_file}): {exc}")
-        return pd.DataFrame(columns=["time", "x_pix", "y_pix"])
+        return pd.DataFrame(columns=["time", "x_pix", "y_pix", "start_time", "end_time"])
 
     time_col = None
     for cand in ("time", "datetime", "timestamp"):
@@ -774,21 +826,35 @@ def _load_gt_points(manos_file: Optional[str]) -> pd.DataFrame:
             "[WARN] manos_file senza colonne richieste per overlay GT "
             f"(time/datetime/timestamp + x_pix + y_pix): {manos_file}"
         )
-        return pd.DataFrame(columns=["time", "x_pix", "y_pix"])
+        return pd.DataFrame(columns=["time", "x_pix", "y_pix", "start_time", "end_time"])
 
     work = df.copy()
     work["time"] = _parse_datetime_series(work[time_col])
     work["x_pix"] = work["x_pix"].apply(_first_numeric_value)
     work["y_pix"] = work["y_pix"].apply(_first_numeric_value)
+    # Optional presence window columns (if present in manos_file).
+    if "start_time" in work.columns:
+        work["start_time"] = _parse_datetime_series(work["start_time"])
+    else:
+        work["start_time"] = pd.NaT
+    if "end_time" in work.columns:
+        work["end_time"] = _parse_datetime_series(work["end_time"])
+    else:
+        work["end_time"] = pd.NaT
     work = work[work["time"].notna()].copy()
     work = work[np.isfinite(work["x_pix"]) & np.isfinite(work["y_pix"])].copy()
     if work.empty:
         print(f"[WARN] Nessun punto GT valido in manos_file: {manos_file}")
-        return pd.DataFrame(columns=["time", "x_pix", "y_pix"])
+        return pd.DataFrame(columns=["time", "x_pix", "y_pix", "start_time", "end_time"])
 
     work["time"] = work["time"].apply(_as_naive_timestamp)
+    work["start_time"] = pd.to_datetime(work["start_time"], errors="coerce")
+    work["end_time"] = pd.to_datetime(work["end_time"], errors="coerce")
+    # Keep timestamps naive for consistent merge/compare.
+    work["start_time"] = work["start_time"].apply(lambda x: _as_naive_timestamp(x) if pd.notna(x) else pd.NaT)
+    work["end_time"] = work["end_time"].apply(lambda x: _as_naive_timestamp(x) if pd.notna(x) else pd.NaT)
     work = work.sort_values("time").reset_index(drop=True)
-    out = work[["time", "x_pix", "y_pix"]].copy()
+    out = work[["time", "x_pix", "y_pix", "start_time", "end_time"]].copy()
     print(f"[INFO] GT points caricati per overlay video: {len(out)}")
     return out
 
@@ -1111,13 +1177,23 @@ def _render_firstpass_roi_frames(
         gt_src = gt_points.copy().sort_values("time").rename(columns={"time": "gt_time"})
         gt_hold = pd.merge_asof(
             render_df[["datetime"]].copy().sort_values("datetime"),
-            gt_src[["gt_time", "x_pix", "y_pix"]].sort_values("gt_time"),
+            gt_src[["gt_time", "x_pix", "y_pix", "start_time", "end_time"]].sort_values("gt_time"),
             left_on="datetime",
             right_on="gt_time",
             direction="backward",
         )
-        render_df["gt_x_manos"] = pd.to_numeric(gt_hold["x_pix"], errors="coerce")
-        render_df["gt_y_manos"] = pd.to_numeric(gt_hold["y_pix"], errors="coerce")
+        gt_x = pd.to_numeric(gt_hold["x_pix"], errors="coerce")
+        gt_y = pd.to_numeric(gt_hold["y_pix"], errors="coerce")
+        gt_start = pd.to_datetime(gt_hold.get("start_time"), errors="coerce")
+        gt_end = pd.to_datetime(gt_hold.get("end_time"), errors="coerce")
+        # Show GT only inside the cyclone presence window if available.
+        valid_mask = np.isfinite(gt_x) & np.isfinite(gt_y)
+        has_start = gt_start.notna()
+        has_end = gt_end.notna()
+        valid_mask = valid_mask & (~has_start | (gt_hold["datetime"] >= gt_start))
+        valid_mask = valid_mask & (~has_end | (gt_hold["datetime"] <= gt_end))
+        render_df["gt_x_manos"] = gt_x.where(valid_mask, np.nan)
+        render_df["gt_y_manos"] = gt_y.where(valid_mask, np.nan)
     else:
         render_df["gt_x_manos"] = np.nan
         render_df["gt_y_manos"] = np.nan
@@ -1323,7 +1399,6 @@ def main() -> None:
     firstpass_preds_csv = output_dir / "_tmp_firstpass_predictions.csv"
     clip_candidates_csv = output_dir / "_tmp_firstpass_clip_candidates.csv"
     tile_root = output_dir / "firstpass_tiles"
-    tile_overlay_root = output_dir / "firstpass_tiles_tracking_overlay"
     track_tiles_csv = output_dir / "_tmp_tracking_inference_predictions_tiles.csv"
     final_time_csv = output_dir / "tracking_inference_predictions.csv"
 
@@ -1366,6 +1441,7 @@ def main() -> None:
             tile_size=args_cli.tile_size,
             threshold=args_cli.firstpass_threshold,
             max_gap_minutes=float(args_cli.max_contiguous_gap_minutes),
+            standard_tiling=bool(args_cli.standard_tiling),
         )
         clip_candidates.to_csv(clip_candidates_csv, index=False)
         created_folders = _create_tile_folders(
