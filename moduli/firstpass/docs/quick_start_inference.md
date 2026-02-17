@@ -1,7 +1,5 @@
 # Quick Start Inference (First‑Pass → VideoTile)
 
-Questo documento descrive l’inferenza end‑to‑end con enfasi sulla fase che usa il centro stimato dal first‑pass per costruire una **video‑tile** (ROI) a partire dall’immagine originale full‑basin. È una guida tecnica per scienziati: spiega cosa avviene e dove andare nel codice per verificare o estendere.
-
 ## Obiettivo scientifico
 Produrre, per ogni evento, una sequenza temporale di ritagli (tile) centrati sul ciclone, a risoluzione originale, così da alimentare il secondo stadio ad alta risoluzione (VideoMAE) e da poter controllare visivamente la correttezza della localizzazione.
 
@@ -32,15 +30,17 @@ La ROI è definita come **quadrato** centrato su `(x_orig, y_orig)` con raggio `
 Questo raggio può essere fisso (config inferenza) o dinamico (derivato dalla larghezza del picco).
 Il ritaglio avviene direttamente sull’immagine originale, senza distorsioni, preservando il rapporto d’aspetto locale.
 
-**Esito atteso:** una sequenza di frame originali ritagliati e centrati sul ciclone, pronta per il secondo stadio o per analisi qualitative.
+Un'altra modalità è stata scelta in cui il ritaglio non viene centrato sul `(x_orig, y_orig)` ma sulla tile avente offsets standard che contiene il centro.
+
+**Esito atteso:** una sequenza di frame originali ritagliati e contenenti il ciclone, pronta per il secondo stadio o per analisi qualitative.
 
 ## 4) Video‑tile temporale
-Per ogni evento si costruisce una sequenza temporale di frame (tipicamente 16).
+Per ogni evento si costruisce una sequenza temporale di 16 frame.
 Si usa il centro stimato nel frame centrale per definire la ROI e applicarla coerentemente a tutti i frame della finestra temporale. Questo garantisce coerenza spaziale all’interno della clip.
 
 **Dove approfondire (visualizzazione/ROI):**
-`moduli/firstpass/notebooks/firstpass_videomae_roi_viz.ipynb`
-`moduli/firstpass/notebooks/firstpass_videomae_roi_viz_utils.py`
+`demetra/notebooks/firstpass_videomae_roi_viz.ipynb`
+`demetra/notebooks/firstpass_videomae_roi_viz_utils.py`
 
 ## 5) Stato della funzione “video‑tile”
 Al momento, la costruzione della video‑tile è implementata nel percorso di visualizzazione ROI (notebook + helper).
