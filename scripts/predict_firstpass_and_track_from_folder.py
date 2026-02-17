@@ -1382,7 +1382,7 @@ def main() -> None:
     firstpass_config = (
         Path(args_cli.firstpass_config).resolve()
         if args_cli.firstpass_config
-        else (firstpass_root / "config" / "default.yml").resolve()
+        else (firstpass_root / "config" / "config_exp31.yml").resolve()
     )
     if not firstpass_root.exists():
         raise FileNotFoundError(f"firstpass_root non trovato: {firstpass_root}")
@@ -1490,14 +1490,6 @@ def main() -> None:
             track_df = pd.read_csv(track_tiles_csv)
         else:
             track_df = pd.DataFrame([])
-
-        _create_tiles_with_tracking_overlay(
-            tile_root=tile_root,
-            tracking_df=track_df,
-            output_root=tile_overlay_root,
-            dot_radius=4,
-        )
-
         _build_timeframe_csv_from_candidates(
             candidates_df=clip_candidates,
             tracking_df=track_df,

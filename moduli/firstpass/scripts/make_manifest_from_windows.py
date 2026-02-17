@@ -119,11 +119,11 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--windows-csv", required=True)
     ap.add_argument("--images-dir", required=True)
     ap.add_argument("--orig-size", type=int, nargs=2, default=[1290, 420], metavar=("W", "H"))
-    ap.add_argument("--target-size", type=int, default=512)
+    ap.add_argument("--target-size", type=int, default=224)
     ap.add_argument(
         "--resize-mode",
         choices=["letterbox", "stretch"],
-        default="letterbox",
+        default="stretch",
         help="Modalità resize usata per le immagini (letterbox con padding oppure stretch).",
     )
     ap.add_argument("--out-dir", required=True)
