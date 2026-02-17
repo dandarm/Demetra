@@ -1,0 +1,1 @@
+{"test_loss": 351.5054, "test_geo_km": 89.6156, "test_px_err": 23.9815}

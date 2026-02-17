@@ -8,7 +8,7 @@ import json
 import os
 import random
 import time
-from typing import Dict, List, Union
+from typing import Dict, List, Optional, Tuple, Union
 
 import numpy as np
 import pandas as pd
@@ -53,11 +53,20 @@ def _ensure_path_list(paths) -> List[str]:
     return [str(paths)]
 
 
-def _compute_sample_record(path: str, pred_xy: torch.Tensor, target_xy: Union[torch.Tensor, None]) -> Dict[str, Union[float, str, None]]:
+def _compute_sample_record(
+    path: str,
+    pred_xy: torch.Tensor,
+    target_xy: Union[torch.Tensor, None],
+    has_target: Optional[bool] = None,
+) -> Dict[str, Union[float, int, str, None]]:
+    if has_target is None:
+        has_target = target_xy is not None
+    else:
+        has_target = bool(has_target)
     pred_np = pred_xy.detach().cpu().numpy().astype(float)
     target_np = None
     err_px = None
-    if target_xy is not None:
+    if has_target and target_xy is not None:
         target_np = target_xy.detach().cpu().numpy().astype(float)
         err_vec = pred_np - target_np
         err_px = float(np.linalg.norm(err_vec))
@@ -90,6 +99,7 @@ def _compute_sample_record(path: str, pred_xy: torch.Tensor, target_xy: Union[to
 
     record = {
         "path": path,
+        "has_target": int(has_target),
         "pred_x": float(pred_np[0]),
         "pred_y": float(pred_np[1]),
         "target_x": float(target_np[0]) if target_np is not None else None,
@@ -120,6 +130,53 @@ def _compute_sample_record(path: str, pred_xy: torch.Tensor, target_xy: Union[to
             )
 
     return record
+
+
+def _extract_state_dict(checkpoint_obj) -> Dict[str, torch.Tensor]:
+    if isinstance(checkpoint_obj, dict):
+        for key in ("state_dict", "model", "module"):
+            val = checkpoint_obj.get(key)
+            if isinstance(val, dict):
+                return val
+        # Fallback: if dict itself already looks like a state_dict
+        if checkpoint_obj and all(isinstance(v, torch.Tensor) for v in checkpoint_obj.values()):
+            return checkpoint_obj
+    raise KeyError(
+        "Checkpoint senza state_dict/model/module valido per il caricamento."
+    )
+
+
+def _normalize_state_dict_keys(state_dict: Dict[str, torch.Tensor]) -> Dict[str, torch.Tensor]:
+    cleaned: Dict[str, torch.Tensor] = {}
+    for key, value in state_dict.items():
+        new_key = key.replace("backbone.", "").replace("module.", "").replace("_orig_mod.", "")
+        cleaned[new_key] = value
+    return cleaned
+
+
+def _adapt_legacy_head_keys(
+    state_dict: Dict[str, torch.Tensor],
+    model_state: Dict[str, torch.Tensor],
+) -> Tuple[Dict[str, torch.Tensor], List[str]]:
+    adapted = dict(state_dict)
+    mapped: List[str] = []
+
+    # Legacy tracking checkpoints might store a linear head as head.weight/head.bias.
+    # Current tracking head is RegressionHead: head.mlp.1.{weight,bias}.
+    if "head.weight" in adapted and "head.mlp.1.weight" in model_state:
+        src = adapted.get("head.weight")
+        dst_shape = tuple(model_state["head.mlp.1.weight"].shape)
+        if isinstance(src, torch.Tensor) and tuple(src.shape) == dst_shape:
+            adapted["head.mlp.1.weight"] = src
+            mapped.append("head.weight->head.mlp.1.weight")
+    if "head.bias" in adapted and "head.mlp.1.bias" in model_state:
+        src = adapted.get("head.bias")
+        dst_shape = tuple(model_state["head.mlp.1.bias"].shape)
+        if isinstance(src, torch.Tensor) and tuple(src.shape) == dst_shape:
+            adapted["head.mlp.1.bias"] = src
+            mapped.append("head.bias->head.mlp.1.bias")
+
+    return adapted, mapped
 
 
 @torch.no_grad()
@@ -165,9 +222,15 @@ def inference_epoch(model, data_loader, device) -> tuple[Dict[str, float], List[
 
         path_list = _ensure_path_list(paths)
         for idx, sample_path in enumerate(path_list):
-            tgt = target[idx] if bool(valid_mask[idx].item()) else None
+            sample_has_target = bool(valid_mask[idx].item())
+            tgt = target[idx] if sample_has_target else None
             results.append(
-                _compute_sample_record(sample_path, output[idx], tgt)
+                _compute_sample_record(
+                    sample_path,
+                    output[idx],
+                    tgt,
+                    has_target=sample_has_target,
+                )
             )
 
     metric_logger.synchronize_between_processes()
@@ -180,14 +243,83 @@ def load_checkpoint(model: torch.nn.Module, checkpoint_path: str, device: torch.
         raise ValueError("checkpoint path must be provided for inference")
     map_location = device if device.type == "cpu" else torch.device("cpu")
     checkpoint = torch.load(checkpoint_path, map_location=map_location)
-    state_dict = checkpoint.get("model") or checkpoint.get("state_dict")
-    if state_dict is None:
-        raise KeyError(
-            f"Checkpoint at {checkpoint_path} does not contain 'model' or 'state_dict' keys; "
-            f"available keys: {list(checkpoint.keys()) if isinstance(checkpoint, dict) else 'N/A'}"
+    raw_state_dict = _extract_state_dict(checkpoint)
+    cleaned_state_dict = _normalize_state_dict_keys(raw_state_dict)
+
+    model_state = model.state_dict()
+    cleaned_state_dict, mapped_head_keys = _adapt_legacy_head_keys(cleaned_state_dict, model_state)
+
+    filtered_state: Dict[str, torch.Tensor] = {}
+    unexpected_keys: List[str] = []
+    skipped_shape: List[str] = []
+    for key, value in cleaned_state_dict.items():
+        if key not in model_state:
+            unexpected_keys.append(key)
+            continue
+        if tuple(value.shape) != tuple(model_state[key].shape):
+            skipped_shape.append(
+                f"{key}: ckpt{tuple(value.shape)} != model{tuple(model_state[key].shape)}"
+            )
+            continue
+        filtered_state[key] = value
+
+    msg = model.load_state_dict(filtered_state, strict=False)
+
+    missing = sorted(msg.missing_keys)
+    loaded_count = len(filtered_state)
+    total_model_keys = len(model_state)
+    print(
+        f"[INFO] Loaded checkpoint from {checkpoint_path} | "
+        f"loaded={loaded_count}/{total_model_keys}, missing={len(missing)}, "
+        f"unexpected={len(unexpected_keys)}, shape_mismatch={len(skipped_shape)}"
+    )
+    if mapped_head_keys:
+        print(f"[INFO] Legacy head mapping applied: {mapped_head_keys}")
+
+    # Explicit diagnostic: confirm regression head parameters are actually loaded.
+    head_keys = sorted([k for k in model_state.keys() if k.startswith("head.")])
+    loaded_head = [k for k in head_keys if k in filtered_state]
+    if head_keys:
+        print(
+            f"[INFO] Regression head load status: loaded {len(loaded_head)}/{len(head_keys)} params"
         )
-    msg = model.load_state_dict(state_dict, strict=False)
-    print(f"[INFO] Loaded checkpoint from {checkpoint_path}: {msg}")
+        if len(loaded_head) == 0:
+            print(
+                "[WARN] Nessun parametro della regression head caricato dal checkpoint: "
+                "la testa puo' restare random."
+            )
+
+    if skipped_shape:
+        print("[WARN] Parametri saltati per mismatch shape (prime 8):")
+        for row in skipped_shape[:8]:
+            print(f"  - {row}")
+    if missing:
+        print(f"[WARN] Missing keys after load (prime 8): {missing[:8]}")
+    if unexpected_keys:
+        print(f"[WARN] Unexpected checkpoint keys (prime 8): {unexpected_keys[:8]}")
+
+
+def _validate_tracking_dataset_paths(dataset) -> None:
+    resolved_paths = getattr(dataset, "_resolved_paths", None)
+    if not isinstance(resolved_paths, list):
+        return
+    total = len(resolved_paths)
+    if total == 0:
+        raise RuntimeError("Tracking dataset vuoto: nessun sample disponibile.")
+
+    existing = sum(1 for p in resolved_paths if isinstance(p, str) and os.path.isdir(p))
+    missing = total - existing
+    print(f"[INFO] Tracking dataset paths: existing={existing}/{total}, missing={missing}")
+    if existing == 0:
+        raise RuntimeError(
+            "Nessuna cartella clip del tracking esiste sul filesystem. "
+            "Controlla il CSV input e i path assoluti/relativi."
+        )
+    if missing > 0:
+        print(
+            "[WARN] Alcune cartelle clip del tracking non esistono. "
+            "Il dataset usera' fallback/skip per quei sample."
+        )
 
 
 def run_tracking_inference(
@@ -248,6 +380,10 @@ def run_tracking_inference(
         for col in pixel_cols:
             if col in df.columns:
                 df[col] = pd.to_numeric(df[col], errors="coerce").round().astype("Int64")
+        if "has_target" in df.columns:
+            df["has_target"] = pd.to_numeric(df["has_target"], errors="coerce").fillna(0).astype("Int8")
+            n_has_target = int((df["has_target"] == 1).sum())
+            print(f"[INFO][tracking_inference] rows with target: {n_has_target}/{len(df)}")
 
         # Quick sanity stats on predictions (useful for debugging collapsed outputs)
         if "pred_x" in df.columns and "pred_y" in df.columns:
@@ -335,6 +471,7 @@ def launch_inference_tracking(terminal_args: argparse.Namespace) -> None:
         specify_data_path=args.test_path,
     )
     data_loader = data_manager.get_tracking_dataloader(args)
+    _validate_tracking_dataset_paths(data_manager.dataset)
 
     model = create_tracking_model(args.model, **args.__dict__)
     model.to(device)

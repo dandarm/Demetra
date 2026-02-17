@@ -1,7 +1,7 @@
 import json
 import math
 from pathlib import Path
-from typing import Dict, Iterable, List, Optional, Sequence, Tuple
+from typing import Dict, Iterable, List, Optional, Sequence, Tuple, Union
 
 import numpy as np
 import pandas as pd
@@ -89,9 +89,9 @@ def _tail_summary(values: np.ndarray) -> Dict[str, float]:
 def export_presence_diagnostics(
     *,
     cfg_run: dict,
-    checkpoint_path: str | Path,
-    manifest_csv: str | Path,
-    out_dir: str | Path,
+    checkpoint_path: Union[str, Path],
+    manifest_csv: Union[str, Path],
+    out_dir: Union[str, Path],
     split_name: str,
     device: Optional[torch.device] = None,
     presence_mode: Optional[str] = None,

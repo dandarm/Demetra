@@ -1,5 +1,5 @@
 import math
-from typing import Tuple
+from typing import Optional, Tuple
 
 import torch
 from torch import nn
@@ -10,7 +10,7 @@ from cyclone_locator.utils.dsnt import spatial_softmax_2d
 def compute_energy_features(
     heatmap_logits: torch.Tensor,
     dsnt_tau: float,
-    topk: int | None,
+    topk: Optional[int],
     eps: float = 1e-6,
 ) -> Tuple[torch.Tensor, torch.Tensor]:
     """

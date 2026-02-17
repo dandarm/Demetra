@@ -26,8 +26,7 @@ Questo primo pass è deliberatamente **leggero, robusto e agnostico** rispetto a
 
 ## 4) Scelte progettuali chiave (senza codice)
 **a) Letterbox offline**
-- Portiamo ogni immagine full‑basin a **S×S** (tip. 384×384) preservando il **rapporto d’aspetto** e aggiungendo **padding** sui lati corti.
-- Motivi: performance (evitare resize per epoca), determinismo (stesse mappe di coordinate sempre), semplificazione dei DataLoader.
+- Portiamo ogni immagine full‑basin a **S×S** (tip. 224 X 224) senza preservare il **rapporto d’aspetto** e senza aggiungendo **padding** sui lati corti. Ogni implementazione che considera padding e letterbox con ratio originale è superata, da non considerare più. Tutta l'area quadrata presa dal modello deve contenere informazione, non solo un rettangolo stretto (letterbox) circondato da padding nero, perché peggiora la performance.
 
 **b) Labeling da finestre temporali**
 - Usiamo **medicanes_new_windows.csv** come **fonte unica**: se il timestamp del frame cade in **[start_time, end_time]**, etichetta **positiva**, altrimenti **negativa**.
@@ -46,13 +45,13 @@ Questo primo pass è deliberatamente **leggero, robusto e agnostico** rispetto a
 
 ### Input e normalizzazione
 
-* **Immagine di ingresso**: frame full‑basin già **letterbox** a S×S (default S=512), valori [0,1].
+* **Immagine di ingresso**: frame full‑basin già **"letterbox stretched"** a S×S (default S=224), valori [0,1].
 * **Canali**: tipicamente 1 canale (IR); estendibile a 3 canali (compositi RGB) o a stack temporali (N canali) senza cambiare il contratto I/O.
 * **Normalizzazione**: per canale (media/deviaz. standard del dataset) o min‑max; l’importante è coerenza tra train/val/infer.
 
 ### Architettura (stile SimpleBaseline)
 
-* **Backbone**: ResNet‑18/50 pre‑addestrata su ImageNet (feature compatte e robuste).
+* **Backbone**: X3D_M pre‑addestrata.
 * **Decoder spaziale**: 2‑3 blocchi *deconvolution/upsampling* per riportare le feature a una griglia densa e ottenere una **heatmap** 1‑canale.
 * **Head di presenza** (in parallelo): classificatore binario (logit) ottenuto da pooling globale + MLP leggero.
 * **Stride di heatmap**: se l’input è S×S e lo stride effettivo è `s` (tipico `s=4`), la heatmap ha risoluzione `(S/s)×(S/s)`.

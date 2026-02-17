@@ -1,5 +1,6 @@
 import os, argparse, yaml, time, csv, random, math
 from contextlib import nullcontext
+from typing import Optional
 import numpy as np
 import torch, torch.nn as nn
 import torch.distributed as dist
@@ -128,7 +129,7 @@ def coord_loss_per_sample(pred_xy: torch.Tensor, target_xy: torch.Tensor, loss_t
     raise ValueError(f"Unknown dsnt_coord_loss: {loss_type}")
 
 
-def spatial_peak_pool(logits: torch.Tensor, pool: str = "max", tau: float = 1.0, topk: int | None = None) -> torch.Tensor:
+def spatial_peak_pool(logits: torch.Tensor, pool: str = "max", tau: float = 1.0, topk: Optional[int] = None) -> torch.Tensor:
     """
     logits: (B,1,H,W)
     Returns: (B,1) pooled logits.
@@ -156,7 +157,7 @@ def spatial_peak_pool(logits: torch.Tensor, pool: str = "max", tau: float = 1.0,
 def _recenter_peak_logit(
     peak_logit: torch.Tensor,
     logits: torch.Tensor,
-    topk: int | None,
+    topk: Optional[int],
     mode: str,
 ) -> torch.Tensor:
     mode = str(mode or "none").lower().strip()
@@ -178,7 +179,7 @@ def compute_peak_logit(
     logits: torch.Tensor,
     pool: str,
     tau: float,
-    topk: int | None,
+    topk: Optional[int],
     center_mode: str,
 ) -> torch.Tensor:
     peak_logit = spatial_peak_pool(logits, pool=pool, tau=tau, topk=topk)
@@ -209,7 +210,7 @@ def center_mae_px(pred_xy_hm: torch.Tensor, target_xy_hm: torch.Tensor, valid: t
     mae_hm = (pred_xy_hm - target_xy_hm).abs().mean(dim=1)  # (B,) mean(|dx|,|dy|)
     return mae_hm[mask].mean() * float(stride)
 
-def estimate_conv3d_max_batch(model: nn.Module, temporal_T: int, image_size: int, device: torch.device) -> int | None:
+def estimate_conv3d_max_batch(model: nn.Module, temporal_T: int, image_size: int, device: torch.device) -> Optional[int]:
     """Estimate max per-process batch size before Conv3d hits int32 indexing limits.
 
     PyTorch can raise `RuntimeError: Input tensor is too large.` inside conv3d when
@@ -306,7 +307,7 @@ def evaluate_loader(model, loader, hm_loss, amp_enabled, loss_weights, device, r
                     dsnt_coord_loss: str = "l1",
                     peak_pool: str = "max",
                     peak_tau: float = 1.0,
-                    presence_topk: int | None = None,
+                    presence_topk: Optional[int] = None,
                     heatmap_stride: int = 4,
                     presence_threshold: float = 0.5,
                     peak_logit_alpha: float = 0.5,
