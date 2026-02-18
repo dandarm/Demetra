@@ -263,7 +263,9 @@ def _make_stretched_manifest(
     skipped = 0
     for row in frames_df.itertuples(index=False):
         orig_path = Path(row.orig_path)
-        img = cv2.imread(str(orig_path), cv2.IMREAD_UNCHANGED)
+        # Force 3 channels to keep first-pass temporal fusion shape stable (16*3=48).
+        # Using IMREAD_UNCHANGED can mix RGB(3) and RGBA(4) across samples.
+        img = cv2.imread(str(orig_path), cv2.IMREAD_COLOR)
         if img is None:
             skipped += 1
             continue
@@ -1374,6 +1376,50 @@ def main() -> None:
     output_dir = Path(args_cli.output_dir).resolve()
     output_dir.mkdir(parents=True, exist_ok=True)
 
+    stretched_dir = output_dir / "_tmp_firstpass_stretched"
+    manifest_csv = output_dir / "_tmp_firstpass_manifest.csv"
+    firstpass_out_dir = output_dir / "_tmp_firstpass_out"
+    firstpass_preds_raw_csv = firstpass_out_dir / "preds_firstpass_raw.csv"
+    firstpass_preds_csv = output_dir / "_tmp_firstpass_predictions.csv"
+    clip_candidates_csv = output_dir / "_tmp_firstpass_clip_candidates.csv"
+    tile_root = output_dir / "firstpass_tiles"
+    track_tiles_csv = output_dir / "_tmp_tracking_inference_predictions_tiles.csv"
+    final_time_csv = output_dir / "tracking_inference_predictions.csv"
+
+    # Fast cache path: if final CSV exists, skip all prediction stages.
+    if final_time_csv.exists():
+        print(f"[INFO] CSV finale gia presente: {final_time_csv}. Salto inferenze.")
+        if not args_cli.make_video:
+            return
+        if args_cli.only_video:
+            video_path = _make_firstpass_roi_video(
+                args_cli=args_cli,
+                frames_df=pd.DataFrame(columns=["orig_path", "datetime"]),
+                candidates_df=pd.DataFrame([]),
+                tracking_df=pd.DataFrame([]),
+                output_dir=output_dir,
+            )
+            print(f"[INFO] Video ROI first-pass generato: {video_path}")
+            return
+        if not clip_candidates_csv.exists():
+            print(
+                "[WARN] Video richiesto ma candidati clip non trovati; "
+                "salto video (nessuna inferenza ricalcolata)."
+            )
+            return
+        frames_df = _collect_frames(Path(args_cli.input_dir).resolve())
+        clip_candidates = pd.read_csv(clip_candidates_csv, parse_dates=["end_datetime"])
+        track_df = pd.read_csv(track_tiles_csv) if track_tiles_csv.exists() else pd.DataFrame([])
+        video_path = _make_firstpass_roi_video(
+            args_cli=args_cli,
+            frames_df=frames_df,
+            candidates_df=clip_candidates,
+            tracking_df=track_df,
+            output_dir=output_dir,
+        )
+        print(f"[INFO] Video ROI first-pass generato: {video_path}")
+        return
+
     firstpass_root = (
         Path(args_cli.firstpass_root).resolve()
         if args_cli.firstpass_root
@@ -1391,16 +1437,6 @@ def main() -> None:
 
     rank, local_rank, world_size, distributed = _setup_distributed()
     device = torch.device(f"cuda:{local_rank}") if torch.cuda.is_available() else torch.device("cpu")
-
-    stretched_dir = output_dir / "_tmp_firstpass_stretched"
-    manifest_csv = output_dir / "_tmp_firstpass_manifest.csv"
-    firstpass_out_dir = output_dir / "_tmp_firstpass_out"
-    firstpass_preds_raw_csv = firstpass_out_dir / "preds_firstpass_raw.csv"
-    firstpass_preds_csv = output_dir / "_tmp_firstpass_predictions.csv"
-    clip_candidates_csv = output_dir / "_tmp_firstpass_clip_candidates.csv"
-    tile_root = output_dir / "firstpass_tiles"
-    track_tiles_csv = output_dir / "_tmp_tracking_inference_predictions_tiles.csv"
-    final_time_csv = output_dir / "tracking_inference_predictions.csv"
 
     if rank == 0:
         frames_df = _collect_frames(Path(args_cli.input_dir).resolve())
@@ -1471,16 +1507,24 @@ def main() -> None:
     positive_folders = [tile_root / name for name in positive_names if name]
     positive_folders = [p for p in positive_folders if p.exists()]
 
-    _run_tracking_inference(
-        args_cli=args_cli,
-        positive_folders=positive_folders,
-        output_dir=output_dir,
-        track_tiles_csv=track_tiles_csv,
-        device=device,
-        world_size=world_size,
-        rank=rank,
-        distributed=distributed,
-    )
+    skip_tracking_due_final = final_time_csv.exists()
+    if skip_tracking_due_final:
+        if rank == 0:
+            print(
+                f"[INFO] CSV finale gia presente in {final_time_csv}: "
+                "salto tracking inference."
+            )
+    else:
+        _run_tracking_inference(
+            args_cli=args_cli,
+            positive_folders=positive_folders,
+            output_dir=output_dir,
+            track_tiles_csv=track_tiles_csv,
+            device=device,
+            world_size=world_size,
+            rank=rank,
+            distributed=distributed,
+        )
 
     if dist.is_available() and dist.is_initialized():
         dist.barrier()
@@ -1490,12 +1534,15 @@ def main() -> None:
             track_df = pd.read_csv(track_tiles_csv)
         else:
             track_df = pd.DataFrame([])
-        _build_timeframe_csv_from_candidates(
-            candidates_df=clip_candidates,
-            tracking_df=track_df,
-            output_csv=final_time_csv,
-        )
-        print(f"[INFO] CSV finale timeframe salvato in {final_time_csv}")
+        if final_time_csv.exists():
+            print(f"[INFO] CSV finale timeframe gia presente: {final_time_csv} (salto rebuild)")
+        else:
+            _build_timeframe_csv_from_candidates(
+                candidates_df=clip_candidates,
+                tracking_df=track_df,
+                output_csv=final_time_csv,
+            )
+            print(f"[INFO] CSV finale timeframe salvato in {final_time_csv}")
 
         if args_cli.make_video:
             video_path = _make_firstpass_roi_video(

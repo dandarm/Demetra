@@ -213,3 +213,5 @@ frames.txt
 
 *.pth
 *.ckpt
+
+*.csv

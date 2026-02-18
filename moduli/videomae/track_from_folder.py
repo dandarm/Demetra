@@ -147,12 +147,30 @@ def _build_gt_map_from_tracks(
     if tracks_df.empty:
         return {}
 
-    tracks_df["time_key"] = tracks_df["time"].dt.round("h")
+    # GT is considered available only at exact hour marks.
+    tracks_df["is_hourly"] = (
+        (tracks_df["time"].dt.minute == 0)
+        & (tracks_df["time"].dt.second == 0)
+        & (tracks_df["time"].dt.microsecond == 0)
+    )
+    tracks_df = tracks_df[tracks_df["is_hourly"]].copy()
+    if tracks_df.empty:
+        return {}
+
+    tracks_df["time_key"] = tracks_df["time"].dt.floor("h")
     grouped = {t: df for t, df in tracks_df.groupby("time_key")}
 
     gt_map: Dict[str, Tuple[float, float]] = {}
     for folder_path, tile_dt, offset_x, offset_y in tile_infos:
-        dt_key = pd.Timestamp(tile_dt).round("h")
+        tile_ts = pd.Timestamp(tile_dt)
+        # No temporal interpolation for GT: only evaluate tiles ending on HH:00.
+        if not (
+            tile_ts.minute == 0
+            and tile_ts.second == 0
+            and tile_ts.microsecond == 0
+        ):
+            continue
+        dt_key = tile_ts.floor("h")
         df_t = grouped.get(dt_key)
         if df_t is None or df_t.empty:
             continue
