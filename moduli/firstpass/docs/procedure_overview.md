@@ -3,7 +3,7 @@
 ## Obiettivo scientifico
 Il progetto è diviso in due moduli principali. **First‑pass** (`moduli/firstpass/`) esegue la rilevazione full‑basin: stima presenza del ciclone e centro tramite heatmap su immagini ridimensionate. **Secondo stadio (VideoMAE)** (`moduli/videomae/`) usa le ROI del first‑pass per analisi ad alta risoluzione nel tempo. 
 
-Questo modulo firstpass deve produrre, per ogni evento, una sequenza temporale di ritagli (tile) centrati sul ciclone, a risoluzione originale, così da alimentare il secondo stadio ad alta risoluzione (VideoMAE)
+Questo modulo firstpass deve produrre, per ogni evento, una sequenza temporale di ritagli (tile) che contengono il ciclone, a risoluzione originale, così da alimentare il secondo stadio ad alta risoluzione (VideoMAE)
 
 Il legame tra i due moduli è il passaggio di **centro e ROI** dall’immagine full‑basin al sotto‑ritaglio ad alta risoluzione.
 
@@ -37,9 +37,16 @@ In presenza di `x_pix_resized/y_pix_resized`, il dataset usa direttamente tali c
 **Dove approfondire:** `moduli/firstpass/src/cyclone_locator/datasets/med_fullbasin.py`.
 
 
+## 4) Output del first‑pass (centro e presenza)
+L’inferenza del first‑pass genera due grandezze chiave:
+1) una **probabilità di presenza** (presence)
+2) una **heatmap** da cui si ricava il centro stimato (peak o soft‑argmax).
+
+Il centro è espresso nello spazio **ridimensionato** (stretch) e va riportato nello spazio dell’immagine originale. Il passaggio usa i metadati di resize (scale_x/scale_y e pad).
 
 
-## 4) Training first‑pass
+
+## 5) Training first‑pass
 Il training esegue:
 - **head heatmap** per la localizzazione del centro,
 - **head presenza** per classificare il frame/evento.
@@ -47,16 +54,22 @@ Le loss combinano errore heatmap e presenza. La densità dei clip è controllata
 
 **Entry point:** `moduli/firstpass/train_temporal.sh` (invoca `src/cyclone_locator/train.py`).
 
+
 ## 5) Inferenza e ROI
-In inferenza, la heatmap predetta viene convertita in coordinate (peak o soft‑argmax). Se la presenza supera la soglia, il centro viene proiettato indietro nello spazio originale e usato per definire una **ROI quadrata** centrata sul ciclone. La ROI è la base per l’hand‑off verso il secondo stadio e per la diagnostica qualitativa.
+In inferenza, la heatmap predetta viene usata per ricavare il centro, usando una funzione che la converte in un valore di intensità (logsumexp dei topk valori della heatmap). Se la presenza supera la soglia, il centro della heatmap viene proiettato indietro nello spazio originale e usato per definire una **ROI quadrata** centrata sul ciclone. La ROI è la base per l’hand‑off verso il secondo stadio e per la diagnostica qualitativa.
+La ROI è definita come **quadrato** centrato su `(x_orig, y_orig)` con raggio uguale al lato della tile input per videomae (224px).
+Il ritaglio avviene direttamente sull’immagine originale non distorta.
+Un'altra modalità è stata scelta in cui il ritaglio non viene centrato sul `(x_orig, y_orig)` ma sulla tile avente offsets standard (valori di default degli offsets) che contiene il centro. Si è mostrato che il tracking è migliore se la ROI viene ritagliata in questo modo.
+
+L'ouput di questa fase è una sequenza di 16 frame a risoluzione originale ritagliati e contenenti il ciclone, cioè la videotile pronta per il secondo stadio videomae.
 
 **Dove approfondire:** `moduli/firstpass/src/cyclone_locator/infer.py` (conversioni e soglie), `moduli/firstpass/src/cyclone_locator/transforms/letterbox.py` (mappe avanti/indietro).
 
 ## 6) Visualizzazione ROI (controllo scientifico)
-La visualizzazione costruisce, per ciascun evento, una sequenza di frame letterbox con heatmap e un pannello con il frame originale su cui è disegnata la ROI. La ROI è definita da centro predetto e raggio configurabile; il marker del ground truth viene proiettato nello stesso frame per verificare la coerenza. Questo consente di valutare: correttezza delle trasformazioni, stabilità temporale della predizione, e adeguatezza della ROI per il secondo stadio.
+La visualizzazione costruisce, per ciascun evento, una sequenza di frame, con il marker del centro predetto dal firstpass, quello predetto da Videomae, e quello del ground truth, che vengono proiettati nello stesso frame per verificare la coerenza. Questo consente di valutare correttezza delle trasformazioni e stabilità temporale della predizione.
 
 **Entry point:** `moduli/firstpass/notebooks/firstpass_videomae_roi_viz.ipynb` e helper `moduli/firstpass/notebooks/firstpass_videomae_roi_viz_utils.py`.
 
 ## 8) Secondo stadio (VideoMAE)
-Il modulo VideoMAE gestisce dataset e sequenze ad alta risoluzione. L’input principale è la sequenza ritagliata via ROI dal first‑pass. Il `data_manager.py` mantiene l’associazione tra sequenze, etichette e metadati temporali.
+Il modulo VideoMAE di tracking gestisce dataset e sequenze ad alta risoluzione. L’input principale è la sequenza ritagliata via ROI dal first‑pass, e l'output costituisce una rifinitura della posizione stimata approssimativamente da firstpass. Videomae ragguinge una precisione maggiore perché opera su immagini a risoluzione maggiore e per via del modello avanzato di processing video.
 
