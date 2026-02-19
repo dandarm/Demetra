@@ -1,18 +1,30 @@
 # Stato Attuale delle Procedure (First‑Pass + ROI)
 
-Questo documento descrive in modo tecnico e verificabile cosa fanno oggi le procedure del progetto, indicando scopo, input/output e dove andare nel codice per approfondire. Non riporta righe di codice, ma collega ogni procedura al file/funzione responsabile.
+## Obiettivo scientifico
+Il progetto è diviso in due moduli principali. **First‑pass** (`moduli/firstpass/`) esegue la rilevazione full‑basin: stima presenza del ciclone e centro tramite heatmap su immagini ridimensionate. **Secondo stadio (VideoMAE)** (`moduli/videomae/`) usa le ROI del first‑pass per analisi ad alta risoluzione nel tempo. 
 
-Il progetto è diviso in due moduli principali. **First‑pass** (`moduli/firstpass/`) esegue la rilevazione full‑basin: stima presenza del ciclone e centro tramite heatmap su immagini ridimensionate. **Secondo stadio (VideoMAE)** (`moduli/videomae/`) usa le ROI del first‑pass per analisi ad alta risoluzione nel tempo. Il legame tra i due moduli è il passaggio di **centro e ROI** dall’immagine full‑basin al sotto‑ritaglio ad alta risoluzione.
+Questo modulo firstpass deve produrre, per ogni evento, una sequenza temporale di ritagli (tile) centrati sul ciclone, a risoluzione originale, così da alimentare il secondo stadio ad alta risoluzione (VideoMAE)
+
+Il legame tra i due moduli è il passaggio di **centro e ROI** dall’immagine full‑basin al sotto‑ritaglio ad alta risoluzione.
 
 ## 1) Immagini operative e metadati di resize
-Le immagini operative sono **stretchate** a lato fisso (es. 224×224) senza padding. Questo rende la mappa pixel‑immagine **lineare e anisotropa** (scale_x ≠ scale_y) ma senza offset. I metadati salvati nel `letterbox_meta.csv` contengono **orig_w, orig_h, out_size, scale_x, scale_y, pad_x, pad_y**. In modalità stretch, `pad_x=pad_y=0`. Questi metadati sono generati da `scripts/make_letterboxed_copies.py` (richiamato da `make_letterboxed_copies.sh`) e sono usati per proiettare avanti/indietro le coordinate tra spazio originale e spazio ridimensionato.
+Le immagini operative sono **stretchate** a lato fisso (es. 224×224) senza padding. Questo rende la mappa pixel‑immagine **lineare e anisotropa** (scale_x ≠ scale_y). I metadati salvati nel `letterbox_meta.csv` contengono **orig_w, orig_h, out_size, scale_x, scale_y, pad_x, pad_y**. In modalità stretch, `pad_x=pad_y=0`. Questi metadati sono generati da `scripts/make_letterboxed_copies.py` e sono usati per proiettare avanti/indietro le coordinate tra spazio originale e spazio ridimensionato.
+
+Una volta ottenute le coordinate nel dominio resized, si applica la trasformazione inversa verso l’immagine originale (1290×420). In modalità stretch, l’inversa è lineare e anisotropa:
+
+x_orig = (x_resized - pad_x) / scale_x
+y_orig = (y_resized - pad_y) / scale_y
 
 **Dove approfondire:** `moduli/firstpass/scripts/make_letterboxed_copies.py`, `moduli/firstpass/src/cyclone_locator/transforms/letterbox.py`.
+
+
+
 
 ## 2) Manifest e coordinate coerenti con lo stretch
 I manifest train/val/test devono contenere `image_path`, `presence`, `cx`, `cy`, e **coordinate resized** (`x_pix_resized`, `y_pix_resized`) già coerenti con lo stretch. La conversione da `cx,cy` (spazio originale) a `x_pix_resized,y_pix_resized` avviene in `scripts/make_manifest_from_windows.py` ed è coerente con i metadati di stretch. Questo evita mismatch fra coordinate del manifest e immagini effettivamente usate durante training/visualizzazione.
 
 **Dove approfondire:** `moduli/firstpass/scripts/make_manifest_from_windows.py`, `moduli/firstpass/mini_data_input/medicanes_new_windows.csv` (origine `x_pix/y_pix`).
+
 
 ## 3) Dataset e generazione heatmap
 Il dataset principale `MedFullBasinDataset` legge i manifest e, per ogni frame, produce:
@@ -23,6 +35,9 @@ Il dataset principale `MedFullBasinDataset` legge i manifest e, per ogni frame, 
 In presenza di `x_pix_resized/y_pix_resized`, il dataset usa direttamente tali coordinate; se assenti usa `cx/cy` + metadati per proiettarle nello spazio resized. La heatmap è costruita a risoluzione ridotta (`image_size / heatmap_stride`) con sigma controllato da config.
 
 **Dove approfondire:** `moduli/firstpass/src/cyclone_locator/datasets/med_fullbasin.py`.
+
+
+
 
 ## 4) Training first‑pass
 Il training esegue:
@@ -42,16 +57,6 @@ La visualizzazione costruisce, per ciascun evento, una sequenza di frame letterb
 
 **Entry point:** `moduli/firstpass/notebooks/firstpass_videomae_roi_viz.ipynb` e helper `moduli/firstpass/notebooks/firstpass_videomae_roi_viz_utils.py`.
 
-## 7) Video batch per tutti gli eventi
-Per analisi qualitative su larga scala, esiste uno script che produce automaticamente i video evento per tutti gli split, organizzandoli in cartelle per split ed evento. L’encoding usa un ffmpeg statico per evitare dipendenze di sistema.
-
-**Entry point:** `moduli/firstpass/scripts/render_all_events.py`.
-
 ## 8) Secondo stadio (VideoMAE)
 Il modulo VideoMAE gestisce dataset e sequenze ad alta risoluzione. L’input principale è la sequenza ritagliata via ROI dal first‑pass. Il `data_manager.py` mantiene l’associazione tra sequenze, etichette e metadati temporali.
 
-**Entry point concettuale:** `moduli/videomae/dataset/data_manager.py`.
-
----
-
-Questa panoramica consente di ricostruire il flusso completo: preparazione immagini e manifest → training first‑pass → inferenza ROI → visualizzazione qualitativa → hand‑off al secondo stadio. Per ogni passaggio sono indicati i file/funzioni chiave dove approfondire.
