@@ -1342,8 +1342,6 @@ def _make_firstpass_roi_video(
                 "Rimuovi --only_video o genera prima i frame."
             )
     else:
-        if frames_dir.exists():
-            shutil.rmtree(frames_dir)
         n_frames = _render_firstpass_roi_frames(
             frames_df=frames_df,
             candidates_df=candidates_df,
