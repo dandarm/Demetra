@@ -2,6 +2,8 @@
 
 import os
 import shutil
+import subprocess
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 import csv
 import re
@@ -239,6 +241,774 @@ def create_df_unlabeled_tiles_from_metadatafiles(sorted_metadata_files, offsets_
         "tile_offset_y": 'int16',
     })
     return res
+
+
+def create_df_frames_from_metadatafiles(sorted_metadata_files):
+    """Build a frame-level dataframe from metadata (without tile offsets)."""
+    rows = []
+    for img_path, frame_dt in sorted_metadata_files:
+        if frame_dt is None:
+            continue
+        rows.append({
+            "path": img_path,
+            "datetime": frame_dt,
+        })
+
+    if len(rows) == 0:
+        return pd.DataFrame({
+            "path": pd.Series(dtype='string'),
+            "datetime": pd.Series(dtype='datetime64[ns]'),
+        })
+
+    res = pd.DataFrame(rows)
+    res = res.astype({
+        "path": 'string',
+        "datetime": 'datetime64[ns]',
+    })
+    res = res.sort_values("datetime").reset_index(drop=True)
+    return res
+
+
+def _empty_video_df():
+    return pd.DataFrame(columns=[
+        "video_id",
+        "tile_offset_x",
+        "tile_offset_y",
+        "path",
+        "label",
+        "start_time",
+        "end_time",
+        "orig_paths",
+    ])
+
+
+def create_default_unsup_tile_videos_from_metadata(
+    sorted_metadata_files,
+    tile_size=224,
+    stride_x=213,
+    stride_y=196,
+    num_frames=16,
+    return_master_df=False,
+):
+    """Create unsupervised videos using the historical fixed Mediterranean offsets."""
+    offsets_for_frame = calc_tile_offsets(tile_size=tile_size, stride_x=stride_x, stride_y=stride_y)
+    df_data_unsup = create_df_unlabeled_tiles_from_metadatafiles(sorted_metadata_files, offsets_for_frame)
+
+    gruppi_date = get_gruppi_date(df_data_unsup.copy())
+    all_videos = []
+    for df in gruppi_date:
+        df_offsets_groups = group_df_by_offsets(df)
+        df_videos = create_tile_videos(df_offsets_groups, supervised=False, num_frames=num_frames)
+        if not df_videos.empty:
+            all_videos.append(df_videos)
+
+    if len(all_videos) == 0:
+        all_df_videos = _empty_video_df()
+    else:
+        all_df_videos = pd.concat(all_videos, ignore_index=True)
+
+    if return_master_df:
+        return all_df_videos, df_data_unsup
+    return all_df_videos
+
+
+def build_temporal_windows_from_frames_df(df_frames, num_frames=16, max_gap_minutes=60):
+    """
+    Build all temporal windows with overlap (step=1 frame) from a frame dataframe.
+    """
+    if df_frames is None or df_frames.empty:
+        return pd.DataFrame(columns=["start_time", "end_time", "orig_paths"])
+
+    if num_frames <= 0:
+        raise ValueError("num_frames must be > 0")
+
+    # Keep only contiguous frame ranges, similar to the existing pipeline.
+    df_tmp = df_frames.copy().sort_values("datetime").reset_index(drop=True)
+    df_tmp["delta"] = df_tmp["datetime"].diff()
+    df_tmp["new_group"] = df_tmp["delta"] > pd.Timedelta(minutes=max_gap_minutes)
+    df_tmp["gruppo"] = df_tmp["new_group"].cumsum()
+    groups = [g for _, g in df_tmp.groupby("gruppo")]
+
+    windows = []
+    for gdf in groups:
+        gdf = gdf.sort_values("datetime").reset_index(drop=True)
+        if gdf.shape[0] < num_frames:
+            continue
+        for start_idx in range(0, gdf.shape[0] - num_frames + 1):
+            block_df = gdf.iloc[start_idx:start_idx + num_frames]
+            windows.append({
+                "start_time": block_df["datetime"].iloc[0],
+                "end_time": block_df["datetime"].iloc[-1],
+                "orig_paths": block_df["path"].tolist(),
+            })
+
+    return pd.DataFrame(windows)
+
+
+def _time_intervals_overlap(start_a, end_a, start_b, end_b):
+    return (start_a <= end_b) and (start_b <= end_a)
+
+
+def _tile_iou(x1, y1, size1, x2, y2, size2):
+    ax2 = x1 + size1
+    ay2 = y1 + size1
+    bx2 = x2 + size2
+    by2 = y2 + size2
+
+    inter_w = max(0, min(ax2, bx2) - max(x1, x2))
+    inter_h = max(0, min(ay2, by2) - max(y1, y2))
+    inter = inter_w * inter_h
+    if inter == 0:
+        return 0.0
+    area_a = size1 * size1
+    area_b = size2 * size2
+    union = area_a + area_b - inter
+    if union <= 0:
+        return 0.0
+    return float(inter / union)
+
+
+def _coverage_score(coverage_map, x, y, tile_size):
+    # 5-point probe: corners + center.
+    x2 = x + tile_size - 1
+    y2 = y + tile_size - 1
+    xc = x + tile_size // 2
+    yc = y + tile_size // 2
+    pts = [(x, y), (x2, y), (x, y2), (x2, y2), (xc, yc)]
+    vals = [coverage_map[py, px] for (px, py) in pts]
+    return float(np.mean(vals))
+
+
+def _edge_preference_score(x, y, max_x, max_y):
+    # 1 near border, 0 near center.
+    d = min(x, max_x - x, y, max_y - y)
+    denom = max(1, max(max_x, max_y))
+    d_norm = d / denom
+    return float(1.0 - d_norm)
+
+
+def _sample_spatial_offset_with_constraints(
+    rng,
+    active_events,
+    coverage_map,
+    max_x,
+    max_y,
+    tile_size,
+    max_iou_active=0.2,
+    sampling_attempts=64,
+    apply_overlap_constraint=True,
+    apply_coverage_bias=True,
+    coverage_weight=1.0,
+    border_boost=0.25,
+):
+    best_feasible = None
+    best_any = None
+
+    for _ in range(int(max(1, sampling_attempts))):
+        x = int(rng.integers(0, max_x + 1))
+        y = int(rng.integers(0, max_y + 1))
+
+        max_iou = 0.0
+        for ev in active_events:
+            iou = _tile_iou(x, y, tile_size, ev["x"], ev["y"], tile_size)
+            if iou > max_iou:
+                max_iou = iou
+
+        score = 0.0
+        if apply_coverage_bias:
+            score += float(coverage_weight) * _coverage_score(coverage_map, x, y, tile_size)
+            score -= float(border_boost) * _edge_preference_score(x, y, max_x, max_y)
+
+        candidate = (max_iou, score, x, y)
+        if (best_any is None) or (candidate[:2] < best_any[:2]):
+            best_any = candidate
+
+        feasible = (not apply_overlap_constraint) or (max_iou <= float(max_iou_active))
+        if feasible and ((best_feasible is None) or (candidate[1] < best_feasible[1])):
+            best_feasible = candidate
+
+    chosen = best_feasible if best_feasible is not None else best_any
+    if chosen is None:
+        return 0, 0
+    return int(chosen[2]), int(chosen[3])
+
+
+def create_random_unsup_tile_videos_from_metadata(
+    sorted_metadata_files,
+    image_width=1290,
+    image_height=420,
+    tile_size=224,
+    num_frames=16,
+    max_gap_minutes=60,
+    num_random_offsets_per_window=12,
+    random_seed=None,
+    max_videos=None,
+    shuffle_windows=True,
+    asynchronous_temporal_sampling=True,
+    temporal_start_jitter_windows=16,
+    min_temporal_gap_windows=0,
+    max_temporal_gap_windows=0,
+    apply_overlap_constraint=True,
+    max_iou_active=0.2,
+    apply_coverage_bias=True,
+    coverage_weight=1.0,
+    border_boost=0.25,
+    sampling_attempts=64,
+):
+    """
+    Build unsupervised videos with random spatial offsets and variable temporal starts.
+
+    - Temporal starts are sampled from all valid overlapping windows (step=1 frame).
+    - By default, temporal sampling is asynchronous across the random tile streams.
+    - Spatial offsets can be constrained by temporal-overlap IoU and historical coverage.
+    - Optional max_videos caps total generated videos.
+    """
+    if num_random_offsets_per_window <= 0:
+        raise ValueError("num_random_offsets_per_window must be >= 1")
+
+    if image_width < tile_size or image_height < tile_size:
+        raise ValueError(
+            f"tile_size={tile_size} does not fit image dimensions {image_width}x{image_height}"
+        )
+    if max_temporal_gap_windows < min_temporal_gap_windows:
+        raise ValueError("max_temporal_gap_windows must be >= min_temporal_gap_windows")
+
+    rng = np.random.default_rng(random_seed)
+    df_frames = create_df_frames_from_metadatafiles(sorted_metadata_files)
+    windows_df = build_temporal_windows_from_frames_df(
+        df_frames,
+        num_frames=num_frames,
+        max_gap_minutes=max_gap_minutes,
+    )
+    if windows_df.empty:
+        return _empty_video_df()
+
+    if shuffle_windows:
+        perm = rng.permutation(len(windows_df))
+        windows_df = windows_df.iloc[perm].reset_index(drop=True)
+
+    max_x = image_width - tile_size
+    max_y = image_height - tile_size
+
+    # 1) Build temporal events first (without spatial offsets).
+    planned = []
+    video_id = 0
+    if asynchronous_temporal_sampling:
+        n_windows = len(windows_df)
+        jitter_max = max(0, int(temporal_start_jitter_windows))
+
+        for stream_id in range(int(num_random_offsets_per_window)):
+            if max_videos is not None and video_id >= int(max_videos):
+                break
+
+            if n_windows == 0:
+                break
+            if jitter_max > 0:
+                start_idx = int(rng.integers(0, min(jitter_max, n_windows - 1) + 1))
+            else:
+                start_idx = 0
+            idx = start_idx
+
+            while idx < n_windows:
+                if max_videos is not None and video_id >= int(max_videos):
+                    break
+
+                row = windows_df.iloc[idx]
+                planned.append({
+                    "video_id": video_id,
+                    "stream_id": int(stream_id),
+                    "label": None,
+                    "start_time": row.start_time,
+                    "end_time": row.end_time,
+                    "orig_paths": row.orig_paths,
+                })
+                video_id += 1
+
+                extra_gap = int(
+                    rng.integers(
+                        int(min_temporal_gap_windows),
+                        int(max_temporal_gap_windows) + 1
+                    )
+                )
+                idx += 1 + extra_gap
+    else:
+        for row in windows_df.itertuples(index=False):
+            repeats = int(num_random_offsets_per_window)
+            if max_videos is not None:
+                remaining = int(max_videos) - video_id
+                if remaining <= 0:
+                    break
+                repeats = min(repeats, remaining)
+
+            for _ in range(repeats):
+                planned.append({
+                    "video_id": video_id,
+                    "stream_id": -1,
+                    "label": None,
+                    "start_time": row.start_time,
+                    "end_time": row.end_time,
+                    "orig_paths": row.orig_paths,
+                })
+                video_id += 1
+
+    if len(planned) == 0:
+        return _empty_video_df()
+
+    # 2) Assign spatial offsets with both overlap constraint and coverage history.
+    planned_df = pd.DataFrame(planned).sort_values("start_time").reset_index(drop=True)
+    coverage_map = np.zeros((int(image_height), int(image_width)), dtype=np.float32)
+    active_events = []
+    results = []
+    used_paths = set()
+
+    for i, row in planned_df.iterrows():
+        start_t = row["start_time"]
+        end_t = row["end_time"]
+
+        # Keep only temporal-overlapping events in active set.
+        active_events = [
+            ev for ev in active_events
+            if _time_intervals_overlap(start_t, end_t, ev["start_time"], ev["end_time"])
+        ]
+
+        off_x, off_y = _sample_spatial_offset_with_constraints(
+            rng=rng,
+            active_events=active_events,
+            coverage_map=coverage_map,
+            max_x=max_x,
+            max_y=max_y,
+            tile_size=tile_size,
+            max_iou_active=max_iou_active,
+            sampling_attempts=sampling_attempts,
+            apply_overlap_constraint=apply_overlap_constraint,
+            apply_coverage_bias=apply_coverage_bias,
+            coverage_weight=coverage_weight,
+            border_boost=border_boost,
+        )
+
+        coverage_map[off_y:off_y + tile_size, off_x:off_x + tile_size] += 1.0
+        active_events.append({
+            "start_time": start_t,
+            "end_time": end_t,
+            "x": off_x,
+            "y": off_y,
+        })
+
+        date_str = end_t.strftime("%d-%m-%Y_%H%M")
+        path_name = f"{date_str}_{off_x}_{off_y}"
+        if path_name in used_paths:
+            path_name = f"{path_name}_v{i:07d}"
+        used_paths.add(path_name)
+
+        results.append({
+            "video_id": int(row["video_id"]),
+            "tile_offset_x": int(off_x),
+            "tile_offset_y": int(off_y),
+            "path": path_name,
+            "label": None,
+            "start_time": start_t,
+            "end_time": end_t,
+            "orig_paths": row["orig_paths"],
+        })
+
+    if len(results) == 0:
+        return _empty_video_df()
+    return pd.DataFrame(results).sort_values("start_time").reset_index(drop=True)
+
+
+def estimate_random_unsup_video_count_from_metadata(
+    sorted_metadata_files,
+    num_frames=16,
+    max_gap_minutes=60,
+    num_random_offsets_per_window=12,
+    max_videos=None,
+    random_seed=None,
+    asynchronous_temporal_sampling=True,
+    temporal_start_jitter_windows=16,
+    min_temporal_gap_windows=0,
+    max_temporal_gap_windows=0,
+    apply_overlap_constraint=True,
+    max_iou_active=0.2,
+    apply_coverage_bias=True,
+    coverage_weight=1.0,
+    border_boost=0.25,
+    sampling_attempts=64,
+):
+    """
+    Dry-run estimate for random unsupervised dataset creation.
+    Returns a dict with number of frames, temporal windows and output videos.
+    """
+    df_frames = create_df_frames_from_metadatafiles(sorted_metadata_files)
+    windows_df = build_temporal_windows_from_frames_df(
+        df_frames,
+        num_frames=num_frames,
+        max_gap_minutes=max_gap_minutes,
+    )
+    if windows_df.empty:
+        total = 0
+    elif asynchronous_temporal_sampling:
+        # Simulate stream progression (without creating full rows) for a faithful count.
+        rng = np.random.default_rng(random_seed)
+        n_windows = len(windows_df)
+        jitter_max = max(0, int(temporal_start_jitter_windows))
+        total = 0
+        for _ in range(int(num_random_offsets_per_window)):
+            if max_videos is not None and total >= int(max_videos):
+                break
+            if jitter_max > 0:
+                idx = int(rng.integers(0, min(jitter_max, n_windows - 1) + 1))
+            else:
+                idx = 0
+            while idx < n_windows:
+                total += 1
+                if max_videos is not None and total >= int(max_videos):
+                    break
+                extra_gap = int(
+                    rng.integers(
+                        int(min_temporal_gap_windows),
+                        int(max_temporal_gap_windows) + 1
+                    )
+                )
+                idx += 1 + extra_gap
+    else:
+        total = len(windows_df) * int(num_random_offsets_per_window)
+        if max_videos is not None:
+            total = min(total, int(max_videos))
+
+    return {
+        "num_frames": int(df_frames.shape[0]),
+        "num_temporal_windows": int(windows_df.shape[0]),
+        "num_videos": int(total),
+    }
+
+
+def estimate_default_unsup_video_count_from_metadata(
+    sorted_metadata_files,
+    tile_size=224,
+    stride_x=213,
+    stride_y=196,
+    num_frames=16,
+    max_gap_minutes=60,
+):
+    """
+    Dry-run estimate for the historical fixed-offset unsupervised pipeline.
+    """
+    df_frames = create_df_frames_from_metadatafiles(sorted_metadata_files)
+    if df_frames.empty:
+        return {
+            "num_frames": 0,
+            "num_offsets": 0,
+            "num_temporal_groups": 0,
+            "num_videos": 0,
+        }
+
+    df_tmp = df_frames.copy().sort_values("datetime").reset_index(drop=True)
+    df_tmp["delta"] = df_tmp["datetime"].diff()
+    df_tmp["new_group"] = df_tmp["delta"] > pd.Timedelta(minutes=max_gap_minutes)
+    df_tmp["gruppo"] = df_tmp["new_group"].cumsum()
+    groups = [g for _, g in df_tmp.groupby("gruppo")]
+
+    n_offsets = len(
+        calc_tile_offsets(
+            tile_size=tile_size,
+            stride_x=stride_x,
+            stride_y=stride_y,
+        )
+    )
+    n_videos = sum((len(g) // int(num_frames)) * n_offsets for g in groups)
+
+    return {
+        "num_frames": int(df_frames.shape[0]),
+        "num_offsets": int(n_offsets),
+        "num_temporal_groups": int(len(groups)),
+        "num_videos": int(n_videos),
+    }
+
+
+def simulate_random_tile_events_for_visualization(
+    num_output_frames=100,
+    num_tiles=12,
+    clip_len=16,
+    image_width=1290,
+    image_height=420,
+    tile_size=224,
+    random_seed=None,
+    min_gap_frames=0,
+    max_gap_frames=16,
+    apply_overlap_constraint=True,
+    max_iou_active=0.2,
+    apply_coverage_bias=True,
+    coverage_weight=1.0,
+    border_boost=0.25,
+    sampling_attempts=64,
+):
+    """
+    Create asynchronous random tile events for visualization.
+    Each event lasts `clip_len` frames, then disappears.
+    """
+    if num_output_frames <= 0:
+        raise ValueError("num_output_frames must be > 0")
+    if num_tiles <= 0:
+        raise ValueError("num_tiles must be > 0")
+    if clip_len <= 0:
+        raise ValueError("clip_len must be > 0")
+    if image_width < tile_size or image_height < tile_size:
+        raise ValueError("tile_size does not fit image dimensions")
+    if max_gap_frames < min_gap_frames:
+        raise ValueError("max_gap_frames must be >= min_gap_frames")
+
+    rng = np.random.default_rng(random_seed)
+    max_x = image_width - tile_size
+    max_y = image_height - tile_size
+
+    planned = []
+    for stream_id in range(int(num_tiles)):
+        start = int(rng.integers(0, clip_len))
+        while start < num_output_frames:
+            end = min(start + int(clip_len), int(num_output_frames))
+            planned.append({
+                "stream_id": int(stream_id),
+                "start_frame": int(start),
+                "end_frame": int(end),
+            })
+            gap = int(rng.integers(int(min_gap_frames), int(max_gap_frames) + 1))
+            start = int(end + gap)
+
+    if len(planned) == 0:
+        return pd.DataFrame(columns=[
+            "stream_id",
+            "start_frame",
+            "end_frame",
+            "tile_offset_x",
+            "tile_offset_y",
+        ])
+
+    planned_df = pd.DataFrame(planned).sort_values(["start_frame", "stream_id"]).reset_index(drop=True)
+    coverage_map = np.zeros((int(image_height), int(image_width)), dtype=np.float32)
+    active_events = []
+    events = []
+
+    for _, row in planned_df.iterrows():
+        start_f = int(row["start_frame"])
+        end_f = int(row["end_frame"])
+
+        active_events = [
+            ev for ev in active_events
+            if _time_intervals_overlap(start_f, end_f, ev["start_frame"], ev["end_frame"])
+        ]
+
+        off_x, off_y = _sample_spatial_offset_with_constraints(
+            rng=rng,
+            active_events=[{"x": ev["x"], "y": ev["y"]} for ev in active_events],
+            coverage_map=coverage_map,
+            max_x=max_x,
+            max_y=max_y,
+            tile_size=tile_size,
+            max_iou_active=max_iou_active,
+            sampling_attempts=sampling_attempts,
+            apply_overlap_constraint=apply_overlap_constraint,
+            apply_coverage_bias=apply_coverage_bias,
+            coverage_weight=coverage_weight,
+            border_boost=border_boost,
+        )
+
+        coverage_map[off_y:off_y + tile_size, off_x:off_x + tile_size] += 1.0
+        active_events.append({
+            "start_frame": start_f,
+            "end_frame": end_f,
+            "x": off_x,
+            "y": off_y,
+        })
+
+        events.append({
+            "stream_id": int(row["stream_id"]),
+            "start_frame": start_f,
+            "end_frame": end_f,
+            "tile_offset_x": int(off_x),
+            "tile_offset_y": int(off_y),
+        })
+
+    if len(events) == 0:
+        return pd.DataFrame(columns=[
+            "stream_id",
+            "start_frame",
+            "end_frame",
+            "tile_offset_x",
+            "tile_offset_y",
+        ])
+    return pd.DataFrame(events).sort_values(["start_frame", "stream_id"]).reset_index(drop=True)
+
+
+def render_overlay_video_from_frames(
+    frame_paths,
+    events_df,
+    output_video_path,
+    tile_size=224,
+    alpha=0.2,
+    color_bgr=(0, 0, 255),
+    fps=6,
+    prefer_h264=True,
+):
+    """
+    Render an MP4 by overlaying active tile boxes on the given frame sequence.
+    """
+    frame_paths = list(frame_paths)
+    if len(frame_paths) == 0:
+        raise ValueError("frame_paths is empty")
+
+    first = cv2.imread(str(frame_paths[0]))
+    if first is None:
+        raise ValueError(f"Cannot read first frame: {frame_paths[0]}")
+    h, w = first.shape[:2]
+
+    output_video_path = Path(output_video_path)
+    output_video_path.parent.mkdir(parents=True, exist_ok=True)
+    tmp_video_path = output_video_path
+    if prefer_h264:
+        tmp_video_path = output_video_path.with_name(output_video_path.stem + "_tmpmp4v.mp4")
+    writer = cv2.VideoWriter(
+        str(tmp_video_path),
+        cv2.VideoWriter_fourcc(*"mp4v"),
+        float(fps),
+        (int(w), int(h)),
+    )
+    if not writer.isOpened():
+        raise RuntimeError(f"Cannot open video writer for {tmp_video_path}")
+
+    events = events_df.copy() if events_df is not None else pd.DataFrame([])
+    required = {"start_frame", "end_frame", "tile_offset_x", "tile_offset_y"}
+    if not events.empty and not required.issubset(events.columns):
+        raise KeyError(f"events_df missing columns: {required - set(events.columns)}")
+
+    try:
+        for i, frame_path in enumerate(frame_paths):
+            frame = cv2.imread(str(frame_path))
+            if frame is None:
+                continue
+
+            overlay = frame.copy()
+            if not events.empty:
+                active = events[
+                    (events["start_frame"] <= i) &
+                    (events["end_frame"] > i)
+                ]
+                for row in active.itertuples(index=False):
+                    x1 = int(row.tile_offset_x)
+                    y1 = int(row.tile_offset_y)
+                    x2 = min(x1 + int(tile_size), w - 1)
+                    y2 = min(y1 + int(tile_size), h - 1)
+                    cv2.rectangle(
+                        overlay,
+                        (x1, y1),
+                        (x2, y2),
+                        color_bgr,
+                        thickness=-1,
+                    )
+
+            out = cv2.addWeighted(overlay, float(alpha), frame, 1.0 - float(alpha), 0.0)
+            writer.write(out)
+    finally:
+        writer.release()
+
+    if prefer_h264:
+        ffmpeg_bin = shutil.which("ffmpeg")
+        if ffmpeg_bin is not None:
+            cmd = [
+                ffmpeg_bin,
+                "-y",
+                "-loglevel",
+                "error",
+                "-i",
+                str(tmp_video_path),
+                "-c:v",
+                "libx264",
+                "-pix_fmt",
+                "yuv420p",
+                str(output_video_path),
+            ]
+            try:
+                subprocess.run(cmd, check=True)
+                if tmp_video_path.exists() and tmp_video_path != output_video_path:
+                    tmp_video_path.unlink(missing_ok=True)
+            except Exception:
+                # Fallback to the original mp4v file if ffmpeg transcode fails.
+                if tmp_video_path != output_video_path:
+                    shutil.move(str(tmp_video_path), str(output_video_path))
+        else:
+            if tmp_video_path != output_video_path:
+                shutil.move(str(tmp_video_path), str(output_video_path))
+
+    return output_video_path
+
+
+def render_overlay_gif_from_frames(
+    frame_paths,
+    events_df,
+    output_gif_path,
+    tile_size=224,
+    alpha=0.2,
+    color_bgr=(0, 0, 255),
+    fps=6,
+):
+    """
+    Render a GIF by overlaying active tile boxes on the given frame sequence.
+    Useful fallback for notebook playback when local MP4 codecs are not supported.
+    """
+    frame_paths = list(frame_paths)
+    if len(frame_paths) == 0:
+        raise ValueError("frame_paths is empty")
+
+    first = cv2.imread(str(frame_paths[0]))
+    if first is None:
+        raise ValueError(f"Cannot read first frame: {frame_paths[0]}")
+    h, w = first.shape[:2]
+
+    events = events_df.copy() if events_df is not None else pd.DataFrame([])
+    required = {"start_frame", "end_frame", "tile_offset_x", "tile_offset_y"}
+    if not events.empty and not required.issubset(events.columns):
+        raise KeyError(f"events_df missing columns: {required - set(events.columns)}")
+
+    pil_frames = []
+    for i, frame_path in enumerate(frame_paths):
+        frame = cv2.imread(str(frame_path))
+        if frame is None:
+            continue
+        overlay = frame.copy()
+        if not events.empty:
+            active = events[
+                (events["start_frame"] <= i) &
+                (events["end_frame"] > i)
+            ]
+            for row in active.itertuples(index=False):
+                x1 = int(row.tile_offset_x)
+                y1 = int(row.tile_offset_y)
+                x2 = min(x1 + int(tile_size), w - 1)
+                y2 = min(y1 + int(tile_size), h - 1)
+                cv2.rectangle(
+                    overlay,
+                    (x1, y1),
+                    (x2, y2),
+                    color_bgr,
+                    thickness=-1,
+                )
+        out = cv2.addWeighted(overlay, float(alpha), frame, 1.0 - float(alpha), 0.0)
+        out_rgb = cv2.cvtColor(out, cv2.COLOR_BGR2RGB)
+        pil_frames.append(Image.fromarray(out_rgb))
+
+    if len(pil_frames) == 0:
+        raise RuntimeError("No valid frames rendered for GIF output")
+
+    output_gif_path = Path(output_gif_path)
+    output_gif_path.parent.mkdir(parents=True, exist_ok=True)
+    duration_ms = max(1, int(round(1000 / float(fps))))
+    pil_frames[0].save(
+        str(output_gif_path),
+        save_all=True,
+        append_images=pil_frames[1:],
+        duration=duration_ms,
+        loop=0,
+    )
+    return output_gif_path
 
 
 
@@ -786,7 +1556,38 @@ def create_tile_videos_last_frame_integer_hour(grouped, tile_size=224, supervise
 
 
 
-def create_and_save_tile_from_complete_df(df, output_dir, overwrite=False):
+def _save_one_video_tile_folder(
+    output_dir,
+    path_name,
+    offset_x,
+    offset_y,
+    orig_paths,
+    overwrite=False,
+    tile_size=224,
+):
+    subfolder = Path(output_dir) / str(path_name)
+    folder_created = 0
+    if not subfolder.exists():
+        subfolder.mkdir(parents=True, exist_ok=True)
+        folder_created = 1
+    else:
+        subfolder.mkdir(parents=True, exist_ok=True)
+
+    salvati_ora = 0
+    gia_salvati = 0
+    totali = 0
+    for k, orig_p in enumerate(orig_paths):
+        new_name = subfolder / f"img_{k+1:05d}.png"
+        totali += 1
+        if (not os.path.isfile(new_name)) or overwrite:
+            save_single_tile(orig_p, new_name, int(offset_x), int(offset_y), tile_size=tile_size)
+            salvati_ora += 1
+        else:
+            gia_salvati += 1
+    return salvati_ora, gia_salvati, totali, folder_created
+
+
+def create_and_save_tile_from_complete_df(df, output_dir, overwrite=False, num_workers=1):
     num_video = df.shape[0]
     if num_video > 0:
         print(f"\nCreazione delle folder per i {num_video} video...", end='\t')
@@ -795,34 +1596,53 @@ def create_and_save_tile_from_complete_df(df, output_dir, overwrite=False):
         gia_salvati = 0
         totali = 0
         folders_created = 0
+        videos_done = 0
 
-        for idx, row in df.iterrows():
-            # crea la cartella di destinazione
-            path_name = row.path
-            subfolder = Path(output_dir) / path_name
-            #print(subfolder)
-            # Conta solo le nuove cartelle realmente create
-            if not subfolder.exists():
-                subfolder.mkdir(parents=True, exist_ok=True)
-                folders_created += 1
-                if folders_created % 50 == 0:
-                    print(folders_created, end=' ', flush=True)
-            else:
-                subfolder.mkdir(parents=True, exist_ok=True)
-
-            offset_x, offset_y = row.tile_offset_x, row.tile_offset_y
-            for k, orig_p in enumerate(row.orig_paths):
-                new_name = subfolder / f"img_{k+1:05d}.png"
-                totali += 1
-                #print(f"new_name {new_name}", end='\t')
-                #print(f"è un file? {os.path.isfile(new_name)}")
-                if not os.path.isfile(new_name) or overwrite:
-                    #print(f"{new_name} lo sto risalvando?!")
-                    save_single_tile(orig_p, new_name, offset_x, offset_y, tile_size=224)
-                    salvati_ora += 1
-                else:
-                    #print(f"non c'è stato bisogno di risalvarlo")
-                    gia_salvati += 1
+        use_parallel = int(num_workers) > 1
+        if not use_parallel:
+            for _, row in df.iterrows():
+                s, g, t, fc = _save_one_video_tile_folder(
+                    output_dir=output_dir,
+                    path_name=row.path,
+                    offset_x=row.tile_offset_x,
+                    offset_y=row.tile_offset_y,
+                    orig_paths=row.orig_paths,
+                    overwrite=overwrite,
+                    tile_size=224,
+                )
+                salvati_ora += s
+                gia_salvati += g
+                totali += t
+                folders_created += fc
+                videos_done += 1
+                if videos_done % 100 == 0 or videos_done == num_video:
+                    print(f"[video {videos_done}/{num_video}]", end=' ', flush=True)
+        else:
+            max_workers = int(max(1, num_workers))
+            futures = []
+            with ThreadPoolExecutor(max_workers=max_workers) as ex:
+                for _, row in df.iterrows():
+                    futures.append(
+                        ex.submit(
+                            _save_one_video_tile_folder,
+                            output_dir,
+                            row.path,
+                            row.tile_offset_x,
+                            row.tile_offset_y,
+                            row.orig_paths,
+                            overwrite,
+                            224,
+                        )
+                    )
+                for fut in as_completed(futures):
+                    s, g, t, fc = fut.result()
+                    salvati_ora += s
+                    gia_salvati += g
+                    totali += t
+                    folders_created += fc
+                    videos_done += 1
+                    if videos_done % 100 == 0 or videos_done == num_video:
+                        print(f"[video {videos_done}/{num_video}]", end=' ', flush=True)
 
         print()  # newline dopo il progresso in tempo reale
         print(f"Salvati {salvati_ora} file - Erano già presenti {gia_salvati} file - File totali {totali}")
@@ -1088,42 +1908,96 @@ def _old_label_subfolders_with_cyclones_df(
 
 
 
-def make_unsup_dataset(input_dir, output_dir):
+def make_unsup_dataset(
+    input_dir,
+    output_dir,
+    random_offsets=False,
+    dry_run=False,
+    save_example_tile=False,
+    random_seed=None,
+    num_frames=16,
+    max_gap_minutes=60,
+    num_random_offsets_per_window=12,
+    asynchronous_temporal_sampling=True,
+    temporal_start_jitter_windows=16,
+    min_temporal_gap_windows=0,
+    max_temporal_gap_windows=0,
+    apply_overlap_constraint=True,
+    max_iou_active=0.2,
+    apply_coverage_bias=True,
+    coverage_weight=1.0,
+    border_boost=0.25,
+    sampling_attempts=64,
+    save_num_workers=1,
+    max_videos=None,
+    tile_size=224,
+    image_width=1290,
+    image_height=420,
+    stride_x=213,
+    stride_y=196,
+):
 
     #input_dir = "../fromgcloud"
-    #output_dir = "../airmassRGB/supervised/" 
-    #unsup_output_dir = "../airmassRGB/unsupervised/" 
+    #output_dir = "../airmassRGB/supervised/"
+    #unsup_output_dir = "../airmassRGB/unsupervised/"
 
-    #expanded_path = os.path.expandvars(path)
-
-    #creo il file all_data_unsup.csv
     sorted_metadata_files = load_all_images(input_dir)
-    offsets_for_frame = calc_tile_offsets(stride_x=213, stride_y=196) # provo con 213 per coprire anche l'area più a destra
-    df_data_unsup = create_df_unlabeled_tiles_from_metadatafiles(sorted_metadata_files, offsets_for_frame)
-    df_data_unsup.to_csv("all_data_unsup.csv")
-     
 
-    nome_file = "all_data_unsup.csv"
-    df_data = pd.read_csv(nome_file, dtype={
-            "path": 'string',
-            "tile_offset_x": 'int16',
-            "tile_offset_y": 'int16',
-        }, parse_dates=['datetime'])
-    df_data.drop(columns="Unnamed: 0", inplace=True)
+    if random_offsets:
+        all_df_videos = create_random_unsup_tile_videos_from_metadata(
+            sorted_metadata_files=sorted_metadata_files,
+            image_width=image_width,
+            image_height=image_height,
+            tile_size=tile_size,
+            num_frames=num_frames,
+            max_gap_minutes=max_gap_minutes,
+            num_random_offsets_per_window=num_random_offsets_per_window,
+            asynchronous_temporal_sampling=asynchronous_temporal_sampling,
+            temporal_start_jitter_windows=temporal_start_jitter_windows,
+            min_temporal_gap_windows=min_temporal_gap_windows,
+            max_temporal_gap_windows=max_temporal_gap_windows,
+            apply_overlap_constraint=apply_overlap_constraint,
+            max_iou_active=max_iou_active,
+            apply_coverage_bias=apply_coverage_bias,
+            coverage_weight=coverage_weight,
+            border_boost=border_boost,
+            sampling_attempts=sampling_attempts,
+            random_seed=random_seed,
+            max_videos=max_videos,
+        )
+    else:
+        # storico: mantiene la griglia di offset "Mediterraneo" originale
+        all_df_videos, df_data_unsup = create_default_unsup_tile_videos_from_metadata(
+            sorted_metadata_files=sorted_metadata_files,
+            tile_size=tile_size,
+            stride_x=stride_x,
+            stride_y=stride_y,
+            num_frames=num_frames,
+            return_master_df=True,
+        )
+        df_data_unsup.to_csv("all_data_unsup.csv", index=False)
 
-    #df_data = df_data[:1000]
+    print(f"Video unsupervised generati: {all_df_videos.shape[0]}")
+    if all_df_videos.empty:
+        return all_df_videos
 
-    gruppi_date = get_gruppi_date(df_data)
-    all_videos = []
-    for df in gruppi_date:
-        df_offsets_groups = group_df_by_offsets(df)
-        df_videos = create_tile_videos(df_offsets_groups, supervised=False)
-        all_videos.append(df_videos)
-        create_and_save_tile_from_complete_df(df_videos, output_dir)
-    
-    all_df_videos = pd.concat(all_videos)
-    df_dataset_csv_unsup = create_final_df_csv(all_df_videos, output_dir)
+    if dry_run:
+        print("DRY RUN attivo: nessun salvataggio massivo delle videotile.")
+        if save_example_tile:
+            print("Salvataggio di una sola videotile di esempio...")
+            create_and_save_tile_from_complete_df(all_df_videos.head(1), output_dir, num_workers=save_num_workers)
+        return all_df_videos
+
+    if save_example_tile:
+        print("save_example_tile=True ma dry_run=False: salvo comunque l'intero dataset.")
+
+    create_and_save_tile_from_complete_df(all_df_videos, output_dir, num_workers=save_num_workers)
+    output_dir_csv = str(output_dir)
+    if not output_dir_csv.endswith(os.sep):
+        output_dir_csv = output_dir_csv + os.sep
+    df_dataset_csv_unsup = create_final_df_csv(all_df_videos, output_dir_csv)
     df_dataset_csv_unsup.drop(columns='label').to_csv("./train_UNsupervised.csv", index=False)
+    return all_df_videos
 
 
 def make_sup_dataset(input_dir, output_dir):
