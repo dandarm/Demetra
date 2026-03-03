@@ -269,7 +269,33 @@ class HybridVideoMAE(torch.utils.data.Dataset):
         tile_h = 224
 
         df = pd.read_csv(self.file_path)
-        df[['x_off', 'y_off']] = df['path'].str.split('_').str[-2:].apply(pd.Series).astype(int)
+
+        required_cols = {"path", "start", "end"}
+        missing = required_cols - set(df.columns)
+        if missing:
+            raise RuntimeError(
+                f"CSV {self.file_path} missing required columns: {sorted(missing)}"
+            )
+
+        if {"x_off", "y_off"}.issubset(df.columns):
+            # Preferred path for pre-cropped tile datasets: explicit offsets in CSV.
+            df["x_off"] = pd.to_numeric(df["x_off"], errors="coerce").fillna(0).astype(int)
+            df["y_off"] = pd.to_numeric(df["y_off"], errors="coerce").fillna(0).astype(int)
+        else:
+            # Backward compatibility: infer offsets from folder name suffix "..._<x>_<y>".
+            # Also supports optional duplicate suffix "..._<x>_<y>_v0000001".
+            offsets = df["path"].astype(str).str.extract(
+                r"_(?P<x_off>-?\d+)_(?P<y_off>-?\d+)(?:_v\d+)?$"
+            )
+            if offsets["x_off"].isna().any() or offsets["y_off"].isna().any():
+                bad_rows = df.loc[offsets["x_off"].isna() | offsets["y_off"].isna(), "path"].head(5).tolist()
+                raise RuntimeError(
+                    "Unable to infer x_off/y_off from path for some rows. "
+                    "Either ensure path ends with '_<x>_<y>' or provide x_off/y_off columns. "
+                    f"Examples: {bad_rows}"
+                )
+            df["x_off"] = offsets["x_off"].astype(int)
+            df["y_off"] = offsets["y_off"].astype(int)
 
         # clips = []
         # with open(file_path) as split_f:
