@@ -93,6 +93,7 @@ def prepare_args(machine=None):
         'seed': 0,
         'resume': '',
         'auto_resume': True,
+        'load_for_test_mode': False,
         'save_ckpt': True,
         'start_epoch': 0,
         'resume_checkpoint': '',
@@ -116,8 +117,8 @@ def prepare_args(machine=None):
         'pretrained': True,  # Abilita il caricamento del checkpoint
         'finetune': './vit_g_hybrid_pt_1200e.pth',
         'init_ckpt': './vit_g_hybrid_pt_1200e.pth',
-        'data_path': './UNtrain.csv',  #train_UNsupervised.csv',
-        'test_path': './UNtest.csv',
+        'train_path': './UNtrain_random_tiles.csv',
+        'test_path': './UNtest_random_tiles.csv',
         'log_dir': './output',
         'output_dir': './output',
         'data_set': 'medicanes',
@@ -125,7 +126,7 @@ def prepare_args(machine=None):
         'mask_ratio': 0.75,
         'decoder_mask_type': 'run_cell',
         'decoder_mask_ratio': 0.5,
-        'batch_size': 6,
+        'batch_size': 24,
         'num_sample': 1,
         'num_frames': 16,
         'sampling_rate': 1,  # voglio tutti i frame temporali
@@ -134,7 +135,7 @@ def prepare_args(machine=None):
         'lr': 1e-3,
         'opt_betas': [0.9, 0.95],
         'warmup_epochs': 10,
-        'epochs': 150,
+        'epochs': 500,
         'save_ckpt_freq': 20,
         'decoder_depth': 4,
         'testing_epochs': 5

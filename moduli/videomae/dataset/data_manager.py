@@ -105,18 +105,25 @@ class DataManager():
     def create_specialization_dataloader(self, args):
         self.dataset = self.get_specialization_dataset(args)
         sampler = self.get_dist_sampler()
+        shuffle = self.is_train if sampler is None else False
+        drop_last = self.is_train
         print(f"Batch_size: {args.batch_size}")
         self.data_loader = DataLoader(self.dataset,
             batch_size=args.batch_size,
-            shuffle=self.is_train,  # se è training -> shuffle , altrimenti no
+            shuffle=shuffle,
             num_workers=args.num_workers,
             pin_memory=args.pin_mem,
-            drop_last=True,
+            drop_last=drop_last,
             collate_fn=self.collate_func,
             worker_init_fn=utils.seed_worker,
             persistent_workers=True,
             sampler=sampler,
         )
+        if len(self.data_loader) == 0:
+            print(
+                f"[WARN] Specialization DataLoader vuoto (is_train={self.is_train}, "
+                f"dataset_len={len(self.dataset)}, batch_size={args.batch_size}, drop_last={drop_last})."
+            )
 
     def get_dist_sampler(self):
         print(f"Creo il DistributedSampler con world_size {self.world_size} e rank {self.rank}")

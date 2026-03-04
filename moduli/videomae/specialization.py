@@ -2,6 +2,7 @@ import numpy as np
 import os
 import datetime
 import time
+import argparse
 from PIL import Image
 import json
 import torch
@@ -19,7 +20,7 @@ from optim_factory import create_optimizer
 from utils import get_model
 from engine_for_pretraining import train_one_epoch, test
 from arguments import prepare_args, Args  # NON TOGLIERE: serve a torch.load per caricare il mio modello addestrato
-from model_analysis import get_dataloader, get_dataset_dataloader
+from dataset.data_manager import DataManager
 
 
 utils.suppress_transformers_pytree_warning()
@@ -28,6 +29,12 @@ utils.suppress_transformers_pytree_warning()
 
 def launch_specialization_training(terminal_args):
     args = prepare_args(machine=terminal_args.on)
+    # Backward compatibility: historical pretraining config used `data_path`
+    # for train CSV, while DataManager expects `train_path`.
+    if not getattr(args, "train_path", None):
+        args.train_path = args.data_path
+    if not getattr(args, "test_path", None):
+        args.test_path = args.data_path
     
 
     #utils.init_distributed_mode(args)
@@ -45,13 +52,18 @@ def launch_specialization_training(terminal_args):
         args.distributed = True
     else:
         args.distributed = False   
-    torch.cuda.set_device(local_rank)
-    args.distributed = True
-    args.gpu = local_rank
-    args.world_size = world_size
-    args.rank = rank
-    
-    device = torch.device(f"cuda:{local_rank}")
+
+    if args.device == 'cuda':
+        torch.cuda.set_device(local_rank)
+        args.gpu = local_rank
+        args.world_size = world_size
+        args.rank = rank
+        device = torch.device(f"cuda:{local_rank}")
+    else:
+        device = torch.device("cpu")
+        args.gpu = None
+        args.world_size = 1
+        args.rank = 0
     #print(device)
 
     # logging
@@ -79,22 +91,51 @@ def launch_specialization_training(terminal_args):
 
 
 
-    # LOAD DATASET
+    # LOAD DATASET (aligned with DataManager used in classification/tracking)
     patch_size = model_without_ddp.encoder.patch_embed.patch_size
-    data_loader_train, dataset_train = get_dataset_dataloader(args, patch_size)
-    # per il test set
-    args.data_path = args.test_path
-    data_loader_test = get_dataloader(args, patch_size)
+    train_m = DataManager(
+        is_train=True,
+        args=args,
+        type_t='unsupervised',
+        patch_size=patch_size,
+        world_size=world_size,
+        rank=rank,
+    )
+    test_m = DataManager(
+        is_train=False,
+        args=args,
+        type_t='unsupervised',
+        patch_size=patch_size,
+        world_size=world_size,
+        rank=rank,
+    )
+    train_m.create_specialization_dataloader(args)
+    test_m.create_specialization_dataloader(args)
+    data_loader_train = train_m.data_loader
+    data_loader_test = test_m.data_loader
+    dataset_train = train_m.dataset
 
 
     # SET HYPER PARAMETERS
     num_tasks = utils.get_world_size()
     total_batch_size = args.batch_size * num_tasks
-    num_training_steps_per_epoch = len(dataset_train) // total_batch_size
+    # Use effective dataloader length (accounts for sampler/drop_last in DDP).
+    num_training_steps_per_epoch = len(data_loader_train)
+    if num_training_steps_per_epoch <= 0:
+        raise ValueError(
+            "num_training_steps_per_epoch=0: dataset troppo piccolo rispetto al batch effettivo. "
+            f"dataset_len={len(dataset_train)}, total_batch_size={total_batch_size}, "
+            f"batch_size={args.batch_size}, world_size={num_tasks}. "
+            "Riduci batch_size o aumenta il numero di sample nel manifest."
+        )
     # scale the lr
     args.lr = args.lr * total_batch_size / 256
     args.min_lr = args.min_lr * total_batch_size / 256
     args.warmup_lr = args.warmup_lr * total_batch_size / 256
+    if args.warmup_epochs > 0 and args.warmup_lr <= 0:
+        raise ValueError(
+            f"warmup_lr deve essere > 0 quando warmup_epochs > 0 (attuale warmup_lr={args.warmup_lr})."
+        )
     print("LR = %.8f" % args.lr)
     print("Batch size = %d" % total_batch_size)
     print("Number of training steps = %d" % num_training_steps_per_epoch)
@@ -112,6 +153,7 @@ def launch_specialization_training(terminal_args):
         args.epochs,
         num_training_steps_per_epoch,
         warmup_epochs=args.warmup_epochs,
+        start_warmup_value=args.warmup_lr,
         warmup_steps=args.warmup_steps,
     )
     if args.weight_decay_end is None:
@@ -210,4 +252,13 @@ def launch_specialization_training(terminal_args):
 
 
 if __name__ == '__main__':
-    launch_specialization_training()
+    parser = argparse.ArgumentParser(
+        'Lancia il training unsupervised di specialization',
+        add_help=False)
+    parser.add_argument('--on',
+        type=str,
+        default='leonardo',
+        help='[ewc, leonardo]'
+    )
+    args = parser.parse_args()
+    launch_specialization_training(args)

@@ -27,8 +27,18 @@ def _collect_tile_folders(root: Path, num_frames: int):
     skipped_short = 0
     scanned_dirs = 0
     required = set(range(1, int(num_frames) + 1))
+    root_resolved = root.resolve()
+    visited_real_dirs = set()
 
-    for dirpath, dirnames, filenames in os.walk(root):
+    # followlinks=True to support datasets exposed via symlinked subfolders.
+    # visited_real_dirs avoids infinite loops in case of cyclic links.
+    for dirpath, dirnames, filenames in os.walk(root, followlinks=True):
+        dir_real = Path(dirpath).resolve()
+        if dir_real in visited_real_dirs:
+            dirnames[:] = []
+            continue
+        visited_real_dirs.add(dir_real)
+
         scanned_dirs += 1
         frame_indices = []
         for fname in filenames:
@@ -41,8 +51,11 @@ def _collect_tile_folders(root: Path, num_frames: int):
                 folders.append(Path(dirpath).resolve())
             else:
                 skipped_short += 1
-            # If this folder already contains frame files, do not descend further.
-            dirnames[:] = []
+            # If this folder already contains frame files, we usually do not need
+            # to descend further. Keep descending only at root level, so mixed
+            # roots (frames + subfolders) are still fully explored.
+            if dir_real != root_resolved:
+                dirnames[:] = []
 
     return sorted(folders), skipped_short, scanned_dirs
 

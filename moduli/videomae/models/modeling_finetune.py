@@ -576,13 +576,18 @@ def load_checkpoint(model, checkpoint_path, load_for_test_mode=False):
         new_state_dict["head.bias"] = new_state_dict.pop("cls_head.fc_cls.bias")
         print("Rinominata 'cls_head.fc_cls' -> 'head' nel checkpoint.")
 
-    if not load_for_test_mode: # TODO: or 'resume'
-            # ❗ Rimuoviamo la testa del modello per evitare il mismatch
+    # Rimuove la testa solo quando ha senso (modelli finetuning/tracking con `head`).
+    # Per i modelli pretrain MAE (senza `head`) non va toccato nulla.
+    if not load_for_test_mode and hasattr(model, "head"):
+        removed_head = False
         if "head.weight" in new_state_dict:
             del new_state_dict["head.weight"]
+            removed_head = True
         if "head.bias" in new_state_dict:
             del new_state_dict["head.bias"]
-        print("Testa del modello rimossa dal checkpoint per evitare mismatch di numero di classi col preaddestrato.")
+            removed_head = True
+        if removed_head:
+            print("Testa del modello rimossa dal checkpoint per evitare mismatch di numero di classi col preaddestrato.")
 
     # Carica i pesi nel modello
     model.load_state_dict(new_state_dict, strict=False)

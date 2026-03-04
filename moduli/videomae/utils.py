@@ -24,6 +24,7 @@ import warnings
 import numpy as np
 import torch
 import torch.distributed as dist
+from packaging import version as pkg_version
 class _NullSummaryWriter:
     def __init__(self, *args, **kwargs):
         pass
@@ -213,11 +214,15 @@ class MetricLogger(object):
         i = 0
         if not header:
             header = ''
+        iterable_len = len(iterable)
+        if iterable_len == 0:
+            print(f"{header} Empty iterable: 0 iterations.")
+            return
         start_time = time.time()
         end = time.time()
         iter_time = SmoothedValue(fmt='{avg:.4f} ({min:.4f} -- {max:.4f})')
         data_time = SmoothedValue(fmt='{avg:.4f} ({min:.4f} -- {max:.4f})')
-        space_fmt = ':' + str(len(str(len(iterable)))) + 'd'
+        space_fmt = ':' + str(len(str(iterable_len))) + 'd'
         log_msg = [
             header, '[{0' + space_fmt + '}/{1}]', 'eta: {eta}', '{meters}',
             'time: {time}', 'data: {data}'
@@ -230,14 +235,14 @@ class MetricLogger(object):
             data_time.update(time.time() - end)
             yield obj
             iter_time.update(time.time() - end)
-            if i % print_freq == 0 or i == len(iterable) - 1:
-                eta_seconds = iter_time.global_avg * (len(iterable) - i)
+            if i % print_freq == 0 or i == iterable_len - 1:
+                eta_seconds = iter_time.global_avg * (iterable_len - i)
                 eta_string = str(datetime.timedelta(seconds=int(eta_seconds)))
                 if torch.cuda.is_available():
                     print(
                         log_msg.format(
                             i,
-                            len(iterable),
+                            iterable_len,
                             eta=eta_string,
                             meters=str(self),
                             time=str(iter_time),
@@ -247,7 +252,7 @@ class MetricLogger(object):
                     print(
                         log_msg.format(
                             i,
-                            len(iterable),
+                            iterable_len,
                             eta=eta_string,
                             meters=str(self),
                             time=str(iter_time),
@@ -257,7 +262,7 @@ class MetricLogger(object):
         total_time = time.time() - start_time
         total_time_str = str(datetime.timedelta(seconds=int(total_time)))
         print('{} Total time: {} ({:.4f} s / it)'.format(
-            header, total_time_str, total_time / len(iterable)))
+            header, total_time_str, total_time / iterable_len))
 
 
 class TensorboardLogger(object):
@@ -539,7 +544,8 @@ def get_model(args):
     except:
         print(f"Impossibile usare dynamo config optimize_ddp")
 
-    if version.parse(torch.__version__) > version.parse('1.13.1'):
+    torch_version = torch.__version__.split('+')[0]
+    if pkg_version.parse(torch_version) > pkg_version.parse('1.13.1'):
         torch.set_float32_matmul_precision('high')
         model = torch.compile(model, backend='eager') 
         # introdotto eager per risolvere un bug con il grafo computazionale
