@@ -705,6 +705,16 @@ def save_model(args, epoch, model, model_without_ddp, optimizer, loss_scaler, mo
             'scaler': loss_scaler.state_dict(),
             'args': args.__dict__,
         }
+        # Save lightweight optimizer metadata to diagnose resume compatibility.
+        try:
+            opt_state = to_save['optimizer']
+            group_sizes = [len(g.get('params', [])) for g in opt_state.get('param_groups', [])]
+            to_save['optimizer_meta'] = {
+                'num_groups': len(group_sizes),
+                'group_sizes': group_sizes,
+            }
+        except Exception:
+            pass
 
         if model_ema is not None:
             to_save['model_ema'] = get_state_dict(model_ema)
@@ -795,11 +805,36 @@ def auto_load_model(args,
             print("Resume checkpoint %s" % args.resume)
             if 'optimizer' in checkpoint and 'epoch' in checkpoint:
                 args.start_epoch = checkpoint['epoch'] + 1
+                optimizer_loaded = False
+                scaler_loaded = False
                 try:
-                    optimizer.load_state_dict(checkpoint['optimizer'])
+                    saved_opt = checkpoint['optimizer']
+                    saved_group_sizes = [
+                        len(g.get('params', []))
+                        for g in saved_opt.get('param_groups', [])
+                    ]
+                    current_group_sizes = [
+                        len(g.get('params', []))
+                        for g in optimizer.state_dict().get('param_groups', [])
+                    ]
+                    if saved_group_sizes != current_group_sizes:
+                        print(
+                            "[WARN] Optimizer state non compatibile per resume: "
+                            f"saved_group_sizes={saved_group_sizes}, "
+                            f"current_group_sizes={current_group_sizes}. "
+                            "Continuo con optimizer nuovo."
+                        )
+                    else:
+                        optimizer.load_state_dict(saved_opt)
+                        optimizer_loaded = True
                 except ValueError as e:
                     print(
                         "[WARN] Impossibile ripristinare optimizer state (param groups cambiati): "
+                        f"{e}. Continuo con optimizer nuovo."
+                    )
+                except Exception as e:
+                    print(
+                        "[WARN] Impossibile ripristinare optimizer state: "
                         f"{e}. Continuo con optimizer nuovo."
                     )
                 if hasattr(args, 'model_ema') and args.model_ema:
@@ -808,9 +843,10 @@ def auto_load_model(args,
                 if 'scaler' in checkpoint:
                     try:
                         loss_scaler.load_state_dict(checkpoint['scaler'])
+                        scaler_loaded = True
                     except Exception as e:
                         print(f"[WARN] Impossibile ripristinare scaler state: {e}")
-                print("With optim & sched!")
+                print(f"With optim & sched! optimizer_loaded={optimizer_loaded}, scaler_loaded={scaler_loaded}")
     else:
         # deepspeed, only support '--auto_resume'.
         if args.auto_resume:
