@@ -727,6 +727,48 @@ def auto_load_model(args,
                     loss_scaler,
                     model_ema=None):
     # serve solo a ricaricare un checkpoint di training precedente per proseguirlo
+    def _strip_known_prefixes(key):
+        prefixes = ("module.", "_orig_mod.", "backbone.")
+        changed = True
+        while changed:
+            changed = False
+            for p in prefixes:
+                if key.startswith(p):
+                    key = key[len(p):]
+                    changed = True
+        return key
+
+    def _load_resume_state_dict(target_model, checkpoint_model_state):
+        try:
+            target_model.load_state_dict(checkpoint_model_state)
+            return
+        except RuntimeError as e:
+            first_line = str(e).splitlines()[0] if str(e) else "load_state_dict failed"
+            print(f"[WARN] strict load_state_dict fallita: {first_line}")
+            print("[INFO] Provo riallineamento chiavi checkpoint (module/_orig_mod/backbone).")
+
+        stripped_ckpt = {}
+        for k, v in checkpoint_model_state.items():
+            stripped_ckpt[_strip_known_prefixes(k)] = v
+
+        aligned_state = {}
+        target_keys = target_model.state_dict().keys()
+        for mk in target_keys:
+            base_k = _strip_known_prefixes(mk)
+            if base_k in stripped_ckpt:
+                aligned_state[mk] = stripped_ckpt[base_k]
+
+        if not aligned_state:
+            raise RuntimeError(
+                "Impossibile riallineare le chiavi del checkpoint per il resume: "
+                "nessuna chiave compatibile trovata."
+            )
+
+        missing, unexpected = target_model.load_state_dict(aligned_state, strict=False)
+        print(
+            f"[INFO] Resume caricato con riallineamento: "
+            f"matched={len(aligned_state)}, missing={len(missing)}, unexpected={len(unexpected)}"
+        )
 
     output_dir = Path(args.output_dir)
     if loss_scaler is not None:
@@ -749,16 +791,25 @@ def auto_load_model(args,
                     args.resume, map_location='cpu', check_hash=True)
             else:
                 checkpoint = torch.load(args.resume, map_location='cpu')
-            model_without_ddp.load_state_dict(checkpoint['model'])
+            _load_resume_state_dict(model_without_ddp, checkpoint['model'])
             print("Resume checkpoint %s" % args.resume)
             if 'optimizer' in checkpoint and 'epoch' in checkpoint:
-                optimizer.load_state_dict(checkpoint['optimizer'])
                 args.start_epoch = checkpoint['epoch'] + 1
+                try:
+                    optimizer.load_state_dict(checkpoint['optimizer'])
+                except ValueError as e:
+                    print(
+                        "[WARN] Impossibile ripristinare optimizer state (param groups cambiati): "
+                        f"{e}. Continuo con optimizer nuovo."
+                    )
                 if hasattr(args, 'model_ema') and args.model_ema:
                     _load_checkpoint_for_ema(model_ema,
                                              checkpoint['model_ema'])
                 if 'scaler' in checkpoint:
-                    loss_scaler.load_state_dict(checkpoint['scaler'])
+                    try:
+                        loss_scaler.load_state_dict(checkpoint['scaler'])
+                    except Exception as e:
+                        print(f"[WARN] Impossibile ripristinare scaler state: {e}")
                 print("With optim & sched!")
     else:
         # deepspeed, only support '--auto_resume'.

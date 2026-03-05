@@ -80,6 +80,7 @@ class DataManager():
     def get_specialization_dataset(self, args):
         print("Getting dataset...") 
         transform = DataAugmentationForVideoMAEv2(args)
+        print(f"no_data_aug={getattr(args, 'no_data_aug', False)}")
         dataset = HybridVideoMAE(
             root=args.data_root,
             file_path=self.file_path,

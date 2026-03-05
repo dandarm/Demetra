@@ -145,35 +145,32 @@ def prepare_args(machine=None):
         'no_data_aug': True,
     }
     # user_args = {
-    #     'model': 'vit_base_patch16_224',
-    #     'data_path': './',
-    #     'finetune': './pytorch_model.bin',
-    #     'log_dir': './output',
-    #     'output_dir': './output',
-    #     'data_set': 'medicanes',
-    #     'batch_size': '1',
-    #     'input_size': '224',
-    #     'short_side_size': '224',
-    #     'save_ckpt_freq': '10',
-    #     'num_frames': 16,
-    #     'sampling_rate': '1',
-    #     'num_workers': '10',
-    #     'opt': 'adamw',
-    #     'lr': '7e-4',
     #     'opt_betas': [0.9, 0.999],
     #     'weight_decay': '0.05',
     #     'layer_decay': '0.75',
     #     'test_num_segment': 1,
     #     'test_num_crop': '1',
-    #     'epochs': '90',
-    #     'dist_eval': '',
-    #     'nb_classes': '1',
-    #     'seed': 42,
-    #     'warmup_steps': 1000
     # }
     # Merge dictionaries (user_args overrides default_args)
     # args_dict = {**default_args, **user_args}
     args_dict = {**default_args, **user_args_pretrain}
+
+    if machine:
+        machine_args_override = {}
+        if machine == 'leonardo':
+            ckpath = '$FAST/checkpoint-99999999.pth'
+            #exp_path = os.path.expandvars(ckpath)
+            #if "$HOME" in exp_path:
+            #    raise EnvironmentError("La variabile d'ambiente HOME non è definita.")
+            #machine_args_override['init_ckpt'] = exp_path
+            #machine_args_override['pretrained'] = True
+            # machine_args_override['csv_folder'] = "./"
+        elif machine == 'ewc':
+            machine_args_override['batch_size'] = 6
+            #machine_args_override['device'] = 'cpu'
+            #machine_args_override['epochs'] = 1
+        args_dict = {**args_dict, **machine_args_override}
+
     # Convert args_dict to an Args object
     args = Args(**args_dict)
     return args
