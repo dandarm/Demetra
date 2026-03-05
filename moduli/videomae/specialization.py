@@ -3,6 +3,7 @@ import os
 import datetime
 import time
 import argparse
+from pathlib import Path
 from PIL import Image
 import json
 import torch
@@ -171,6 +172,19 @@ def launch_specialization_training(terminal_args):
         model_without_ddp=model_without_ddp,
         optimizer=optimizer,
         loss_scaler=loss_scaler)
+    # Rolling checkpoint logic state:
+    # save only when current test loss improves over the previous evaluated test loss.
+    prev_test_loss = None
+    last_improved_ckpt_path = None
+    if getattr(args, "resume", ""):
+        try:
+            resumed = torch.load(args.resume, map_location="cpu")
+            if isinstance(resumed, dict) and "prev_test_loss" in resumed:
+                prev_test_loss = float(resumed["prev_test_loss"])
+            if str(args.resume).endswith(".pth"):
+                last_improved_ckpt_path = str(args.resume)
+        except Exception:
+            pass
     torch.cuda.empty_cache()
 
     # SET THE LOGGING
@@ -208,16 +222,6 @@ def launch_specialization_training(terminal_args):
             wd_schedule_values=wd_schedule_values,
             patch_size=patch_size[0],
             normlize_target=args.normlize_target)
-        if args.output_dir:
-            _epoch = epoch + 1
-            if _epoch % args.save_ckpt_freq == 0 or _epoch == args.epochs:
-                utils.save_model(
-                    args=args,
-                    model=pretrained_model,
-                    model_without_ddp=model_without_ddp,
-                    optimizer=optimizer,
-                    loss_scaler=loss_scaler,
-                    epoch=epoch)
 
         log_stats = {
             **{f'train_{k}': v for k, v in train_stats.items()}, 'epoch': epoch,
@@ -240,6 +244,37 @@ def launch_specialization_training(terminal_args):
                     log_writer.flush()
                 with open(os.path.join(args.output_dir, "log.txt"), mode="a", encoding="utf-8") as f:
                     f.write(json.dumps(test_log_stats) + "\n")
+
+                # Save checkpoint only if current test loss improves over previous test loss.
+                test_loss = test_stats.get("loss", None)
+                if test_loss is not None:
+                    improved = (prev_test_loss is None) or (float(test_loss) < float(prev_test_loss))
+                    if improved:
+                        ckpt_dir = Path(args.output_dir)
+                        ckpt_dir.mkdir(parents=True, exist_ok=True)
+                        ckpt_path = ckpt_dir / f"checkpoint-{epoch}.pth"
+                        to_save = {
+                            'model': model_without_ddp.state_dict(),
+                            'optimizer': optimizer.state_dict(),
+                            'epoch': epoch,
+                            'scaler': loss_scaler.state_dict(),
+                            'args': args.__dict__,
+                            'prev_test_loss': float(test_loss),
+                        }
+                        torch.save(to_save, ckpt_path)
+                        if last_improved_ckpt_path is not None and last_improved_ckpt_path != str(ckpt_path):
+                            try:
+                                old_path = Path(last_improved_ckpt_path)
+                                if old_path.exists():
+                                    old_path.unlink()
+                            except Exception:
+                                pass
+                        last_improved_ckpt_path = str(ckpt_path)
+                        print(
+                            f"[CKPT] Saved improved checkpoint: {ckpt_path} "
+                            f"(test_loss {test_loss:.6f}, prev {prev_test_loss})"
+                        )
+                    prev_test_loss = float(test_loss)
 
 
 
