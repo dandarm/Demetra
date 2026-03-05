@@ -109,7 +109,9 @@ def prepare_args(machine=None):
         'dist_backend': 'nccl',
         'enable_deepspeed': False,
         ### solo per pretraining,
-        'normlize_target': True
+        'normlize_target': True,
+        # Specialization-only: disable spatial data augmentation (keeps MAE masking).
+        'no_data_aug': True,
     }
     # user argument values
     user_args_pretrain = {
@@ -138,7 +140,9 @@ def prepare_args(machine=None):
         'epochs': 500,
         'save_ckpt_freq': 20,
         'decoder_depth': 4,
-        'testing_epochs': 5
+        'testing_epochs': 5,
+        # Set True to disable GroupMultiScaleCrop in specialization.
+        'no_data_aug': True,
     }
     # user_args = {
     #     'model': 'vit_base_patch16_224',

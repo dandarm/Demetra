@@ -28,7 +28,11 @@ class DataAugmentationForVideoMAEv2(object):
         div = True
         roll = False
         normalize = GroupNormalize(self.input_mean, self.input_std)
-        self.train_augmentation = GroupMultiScaleCrop(args.input_size,[1, .875, .75, .66])
+        if getattr(args, "no_data_aug", False):
+            # Keep frames unchanged before tensor conversion/normalization.
+            self.train_augmentation = transforms.Lambda(lambda data: data)
+        else:
+            self.train_augmentation = GroupMultiScaleCrop(args.input_size,[1, .875, .75, .66])
         # Sostituisce il crop con la suddivisione in tile
         #self.train_augmentation = transforms.Lambda(lambda x: tile_image(x[0], crop_size=args.input_size))
 

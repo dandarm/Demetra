@@ -36,6 +36,44 @@ def launch_specialization_training(terminal_args):
         args.train_path = args.data_path
     if not getattr(args, "test_path", None):
         args.test_path = args.data_path
+
+    # Resolve relative paths from this module directory, not from caller CWD.
+    module_dir = Path(__file__).resolve().parent
+    def _resolve_path(value):
+        if value is None or value == "":
+            return value
+        p = Path(str(value)).expanduser()
+        if p.is_absolute():
+            return str(p)
+        return str((module_dir / p).resolve())
+
+    args.train_path = _resolve_path(args.train_path)
+    args.test_path = _resolve_path(args.test_path)
+    args.output_dir = _resolve_path(args.output_dir)
+    args.log_dir = _resolve_path(args.log_dir)
+    args.init_ckpt = _resolve_path(args.init_ckpt)
+    if getattr(args, "resume", None):
+        args.resume = _resolve_path(args.resume)
+
+    # Prefer latest training checkpoint for resume when available.
+    if args.auto_resume and not args.resume:
+        out_dir = Path(args.output_dir)
+        latest_ckpt = -1
+        latest_path = None
+        for ckpt in out_dir.glob("checkpoint-*.pth"):
+            t = ckpt.stem.split("-")[-1]
+            if t.isdigit():
+                n = int(t)
+                if n > latest_ckpt:
+                    latest_ckpt = n
+                    latest_path = ckpt
+        if latest_path is not None:
+            args.resume = str(latest_path)
+
+    # If resuming, initialize model from that checkpoint too (same weights path).
+    if args.resume and Path(args.resume).exists():
+        print(f"[RESUME] Using training checkpoint: {args.resume}")
+        args.init_ckpt = args.resume
     
 
     #utils.init_distributed_mode(args)
