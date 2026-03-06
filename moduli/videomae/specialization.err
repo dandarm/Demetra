@@ -14,3 +14,4 @@
 [lrdn3225.leonardo.local:134273] MCW rank 15 bound to socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]], socket 0[core 15[hwt 0]]: [././././././././././././B/B/B/B]
 [lrdn2429.leonardo.local:3748225] MCW rank 11 bound to socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]], socket 0[core 15[hwt 0]]: [././././././././././././B/B/B/B]
 [lrdn2406.leonardo.local:129629] MCW rank 7 bound to socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]], socket 0[core 15[hwt 0]]: [././././././././././././B/B/B/B]
+slurmstepd: error: *** JOB 35678478 ON lrdn2400 CANCELLED AT 2026-03-06T23:39:07 DUE TO TIME LIMIT ***
