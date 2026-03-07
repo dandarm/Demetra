@@ -7,6 +7,8 @@
 #SBATCH --time=23:59:00
 #SBATCH --error=specialization.err
 #SBATCH --output=specialization.out
+#SBATCH --account=iscrc_same-d2
+
 
 module load profile/deeplrn
 module load cineca-ai/4.3.0

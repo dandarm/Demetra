@@ -132,12 +132,12 @@ def prepare_args(machine=None):
         'num_sample': 1,
         'num_frames': 16,
         'sampling_rate': 1,  # voglio tutti i frame temporali
-        'num_workers': 1,     # TODO: verificare se deve stare a 1 o può aumentare
+        'num_workers': 4,     
         'opt': 'adamw',
         'lr': 1e-3,
         'opt_betas': [0.9, 0.95],
         'warmup_epochs': 10,
-        'epochs': 500,
+        'epochs': 1000,
         'save_ckpt_freq': 20,
         'decoder_depth': 4,
         'testing_epochs': 5,
