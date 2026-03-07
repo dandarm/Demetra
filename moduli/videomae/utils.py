@@ -297,6 +297,98 @@ def seed_worker(worker_id):
     random.seed(worker_seed)
 
 
+def capture_rng_state():
+    """Capture local RNG states for Python, NumPy, Torch CPU and CUDA."""
+    rng_state = {
+        "python": random.getstate(),
+        "numpy": np.random.get_state(),
+        "torch_cpu": torch.get_rng_state(),
+    }
+    if torch.cuda.is_available():
+        try:
+            rng_state["torch_cuda_all"] = torch.cuda.get_rng_state_all()
+        except Exception:
+            try:
+                rng_state["torch_cuda"] = torch.cuda.get_rng_state()
+            except Exception:
+                pass
+    return rng_state
+
+
+def gather_rng_state_all_ranks(local_rng_state):
+    """Gather local RNG state from all distributed ranks.
+
+    Returns a list with one item per rank when distributed is initialized,
+    otherwise returns the local state dict.
+    """
+    if not is_dist_avail_and_initialized():
+        return local_rng_state
+    if not hasattr(dist, "all_gather_object"):
+        return local_rng_state
+    world_size = get_world_size()
+    gathered = [None] * world_size
+    dist.all_gather_object(gathered, local_rng_state)
+    return gathered
+
+
+def restore_rng_state(rng_state_payload):
+    """Restore RNG state from checkpoint payload.
+
+    Supports:
+    - single-rank payload: dict
+    - multi-rank payload: list[dict] (one dict per rank)
+    """
+    if rng_state_payload is None:
+        return False
+
+    selected = rng_state_payload
+    if isinstance(rng_state_payload, list):
+        rank = get_rank() if is_dist_avail_and_initialized() else 0
+        if len(rng_state_payload) > rank and isinstance(rng_state_payload[rank], dict):
+            selected = rng_state_payload[rank]
+        elif len(rng_state_payload) > 0 and isinstance(rng_state_payload[0], dict):
+            selected = rng_state_payload[0]
+        else:
+            return False
+    if not isinstance(selected, dict):
+        return False
+
+    restored_any = False
+
+    py_state = selected.get("python")
+    if py_state is not None:
+        random.setstate(py_state)
+        restored_any = True
+
+    np_state = selected.get("numpy")
+    if np_state is not None:
+        np.random.set_state(np_state)
+        restored_any = True
+
+    torch_cpu_state = selected.get("torch_cpu")
+    if torch_cpu_state is not None:
+        torch.set_rng_state(torch_cpu_state)
+        restored_any = True
+
+    if torch.cuda.is_available():
+        cuda_all = selected.get("torch_cuda_all")
+        if cuda_all is not None:
+            try:
+                torch.cuda.set_rng_state_all(cuda_all)
+                restored_any = True
+            except Exception:
+                pass
+        cuda_one = selected.get("torch_cuda")
+        if cuda_one is not None:
+            try:
+                torch.cuda.set_rng_state(cuda_one)
+                restored_any = True
+            except Exception:
+                pass
+
+    return restored_any
+
+
 def _load_checkpoint_for_ema(model_ema, checkpoint):
     """
     Workaround for ModelEma._load_checkpoint to accept an already-loaded object
@@ -704,6 +796,7 @@ def save_model(args, epoch, model, model_without_ddp, optimizer, loss_scaler, mo
             'epoch': epoch,
             'scaler': loss_scaler.state_dict(),
             'args': args.__dict__,
+            'rng_state': capture_rng_state(),
         }
         # Save lightweight optimizer metadata to diagnose resume compatibility.
         try:
@@ -846,7 +939,15 @@ def auto_load_model(args,
                         scaler_loaded = True
                     except Exception as e:
                         print(f"[WARN] Impossibile ripristinare scaler state: {e}")
+                rng_loaded = False
+                try:
+                    rng_payload = checkpoint.get('rng_state_all_ranks', checkpoint.get('rng_state', None))
+                    rng_loaded = restore_rng_state(rng_payload)
+                except Exception as e:
+                    print(f"[WARN] Impossibile ripristinare RNG state: {e}")
                 print(f"With optim & sched! optimizer_loaded={optimizer_loaded}, scaler_loaded={scaler_loaded}")
+                if rng_loaded:
+                    print("RNG state restored from checkpoint.")
     else:
         # deepspeed, only support '--auto_resume'.
         if args.auto_resume:

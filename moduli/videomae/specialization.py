@@ -276,6 +276,15 @@ def launch_specialization_training(terminal_args):
             test_stats = test(pretrained_model, data_loader_test, device, epoch,
                         patch_size=patch_size[0], normlize_target=args.normlize_target, log_writer=log_writer)
             test_log_stats = {**{f'test_{k}': v for k, v in test_stats.items()}, 'epoch': epoch}  #, 'n_parameters': n_parameters}
+            test_loss = test_stats.get("loss", None)
+            improved = False
+            rng_state_payload = None
+            if test_loss is not None:
+                improved = (prev_test_loss is None) or (float(test_loss) < float(prev_test_loss))
+                if improved:
+                    # All ranks participate so DDP resume can restore per-rank RNG streams.
+                    local_rng_state = utils.capture_rng_state()
+                    rng_state_payload = utils.gather_rng_state_all_ranks(local_rng_state)
 
             if args.output_dir and utils.is_main_process():
                 if log_writer is not None:
@@ -284,35 +293,37 @@ def launch_specialization_training(terminal_args):
                     f.write(json.dumps(test_log_stats) + "\n")
 
                 # Save checkpoint only if current test loss improves over previous test loss.
-                test_loss = test_stats.get("loss", None)
-                if test_loss is not None:
-                    improved = (prev_test_loss is None) or (float(test_loss) < float(prev_test_loss))
-                    if improved:
-                        ckpt_dir = Path(args.output_dir)
-                        ckpt_dir.mkdir(parents=True, exist_ok=True)
-                        ckpt_path = ckpt_dir / f"checkpoint-{epoch}.pth"
-                        to_save = {
-                            'model': model_without_ddp.state_dict(),
-                            'optimizer': optimizer.state_dict(),
-                            'epoch': epoch,
-                            'scaler': loss_scaler.state_dict(),
-                            'args': args.__dict__,
-                            'prev_test_loss': float(test_loss),
-                        }
-                        torch.save(to_save, ckpt_path)
-                        if last_improved_ckpt_path is not None and last_improved_ckpt_path != str(ckpt_path):
-                            try:
-                                old_path = Path(last_improved_ckpt_path)
-                                if old_path.exists():
-                                    old_path.unlink()
-                            except Exception:
-                                pass
-                        last_improved_ckpt_path = str(ckpt_path)
-                        print(
-                            f"[CKPT] Saved improved checkpoint: {ckpt_path} "
-                            f"(test_loss {test_loss:.6f}, prev {prev_test_loss})"
-                        )
-                    prev_test_loss = float(test_loss)
+                if test_loss is not None and improved:
+                    ckpt_dir = Path(args.output_dir)
+                    ckpt_dir.mkdir(parents=True, exist_ok=True)
+                    ckpt_path = ckpt_dir / f"checkpoint-{epoch}.pth"
+                    to_save = {
+                        'model': model_without_ddp.state_dict(),
+                        'optimizer': optimizer.state_dict(),
+                        'epoch': epoch,
+                        'scaler': loss_scaler.state_dict(),
+                        'args': args.__dict__,
+                        'prev_test_loss': float(test_loss),
+                    }
+                    if isinstance(rng_state_payload, list):
+                        to_save['rng_state_all_ranks'] = rng_state_payload
+                    elif rng_state_payload is not None:
+                        to_save['rng_state'] = rng_state_payload
+                    torch.save(to_save, ckpt_path)
+                    if last_improved_ckpt_path is not None and last_improved_ckpt_path != str(ckpt_path):
+                        try:
+                            old_path = Path(last_improved_ckpt_path)
+                            if old_path.exists():
+                                old_path.unlink()
+                        except Exception:
+                            pass
+                    last_improved_ckpt_path = str(ckpt_path)
+                    print(
+                        f"[CKPT] Saved improved checkpoint: {ckpt_path} "
+                        f"(test_loss {test_loss:.6f}, prev {prev_test_loss})"
+                    )
+            if test_loss is not None:
+                prev_test_loss = float(test_loss)
 
 
 
