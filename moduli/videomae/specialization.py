@@ -16,7 +16,7 @@ from functools import partial
 import utils
 from utils import NativeScalerWithGradNormCount as NativeScaler
 from utils import multiple_pretrain_samples_collate, setup_for_distributed
-from optim_factory import create_optimizer
+from optim_factory import LayerDecayValueAssigner, create_optimizer
 #from dataset import build_pretraining_dataset
 from utils import get_model
 from engine_for_pretraining import train_one_epoch, test
@@ -26,6 +26,105 @@ from dataset.data_manager import DataManager
 
 utils.suppress_transformers_pytree_warning()
 
+
+
+def _clean_param_name(name):
+    prefixes = ("module.", "_orig_mod.", "backbone.")
+    changed = True
+    while changed:
+        changed = False
+        for p in prefixes:
+            if name.startswith(p):
+                name = name[len(p):]
+                changed = True
+    return name
+
+
+def _layer_key_for_param(name):
+    name = _clean_param_name(name)
+    parts = name.split(".")
+    if name.startswith("encoder.blocks.") and len(parts) > 2 and parts[2].isdigit():
+        return f"encoder.blocks.{parts[2]}"
+    if name.startswith("decoder.blocks.") and len(parts) > 2 and parts[2].isdigit():
+        return f"decoder.blocks.{parts[2]}"
+    if name.startswith("encoder.patch_embed"):
+        return "encoder.patch_embed"
+    if name.startswith("encoder.norm"):
+        return "encoder.norm"
+    if name.startswith("decoder.norm"):
+        return "decoder.norm"
+    if name.startswith("decoder.head"):
+        return "decoder.head"
+    if name.startswith("encoder_to_decoder"):
+        return "encoder_to_decoder"
+    if name in ("mask_token", "pos_embed"):
+        return name
+    return parts[0] if parts else name
+
+
+def _capture_reference_params(model):
+    reference = {}
+    with torch.no_grad():
+        for name, param in model.named_parameters():
+            if not param.requires_grad:
+                continue
+            reference[name] = param.detach().to(dtype=torch.float32, device="cpu").clone()
+    return reference
+
+
+def _compute_weight_drift_by_layer(model, reference_params):
+    layer_stats = {}
+    overall_diff_sq = 0.0
+    overall_ref_sq = 0.0
+    missing_params = 0
+
+    with torch.no_grad():
+        for name, param in model.named_parameters():
+            if not param.requires_grad:
+                continue
+            ref = reference_params.get(name, None)
+            if ref is None or ref.shape != param.shape:
+                missing_params += 1
+                continue
+
+            current = param.detach().to(dtype=torch.float32, device="cpu")
+            diff = current - ref
+            diff_sq = float(torch.sum(diff * diff).item())
+            ref_sq = float(torch.sum(ref * ref).item())
+
+            layer_key = _layer_key_for_param(name)
+            if layer_key not in layer_stats:
+                layer_stats[layer_key] = {"diff_sq": 0.0, "ref_sq": 0.0}
+            layer_stats[layer_key]["diff_sq"] += diff_sq
+            layer_stats[layer_key]["ref_sq"] += ref_sq
+
+            overall_diff_sq += diff_sq
+            overall_ref_sq += ref_sq
+
+    layer_rel = {}
+    for layer_key, stats in layer_stats.items():
+        denom = max(stats["ref_sq"] ** 0.5, 1e-12)
+        layer_rel[layer_key] = (stats["diff_sq"] ** 0.5) / denom
+
+    overall_rel = (overall_diff_sq ** 0.5) / max(overall_ref_sq ** 0.5, 1e-12)
+    return {
+        "overall_rel_l2": overall_rel,
+        "layer_rel_l2": dict(sorted(layer_rel.items())),
+        "missing_params": missing_params,
+    }
+
+
+def _print_weight_drift_summary(drift_stats, top_k=10):
+    overall = drift_stats.get("overall_rel_l2", 0.0)
+    missing = drift_stats.get("missing_params", 0)
+    layer_rel = drift_stats.get("layer_rel_l2", {})
+    print(
+        f"[DRIFT] overall_rel_l2={overall:.6e}, "
+        f"tracked_layers={len(layer_rel)}, missing_params={missing}"
+    )
+    top_layers = sorted(layer_rel.items(), key=lambda x: x[1], reverse=True)[:top_k]
+    for layer_key, rel_value in top_layers:
+        print(f"[DRIFT][TOP] {layer_key} rel_l2={rel_value:.6e}")
 
 
 def launch_specialization_training(terminal_args):
@@ -182,7 +281,31 @@ def launch_specialization_training(terminal_args):
           (total_batch_size * num_training_steps_per_epoch))
 
 
-    optimizer = create_optimizer(args, model_without_ddp)
+    assigner = None
+    if hasattr(args, "layer_decay") and args.layer_decay is not None and args.layer_decay < 1.0:
+        encoder_layers = None
+        if hasattr(model_without_ddp, "encoder") and hasattr(model_without_ddp.encoder, "get_num_layers"):
+            encoder_layers = model_without_ddp.encoder.get_num_layers()
+        elif hasattr(model_without_ddp, "get_num_layers"):
+            try:
+                encoder_layers = model_without_ddp.get_num_layers()
+            except Exception:
+                encoder_layers = None
+        if encoder_layers is not None and encoder_layers > 0:
+            num_layers = int(encoder_layers) + 2
+            scales = [args.layer_decay ** (num_layers - i - 1) for i in range(num_layers)]
+            assigner = LayerDecayValueAssigner(scales)
+            print(
+                f"Layer decay enabled: layer_decay={args.layer_decay}, "
+                f"encoder_layers={encoder_layers}, num_layers={num_layers}"
+            )
+
+    optimizer = create_optimizer(
+        args,
+        model_without_ddp,
+        get_num_layer=assigner.get_layer_id if assigner is not None else None,
+        get_layer_scale=assigner.get_scale if assigner is not None else None,
+    )
     loss_scaler = NativeScaler()
 
     print("Use step level LR & WD scheduler!")
@@ -210,6 +333,12 @@ def launch_specialization_training(terminal_args):
         model_without_ddp=model_without_ddp,
         optimizer=optimizer,
         loss_scaler=loss_scaler)
+
+    weight_reference_params = None
+    if utils.is_main_process():
+        print("Capturing reference weights for per-layer drift logging...")
+        weight_reference_params = _capture_reference_params(model_without_ddp)
+        print(f"[DRIFT] reference tensors captured: {len(weight_reference_params)}")
     # Rolling checkpoint logic state:
     # save only when current test loss improves over the previous evaluated test loss.
     prev_test_loss = None
@@ -276,6 +405,12 @@ def launch_specialization_training(terminal_args):
             test_stats = test(pretrained_model, data_loader_test, device, epoch,
                         patch_size=patch_size[0], normlize_target=args.normlize_target, log_writer=log_writer)
             test_log_stats = {**{f'test_{k}': v for k, v in test_stats.items()}, 'epoch': epoch}  #, 'n_parameters': n_parameters}
+            if utils.is_main_process() and weight_reference_params is not None:
+                drift_stats = _compute_weight_drift_by_layer(model_without_ddp, weight_reference_params)
+                _print_weight_drift_summary(drift_stats, top_k=10)
+                test_log_stats["weight_drift_overall_rel_l2"] = float(drift_stats["overall_rel_l2"])
+                test_log_stats["weight_drift_missing_params"] = int(drift_stats["missing_params"])
+                test_log_stats["weight_drift_by_layer_rel_l2"] = drift_stats["layer_rel_l2"]
             test_loss = test_stats.get("loss", None)
             improved = False
             rng_state_payload = None

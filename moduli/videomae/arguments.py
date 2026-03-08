@@ -117,8 +117,9 @@ def prepare_args(machine=None):
     user_args_pretrain = {
         'model': 'pretrain_videomae_giant_patch14_224',  # 'pretrain_videomae_base_patch16_224',
         'pretrained': True,  # Abilita il caricamento del checkpoint
-        'finetune': './vit_g_hybrid_pt_1200e.pth',
-        'init_ckpt': './vit_g_hybrid_pt_1200e.pth',
+        'finetune': './output/checkpoint-590_rand1.pth', #'./vit_g_hybrid_pt_1200e.pth',
+        'init_ckpt': './output/checkpoint-590_rand1.pth', #'./vit_g_hybrid_pt_1200e.pth',
+        'auto_resume': False,
         'train_path': './UNtrain_random_tiles.csv',
         'test_path': './UNtest_random_tiles.csv',
         'log_dir': './output',
@@ -134,15 +135,19 @@ def prepare_args(machine=None):
         'sampling_rate': 1,  # voglio tutti i frame temporali
         'num_workers': 4,     
         'opt': 'adamw',
-        'lr': 1e-3,
+        'lr': 1e-2,
         'opt_betas': [0.9, 0.95],
         'warmup_epochs': 10,
-        'epochs': 1000,
+        'layer_decay': 0.98,
+        'weight_decay': 0.02,
+        'warmup_lr': 1e-6,
+        'min_lr': 1e-4,
+        'epochs': 300,
         'save_ckpt_freq': 20,
         'decoder_depth': 4,
         'testing_epochs': 5,
         # Set True to disable GroupMultiScaleCrop in specialization.
-        'no_data_aug': True,
+        'no_data_aug': False,
     }
     # user_args = {
     #     'opt_betas': [0.9, 0.999],
@@ -524,6 +529,8 @@ def prepare_tracking_args(machine=None):
         args_dict = {**args_dict, **machine_args_override}
 
     return Args(**args_dict)
+
+
 #region 
 # argomenti da approfondire
 # argomenti utili?

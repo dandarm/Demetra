@@ -7,7 +7,7 @@
 #SBATCH --time=23:59:00
 #SBATCH --error=specialization.err
 #SBATCH --output=specialization.out
-#SBATCH --account=iscrc_same-d2
+#SBATCH --account=iscrc_same-d
 
 
 module load profile/deeplrn

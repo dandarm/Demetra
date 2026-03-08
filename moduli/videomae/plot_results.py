@@ -149,6 +149,7 @@ def plot_training_curves(tuple_vars, plot_file_name=None):  #TODO: per l'asse no
     #if log:
     ax1.set_yscale('log')
     ax1.set_xscale('log')
+    #ax1.set_ylim(0.01,1)
 
     if len(val_accs)>0:
         # Asse destro per l'accuracy

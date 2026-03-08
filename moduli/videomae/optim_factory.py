@@ -27,11 +27,29 @@ except ImportError:
     has_apex = False
 
 
+def _strip_known_prefixes(var_name):
+    prefixes = ("module.", "_orig_mod.", "backbone.")
+    changed = True
+    while changed:
+        changed = False
+        for p in prefixes:
+            if var_name.startswith(p):
+                var_name = var_name[len(p):]
+                changed = True
+    return var_name
+
+
 def get_num_layer_for_vit(var_name, num_max_layer):
+    var_name = _strip_known_prefixes(var_name)
+    if var_name.startswith("encoder."):
+        var_name = var_name[len("encoder."):]
+
     if var_name in ("cls_token", "mask_token", "pos_embed"):
         return 0
     elif var_name.startswith("patch_embed"):
         return 0
+    elif var_name.startswith("decoder.") or var_name.startswith("encoder_to_decoder"):
+        return num_max_layer - 1
     elif var_name.startswith("rel_pos_bias"):
         return num_max_layer - 1
     elif var_name.startswith("blocks"):
