@@ -1,16 +1,27 @@
-[lrdn1779.leonardo.local:726117] MCW rank 0 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]]: [B/B/B/B/./././././././././././.]
-[lrdn1779.leonardo.local:726117] MCW rank 1 bound to socket 0[core 4[hwt 0]], socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]]: [././././B/B/B/B/./././././././.]
-[lrdn1779.leonardo.local:726117] MCW rank 2 bound to socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]], socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]]: [././././././././B/B/B/B/./././.]
-[lrdn1779.leonardo.local:726117] MCW rank 3 bound to socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]], socket 0[core 15[hwt 0]]: [././././././././././././B/B/B/B]
-[lrdn1787.leonardo.local:93850] MCW rank 8 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]]: [B/B/B/B/./././././././././././.]
-[lrdn1787.leonardo.local:93850] MCW rank 9 bound to socket 0[core 4[hwt 0]], socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]]: [././././B/B/B/B/./././././././.]
-[lrdn1787.leonardo.local:93850] MCW rank 10 bound to socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]], socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]]: [././././././././B/B/B/B/./././.]
-[lrdn1787.leonardo.local:93850] MCW rank 11 bound to socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]], socket 0[core 15[hwt 0]]: [././././././././././././B/B/B/B]
-[lrdn1780.leonardo.local:989682] MCW rank 4 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]]: [B/B/B/B/./././././././././././.]
-[lrdn1780.leonardo.local:989682] MCW rank 5 bound to socket 0[core 4[hwt 0]], socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]]: [././././B/B/B/B/./././././././.]
-[lrdn1780.leonardo.local:989682] MCW rank 6 bound to socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]], socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]]: [././././././././B/B/B/B/./././.]
-[lrdn1780.leonardo.local:989682] MCW rank 7 bound to socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]], socket 0[core 15[hwt 0]]: [././././././././././././B/B/B/B]
-[lrdn1789.leonardo.local:752236] MCW rank 12 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]]: [B/B/B/B/./././././././././././.]
-[lrdn1789.leonardo.local:752236] MCW rank 13 bound to socket 0[core 4[hwt 0]], socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]]: [././././B/B/B/B/./././././././.]
-[lrdn1789.leonardo.local:752236] MCW rank 14 bound to socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]], socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]]: [././././././././B/B/B/B/./././.]
-[lrdn1789.leonardo.local:752236] MCW rank 15 bound to socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]], socket 0[core 15[hwt 0]]: [././././././././././././B/B/B/B]
+[lrdn1450.leonardo.local:2155149] MCW rank 0 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]]: [B/B/B/B/./././././././././././.]
+[lrdn1450.leonardo.local:2155149] MCW rank 1 bound to socket 0[core 4[hwt 0]], socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]]: [././././B/B/B/B/./././././././.]
+[lrdn1450.leonardo.local:2155149] MCW rank 2 bound to socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]], socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]]: [././././././././B/B/B/B/./././.]
+[lrdn1450.leonardo.local:2155149] MCW rank 3 bound to socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]], socket 0[core 15[hwt 0]]: [././././././././././././B/B/B/B]
+[lrdn1470.leonardo.local:4150129] MCW rank 12 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]]: [B/B/B/B/./././././././././././.]
+[lrdn1470.leonardo.local:4150129] MCW rank 13 bound to socket 0[core 4[hwt 0]], socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]]: [././././B/B/B/B/./././././././.]
+[lrdn1470.leonardo.local:4150129] MCW rank 14 bound to socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]], socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]]: [././././././././B/B/B/B/./././.]
+[lrdn1459.leonardo.local:1478673] MCW rank 8 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]]: [B/B/B/B/./././././././././././.]
+[lrdn1470.leonardo.local:4150129] MCW rank 15 bound to socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]], socket 0[core 15[hwt 0]]: [././././././././././././B/B/B/B]
+[lrdn1459.leonardo.local:1478673] MCW rank 9 bound to socket 0[core 4[hwt 0]], socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]]: [././././B/B/B/B/./././././././.]
+[lrdn1459.leonardo.local:1478673] MCW rank 10 bound to socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]], socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]]: [././././././././B/B/B/B/./././.]
+[lrdn1459.leonardo.local:1478673] MCW rank 11 bound to socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]], socket 0[core 15[hwt 0]]: [././././././././././././B/B/B/B]
+[lrdn1457.leonardo.local:1228736] MCW rank 4 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]]: [B/B/B/B/./././././././././././.]
+[lrdn1457.leonardo.local:1228736] MCW rank 5 bound to socket 0[core 4[hwt 0]], socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]]: [././././B/B/B/B/./././././././.]
+[lrdn1457.leonardo.local:1228736] MCW rank 6 bound to socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]], socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]]: [././././././././B/B/B/B/./././.]
+[lrdn1457.leonardo.local:1228736] MCW rank 7 bound to socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]], socket 0[core 15[hwt 0]]: [././././././././././././B/B/B/B]
+--------------------------------------------------------------------------
+Primary job  terminated normally, but 1 process returned
+a non-zero exit code. Per user-direction, the job has been aborted.
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+mpirun detected that one or more processes exited with non-zero status, thus causing
+the job to be terminated. The first process to do so was:
+
+  Process name: [[21797,1],12]
+  Exit code:    2
+--------------------------------------------------------------------------
