@@ -18,9 +18,10 @@ export MASTER_ADDR=$(scontrol show hostnames $SLURM_JOB_NODELIST | head -n 1)
 export MASTER_PORT=12340
 
 export PYTHONWARNINGS=ignore
+export NCCL_DEBUG=INFO
+export TORCH_DISTRIBUTED_DEBUG=DETAIL
 
-mpirun --map-by socket:PE=4 --report-bindings python specialization.py \
+mpirun --map-by socket:PE=4 --report-bindings --tag-output python -u specialization.py \
     --on leonardo \
     
-
 
