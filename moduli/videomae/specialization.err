@@ -14,3 +14,241 @@
 [1,9]<stderr>:[lrdn2524.leonardo.local:1185965] MCW rank 9 bound to socket 0[core 4[hwt 0]], socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]]: [././././B/B/B/B/./././././././.]
 [1,10]<stderr>:[lrdn2524.leonardo.local:1185965] MCW rank 10 bound to socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]], socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]]: [././././././././B/B/B/B/./././.]
 [1,11]<stderr>:[lrdn2524.leonardo.local:1185965] MCW rank 11 bound to socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]], socket 0[core 15[hwt 0]]: [././././././././././././B/B/B/B]
+[1,0]<stderr>:[rank0]:[E ProcessGroupGloo.cpp:2956] [Rank 0]: Rank 12 failed to pass monitoredBarrier in 600000 ms
+[1,0]<stderr>:[rank0]:[E ProcessGroupGloo.cpp:144] [Rank 0]: Ranks 12 failed to pass monitoredBarrier in 600000 ms
+[1,0]<stderr>:Traceback (most recent call last):
+[1,0]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 483, in <module>
+[1,0]<stderr>:    launch_specialization_training(args)
+[1,0]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 378, in launch_specialization_training
+[1,0]<stderr>:    train_stats = train_one_epoch(
+[1,0]<stderr>:     [1,0]<stderr>:     [1,0]<stderr>:        ^^^^^^^^^^^^[1,0]<stderr>:^^^^[1,0]<stderr>:
+[1,0]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/engine_for_pretraining.py", line 119, in train_one_epoch
+[1,0]<stderr>:    grad_norm = loss_scaler(
+[1,0]<stderr>:         [1,0]<stderr>:    [1,0]<stderr>:   ^^^^^^^^^^^^
+[1,0]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/utils.py", line 714, in __call__
+[1,0]<stderr>:    self._scaler.scale(loss).backward(create_graph=create_graph)
+[1,0]<stderr>:  File "/leonardo/prod/opt/libraries/cineca-ai/4.3.0/none/cineca-ai-env/lib/python3.11/site-packages/torch/_tensor.py", line 522, in backward
+[1,0]<stderr>:    torch.autograd.backward(
+[1,0]<stderr>:  File "/leonardo/prod/opt/libraries/cineca-ai/4.3.0/none/cineca-ai-env/lib/python3.11/site-packages/torch/autograd/__init__.py", line 266, in backward
+[1,0]<stderr>:    Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+[1,0]<stderr>:RuntimeError: [Rank 0]: Ranks 12 failed to pass monitoredBarrier in 600000 ms[1,0]<stderr>:
+--------------------------------------------------------------------------
+Primary job  terminated normally, but 1 process returned
+a non-zero exit code. Per user-direction, the job has been aborted.
+--------------------------------------------------------------------------
+[1,5]<stderr>:[rank5]:[E ProcessGroupGloo.cpp:144] Rank 5 successfully reached monitoredBarrier, but received errors while waiting for send/recv from rank 0. Please check rank 0 logs for faulty rank.
+[1,5]<stderr>:Traceback (most recent call last):
+[1,5]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 483, in <module>
+[1,5]<stderr>:    launch_specialization_training(args)
+[1,5]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 378, in launch_specialization_training
+[1,5]<stderr>:    train_stats = train_one_epoch(
+[1,5]<stderr>:                  ^^^^^^^^^^^^^^^^
+[1,5]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/engine_for_pretraining.py", line 119, in train_one_epoch
+[1,5]<stderr>:    grad_norm = loss_scaler(
+[1,5]<stderr>:                ^^^^^^^^^^^^
+[1,5]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/utils.py", line 714, in __call__
+[1,5]<stderr>:    self._scaler.scale(loss).backward(create_graph=create_graph)
+[1,5]<stderr>:  File "/leonardo/prod/opt/libraries/cineca-ai/4.3.0/none/cineca-ai-env/lib/python3.11/site-packages/torch/_tensor.py", line 522, in backward
+[1,5]<stderr>:    torch.autograd.backward(
+[1,5]<stderr>:  File "/leonardo/prod/opt/libraries/cineca-ai/4.3.0/none/cineca-ai-env/lib/python3.11/site-packages/torch/autograd/__init__.py", line 266, in backward
+[1,5]<stderr>:    Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+[1,5]<stderr>:RuntimeError: Rank 5 successfully reached monitoredBarrier, but received errors while waiting for send/recv from rank 0. Please check rank 0 logs for faulty rank.
+[1,5]<stderr>: Original exception: 
+[1,5]<stderr>:[/leonardo/prod/build/libraries/cineca-ai/4.3.0/none/BA_WORK/cineca-ai-4.3.0/work-dir/000002/000000_cineca-ai/work/sources/pytorch/third_party/gloo/gloo/transport/tcp/pair.cc:534] Connection closed by peer [10.7.0.251]:33703
+[1,4]<stderr>:[rank4]:[E ProcessGroupGloo.cpp:144] Rank 4 successfully reached monitoredBarrier, but received errors while waiting for send/recv from rank 0. Please check rank 0 logs for faulty rank.
+[1,4]<stderr>:Traceback (most recent call last):
+[1,4]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 483, in <module>
+[1,4]<stderr>:    launch_specialization_training(args)
+[1,4]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 378, in launch_specialization_training
+[1,4]<stderr>:    train_stats = train_one_epoch(
+[1,4]<stderr>:                  ^^^^^^^^^^^^^^^^
+[1,4]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/engine_for_pretraining.py", line 119, in train_one_epoch
+[1,4]<stderr>:    grad_norm = loss_scaler(
+[1,4]<stderr>:                ^^^^^^^^^^^^
+[1,4]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/utils.py", line 714, in __call__
+[1,4]<stderr>:    self._scaler.scale(loss).backward(create_graph=create_graph)
+[1,4]<stderr>:  File "/leonardo/prod/opt/libraries/cineca-ai/4.3.0/none/cineca-ai-env/lib/python3.11/site-packages/torch/_tensor.py", line 522, in backward
+[1,4]<stderr>:    torch.autograd.backward(
+[1,4]<stderr>:  File "/leonardo/prod/opt/libraries/cineca-ai/4.3.0/none/cineca-ai-env/lib/python3.11/site-packages/torch/autograd/__init__.py", line 266, in backward
+[1,4]<stderr>:    Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+[1,4]<stderr>:RuntimeError: Rank 4 successfully reached monitoredBarrier, but received errors while waiting for send/recv from rank 0. Please check rank 0 logs for faulty rank.
+[1,4]<stderr>: Original exception: 
+[1,4]<stderr>:[/leonardo/prod/build/libraries/cineca-ai/4.3.0/none/BA_WORK/cineca-ai-4.3.0/work-dir/000002/000000_cineca-ai/work/sources/pytorch/third_party/gloo/gloo/transport/tcp/pair.cc:534] Connection closed by peer [10.7.0.251]:33703
+[1,6]<stderr>:[rank6]:[E ProcessGroupGloo.cpp:144] Rank 6 successfully reached monitoredBarrier, but received errors while waiting for send/recv from rank 0. Please check rank 0 logs for faulty rank.
+[1,6]<stderr>:Traceback (most recent call last):
+[1,6]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 483, in <module>
+[1,6]<stderr>:    launch_specialization_training(args)
+[1,6]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 378, in launch_specialization_training
+[1,6]<stderr>:    train_stats = train_one_epoch(
+[1,6]<stderr>:                  ^^^^^^^^^^^^^^^^
+[1,6]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/engine_for_pretraining.py", line 119, in train_one_epoch
+[1,6]<stderr>:    grad_norm = loss_scaler(
+[1,6]<stderr>:                ^^^^^^^^^^^^
+[1,6]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/utils.py", line 714, in __call__
+[1,6]<stderr>:    self._scaler.scale(loss).backward(create_graph=create_graph)
+[1,6]<stderr>:  File "/leonardo/prod/opt/libraries/cineca-ai/4.3.0/none/cineca-ai-env/lib/python3.11/site-packages/torch/_tensor.py", line 522, in backward
+[1,6]<stderr>:    torch.autograd.backward(
+[1,6]<stderr>:  File "/leonardo/prod/opt/libraries/cineca-ai/4.3.0/none/cineca-ai-env/lib/python3.11/site-packages/torch/autograd/__init__.py", line 266, in backward
+[1,6]<stderr>:    Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+[1,6]<stderr>:RuntimeError: Rank 6 successfully reached monitoredBarrier, but received errors while waiting for send/recv from rank 0. Please check rank 0 logs for faulty rank.
+[1,6]<stderr>: Original exception: 
+[1,6]<stderr>:[/leonardo/prod/build/libraries/cineca-ai/4.3.0/none/BA_WORK/cineca-ai-4.3.0/work-dir/000002/000000_cineca-ai/work/sources/pytorch/third_party/gloo/gloo/transport/tcp/pair.cc:534] Connection closed by peer [10.7.0.251]:33703
+[1,7]<stderr>:[rank7]:[E ProcessGroupGloo.cpp:144] Rank 7 successfully reached monitoredBarrier, but received errors while waiting for send/recv from rank 0. Please check rank 0 logs for faulty rank.
+[1,7]<stderr>:Traceback (most recent call last):
+[1,7]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 483, in <module>
+[1,7]<stderr>:    launch_specialization_training(args)
+[1,7]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 378, in launch_specialization_training
+[1,7]<stderr>:    train_stats = train_one_epoch(
+[1,7]<stderr>:                  ^^^^^^^^^^^^^^^^
+[1,7]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/engine_for_pretraining.py", line 119, in train_one_epoch
+[1,7]<stderr>:    grad_norm = loss_scaler(
+[1,7]<stderr>:                ^^^^^^^^^^^^
+[1,7]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/utils.py", line 714, in __call__
+[1,7]<stderr>:    self._scaler.scale(loss).backward(create_graph=create_graph)
+[1,7]<stderr>:  File "/leonardo/prod/opt/libraries/cineca-ai/4.3.0/none/cineca-ai-env/lib/python3.11/site-packages/torch/_tensor.py", line 522, in backward
+[1,7]<stderr>:    torch.autograd.backward(
+[1,7]<stderr>:  File "/leonardo/prod/opt/libraries/cineca-ai/4.3.0/none/cineca-ai-env/lib/python3.11/site-packages/torch/autograd/__init__.py", line 266, in backward
+[1,7]<stderr>:    Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+[1,7]<stderr>:RuntimeError: Rank 7 successfully reached monitoredBarrier, but received errors while waiting for send/recv from rank 0. Please check rank 0 logs for faulty rank.
+[1,7]<stderr>: Original exception: 
+[1,7]<stderr>:[/leonardo/prod/build/libraries/cineca-ai/4.3.0/none/BA_WORK/cineca-ai-4.3.0/work-dir/000002/000000_cineca-ai/work/sources/pytorch/third_party/gloo/gloo/transport/tcp/pair.cc:534] Connection closed by peer [10.7.0.251]:33703
+[1,10]<stderr>:[rank10]:[E ProcessGroupGloo.cpp:144] Rank 10 successfully reached monitoredBarrier, but received errors while waiting for send/recv from rank 0. Please check rank 0 logs for faulty rank.
+[1,10]<stderr>:Traceback (most recent call last):
+[1,10]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 483, in <module>
+[1,10]<stderr>:    launch_specialization_training(args)
+[1,10]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 378, in launch_specialization_training
+[1,10]<stderr>:    train_stats = train_one_epoch(
+[1,10]<stderr>:                  ^^^^^^^^^^^^^^^^
+[1,10]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/engine_for_pretraining.py", line 119, in train_one_epoch
+[1,10]<stderr>:    grad_norm = loss_scaler(
+[1,10]<stderr>:                ^^^^^^^^^^^^
+[1,10]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/utils.py", line 714, in __call__
+[1,10]<stderr>:    self._scaler.scale(loss).backward(create_graph=create_graph)
+[1,10]<stderr>:  File "/leonardo/prod/opt/libraries/cineca-ai/4.3.0/none/cineca-ai-env/lib/python3.11/site-packages/torch/_tensor.py", line 522, in backward
+[1,10]<stderr>:    torch.autograd.backward(
+[1,10]<stderr>:  File "/leonardo/prod/opt/libraries/cineca-ai/4.3.0/none/cineca-ai-env/lib/python3.11/site-packages/torch/autograd/__init__.py", line 266, in backward
+[1,10]<stderr>:    Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+[1,10]<stderr>:RuntimeError: Rank 10 successfully reached monitoredBarrier, but received errors while waiting for send/recv from rank 0. Please check rank 0 logs for faulty rank.
+[1,10]<stderr>: Original exception: 
+[1,10]<stderr>:[/leonardo/prod/build/libraries/cineca-ai/4.3.0/none/BA_WORK/cineca-ai-4.3.0/work-dir/000002/000000_cineca-ai/work/sources/pytorch/third_party/gloo/gloo/transport/tcp/pair.cc:534] Connection closed by peer [10.7.0.251]:33703
+[1,11]<stderr>:[rank11]:[E ProcessGroupGloo.cpp:144] Rank 11 successfully reached monitoredBarrier, but received errors while waiting for send/recv from rank 0. Please check rank 0 logs for faulty rank.
+[1,11]<stderr>:Traceback (most recent call last):
+[1,11]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 483, in <module>
+[1,11]<stderr>:    launch_specialization_training(args)
+[1,11]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 378, in launch_specialization_training
+[1,11]<stderr>:    train_stats = train_one_epoch(
+[1,11]<stderr>:                  ^^^^^^^^^^^^^^^^
+[1,11]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/engine_for_pretraining.py", line 119, in train_one_epoch
+[1,11]<stderr>:    grad_norm = loss_scaler(
+[1,11]<stderr>:                ^^^^^^^^^^^^
+[1,11]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/utils.py", line 714, in __call__
+[1,11]<stderr>:    self._scaler.scale(loss).backward(create_graph=create_graph)
+[1,11]<stderr>:  File "/leonardo/prod/opt/libraries/cineca-ai/4.3.0/none/cineca-ai-env/lib/python3.11/site-packages/torch/_tensor.py", line 522, in backward
+[1,11]<stderr>:    torch.autograd.backward(
+[1,11]<stderr>:  File "/leonardo/prod/opt/libraries/cineca-ai/4.3.0/none/cineca-ai-env/lib/python3.11/site-packages/torch/autograd/__init__.py", line 266, in backward
+[1,11]<stderr>:    Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+[1,11]<stderr>:RuntimeError: Rank 11 successfully reached monitoredBarrier, but received errors while waiting for send/recv from rank 0. Please check rank 0 logs for faulty rank.
+[1,11]<stderr>: Original exception: 
+[1,11]<stderr>:[/leonardo/prod/build/libraries/cineca-ai/4.3.0/none/BA_WORK/cineca-ai-4.3.0/work-dir/000002/000000_cineca-ai/work/sources/pytorch/third_party/gloo/gloo/transport/tcp/pair.cc:534] Connection closed by peer [10.7.0.251]:33703
+[1,8]<stderr>:[rank8]:[E ProcessGroupGloo.cpp:144] Rank 8 successfully reached monitoredBarrier, but received errors while waiting for send/recv from rank 0. Please check rank 0 logs for faulty rank.
+[1,8]<stderr>:Traceback (most recent call last):
+[1,8]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 483, in <module>
+[1,8]<stderr>:    launch_specialization_training(args)
+[1,8]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 378, in launch_specialization_training
+[1,8]<stderr>:    train_stats = train_one_epoch(
+[1,8]<stderr>:                  ^^^^^^^^^^^^^^^^
+[1,8]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/engine_for_pretraining.py", line 119, in train_one_epoch
+[1,8]<stderr>:    grad_norm = loss_scaler(
+[1,8]<stderr>:                ^^^^^^^^^^^^
+[1,8]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/utils.py", line 714, in __call__
+[1,8]<stderr>:    self._scaler.scale(loss).backward(create_graph=create_graph)
+[1,8]<stderr>:  File "/leonardo/prod/opt/libraries/cineca-ai/4.3.0/none/cineca-ai-env/lib/python3.11/site-packages/torch/_tensor.py", line 522, in backward
+[1,8]<stderr>:    torch.autograd.backward(
+[1,8]<stderr>:  File "/leonardo/prod/opt/libraries/cineca-ai/4.3.0/none/cineca-ai-env/lib/python3.11/site-packages/torch/autograd/__init__.py", line 266, in backward
+[1,8]<stderr>:    Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+[1,8]<stderr>:RuntimeError: Rank 8 successfully reached monitoredBarrier, but received errors while waiting for send/recv from rank 0. Please check rank 0 logs for faulty rank.
+[1,8]<stderr>: Original exception: 
+[1,8]<stderr>:[/leonardo/prod/build/libraries/cineca-ai/4.3.0/none/BA_WORK/cineca-ai-4.3.0/work-dir/000002/000000_cineca-ai/work/sources/pytorch/third_party/gloo/gloo/transport/tcp/pair.cc:534] Connection closed by peer [10.7.0.251]:33703
+[1,9]<stderr>:[rank9]:[E ProcessGroupGloo.cpp:144] Rank 9 successfully reached monitoredBarrier, but received errors while waiting for send/recv from rank 0. Please check rank 0 logs for faulty rank.
+[1,9]<stderr>:Traceback (most recent call last):
+[1,9]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 483, in <module>
+[1,9]<stderr>:    launch_specialization_training(args)
+[1,9]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 378, in launch_specialization_training
+[1,9]<stderr>:    train_stats = train_one_epoch(
+[1,9]<stderr>:                  ^^^^^^^^^^^^^^^^
+[1,9]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/engine_for_pretraining.py", line 119, in train_one_epoch
+[1,9]<stderr>:    grad_norm = loss_scaler(
+[1,9]<stderr>:                ^^^^^^^^^^^^
+[1,9]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/utils.py", line 714, in __call__
+[1,9]<stderr>:    self._scaler.scale(loss).backward(create_graph=create_graph)
+[1,9]<stderr>:  File "/leonardo/prod/opt/libraries/cineca-ai/4.3.0/none/cineca-ai-env/lib/python3.11/site-packages/torch/_tensor.py", line 522, in backward
+[1,9]<stderr>:    torch.autograd.backward(
+[1,9]<stderr>:  File "/leonardo/prod/opt/libraries/cineca-ai/4.3.0/none/cineca-ai-env/lib/python3.11/site-packages/torch/autograd/__init__.py", line 266, in backward
+[1,9]<stderr>:    Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+[1,9]<stderr>:RuntimeError: Rank 9 successfully reached monitoredBarrier, but received errors while waiting for send/recv from rank 0. Please check rank 0 logs for faulty rank.
+[1,9]<stderr>: Original exception: 
+[1,9]<stderr>:[/leonardo/prod/build/libraries/cineca-ai/4.3.0/none/BA_WORK/cineca-ai-4.3.0/work-dir/000002/000000_cineca-ai/work/sources/pytorch/third_party/gloo/gloo/transport/tcp/pair.cc:534] Connection closed by peer [10.7.0.251]:33703
+[1,14]<stderr>:[rank14]:[E ProcessGroupGloo.cpp:144] Rank 14 successfully reached monitoredBarrier, but received errors while waiting for send/recv from rank 0. Please check rank 0 logs for faulty rank.
+[1,14]<stderr>:Traceback (most recent call last):
+[1,14]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 483, in <module>
+[1,14]<stderr>:    launch_specialization_training(args)
+[1,14]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 378, in launch_specialization_training
+[1,14]<stderr>:    train_stats = train_one_epoch(
+[1,14]<stderr>:                  ^^^^^^^^^^^^^^^^
+[1,14]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/engine_for_pretraining.py", line 119, in train_one_epoch
+[1,14]<stderr>:    grad_norm = loss_scaler(
+[1,14]<stderr>:                ^^^^^^^^^^^^
+[1,14]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/utils.py", line 714, in __call__
+[1,14]<stderr>:    self._scaler.scale(loss).backward(create_graph=create_graph)
+[1,14]<stderr>:  File "/leonardo/prod/opt/libraries/cineca-ai/4.3.0/none/cineca-ai-env/lib/python3.11/site-packages/torch/_tensor.py", line 522, in backward
+[1,14]<stderr>:    torch.autograd.backward(
+[1,14]<stderr>:  File "/leonardo/prod/opt/libraries/cineca-ai/4.3.0/none/cineca-ai-env/lib/python3.11/site-packages/torch/autograd/__init__.py", line 266, in backward
+[1,14]<stderr>:    Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+[1,14]<stderr>:RuntimeError: Rank 14 successfully reached monitoredBarrier, but received errors while waiting for send/recv from rank 0. Please check rank 0 logs for faulty rank.
+[1,14]<stderr>: Original exception: 
+[1,14]<stderr>:[/leonardo/prod/build/libraries/cineca-ai/4.3.0/none/BA_WORK/cineca-ai-4.3.0/work-dir/000002/000000_cineca-ai/work/sources/pytorch/third_party/gloo/gloo/transport/tcp/pair.cc:534] Connection closed by peer [10.7.0.251]:33703
+[1,13]<stderr>:[rank13]:[E ProcessGroupGloo.cpp:144] Rank 13 successfully reached monitoredBarrier, but received errors while waiting for send/recv from rank 0. Please check rank 0 logs for faulty rank.
+[1,13]<stderr>:Traceback (most recent call last):
+[1,13]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 483, in <module>
+[1,13]<stderr>:    launch_specialization_training(args)
+[1,13]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 378, in launch_specialization_training
+[1,13]<stderr>:    train_stats = train_one_epoch(
+[1,13]<stderr>:                  ^^^^^^^^^^^^^^^^
+[1,13]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/engine_for_pretraining.py", line 119, in train_one_epoch
+[1,13]<stderr>:    grad_norm = loss_scaler(
+[1,13]<stderr>:                ^^^^^^^^^^^^
+[1,13]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/utils.py", line 714, in __call__
+[1,13]<stderr>:    self._scaler.scale(loss).backward(create_graph=create_graph)
+[1,13]<stderr>:  File "/leonardo/prod/opt/libraries/cineca-ai/4.3.0/none/cineca-ai-env/lib/python3.11/site-packages/torch/_tensor.py", line 522, in backward
+[1,13]<stderr>:    torch.autograd.backward(
+[1,13]<stderr>:  File "/leonardo/prod/opt/libraries/cineca-ai/4.3.0/none/cineca-ai-env/lib/python3.11/site-packages/torch/autograd/__init__.py", line 266, in backward
+[1,13]<stderr>:    Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+[1,13]<stderr>:RuntimeError: Rank 13 successfully reached monitoredBarrier, but received errors while waiting for send/recv from rank 0. Please check rank 0 logs for faulty rank.
+[1,13]<stderr>: Original exception: 
+[1,13]<stderr>:[/leonardo/prod/build/libraries/cineca-ai/4.3.0/none/BA_WORK/cineca-ai-4.3.0/work-dir/000002/000000_cineca-ai/work/sources/pytorch/third_party/gloo/gloo/transport/tcp/pair.cc:534] Connection closed by peer [10.7.0.251]:33703
+[1,15]<stderr>:[rank15]:[E ProcessGroupGloo.cpp:144] Rank 15 successfully reached monitoredBarrier, but received errors while waiting for send/recv from rank 0. Please check rank 0 logs for faulty rank.
+[1,15]<stderr>:Traceback (most recent call last):
+[1,15]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 483, in <module>
+[1,15]<stderr>:    launch_specialization_training(args)
+[1,15]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 378, in launch_specialization_training
+[1,15]<stderr>:    train_stats = train_one_epoch(
+[1,15]<stderr>:                  ^^^^^^^^^^^^^^^^
+[1,15]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/engine_for_pretraining.py", line 119, in train_one_epoch
+[1,15]<stderr>:    grad_norm = loss_scaler(
+[1,15]<stderr>:                ^^^^^^^^^^^^
+[1,15]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/utils.py", line 714, in __call__
+[1,15]<stderr>:    self._scaler.scale(loss).backward(create_graph=create_graph)
+[1,15]<stderr>:  File "/leonardo/prod/opt/libraries/cineca-ai/4.3.0/none/cineca-ai-env/lib/python3.11/site-packages/torch/_tensor.py", line 522, in backward
+[1,15]<stderr>:    torch.autograd.backward(
+[1,15]<stderr>:  File "/leonardo/prod/opt/libraries/cineca-ai/4.3.0/none/cineca-ai-env/lib/python3.11/site-packages/torch/autograd/__init__.py", line 266, in backward
+[1,15]<stderr>:    Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+[1,15]<stderr>:RuntimeError: Rank 15 successfully reached monitoredBarrier, but received errors while waiting for send/recv from rank 0. Please check rank 0 logs for faulty rank.
+[1,15]<stderr>: Original exception: 
+[1,15]<stderr>:[/leonardo/prod/build/libraries/cineca-ai/4.3.0/none/BA_WORK/cineca-ai-4.3.0/work-dir/000002/000000_cineca-ai/work/sources/pytorch/third_party/gloo/gloo/transport/tcp/pair.cc:534] Connection closed by peer [10.7.0.251]:33703
+--------------------------------------------------------------------------
+mpirun detected that one or more processes exited with non-zero status, thus causing
+the job to be terminated. The first process to do so was:
+
+  Process name: [[62988,1],12]
+  Exit code:    2
+--------------------------------------------------------------------------
