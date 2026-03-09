@@ -163,12 +163,13 @@ def prepare_args(machine=None):
     if machine:
         machine_args_override = {}
         if machine == 'leonardo':
-            ckpath = '$FAST/checkpoint-99999999.pth'
-            #exp_path = os.path.expandvars(ckpath)
-            #if "$HOME" in exp_path:
-            #    raise EnvironmentError("La variabile d'ambiente HOME non è definita.")
-            #machine_args_override['init_ckpt'] = exp_path
-            #machine_args_override['pretrained'] = True
+            ckpath = '$FAST/vit_g_hybrid_pt_1200e.pth'
+            exp_path = os.path.expandvars(ckpath)
+            if "$HOME" in exp_path:
+                raise EnvironmentError("La variabile d'ambiente HOME non è definita.")
+            machine_args_override['init_ckpt'] = exp_path
+            machine_args_override['finetune'] = exp_path
+            machine_args_override['pretrained'] = True
             # machine_args_override['csv_folder'] = "./"
         elif machine == 'ewc':
             machine_args_override['batch_size'] = 6
