@@ -7,7 +7,7 @@
 #SBATCH --time=23:59:00
 #SBATCH --error=specialization.err
 #SBATCH --output=specialization.out
-#SBATCH --account=iscrc_same-d
+#SBATCH --account=iscrc_same-d2
 
 
 module load profile/deeplrn
@@ -18,10 +18,9 @@ export MASTER_ADDR=$(scontrol show hostnames $SLURM_JOB_NODELIST | head -n 1)
 export MASTER_PORT=12340
 
 export PYTHONWARNINGS=ignore
-export NCCL_DEBUG=INFO
-export TORCH_DISTRIBUTED_DEBUG=DETAIL
+export NCCL_DEBUG=WARN
+export NCCL_ASYNC_ERROR_HANDLING=1
 
 mpirun --map-by socket:PE=4 --report-bindings --tag-output python -u specialization.py \
     --on leonardo \
     
-

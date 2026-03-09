@@ -117,8 +117,8 @@ def prepare_args(machine=None):
     user_args_pretrain = {
         'model': 'pretrain_videomae_giant_patch14_224',  # 'pretrain_videomae_base_patch16_224',
         'pretrained': True,  # Abilita il caricamento del checkpoint
-        'finetune': './output/checkpoint-590_rand1.pth', #'./vit_g_hybrid_pt_1200e.pth',
-        'init_ckpt': './output/checkpoint-590_rand1.pth', #'./vit_g_hybrid_pt_1200e.pth',
+        'finetune': './vit_g_hybrid_pt_1200e.pth', #'./output/checkpoint-590_rand1.pth', #
+        'init_ckpt': './vit_g_hybrid_pt_1200e.pth', # './output/checkpoint-590_rand1.pth', #
         'auto_resume': False,
         'train_path': './UNtrain_random_tiles.csv',
         'test_path': './UNtest_random_tiles.csv',
@@ -147,7 +147,7 @@ def prepare_args(machine=None):
         'decoder_depth': 4,
         'testing_epochs': 5,
         # Set True to disable GroupMultiScaleCrop in specialization.
-        'no_data_aug': False,
+        'no_data_aug': True,
     }
     # user_args = {
     #     'opt_betas': [0.9, 0.999],
