@@ -9,7 +9,6 @@
 #SBATCH --output=specialization.out
 #SBATCH --account=iscrc_same-d2
 
-
 module load profile/deeplrn
 module load cineca-ai/4.3.0
 source $HOME/videomae/bin/activate
