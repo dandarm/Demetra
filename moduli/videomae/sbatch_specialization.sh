@@ -18,7 +18,7 @@ export MASTER_PORT=12340
 
 export PYTHONWARNINGS=ignore
 export NCCL_DEBUG=WARN
-export NCCL_ASYNC_ERROR_HANDLING=1
+export TORCH_NCCL_ASYNC_ERROR_HANDLING=1
 
 mpirun --map-by socket:PE=4 --report-bindings --tag-output python -u specialization.py \
     --on leonardo \
