@@ -1,8 +1,8 @@
 #!/bin/bash
-#SBATCH --nodes=4
-#SBATCH --ntasks-per-node=8
+#SBATCH --nodes=8
+#SBATCH --ntasks-per-node=4
 #SBATCH --partition=boost_usr_prod
-#SBATCH --gres=gpu:8
+#SBATCH --gres=gpu:4
 #SBATCH --cpus-per-task=8
 #SBATCH --time=23:59:00
 #SBATCH --error=specialization.err
