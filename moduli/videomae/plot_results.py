@@ -1,6 +1,7 @@
 import json
 import numpy as np
 import matplotlib.pyplot as plt
+from itertools import cycle
 from matplotlib.ticker import MultipleLocator
 from mpl_toolkits.axes_grid1 import host_subplot
 import mpl_toolkits.axisartist as AA
@@ -111,100 +112,149 @@ def axis_color(ax, colore_asse):
     ax.axis["right"].line.set_color(colore_asse)
 
 
-def plot_training_curves(tuple_vars, plot_file_name=None):  #TODO: per l'asse non LOG tocca rifare da capo log=True):
+def _is_result_tuple(candidate):
+    return isinstance(candidate, tuple) and len(candidate) == 16
 
-    #(train_epochs, train_losses, test_epochs, test_losses, val_epochs, val_losses, val_accs, lr_epochs) = tuple_vars
-    #(train_epochs, train_losses, test_epochs, test_losses, val_epochs, val_losses, val_accs, lr_epochs, val_fprs, val_fnrs, val2_losses, val2_accs, val2_fprs, val2_fnrs) = tuple_vars
-    (train_epochs, train_losses, test_epochs, 
-        test_losses, val_epochs, val_losses, val_accs, 
-        lr_epochs, val_bal_acc, val_pod, val_far, val2_losses, 
-        val2_accs, val2_bal_acc, val2_pod, val2_far) = tuple_vars
-    
+
+def _normalize_runs(plot_args):
+    if len(plot_args) == 1:
+        first = plot_args[0]
+        if _is_result_tuple(first):
+            return [first]
+        if isinstance(first, (list, tuple)) and len(first) > 0 and all(_is_result_tuple(x) for x in first):
+            return list(first)
+    if len(plot_args) > 0 and all(_is_result_tuple(x) for x in plot_args):
+        return list(plot_args)
+    raise ValueError("plot_training_curves expects one or more result tuples returned by collect_data().")
+
+
+def plot_training_curves(*tuple_vars, plot_file_name=None, labels=None, log=False, show_lr=None):  #TODO: per l'asse non LOG tocca rifare da capo log=True):
+    runs = _normalize_runs(tuple_vars)
+    is_multi_run = len(runs) > 1
+
+    if labels is None:
+        labels = [f'Run {idx + 1}' for idx in range(len(runs))]
+    elif len(labels) != len(runs):
+        raise ValueError(f"labels length ({len(labels)}) must match number of runs ({len(runs)}).")
+
+    if show_lr is None:
+        show_lr = not is_multi_run
 
     # Plot del grafico
     fig = plt.figure(figsize=(20, 10))
-
     ax1 = host_subplot(111, axes_class=AA.Axes, figure=fig)
-    #plt.subplots_adjust(right=0.75)
     ax2 = ax1.twinx()
 
-    # Asse sinistro per la loss
-    ax1.plot(train_epochs, train_losses, marker='.', label='Training Loss') #, marker='o', linestyle='')
-    if test_losses is not None and len(test_losses) > 0:
-        ax1.plot(test_epochs, test_losses, label='Test Loss') #color='r', marker='s', 
-    ax1.plot(val_epochs, val_losses, marker='.', label='Validation Loss') #color='r', marker='s', 
-    if val2_losses is not None and len(val2_losses) > 0:
-       ax1.plot(val_epochs, val2_losses, marker='.', label='Validation2 Loss', color='peachpuff') # marker='s',
-    
+    run_color_cycle = cycle(plt.rcParams['axes.prop_cycle'].by_key()['color'])
+
+    first_val_accs = []
+    first_val_epochs = []
+    first_val_bal_acc = []
+    first_val_pod = []
+    first_val_far = []
+    first_val2_losses = []
+    first_val2_accs = []
+    first_val2_bal_acc = []
+    first_val2_pod = []
+    first_val2_far = []
+    first_lr_epochs = []
+    first_train_epochs = []
+
+    for idx, run in enumerate(runs):
+        (train_epochs, train_losses, test_epochs,
+            test_losses, val_epochs, val_losses, val_accs,
+            lr_epochs, val_bal_acc, val_pod, val_far, val2_losses,
+            val2_accs, val2_bal_acc, val2_pod, val2_far) = run
+
+        color = next(run_color_cycle)
+        run_label = labels[idx]
+
+        ax1.plot(train_epochs, train_losses, marker='.', linestyle='-', color=color, label=f'{run_label} - Training Loss')
+        if test_losses is not None and len(test_losses) > 0:
+            ax1.plot(test_epochs, test_losses, linestyle='--', color=color, alpha=0.8, label=f'{run_label} - Test Loss')
+        if val_losses is not None and len(val_losses) > 0:
+            ax1.plot(val_epochs, val_losses, marker='.', linestyle='-.', color=color, alpha=0.85, label=f'{run_label} - Validation Loss')
+        if val2_losses is not None and len(val2_losses) > 0:
+            ax1.plot(val_epochs, val2_losses, marker='.', linestyle=':', color=color, alpha=0.85, label=f'{run_label} - Validation2 Loss')
+
+        if idx == 0:
+            first_val_accs = val_accs
+            first_val_epochs = val_epochs
+            first_val_bal_acc = val_bal_acc
+            first_val_pod = val_pod
+            first_val_far = val_far
+            first_val2_losses = val2_losses
+            first_val2_accs = val2_accs
+            first_val2_bal_acc = val2_bal_acc
+            first_val2_pod = val2_pod
+            first_val2_far = val2_far
+            first_lr_epochs = lr_epochs
+            first_train_epochs = train_epochs
 
     tick_length = 20
-    tick_width  = 180
+    tick_width = 180
     set_ticklines(ax1, tick_length, tick_width)
-
 
     ax1.set_xlabel('Epochs')
     ax1.set_ylabel('Loss')
     ax1.grid(True)
-    ax1.legend(loc='upper left')
-    #if log:
-    ax1.set_yscale('log')
-    ax1.set_xscale('log')
-    #ax1.set_ylim(0.01,1)
+    if log:
+        ax1.set_yscale('log')
+        ax1.set_xscale('log')
+    ax1.legend(loc='upper right')
+    ax1.set_ylim(bottom=3e-1)
 
-    if len(val_accs)>0:
-        # Asse destro per l'accuracy
-        
+    # Accuracy axis: solo run singola per non sovraccaricare il grafico
+    if not is_multi_run and len(first_val_accs) > 0:
         ax2.axis["right"].toggle(all=True)
-        p2 = ax2.plot(val_epochs, val_accs, color='g', marker='.', label='Validation Accuracy')        
-        #p2 = ax2.plot(val_epochs, val_bal_acc, color='turquoise', marker='.', label='Validation Balanced Accuracy')
+        p2 = ax2.plot(first_val_epochs, first_val_accs, color='g', marker='.', label='Validation Accuracy')
         colore_asse = p2[0].get_color()
         ax2.set_ylabel('Accuracy')
-        ax2.grid(True, color=colore_asse, linestyle='--', linewidth=1.5, axis='y',  )
-        #ax2.yaxis.set_major_locator(MultipleLocator(5))
-        #ax2.legend(loc='center right')
+        ax2.grid(True, color=colore_asse, linestyle='--', linewidth=1.5, axis='y')
         ax2.legend(loc='lower left')
-        ax2.set_ylim(0,1)
-
+        ax2.set_ylim(0, 1)
         axis_color(ax2, colore_asse)
+    elif is_multi_run:
+        ax2.axis["right"].toggle(all=False)
 
-
-    if len(lr_epochs) > 0:
+    if show_lr and len(first_lr_epochs) > 0:
         try:
             ax3 = ax1.twinx()
-        except:
+        except Exception:
             ax3 = ax1.get_aux_axes(ax1.transData)
             # TODO: è inutile, rifare da capo nel caso di assi non logaritmici
-        
+
         new_fixed_axis = ax3.get_grid_helper().new_fixed_axis
         ax3.axis["right"] = new_fixed_axis(loc="right", axes=ax3, offset=(100, 0))
         ax3.axis["right"].toggle(all=True)
 
-        p3 = ax3.plot(train_epochs, lr_epochs, label='Learning rate', color='black')
+        p3 = ax3.plot(first_train_epochs, first_lr_epochs, label='Learning rate', color='black')
         colore_asse = p3[0].get_color()
         ax3.set_ylabel('Learning rate')
-        #ax3.spines['right'].set_position(('outward', 60))
         set_ticklines(ax3, 190, tick_width)
 
-        #if log:
         ax3.set_yscale('log')
-        ax3.set_xscale('log')
-
+        if log:
+            ax3.set_xscale('log')
         axis_color(ax3, colore_asse)
 
-    plt.title('Training Loss, Validation Loss, and Accuracy per Epoch')
+    title = 'Training Loss, Validation Loss, and Accuracy per Epoch'
+    if is_multi_run:
+        title = 'Training and Validation Loss Comparison'
+    plt.title(title)
     fig.canvas.draw()
 
+    podfar_file_name = None
     if plot_file_name is not None:
         plt.savefig(plot_file_name)
-     
-        ### plot POD FAR
-        plot_file_name = plot_file_name.replace('.png', '_podfar.png')
+        podfar_file_name = plot_file_name.replace('.png', '_podfar.png')
 
-    if  len(val_pod) > 0 and len(val_far) > 0:
-        if len(val2_pod) > 0 and len(val2_far) > 0:
-            plot_podfar(val_bal_acc, val_pod, val_far, val_epochs, val2_bal_acc, val2_pod, val2_far, plot_file_name=plot_file_name)
+    if (not is_multi_run) and len(first_val_pod) > 0 and len(first_val_far) > 0:
+        if len(first_val2_pod) > 0 and len(first_val2_far) > 0:
+            plot_podfar(first_val_bal_acc, first_val_pod, first_val_far, first_val_epochs,
+                        first_val2_bal_acc, first_val2_pod, first_val2_far, plot_file_name=podfar_file_name)
         else:
-            plot_podfar(val_accs, val_pod, val_far, val_epochs, plot_file_name=plot_file_name)
+            plot_podfar(first_val_accs, first_val_pod, first_val_far, first_val_epochs, plot_file_name=podfar_file_name)
         
 
 

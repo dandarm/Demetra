@@ -3,6 +3,7 @@ import os
 import datetime
 import time
 import argparse
+import math
 from pathlib import Path
 from PIL import Image
 import json
@@ -125,6 +126,22 @@ def _print_weight_drift_summary(drift_stats, top_k=10):
     top_layers = sorted(layer_rel.items(), key=lambda x: x[1], reverse=True)[:top_k]
     for layer_key, rel_value in top_layers:
         print(f"[DRIFT][TOP] {layer_key} rel_l2={rel_value:.6e}")
+
+
+def _model_non_finite_summary(model, max_examples=10):
+    bad_tensors = 0
+    bad_elems = 0
+    examples = []
+    with torch.no_grad():
+        for name, param in model.named_parameters():
+            t = param.detach()
+            bad = (~torch.isfinite(t)).sum().item()
+            if bad:
+                bad_tensors += 1
+                bad_elems += int(bad)
+                if len(examples) < max_examples:
+                    examples.append((name, int(bad), tuple(t.shape)))
+    return bad_tensors, bad_elems, examples
 
 
 def launch_specialization_training(terminal_args):
@@ -428,35 +445,52 @@ def launch_specialization_training(terminal_args):
                     f.write(json.dumps(test_log_stats) + "\n")
 
                 # Save checkpoint only if current test loss improves over previous test loss.
+                # Skip save if test_loss or model weights are non-finite.
                 if test_loss is not None and improved:
-                    ckpt_dir = Path(args.output_dir)
-                    ckpt_dir.mkdir(parents=True, exist_ok=True)
-                    ckpt_path = ckpt_dir / f"checkpoint-{epoch}.pth"
-                    to_save = {
-                        'model': model_without_ddp.state_dict(),
-                        'optimizer': optimizer.state_dict(),
-                        'epoch': epoch,
-                        'scaler': loss_scaler.state_dict(),
-                        'args': args.__dict__,
-                        'prev_test_loss': float(test_loss),
-                    }
-                    if isinstance(rng_state_payload, list):
-                        to_save['rng_state_all_ranks'] = rng_state_payload
-                    elif rng_state_payload is not None:
-                        to_save['rng_state'] = rng_state_payload
-                    torch.save(to_save, ckpt_path)
-                    if last_improved_ckpt_path is not None and last_improved_ckpt_path != str(ckpt_path):
-                        try:
-                            old_path = Path(last_improved_ckpt_path)
-                            if old_path.exists():
-                                old_path.unlink()
-                        except Exception:
-                            pass
-                    last_improved_ckpt_path = str(ckpt_path)
-                    print(
-                        f"[CKPT] Saved improved checkpoint: {ckpt_path} "
-                        f"(test_loss {test_loss:.6f}, prev {prev_test_loss})"
-                    )
+                    finite_test_loss = math.isfinite(float(test_loss))
+                    bad_tensors, bad_elems, bad_examples = _model_non_finite_summary(model_without_ddp, max_examples=5)
+                    finite_weights = (bad_tensors == 0)
+                    if not finite_test_loss or not finite_weights:
+                        print(
+                            "[CKPT][SKIP] Non-finite state detected, checkpoint not saved: "
+                            f"test_loss={test_loss}, finite_test_loss={finite_test_loss}, "
+                            f"bad_tensors={bad_tensors}, bad_elems={bad_elems}, "
+                            f"examples={bad_examples}"
+                        )
+                        # Do not overwrite previous best with a corrupted checkpoint.
+                        if not finite_test_loss:
+                            test_log_stats["checkpoint_skipped_non_finite_test_loss"] = True
+                        if not finite_weights:
+                            test_log_stats["checkpoint_skipped_non_finite_weights"] = True
+                    else:
+                        ckpt_dir = Path(args.output_dir)
+                        ckpt_dir.mkdir(parents=True, exist_ok=True)
+                        ckpt_path = ckpt_dir / f"checkpoint-{epoch}.pth"
+                        to_save = {
+                            'model': model_without_ddp.state_dict(),
+                            'optimizer': optimizer.state_dict(),
+                            'epoch': epoch,
+                            'scaler': loss_scaler.state_dict(),
+                            'args': args.__dict__,
+                            'prev_test_loss': float(test_loss),
+                        }
+                        if isinstance(rng_state_payload, list):
+                            to_save['rng_state_all_ranks'] = rng_state_payload
+                        elif rng_state_payload is not None:
+                            to_save['rng_state'] = rng_state_payload
+                        torch.save(to_save, ckpt_path)
+                        if last_improved_ckpt_path is not None and last_improved_ckpt_path != str(ckpt_path):
+                            try:
+                                old_path = Path(last_improved_ckpt_path)
+                                if old_path.exists():
+                                    old_path.unlink()
+                            except Exception:
+                                pass
+                        last_improved_ckpt_path = str(ckpt_path)
+                        print(
+                            f"[CKPT] Saved improved checkpoint: {ckpt_path} "
+                            f"(test_loss {test_loss:.6f}, prev {prev_test_loss})"
+                        )
             if test_loss is not None:
                 prev_test_loss = float(test_loss)
 

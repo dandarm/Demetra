@@ -86,20 +86,22 @@ def train_one_epoch(model: torch.nn.Module,
             loss = (outputs - labels)**2
             loss = loss.mean(dim=-1)
             cal_loss_mask = bool_masked_pos[~decode_masked_pos].reshape(B, -1)
-            mask_denom = cal_loss_mask.sum().clamp(min=1.0)
+            mask_denom = cal_loss_mask.sum()
+            if mask_denom.item() <= 0:
+                print("Empty cal_loss_mask detected, stopping training")
+                sys.exit(2)
             loss = (loss * cal_loss_mask).sum() / mask_denom
-            # Guard against occasional non-finite values without aborting the whole DDP job.
-            loss = torch.nan_to_num(loss, nan=0.0, posinf=1e4, neginf=-1e4)
         else:
             with torch.cuda.amp.autocast():
                 outputs = model(images, bool_masked_pos, decode_masked_pos)
                 loss = (outputs - labels)**2
                 loss = loss.mean(dim=-1)
                 cal_loss_mask = bool_masked_pos[~decode_masked_pos].reshape(B, -1)
-                mask_denom = cal_loss_mask.sum().clamp(min=1.0)
+                mask_denom = cal_loss_mask.sum()
+                if mask_denom.item() <= 0:
+                    print("Empty cal_loss_mask detected, stopping training")
+                    sys.exit(2)
                 loss = (loss * cal_loss_mask).sum() / mask_denom
-                # Guard against occasional non-finite values without aborting the whole DDP job.
-                loss = torch.nan_to_num(loss, nan=0.0, posinf=1e4, neginf=-1e4)
 
         loss_value = loss.item()
 
@@ -223,10 +225,11 @@ def test(model: torch.nn.Module,
                 loss = (outputs - labels) ** 2
                 loss = loss.mean(dim=-1)
                 cal_loss_mask = bool_masked_pos[~decode_masked_pos].reshape(B, -1)
-                mask_denom = cal_loss_mask.sum().clamp(min=1.0)
+                mask_denom = cal_loss_mask.sum()
+                if mask_denom.item() <= 0:
+                    print("Empty cal_loss_mask detected during test, stopping")
+                    sys.exit(2)
                 loss = (loss * cal_loss_mask).sum() / mask_denom
-                # Keep evaluation finite even if a rare invalid batch appears.
-                loss = torch.nan_to_num(loss, nan=0.0, posinf=1e4, neginf=-1e4)
 
         loss_value = loss.item()
 

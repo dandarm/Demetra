@@ -1,9 +1,9 @@
 #!/bin/bash
 #SBATCH --nodes=4
-#SBATCH --ntasks-per-node=4
+#SBATCH --ntasks-per-node=8
 #SBATCH --partition=boost_usr_prod
-#SBATCH --gres=gpu:4
-#SBATCH --cpus-per-task=4
+#SBATCH --gres=gpu:8
+#SBATCH --cpus-per-task=8
 #SBATCH --time=23:59:00
 #SBATCH --error=specialization.err
 #SBATCH --output=specialization.out
@@ -20,6 +20,6 @@ export PYTHONWARNINGS=ignore
 export NCCL_DEBUG=WARN
 export TORCH_NCCL_ASYNC_ERROR_HANDLING=1
 
-mpirun --map-by socket:PE=4 --report-bindings --tag-output python -u specialization.py \
+mpirun --map-by socket:PE=8 --report-bindings --tag-output python -u specialization.py \
     --on leonardo \
     
