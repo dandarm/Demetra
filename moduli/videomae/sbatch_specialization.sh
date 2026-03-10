@@ -26,8 +26,7 @@ export MKL_NUM_THREADS=1
 export OPENBLAS_NUM_THREADS=1
 export VECLIB_MAXIMUM_THREADS=1
 export NUMEXPR_NUM_THREADS=1
-export OPENCV_FOR_THREADS_NUM=1  # Fondamentale se usi cv2 per estrarre i frame video
+export OPENCV_FOR_THREADS_NUM=1
 
-mpirun --map-by socket:PE=5 --report-bindings --tag-output python -u specialization.py \
-    --on leonardo \
+mpirun --map-by socket:PE=5 --report-bindings --tag-output python -u specialization.py --on leonardo
     

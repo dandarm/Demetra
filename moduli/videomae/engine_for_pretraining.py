@@ -39,6 +39,8 @@ def train_one_epoch(model: torch.nn.Module,
     #metric_logger.add_meter('min_lr', utils.SmoothedValue(window_size=1, fmt='{value:.6f}'))
     header = 'Epoch: [{}]'.format(epoch)
     print_freq = 20
+    mean = torch.as_tensor(IMAGENET_DEFAULT_MEAN, device=device)[None, :, None, None, None]
+    std = torch.as_tensor(IMAGENET_DEFAULT_STD, device=device)[None, :, None, None, None]
 
     for step, batch in enumerate(metric_logger.log_every(data_loader, print_freq, header)):
         # assign learning rate & weight decay for each step
@@ -61,8 +63,6 @@ def train_one_epoch(model: torch.nn.Module,
 
         with torch.no_grad():
             # calculate the predict label
-            mean = torch.as_tensor(IMAGENET_DEFAULT_MEAN).to(device)[None, :, None, None, None]
-            std = torch.as_tensor(IMAGENET_DEFAULT_STD).to(device)[None, :, None, None, None]
             unnorm_images = images * std + mean  # in [0, 1]
 
             if normlize_target:
@@ -109,7 +109,7 @@ def train_one_epoch(model: torch.nn.Module,
             print("Loss is {}, stopping training".format(loss_value))
             sys.exit(2)
 
-        optimizer.zero_grad()
+        optimizer.zero_grad(set_to_none=True)
 
         if loss_scaler is None:
             loss.backward()
@@ -131,8 +131,6 @@ def train_one_epoch(model: torch.nn.Module,
                 parameters=model.parameters(),
                 create_graph=is_second_order)
             loss_scale_value = loss_scaler.state_dict()["scale"]
-
-        torch.cuda.synchronize()
 
         metric_logger.update(loss=loss_value)
         #metric_logger.update(loss_scale=loss_scale_value)
@@ -184,6 +182,8 @@ def test(model: torch.nn.Module,
     #metric_logger.add_meter('min_lr', utils.SmoothedValue(window_size=1, fmt='{value:.6f}'))
     header = 'TEST... '
     print_freq = 20
+    mean = torch.as_tensor(IMAGENET_DEFAULT_MEAN, device=device)[None, :, None, None, None]
+    std = torch.as_tensor(IMAGENET_DEFAULT_STD, device=device)[None, :, None, None, None]
 
     for step, batch in enumerate(metric_logger.log_every(data_loader, print_freq, header)):
         # NOTE: When the decoder mask ratio is 0,
@@ -198,8 +198,6 @@ def test(model: torch.nn.Module,
         with torch.no_grad():
 
             # region calculate the predict label
-            mean = torch.as_tensor(IMAGENET_DEFAULT_MEAN).to(device)[None, :, None, None, None]
-            std = torch.as_tensor(IMAGENET_DEFAULT_STD).to(device)[None, :, None, None, None]
             unnorm_images = images * std + mean  # in [0, 1]
 
             if normlize_target:
