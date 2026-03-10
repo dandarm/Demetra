@@ -8,6 +8,7 @@
 import math
 import sys
 from typing import Iterable
+from contextlib import nullcontext
 
 import torch
 from einops import rearrange
@@ -28,6 +29,7 @@ def train_one_epoch(model: torch.nn.Module,
                     max_norm: float = 0,
                     patch_size: int = 16,
                     normlize_target: bool = True,
+                    amp_dtype: str = "fp16",
                     log_writer=None,
                     lr_scheduler=None,
                     start_steps=None,
@@ -41,6 +43,13 @@ def train_one_epoch(model: torch.nn.Module,
     print_freq = 20
     mean = torch.as_tensor(IMAGENET_DEFAULT_MEAN, device=device)[None, :, None, None, None]
     std = torch.as_tensor(IMAGENET_DEFAULT_STD, device=device)[None, :, None, None, None]
+    amp_dtype = str(amp_dtype or "fp16").lower()
+    if amp_dtype in ("bf16", "bfloat16"):
+        autocast_dtype = torch.bfloat16
+    elif amp_dtype in ("fp16", "float16", "half"):
+        autocast_dtype = torch.float16
+    else:
+        autocast_dtype = None
 
     for step, batch in enumerate(metric_logger.log_every(data_loader, print_freq, header)):
         # assign learning rate & weight decay for each step
@@ -92,7 +101,12 @@ def train_one_epoch(model: torch.nn.Module,
                 sys.exit(2)
             loss = (loss * cal_loss_mask).sum() / mask_denom
         else:
-            with torch.cuda.amp.autocast():
+            amp_ctx = (
+                torch.amp.autocast(device_type="cuda", dtype=autocast_dtype)
+                if (device.type == "cuda" and autocast_dtype is not None)
+                else nullcontext()
+            )
+            with amp_ctx:
                 outputs = model(images, bool_masked_pos, decode_masked_pos)
                 loss = (outputs - labels)**2
                 loss = loss.mean(dim=-1)
@@ -173,6 +187,7 @@ def test(model: torch.nn.Module,
         epoch,
         patch_size: int = 16,
         normlize_target: bool = True,
+        amp_dtype: str = "fp16",
         log_writer=None):
 
     model.eval()
@@ -184,6 +199,13 @@ def test(model: torch.nn.Module,
     print_freq = 20
     mean = torch.as_tensor(IMAGENET_DEFAULT_MEAN, device=device)[None, :, None, None, None]
     std = torch.as_tensor(IMAGENET_DEFAULT_STD, device=device)[None, :, None, None, None]
+    amp_dtype = str(amp_dtype or "fp16").lower()
+    if amp_dtype in ("bf16", "bfloat16"):
+        autocast_dtype = torch.bfloat16
+    elif amp_dtype in ("fp16", "float16", "half"):
+        autocast_dtype = torch.float16
+    else:
+        autocast_dtype = None
 
     for step, batch in enumerate(metric_logger.log_every(data_loader, print_freq, header)):
         # NOTE: When the decoder mask ratio is 0,
@@ -218,7 +240,12 @@ def test(model: torch.nn.Module,
             # endregion
 
 
-            with torch.cuda.amp.autocast():
+            amp_ctx = (
+                torch.amp.autocast(device_type="cuda", dtype=autocast_dtype)
+                if (device.type == "cuda" and autocast_dtype is not None)
+                else nullcontext()
+            )
+            with amp_ctx:
                 outputs = model(images, bool_masked_pos, decode_masked_pos)
                 loss = (outputs - labels) ** 2
                 loss = loss.mean(dim=-1)

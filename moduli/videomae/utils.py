@@ -15,6 +15,7 @@ import math
 import os
 import sys
 import random
+import traceback
 import subprocess
 import time
 from collections import defaultdict, deque
@@ -638,9 +639,27 @@ def get_model(args):
 
     torch_version = torch.__version__.split('+')[0]
     if pkg_version.parse(torch_version) > pkg_version.parse('1.13.1'):
-        torch.set_float32_matmul_precision('high')
-        model = torch.compile(model, backend='eager') 
-        # introdotto eager per risolvere un bug con il grafo computazionale
+        # TF32 tuning is handled in specialization/classification entrypoints.
+        if getattr(args, "enable_tf32", True):
+            torch.set_float32_matmul_precision('high')
+        else:
+            torch.set_float32_matmul_precision('highest')
+
+        compile_model = bool(getattr(args, "compile_model", True))
+        compile_backend = str(getattr(args, "compile_backend", "eager") or "eager").lower()
+        compile_mode = getattr(args, "compile_mode", None)
+        if compile_model and compile_backend not in ("none", "off", "false", "disable", "disabled"):
+            try:
+                if compile_mode:
+                    model = torch.compile(model, backend=compile_backend, mode=compile_mode)
+                else:
+                    model = torch.compile(model, backend=compile_backend)
+                print(f"torch.compile enabled: backend={compile_backend}, mode={compile_mode}")
+            except Exception as e:
+                print(f"[WARN] torch.compile failed (backend={compile_backend}, mode={compile_mode}): {e}")
+                print("[WARN][TRACEBACK] torch.compile traceback completo:")
+                print(traceback.format_exc())
+                print("[INFO] Continuing without torch.compile.")
 
     return model
 
@@ -848,6 +867,8 @@ def auto_load_model(args,
         except RuntimeError as e:
             first_line = str(e).splitlines()[0] if str(e) else "load_state_dict failed"
             print(f"[WARN] strict load_state_dict fallita: {first_line}")
+            print("[WARN][TRACEBACK] strict load_state_dict traceback completo:")
+            print(traceback.format_exc())
             print("[INFO] Provo riallineamento chiavi checkpoint (module/_orig_mod/backbone).")
 
         stripped_ckpt = {}
