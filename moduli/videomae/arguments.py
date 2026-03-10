@@ -133,7 +133,7 @@ def prepare_args(machine=None):
         'num_sample': 1,
         'num_frames': 16,
         'sampling_rate': 1,  # voglio tutti i frame temporali
-        'num_workers': 8,     
+        'num_workers': 4,     
         'opt': 'adamw',
         'lr': 5e-4,
         'opt_betas': [0.9, 0.95],

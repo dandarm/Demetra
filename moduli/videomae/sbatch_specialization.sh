@@ -3,11 +3,12 @@
 #SBATCH --ntasks-per-node=4
 #SBATCH --partition=boost_usr_prod
 #SBATCH --gres=gpu:4
-#SBATCH --cpus-per-task=8
+#SBATCH --cpus-per-task=5
 #SBATCH --time=23:59:00
 #SBATCH --error=specialization.err
 #SBATCH --output=specialization.out
 #SBATCH --account=iscrc_same-d2
+#SBATCH --job-name=specialization_videomae
 
 module load profile/deeplrn
 module load cineca-ai/4.3.0
@@ -20,6 +21,13 @@ export PYTHONWARNINGS=ignore
 export NCCL_DEBUG=WARN
 export TORCH_NCCL_ASYNC_ERROR_HANDLING=1
 
-mpirun --map-by socket:PE=8 --report-bindings --tag-output python -u specialization.py \
+export OMP_NUM_THREADS=1
+export MKL_NUM_THREADS=1
+export OPENBLAS_NUM_THREADS=1
+export VECLIB_MAXIMUM_THREADS=1
+export NUMEXPR_NUM_THREADS=1
+export OPENCV_FOR_THREADS_NUM=1  # Fondamentale se usi cv2 per estrarre i frame video
+
+mpirun --map-by socket:PE=5 --report-bindings --tag-output python -u specialization.py \
     --on leonardo \
     
