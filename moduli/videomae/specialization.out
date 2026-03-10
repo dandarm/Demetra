@@ -2161,3 +2161,7 @@ Loading cineca-ai/4.3.0
 [1,0]<stdout>:[DRIFT][TOP] encoder.blocks.26 rel_l2=1.130362e+00
 [1,0]<stdout>:[DRIFT][TOP] encoder.blocks.30 rel_l2=1.126473e+00
 [1,0]<stdout>:[DRIFT][TOP] encoder.blocks.31 rel_l2=1.114135e+00
+[1,0]<stdout>:[CKPT] Saved improved checkpoint: /leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/output/checkpoint-100.pth (test_loss 0.486163, prev 0.4882020124954716)
+[1,0]<stdout>:Epoch: [101]  [  0/279]  eta: 0:07:03  loss: 0.4868 (0.4868)  time: 1.5174 (1.5174 -- 1.5174)  data: 0.9141 (0.9141 -- 0.9141)  max mem: 53097
+[1,0]<stdout>:Epoch: [101]  [ 20/279]  eta: 0:03:13  loss: 0.4741 (0.4742)  time: 0.7093 (0.6955 -- 0.7250)  data: 0.0006 (0.0002 -- 0.0012)  max mem: 53097
+[1,0]<stdout>:Epoch: [101]  [ 40/279]  eta: 0:02:55  loss: 0.4726 (0.4741)  time: 0.7169 (0.7011 -- 0.7628)  data: 0.0006 (0.0001 -- 0.0011)  max mem: 53097
