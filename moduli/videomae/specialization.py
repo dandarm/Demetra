@@ -152,6 +152,12 @@ def launch_specialization_training(terminal_args):
         args.train_path = args.data_path
     if not getattr(args, "test_path", None):
         args.test_path = args.data_path
+    print(
+        f"Perf config: with_checkpoint={getattr(args, 'with_checkpoint', None)}, "
+        f"amp_dtype={getattr(args, 'amp_dtype', 'fp16')}, "
+        f"compile_backend={getattr(args, 'compile_backend', 'eager')}, "
+        f"use_sdpa={getattr(args, 'use_sdpa', False)}"
+    )
 
     # Resolve relative paths from this module directory, not from caller CWD.
     module_dir = Path(__file__).resolve().parent
@@ -220,6 +226,41 @@ def launch_specialization_training(terminal_args):
         args.world_size = 1
         args.rank = 0
     #print(device)
+
+    if device.type == "cuda":
+        enable_tf32 = bool(getattr(args, "enable_tf32", True))
+        torch.backends.cuda.matmul.allow_tf32 = enable_tf32
+        if hasattr(torch.backends, "cudnn"):
+            torch.backends.cudnn.allow_tf32 = enable_tf32
+            torch.backends.cudnn.benchmark = True
+        if rank == 0:
+            print(f"TF32 enabled: {enable_tf32}")
+
+        sdpa_kernel = str(getattr(args, "sdpa_kernel", "auto") or "auto").lower()
+        if hasattr(torch.backends, "cuda") and hasattr(torch.backends.cuda, "enable_flash_sdp"):
+            flash = mem_eff = math_sdp = True
+            if sdpa_kernel == "flash":
+                mem_eff = False
+                math_sdp = False
+            elif sdpa_kernel in ("mem_efficient", "memory_efficient"):
+                flash = False
+                math_sdp = False
+            elif sdpa_kernel == "math":
+                flash = False
+                mem_eff = False
+            torch.backends.cuda.enable_flash_sdp(flash)
+            torch.backends.cuda.enable_mem_efficient_sdp(mem_eff)
+            torch.backends.cuda.enable_math_sdp(math_sdp)
+            if rank == 0:
+                print(
+                    f"SDPA kernel config: mode={sdpa_kernel}, "
+                    f"flash={flash}, mem_efficient={mem_eff}, math={math_sdp}"
+                )
+        elif bool(getattr(args, "use_sdpa", False)) and rank == 0:
+            print(
+                "[WARN] use_sdpa=True ma backend SDPA non disponibile in questo runtime "
+                "(torch.backends.cuda.enable_*_sdp assenti). Fallback automatico al path attention standard."
+            )
 
     # logging
     if args.log_dir and not os.path.exists(args.log_dir):
@@ -405,7 +446,8 @@ def launch_specialization_training(terminal_args):
             lr_schedule_values=lr_schedule_values,
             wd_schedule_values=wd_schedule_values,
             patch_size=patch_size[0],
-            normlize_target=args.normlize_target)
+            normlize_target=args.normlize_target,
+            amp_dtype=getattr(args, "amp_dtype", "fp16"))
 
         log_stats = {
             **{f'train_{k}': v for k, v in train_stats.items()}, 'epoch': epoch,
@@ -420,7 +462,8 @@ def launch_specialization_training(terminal_args):
 
         if epoch % args.testing_epochs == 0:
             test_stats = test(pretrained_model, data_loader_test, device, epoch,
-                        patch_size=patch_size[0], normlize_target=args.normlize_target, log_writer=log_writer)
+                        patch_size=patch_size[0], normlize_target=args.normlize_target,
+                        log_writer=log_writer, amp_dtype=getattr(args, "amp_dtype", "fp16"))
             test_log_stats = {**{f'test_{k}': v for k, v in test_stats.items()}, 'epoch': epoch}  #, 'n_parameters': n_parameters}
             if utils.is_main_process() and weight_reference_params is not None:
                 drift_stats = _compute_weight_drift_by_layer(model_without_ddp, weight_reference_params)

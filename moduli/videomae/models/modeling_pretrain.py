@@ -51,7 +51,8 @@ class PretrainVisionTransformerEncoder(nn.Module):
                  use_learnable_pos_emb=False,
                  with_cp=False,
                  all_frames=16,
-                 cos_attn=False):
+                 cos_attn=False,
+                 use_sdpa=False):
         super().__init__()
         self.num_classes = num_classes
         # num_features for consistency with other models
@@ -88,7 +89,8 @@ class PretrainVisionTransformerEncoder(nn.Module):
                 drop_path=dpr[i],
                 norm_layer=norm_layer,
                 init_values=init_values,
-                cos_attn=cos_attn) for i in range(depth)
+                cos_attn=cos_attn,
+                use_sdpa=use_sdpa) for i in range(depth)
         ])
         self.norm = norm_layer(embed_dim)
         self.head = nn.Linear(
@@ -168,7 +170,8 @@ class PretrainVisionTransformerDecoder(nn.Module):
                  num_patches=196,
                  tubelet_size=2,
                  with_cp=False,
-                 cos_attn=False):
+                 cos_attn=False,
+                 use_sdpa=False):
         super().__init__()
         self.num_classes = num_classes
         assert num_classes == 3 * tubelet_size * patch_size**2
@@ -191,7 +194,8 @@ class PretrainVisionTransformerDecoder(nn.Module):
                 drop_path=dpr[i],
                 norm_layer=norm_layer,
                 init_values=init_values,
-                cos_attn=cos_attn) for i in range(depth)
+                cos_attn=cos_attn,
+                use_sdpa=use_sdpa) for i in range(depth)
         ])
         self.norm = norm_layer(embed_dim)
         self.head = nn.Linear(
@@ -271,6 +275,7 @@ class PretrainVisionTransformer(nn.Module):
         with_cp=False,
         all_frames=16,
         cos_attn=False,
+        use_sdpa=False,
         **kwargs,
     ):
         super().__init__()
@@ -294,7 +299,8 @@ class PretrainVisionTransformer(nn.Module):
             use_learnable_pos_emb=use_learnable_pos_emb,
             with_cp=with_cp,
             all_frames=all_frames,
-            cos_attn=cos_attn)
+            cos_attn=cos_attn,
+            use_sdpa=use_sdpa)
 
         self.decoder = PretrainVisionTransformerDecoder(
             patch_size=patch_size,
@@ -313,7 +319,8 @@ class PretrainVisionTransformer(nn.Module):
             init_values=init_values,
             tubelet_size=tubelet_size,
             with_cp=with_cp,
-            cos_attn=cos_attn)
+            cos_attn=cos_attn,
+            use_sdpa=use_sdpa)
 
         self.encoder_to_decoder = nn.Linear(
             encoder_embed_dim, decoder_embed_dim, bias=False)

@@ -108,6 +108,14 @@ def prepare_args(machine=None):
         'dist_url': 'env://',
         'dist_backend': 'nccl',
         'enable_deepspeed': False,
+        # Compile/precision/performance flags
+        'compile_model': True,
+        'compile_backend': 'eager',
+        'compile_mode': None,
+        'amp_dtype': 'fp16',   # one of: fp16, bf16
+        'enable_tf32': True,
+        'use_sdpa': False,
+        'sdpa_kernel': 'auto',  # auto | flash | mem_efficient | math
         ### solo per pretraining,
         'normlize_target': True,
         # Specialization-only: disable spatial data augmentation (keeps MAE masking).
@@ -146,6 +154,13 @@ def prepare_args(machine=None):
         'save_ckpt_freq': 20,
         'decoder_depth': 4,
         'testing_epochs': 5,
+        # Performance defaults for specialization on A100/HPC
+        'compile_backend': 'inductor',
+        'compile_mode': 'default',
+        'amp_dtype': 'bf16',
+        'enable_tf32': True,
+        'use_sdpa': True,
+        'sdpa_kernel': 'auto',
         # Set True to disable GroupMultiScaleCrop in specialization.
         'no_data_aug': True,
     }

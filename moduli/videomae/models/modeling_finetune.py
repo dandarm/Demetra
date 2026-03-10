@@ -6,6 +6,7 @@
 # https://github.com/facebookresearch/dino
 # --------------------------------------------------------'
 from functools import partial
+import warnings
 
 import numpy as np
 import torch
@@ -14,6 +15,8 @@ import torch.nn.functional as F
 import torch.utils.checkpoint as cp
 from timm.models.layers import drop_path, to_2tuple, trunc_normal_
 from timm.models.registry import register_model
+
+_SDPA_FALLBACK_WARNED = False
 
 
 def _cfg(url='', **kwargs):
@@ -148,7 +151,8 @@ class Attention(nn.Module):
                  qk_scale=None,
                  attn_drop=0.,
                  proj_drop=0.,
-                 attn_head_dim=None):
+                 attn_head_dim=None,
+                 use_sdpa=False):
         super().__init__()
         self.num_heads = num_heads
         head_dim = dim // num_heads
@@ -168,6 +172,16 @@ class Attention(nn.Module):
         self.attn_drop = nn.Dropout(attn_drop)
         self.proj = nn.Linear(all_head_dim, dim)
         self.proj_drop = nn.Dropout(proj_drop)
+        self.use_sdpa = bool(use_sdpa and hasattr(F, "scaled_dot_product_attention"))
+        if use_sdpa and not self.use_sdpa:
+            global _SDPA_FALLBACK_WARNED
+            if not _SDPA_FALLBACK_WARNED:
+                warnings.warn(
+                    "SDPA requested but torch.nn.functional.scaled_dot_product_attention "
+                    "is unavailable in this runtime. Falling back to standard attention path.",
+                    RuntimeWarning,
+                )
+                _SDPA_FALLBACK_WARNED = True
 
     def forward(self, x):
         B, N, C = x.shape
@@ -182,13 +196,23 @@ class Attention(nn.Module):
         q, k, v = qkv[0], qkv[1], qkv[
             2]  # make torchscript happy (cannot use tensor as tuple)
 
-        q = q * self.scale
-        attn = (q @ k.transpose(-2, -1))
-
-        attn = attn.softmax(dim=-1)
-        attn = self.attn_drop(attn)
-
-        x = (attn @ v).transpose(1, 2).reshape(B, N, -1)
+        if self.use_sdpa:
+            dropout_p = self.attn_drop.p if self.training else 0.0
+            x = F.scaled_dot_product_attention(
+                q,
+                k,
+                v,
+                attn_mask=None,
+                dropout_p=dropout_p,
+                is_causal=False,
+                scale=self.scale,
+            ).transpose(1, 2).reshape(B, N, -1)
+        else:
+            q = q * self.scale
+            attn = (q @ k.transpose(-2, -1))
+            attn = attn.softmax(dim=-1)
+            attn = self.attn_drop(attn)
+            x = (attn @ v).transpose(1, 2).reshape(B, N, -1)
 
         x = self.proj(x)
         x = self.proj_drop(x)
@@ -210,7 +234,8 @@ class Block(nn.Module):
                  act_layer=nn.GELU,
                  norm_layer=nn.LayerNorm,
                  attn_head_dim=None,
-                 cos_attn=False):
+                 cos_attn=False,
+                 use_sdpa=False):
         super().__init__()
         self.norm1 = norm_layer(dim)
         if cos_attn:
@@ -230,7 +255,8 @@ class Block(nn.Module):
                 qk_scale=qk_scale,
                 attn_drop=attn_drop,
                 proj_drop=drop,
-                attn_head_dim=attn_head_dim)
+                attn_head_dim=attn_head_dim,
+                use_sdpa=use_sdpa)
         # NOTE: drop path for stochastic depth, we shall see if this is better than dropout here
         self.drop_path = DropPath(
             drop_path) if drop_path > 0. else nn.Identity()
@@ -346,6 +372,7 @@ class VisionTransformer(nn.Module):
                  use_mean_pooling=True,
                  with_cp=False,
                  cos_attn=False,
+                 use_sdpa=False,
                  **kwargs):
         super().__init__()
         self.num_classes = num_classes
@@ -386,7 +413,8 @@ class VisionTransformer(nn.Module):
                 drop_path=dpr[i],
                 norm_layer=norm_layer,
                 init_values=init_values,
-                cos_attn=cos_attn) for i in range(depth)
+                cos_attn=cos_attn,
+                use_sdpa=use_sdpa) for i in range(depth)
         ])
         self.norm = nn.Identity() if use_mean_pooling else norm_layer(
             embed_dim)
