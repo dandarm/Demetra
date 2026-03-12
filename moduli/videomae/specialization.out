@@ -1,43 +1,213 @@
-Loading cineca-ai/4.3.0
-  Loading requirement: cuda/12.1 nccl/2.19.1-1--gcc--12.2.0-cuda-12.1
-    cudnn/8.9.7.29-12--gcc--12.2.0-cuda-12.1 gcc/12.2.0-binut2.41
-    openmpi/4.1.6--gcc--12.2.0 bzip2/1.0.8-gp5wcz5 libmd/1.0.4-wja3f5q
-    libbsd/0.11.7-cgxjopl expat/2.5.0-bptl3xw ncurses/6.4-asx3jea
-    readline/8.2-nyw6mp6 gdbm/1.23-fs6otck libiconv/1.17-d7yvx2s
-    xz/5.4.1-hubmwr5 zlib-ng/2.1.4-6htiapk libxml2/2.10.3-5eeeokp
-    pigz/2.7-bopr5vp zstd/1.5.5-gawytfl tar/1.34-amqus5s gettext/0.22.3-2g7elif
-    libffi/3.4.4-6r7brdq libxcrypt/4.4.35-ss2rzin sqlite/3.43.2
-    util-linux-uuid/2.38.1-jkdi7kv python/3.11.6--gcc--8.5.0 cmake/3.27.7
-    openjdk/11.0.20.1_1
-[1,15]<stdout>:TensorboardX non disponibile: provo torch.utils.tensorboard
-[1,12]<stdout>:TensorboardX non disponibile: provo torch.utils.tensorboard
-[1,14]<stdout>:TensorboardX non disponibile: provo torch.utils.tensorboard
-[1,13]<stdout>:TensorboardX non disponibile: provo torch.utils.tensorboard
-[1,21]<stdout>:TensorboardX non disponibile: provo torch.utils.tensorboard
-[1,22]<stdout>:TensorboardX non disponibile: provo torch.utils.tensorboard
-[1,20]<stdout>:TensorboardX non disponibile: provo torch.utils.tensorboard
-[1,23]<stdout>:TensorboardX non disponibile: provo torch.utils.tensorboard
-[1,11]<stdout>:TensorboardX non disponibile: provo torch.utils.tensorboard
-[1,8]<stdout>:TensorboardX non disponibile: provo torch.utils.tensorboard
-[1,10]<stdout>:TensorboardX non disponibile: provo torch.utils.tensorboard
-[1,9]<stdout>:TensorboardX non disponibile: provo torch.utils.tensorboard
-[1,17]<stdout>:TensorboardX non disponibile: provo torch.utils.tensorboard
-[1,16]<stdout>:TensorboardX non disponibile: provo torch.utils.tensorboard
-[1,18]<stdout>:TensorboardX non disponibile: provo torch.utils.tensorboard
-[1,19]<stdout>:TensorboardX non disponibile: provo torch.utils.tensorboard
-[1,6]<stdout>:TensorboardX non disponibile: provo torch.utils.tensorboard
-[1,5]<stdout>:TensorboardX non disponibile: provo torch.utils.tensorboard
-[1,4]<stdout>:TensorboardX non disponibile: provo torch.utils.tensorboard
-[1,7]<stdout>:TensorboardX non disponibile: provo torch.utils.tensorboard
-[1,26]<stdout>:TensorboardX non disponibile: provo torch.utils.tensorboard
-[1,24]<stdout>:TensorboardX non disponibile: provo torch.utils.tensorboard
-[1,25]<stdout>:TensorboardX non disponibile: provo torch.utils.tensorboard
-[1,27]<stdout>:TensorboardX non disponibile: provo torch.utils.tensorboard
-[1,28]<stdout>:TensorboardX non disponibile: provo torch.utils.tensorboard
-[1,29]<stdout>:TensorboardX non disponibile: provo torch.utils.tensorboard
-[1,30]<stdout>:TensorboardX non disponibile: provo torch.utils.tensorboard
-[1,31]<stdout>:TensorboardX non disponibile: provo torch.utils.tensorboard
-[1,1]<stdout>:TensorboardX non disponibile: provo torch.utils.tensorboard
-[1,2]<stdout>:TensorboardX non disponibile: provo torch.utils.tensorboard
-[1,0]<stdout>:TensorboardX non disponibile: provo torch.utils.tensorboard
-[1,3]<stdout>:TensorboardX non disponibile: provo torch.utils.tensorboard
+[1,10]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=50
+[1,8]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=50
+[1,9]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=50
+[1,11]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=50
+[1,7]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=50
+[1,5]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=50
+[1,4]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=50
+[1,6]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=50
+[1,3]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=50
+[1,1]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=50
+[1,0]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=50
+[1,2]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=50
+[1,0]<stdout>:launch with mpirun
+[1,12]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=50
+[1,14]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=50
+[1,30]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=50
+[1,13]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=50
+[1,31]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=50
+[1,15]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=50
+[1,29]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=50
+[1,28]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=50
+[1,19]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=50
+[1,17]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=50
+[1,18]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=50
+[1,16]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=50
+[1,23]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=50
+[1,22]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=50
+[1,21]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=50
+[1,20]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=50
+[1,27]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=50
+[1,25]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=50
+[1,26]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=50
+[1,24]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=50
+[1,0]<stdout>:TF32 enabled: True
+[1,0]<stdout>:SDPA kernel config: mode=auto, flash=True, mem_efficient=True, math=True
+[1,0]<stdout>:Inductor CUDA Graphs disabled: False (INDUCTOR_DISABLE_CUDAGRAPHS=0)
+[1,0]<stdout>:Creating model: pretrain_videomae_giant_patch14_224
+[1,0]<stdout>:From pretrained model? True
+[1,0]<stdout>:Caricamento del checkpoint da: /leonardo_scratch/fast/IscrC_SAME-D/vit_g_hybrid_pt_1200e.pth
+[1,0]<stdout>:Caricato state_dict con chiave: model
+[1,0]<stdout>:Checkpoint caricato con successo!
+[1,0]<stdout>:torch.compile enabled: backend=inductor, mode=default
+[1,0]<stdout>:NCCL version 2.19.1+cuda12.1
+[1,0]<stdout>:Patch size = (14, 14)
+[1,0]<stdout>:Window size : (8, 16, 16)
+[1,0]<stdout>:Patch size = (14, 14)
+[1,0]<stdout>:Window size : (8, 16, 16)
+[1,0]<stdout>:Getting dataset...
+[1,0]<stdout>:no_data_aug=True
+[1,0]<stdout>:File di dati: /leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/UNtrain_random_tiles.csv
+[1,0]<stdout>:Data Aug = (DataAugmentationForVideoMAEv2,
+[1,0]<stdout>:  transform = Compose(
+[1,0]<stdout>:    Lambda()
+[1,0]<stdout>:    <dataset.transforms.Stack object at 0x14a8479fdd50>
+[1,0]<stdout>:    <dataset.transforms.ToTorchFormatTensor object at 0x14a84799ee10>
+[1,0]<stdout>:    <dataset.transforms.GroupNormalize object at 0x14a8479fff50>
+[1,0]<stdout>:),
+[1,0]<stdout>:  Encoder Masking Generator = Tube Masking: total patches 2048, mask patches 1536,
+[1,0]<stdout>:  Decoder Masking Generator = Running Cell Masking with mask ratio 0.5,
+[1,0]<stdout>:)
+[1,0]<stdout>:DATASET length: 107441
+[1,0]<stdout>:Creo il DistributedSampler con world_size 32 e rank 0
+[1,0]<stdout>:Sampler_train = <torch.utils.data.distributed.DistributedSampler object at 0x14a847829750>
+[1,0]<stdout>:Batch_size: 12
+[1,0]<stdout>:Getting dataset...
+[1,0]<stdout>:no_data_aug=True
+[1,0]<stdout>:File di dati: /leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/UNtest_random_tiles.csv
+[1,0]<stdout>:Data Aug = (DataAugmentationForVideoMAEv2,
+[1,0]<stdout>:  transform = Compose(
+[1,0]<stdout>:    Lambda()
+[1,0]<stdout>:    <dataset.transforms.Stack object at 0x14a847d3cd10>
+[1,0]<stdout>:    <dataset.transforms.ToTorchFormatTensor object at 0x14a8475ade10>
+[1,0]<stdout>:    <dataset.transforms.GroupNormalize object at 0x14a847d5f210>
+[1,0]<stdout>:),
+[1,0]<stdout>:  Encoder Masking Generator = Tube Masking: total patches 2048, mask patches 1536,
+[1,0]<stdout>:  Decoder Masking Generator = Running Cell Masking with mask ratio 0.5,
+[1,0]<stdout>:)
+[1,0]<stdout>:DATASET length: 19999
+[1,0]<stdout>:Creo il DistributedSampler con world_size 32 e rank 0
+[1,0]<stdout>:Sampler_train = <torch.utils.data.distributed.DistributedSampler object at 0x14a8478c58d0>
+[1,0]<stdout>:Batch_size: 12
+[1,0]<stdout>:LR = 0.00150000
+[1,0]<stdout>:Batch size = 384
+[1,0]<stdout>:Number of training steps = 279
+[1,0]<stdout>:Number of training examples per epoch = 107136
+[1,0]<stdout>:Layer decay enabled: layer_decay=0.98, encoder_layers=40, num_layers=42
+[1,0]<stdout>:optimizer settings: [1,0]<stdout>:{'lr': 0.0015, 'weight_decay': 0.0, 'eps': 1e-08, 'betas': [0.9, 0.95]}
+[1,0]<stdout>:Use step level LR & WD scheduler!
+[1,0]<stdout>:Set warmup steps = 1395
+[1,0]<stdout>:Set warmup steps = 0
+[1,0]<stdout>:Max WD = 0.0200000, Min WD = 0.0200000
+[1,0]<stdout>:Capturing reference weights for per-layer drift logging...
+[1,0]<stdout>:[DRIFT] reference tensors captured: 582
+[1,0]<stdout>:Start training for 150 epochs
+[1,0]<stdout>:Epoch: [0]  [  0/279]  eta: 8:34:32  loss: 0.7234 (0.7234)  time: 110.6540 (110.6540 -- 110.6540)  data: 1.2329 (1.2329 -- 1.2329)  max mem: 23383
+[1,0]<stdout>:Epoch: [0]  [ 20/279]  eta: 0:25:59  loss: 0.6716 (0.6780)  time: 0.7913 (0.6665 -- 1.1334)  data: 0.0004 (0.0001 -- 0.0009)  max mem: 34850
+[1,0]<stdout>:Epoch: [0]  [ 40/279]  eta: 0:13:55  loss: 0.6457 (0.6622)  time: 0.8421 (0.6833 -- 1.1749)  data: 0.0004 (0.0001 -- 0.0016)  max mem: 34850
+[1,0]<stdout>:[PERF][STEP] epoch=0 step=50 h2d=0.0061s targets=0.0014s fwd_loss=0.0977s bwd_opt=0.6243s total=0.7295s[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [0]  [ 60/279]  eta: 0:09:28  loss: 0.6261 (0.6495)  time: 0.7515 (0.6313 -- 0.9717)  data: 0.0005 (0.0001 -- 0.0014)  max mem: 34850
+[1,0]<stdout>:Epoch: [0]  [ 80/279]  eta: 0:07:06  loss: 0.6120 (0.6406)  time: 0.7600 (0.6218 -- 1.2582)  data: 0.0004 (0.0001 -- 0.0014)  max mem: 34850
+[1,0]<stdout>:[PERF][STEP] epoch=0 step=100 h2d=0.0054s targets=0.0014s fwd_loss=0.0983s bwd_opt=0.6869s total=0.7919s[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [0]  [100/279]  eta: 0:05:35  loss: 0.6182 (0.6347)  time: 0.7960 (0.7085 -- 1.0760)  data: 0.0004 (0.0001 -- 0.0011)  max mem: 34850
+[1,0]<stdout>:Epoch: [0]  [120/279]  eta: 0:04:29  loss: 0.6142 (0.6320)  time: 0.7912 (0.7054 -- 1.1407)  data: 0.0004 (0.0001 -- 0.0010)  max mem: 34850
+[1,0]<stdout>:Epoch: [0]  [140/279]  eta: 0:03:36  loss: 0.6024 (0.6284)  time: 0.7297 (0.6479 -- 0.8929)  data: 0.0005 (0.0001 -- 0.0010)  max mem: 34850
+[1,0]<stdout>:[PERF][STEP] epoch=0 step=150 h2d=0.0056s targets=0.0014s fwd_loss=0.1009s bwd_opt=0.5592s total=0.6671s[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [0]  [160/279]  eta: 0:02:52  loss: 0.6021 (0.6252)  time: 0.6976 (0.6393 -- 0.9247)  data: 0.0007 (0.0001 -- 0.0018)  max mem: 34850
+[1,0]<stdout>:Epoch: [0]  [180/279]  eta: 0:02:15  loss: 0.6014 (0.6224)  time: 0.7063 (0.6398 -- 0.9415)  data: 0.0007 (0.0001 -- 0.0013)  max mem: 34850
+[1,0]<stdout>:[PERF][STEP] epoch=0 step=200 h2d=0.0055s targets=0.0014s fwd_loss=0.0988s bwd_opt=0.5517s total=0.6574s[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [0]  [200/279]  eta: 0:01:43  loss: 0.6164 (0.6212)  time: 0.7310 (0.6586 -- 0.9001)  data: 0.0006 (0.0001 -- 0.0013)  max mem: 34850
+[1,0]<stdout>:Epoch: [0]  [220/279]  eta: 0:01:13  loss: 0.5946 (0.6190)  time: 0.7143 (0.6296 -- 0.9446)  data: 0.0008 (0.0001 -- 0.0018)  max mem: 34850
+[1,0]<stdout>:Epoch: [0]  [240/279]  eta: 0:00:47  loss: 0.5993 (0.6175)  time: 0.8492 (0.7373 -- 1.1507)  data: 0.0005 (0.0001 -- 0.0014)  max mem: 34850
+[1,0]<stdout>:[PERF][STEP] epoch=0 step=250 h2d=0.0057s targets=0.0014s fwd_loss=0.0976s bwd_opt=0.9356s total=1.0402s[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [0]  [260/279]  eta: 0:00:22  loss: 0.5935 (0.6158)  time: 0.9697 (0.7113 -- 1.4716)  data: 0.0007 (0.0001 -- 0.0012)  max mem: 34850[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [0]  [278/279]  eta: 0:00:01  loss: 0.6030 (0.6150)  time: 0.9749 (0.7059 -- 1.2126)  data: 0.0003 (0.0001 -- 0.0007)  max mem: 34850
+[1,0]<stdout>:Epoch: [0] Total time: 0:05:30 (1.1848 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6030 (0.6136)
+[1,0]<stdout>:TEST...   [ 0/53]  eta: 0:37:01  loss: 0.5950 (0.5950)  time: 41.9207 (41.9207 -- 41.9207)  data: 1.3874 (1.3874 -- 1.3874)  max mem: 34850
+[1,0]<stdout>:TEST...   [20/53]  eta: 0:01:11  loss: 0.5849 (0.5815)  time: 0.1816 (0.0999 -- 0.7319)  data: 0.0794 (0.0001 -- 0.6301)  max mem: 34850
+[1,0]<stdout>:TEST...   [40/53]  eta: 0:00:16  loss: 0.5929 (0.5847)  time: 0.2683 (0.1000 -- 0.7606)  data: 0.1662 (0.0001 -- 0.6592)  max mem: 34850
+[1,0]<stdout>:TEST...   [52/53]  eta: 0:00:01  loss: 0.5913 (0.5858)  time: 2.6149 (0.0993 -- 47.2828)  data: 0.1547 (0.0001 -- 0.5986)  max mem: 34850
+[1,0]<stdout>:TEST...  Total time: 0:01:41 (1.9068 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.5913 (0.5868)
+[1,0]<stdout>:[DRIFT] overall_rel_l2=2.271387e-02, tracked_layers=50, missing_params=0
+[1,0]<stdout>:[DRIFT][TOP] decoder.head rel_l2=9.563920e-02
+[1,0]<stdout>:[DRIFT][TOP] decoder.blocks.3 rel_l2=3.989341e-02
+[1,0]<stdout>:[DRIFT][TOP] decoder.blocks.2 rel_l2=3.703798e-02
+[1,0]<stdout>:[DRIFT][TOP] decoder.blocks.1 rel_l2=3.572268e-02
+[1,0]<stdout>:[DRIFT][TOP] encoder.blocks.39 rel_l2=3.260004e-02
+[1,0]<stdout>:[DRIFT][TOP] encoder.blocks.38 rel_l2=3.094911e-02
+[1,0]<stdout>:[DRIFT][TOP] encoder.blocks.36 rel_l2=2.999658e-02[1,0]<stdout>:
+[1,0]<stdout>:[DRIFT][TOP] encoder.blocks.37 rel_l2=2.962802e-02
+[1,0]<stdout>:[DRIFT][TOP] encoder.blocks.33 rel_l2=2.907323e-02
+[1,0]<stdout>:[DRIFT][TOP] encoder.blocks.32 rel_l2=2.904021e-02
+[1,0]<stdout>:[CKPT] Saved improved checkpoint: /leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/output/checkpoint-0.pth (test_loss 0.586784, prev None)
+[1,0]<stdout>:Epoch: [1]  [  0/279]  eta: 0:07:33  loss: 0.5944 (0.5944)  time: 1.6248 (1.6248 -- 1.6248)  data: 0.9143 (0.9143 -- 0.9143)  max mem: 34850
+[1,0]<stdout>:Epoch: [1]  [ 20/279]  eta: 0:03:38  loss: 0.6030 (0.6028)  time: 0.8038 (0.6445 -- 1.1245)  data: 0.0007 (0.0001 -- 0.0015)  max mem: 34850
+[1,0]<stdout>:Epoch: [1]  [ 40/279]  eta: 0:03:14  loss: 0.5839 (0.5957)  time: 0.7811 (0.6829 -- 0.9561)  data: 0.0007 (0.0001 -- 0.0012)  max mem: 34850
+[1,0]<stdout>:[PERF][STEP] epoch=1 step=50 h2d=0.0071s targets=0.0014s fwd_loss=0.0980s bwd_opt=0.6893s total=0.7959s[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [1]  [ 60/279]  eta: 0:02:56  loss: 0.5851 (0.5932)  time: 0.7950 (0.7078 -- 1.0890)  data: 0.0005 (0.0001 -- 0.0012)  max mem: 34850
+[1,0]<stdout>:Epoch: [1]  [ 80/279]  eta: 0:02:37  loss: 0.5892 (0.5922)  time: 0.7416 (0.6312 -- 1.0121)  data: 0.0006 (0.0001 -- 0.0012)  max mem: 34850
+[1,0]<stdout>:[PERF][STEP] epoch=1 step=100 h2d=0.0055s targets=0.0014s fwd_loss=0.0973s bwd_opt=0.7076s total=0.8117s[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [1]  [100/279]  eta: 0:02:22  loss: 0.5938 (0.5923)  time: 0.8182 (0.7030 -- 1.1196)  data: 0.0007 (0.0001 -- 0.0012)  max mem: 34850
+[1,0]<stdout>:Epoch: [1]  [120/279]  eta: 0:02:06  loss: 0.5910 (0.5922)  time: 0.7907 (0.6966 -- 1.0300)  data: 0.0007 (0.0001 -- 0.0011)  max mem: 34850
+[1,0]<stdout>:Epoch: [1]  [140/279]  eta: 0:01:49  loss: 0.5863 (0.5916)  time: 0.7519 (0.6522 -- 1.0101)  data: 0.0006 (0.0001 -- 0.0012)  max mem: 34850
+[1,0]<stdout>:[PERF][STEP] epoch=1 step=150 h2d=0.0055s targets=0.0014s fwd_loss=0.0975s bwd_opt=0.5596s total=0.6640s[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [1]  [160/279]  eta: 0:01:32  loss: 0.5896 (0.5914)  time: 0.6834 (0.6376 -- 0.8254)  data: 0.0007 (0.0001 -- 0.0014)  max mem: 34850
+[1,0]<stdout>:Epoch: [1]  [180/279]  eta: 0:01:15  loss: 0.5872 (0.5912)  time: 0.6792 (0.6298 -- 0.8845)  data: 0.0007 (0.0002 -- 0.0013)  max mem: 34850
+[1,0]<stdout>:[PERF][STEP] epoch=1 step=200 h2d=0.0057s targets=0.0014s fwd_loss=0.0973s bwd_opt=0.7664s total=0.8708s[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [1]  [200/279]  eta: 0:01:00  loss: 0.5845 (0.5908)  time: 0.7428 (0.6398 -- 0.9024)  data: 0.0006 (0.0001 -- 0.0013)  max mem: 34850
+[1,0]<stdout>:Epoch: [1]  [220/279]  eta: 0:00:44  loss: 0.5854 (0.5903)  time: 0.7523 (0.6504 -- 1.0058)  data: 0.0006 (0.0001 -- 0.0012)  max mem: 34850
+[1,0]<stdout>:Epoch: [1]  [240/279]  eta: 0:00:29  loss: 0.5815 (0.5900)  time: 0.7503 (0.6261 -- 0.9100)  data: 0.0007 (0.0001 -- 0.0013)  max mem: 34850
+[1,0]<stdout>:[PERF][STEP] epoch=1 step=250 h2d=0.0055s targets=0.0014s fwd_loss=0.0979s bwd_opt=0.8217s total=0.9264s
+[1,0]<stdout>:Epoch: [1]  [260/279]  eta: 0:00:14  loss: 0.5924 (0.5899)  time: 0.7658 (0.6729 -- 1.1054)  data: 0.0006 (0.0001 -- 0.0012)  max mem: 34850
+[1,0]<stdout>:Epoch: [1]  [278/279]  eta: 0:00:00  loss: 0.5853 (0.5896)  time: 0.7579 (0.6152 -- 1.0718)  data: 0.0005 (0.0001 -- 0.0013)  max mem: 34850
+[1,0]<stdout>:Epoch: [1] Total time: 0:03:32 (0.7615 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.5853 (0.5901)
+[1,0]<stdout>:Epoch: [2]  [  0/279]  eta: 0:10:19  loss: 0.5862 (0.5862)  time: 2.2190 (2.2190 -- 2.2190)  data: 1.0617 (1.0617 -- 1.0617)  max mem: 34850
+[1,0]<stdout>:Epoch: [2]  [ 20/279]  eta: 0:04:19  loss: 0.5857 (0.5829)  time: 0.9396 (0.7540 -- 1.2094)  data: 0.0003 (0.0001 -- 0.0008)  max mem: 34850
+[1,0]<stdout>:Epoch: [2]  [ 40/279]  eta: 0:03:45  loss: 0.5819 (0.5824)  time: 0.8842 (0.7437 -- 1.1957)  data: 0.0004 (0.0001 -- 0.0009)  max mem: 34850
+[1,0]<stdout>:[PERF][STEP] epoch=2 step=50 h2d=0.0058s targets=0.0014s fwd_loss=0.0975s bwd_opt=0.8563s total=0.9610s[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [2]  [ 60/279]  eta: 0:03:27  loss: 0.5830 (0.5830)  time: 0.9543 (0.7368 -- 1.2371)  data: 0.0003 (0.0001 -- 0.0006)  max mem: 34850
+[1,0]<stdout>:Epoch: [2]  [ 80/279]  eta: 0:03:10  loss: 0.5777 (0.5823)  time: 0.9964 (0.7314 -- 1.5795)  data: 0.0004 (0.0001 -- 0.0010)  max mem: 34850
+[1,0]<stdout>:[PERF][STEP] epoch=2 step=100 h2d=0.0058s targets=0.0014s fwd_loss=0.1004s bwd_opt=0.7112s total=0.8188s[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [2]  [100/279]  eta: 0:02:49  loss: 0.5741 (0.5811)  time: 0.8921 (0.7434 -- 1.4249)  data: 0.0006 (0.0001 -- 0.0016)  max mem: 34850
+[1,0]<stdout>:Epoch: [2]  [120/279]  eta: 0:02:23  loss: 0.5870 (0.5821)  time: 0.6847 (0.6270 -- 0.8204)  data: 0.0006 (0.0001 -- 0.0015)  max mem: 34850
+[1,0]<stdout>:Epoch: [2]  [140/279]  eta: 0:02:01  loss: 0.5777 (0.5815)  time: 0.7114 (0.6455 -- 0.9551)  data: 0.0006 (0.0001 -- 0.0013)  max mem: 34850
+[1,0]<stdout>:[PERF][STEP] epoch=2 step=150 h2d=0.0056s targets=0.0014s fwd_loss=0.0991s bwd_opt=0.5412s total=0.6473s[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [2]  [160/279]  eta: 0:01:41  loss: 0.5796 (0.5810)  time: 0.6853 (0.6396 -- 0.8425)  data: 0.0007 (0.0001 -- 0.0015)  max mem: 34850
+[1,0]<stdout>:Epoch: [2]  [180/279]  eta: 0:01:22  loss: 0.5779 (0.5808)  time: 0.6739 (0.6240 -- 1.0135)  data: 0.0005 (0.0001 -- 0.0013)  max mem: 34850
+[1,0]<stdout>:[PERF][STEP] epoch=2 step=200 h2d=0.0059s targets=0.0014s fwd_loss=0.0990s bwd_opt=0.5935s total=0.6998s[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [2]  [200/279]  eta: 0:01:04  loss: 0.5797 (0.5810)  time: 0.6977 (0.6434 -- 0.9395)  data: 0.0007 (0.0001 -- 0.0014)  max mem: 34850
+[1,0]<stdout>:Epoch: [2]  [220/279]  eta: 0:00:47  loss: 0.5764 (0.5804)  time: 0.7019 (0.6137 -- 1.3479)  data: 0.0007 (0.0001 -- 0.0013)  max mem: 34850
+[1,0]<stdout>:Epoch: [2]  [240/279]  eta: 0:00:31  loss: 0.5817 (0.5802)  time: 0.6948 (0.6352 -- 0.8503)  data: 0.0006 (0.0001 -- 0.0011)  max mem: 34850
+[1,0]<stdout>:[PERF][STEP] epoch=2 step=250 h2d=0.0058s targets=0.0014s fwd_loss=0.0980s bwd_opt=0.6162s total=0.7214s[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [2]  [260/279]  eta: 0:00:15  loss: 0.5785 (0.5798)  time: 0.7101 (0.6393 -- 0.9479)  data: 0.0007 (0.0001 -- 0.0016)  max mem: 34850
+[1,0]<stdout>:Epoch: [2]  [278/279]  eta: 0:00:00  loss: 0.5721 (0.5795)  time: 0.6688 (0.6210 -- 0.8581)  data: 0.0005 (0.0001 -- 0.0010)  max mem: 34850
+[1,0]<stdout>:Epoch: [2] Total time: 0:03:38 (0.7844 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.5721 (0.5805)
+[1,0]<stdout>:Epoch: [3]  [  0/279]  eta: 0:08:56  loss: 0.5686 (0.5686)  time: 1.9221 (1.9221 -- 1.9221)  data: 0.9549 (0.9549 -- 0.9549)  max mem: 34850
+[1,0]<stdout>:Epoch: [3]  [ 20/279]  eta: 0:03:14  loss: 0.5731 (0.5781)  time: 0.6920 (0.6338 -- 0.8991)  data: 0.0007 (0.0001 -- 0.0016)  max mem: 34850
+[1,0]<stdout>:Epoch: [3]  [ 40/279]  eta: 0:02:50  loss: 0.5676 (0.5750)  time: 0.6722 (0.6299 -- 0.7740)  data: 0.0006 (0.0001 -- 0.0011)  max mem: 34850
+[1,0]<stdout>:[PERF][STEP] epoch=3 step=50 h2d=0.0057s targets=0.0014s fwd_loss=0.0976s bwd_opt=0.5496s total=0.6544s[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [3]  [ 60/279]  eta: 0:02:38  loss: 0.5751 (0.5736)  time: 0.7508 (0.6288 -- 1.4095)  data: 0.0004 (0.0001 -- 0.0009)  max mem: 34850
+[1,0]<stdout>:Epoch: [3]  [ 80/279]  eta: 0:02:23  loss: 0.5662 (0.5728)  time: 0.7109 (0.6457 -- 0.9365)  data: 0.0007 (0.0001 -- 0.0012)  max mem: 34850
+[1,0]<stdout>:[PERF][STEP] epoch=3 step=100 h2d=0.0056s targets=0.0014s fwd_loss=0.0985s bwd_opt=0.5172s total=0.6228s[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [3]  [100/279]  eta: 0:02:08  loss: 0.5844 (0.5749)  time: 0.7051 (0.6242 -- 1.0295)  data: 0.0006 (0.0002 -- 0.0010)  max mem: 34850
+[1,0]<stdout>:Epoch: [3]  [120/279]  eta: 0:01:53  loss: 0.5829 (0.5760)  time: 0.6873 (0.6392 -- 0.8881)  data: 0.0007 (0.0001 -- 0.0016)  max mem: 34850
+[1,0]<stdout>:Epoch: [3]  [140/279]  eta: 0:01:38  loss: 0.5744 (0.5758)  time: 0.6951 (0.6382 -- 0.8895)  data: 0.0006 (0.0001 -- 0.0010)  max mem: 34850
+[1,0]<stdout>:[PERF][STEP] epoch=3 step=150 h2d=0.0055s targets=0.0014s fwd_loss=0.0982s bwd_opt=0.5405s total=0.6455s[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [3]  [160/279]  eta: 0:01:24  loss: 0.5646 (0.5747)  time: 0.6933 (0.6166 -- 0.8400)  data: 0.0007 (0.0001 -- 0.0018)  max mem: 34850
+[1,0]<stdout>:Epoch: [3]  [180/279]  eta: 0:01:09  loss: 0.5659 (0.5742)  time: 0.6617 (0.6182 -- 0.8278)  data: 0.0006 (0.0001 -- 0.0012)  max mem: 34850
+[1,0]<stdout>:[PERF][STEP] epoch=3 step=200 h2d=0.0056s targets=0.0014s fwd_loss=0.0985s bwd_opt=0.5762s total=0.6817s[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [3]  [200/279]  eta: 0:00:55  loss: 0.5716 (0.5740)  time: 0.7000 (0.6560 -- 0.8790)  data: 0.0007 (0.0001 -- 0.0020)  max mem: 34850
+[1,0]<stdout>:Epoch: [3]  [220/279]  eta: 0:00:41  loss: 0.5673 (0.5737)  time: 0.7097 (0.6456 -- 0.9572)  data: 0.0006 (0.0001 -- 0.0011)  max mem: 34850
+[1,0]<stdout>:Epoch: [3]  [240/279]  eta: 0:00:27  loss: 0.5784 (0.5739)  time: 0.6774 (0.6346 -- 0.8752)  data: 0.0005 (0.0001 -- 0.0014)  max mem: 34850
+[1,0]<stdout>:[PERF][STEP] epoch=3 step=250 h2d=0.0069s targets=0.0014s fwd_loss=0.0989s bwd_opt=0.5417s total=0.6489s[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [3]  [260/279]  eta: 0:00:13  loss: 0.5787 (0.5742)  time: 0.6850 (0.6234 -- 0.9680)  data: 0.0007 (0.0001 -- 0.0013)  max mem: 34850
+[1,0]<stdout>:Epoch: [3]  [278/279]  eta: 0:00:00  loss: 0.5824 (0.5745)  time: 0.6834 (0.6427 -- 0.9125)  data: 0.0006 (0.0001 -- 0.0013)  max mem: 34850
+[1,0]<stdout>:Epoch: [3] Total time: 0:03:14 (0.6983 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.5824 (0.5743)
+[1,0]<stdout>:Epoch: [4]  [  0/279]  eta: 0:09:24  loss: 0.6253 (0.6253)  time: 2.0245 (2.0245 -- 2.0245)  data: 1.0740 (1.0740 -- 1.0740)  max mem: 34850
+[1,0]<stdout>:Epoch: [4]  [ 20/279]  eta: 0:03:28  loss: 0.5672 (0.5762)  time: 0.7458 (0.6171 -- 0.9433)  data: 0.0006 (0.0001 -- 0.0013)  max mem: 34850[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [4]  [ 40/279]  eta: 0:03:38  loss: 0.5666 (0.5741)  time: 1.0275 (0.7048 -- 1.3882)  data: 0.0004 (0.0001 -- 0.0011)  max mem: 34850
+[1,0]<stdout>:[PERF][STEP] epoch=4 step=50 h2d=0.0053s targets=0.0014s fwd_loss=0.0977s bwd_opt=1.0018s total=1.1062s[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [4]  [ 60/279]  eta: 0:03:28  loss: 0.5674 (0.5710)  time: 1.0298 (0.7550 -- 1.1901)  data: 0.0005 (0.0001 -- 0.0012)  max mem: 34850
+[1,0]<stdout>:Epoch: [4]  [ 80/279]  eta: 0:03:14  loss: 0.5791 (0.5724)  time: 1.0448 (0.7559 -- 1.2263)  data: 0.0004 (0.0001 -- 0.0010)  max mem: 34850
+[1,0]<stdout>:[PERF][STEP] epoch=4 step=100 h2d=0.0059s targets=0.0014s fwd_loss=0.0977s bwd_opt=1.1102s total=1.2153s[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [4]  [100/279]  eta: 0:02:58  loss: 0.5663 (0.5710)  time: 1.0756 (0.7624 -- 1.4661)  data: 0.0004 (0.0001 -- 0.0011)  max mem: 34850
+[1,0]<stdout>:Epoch: [4]  [120/279]  eta: 0:02:36  loss: 0.5736 (0.5716)  time: 0.9367 (0.7374 -- 1.5137)  data: 0.0004 (0.0001 -- 0.0009)  max mem: 34850
+[1,0]<stdout>:Epoch: [4]  [140/279]  eta: 0:02:16  loss: 0.5756 (0.5717)  time: 0.9708 (0.7298 -- 1.2921)  data: 0.0005 (0.0001 -- 0.0012)  max mem: 34850
+[1,0]<stdout>:[PERF][STEP] epoch=4 step=150 h2d=0.0057s targets=0.0014s fwd_loss=0.0973s bwd_opt=1.0556s total=1.1601s
+[1,0]<stdout>:Epoch: [4]  [160/279]  eta: 0:01:58  loss: 0.5638 (0.5709)  time: 1.0679 (0.8932 -- 1.3063)  data: 0.0002 (0.0001 -- 0.0009)  max mem: 34850
+[1,0]<stdout>:Epoch: [4]  [180/279]  eta: 0:01:36  loss: 0.5661 (0.5707)  time: 0.8050 (0.6307 -- 1.1735)  data: 0.0006 (0.0001 -- 0.0011)  max mem: 34850
