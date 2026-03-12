@@ -1,225 +1,460 @@
-/var/spool/slurmd/job37430166/slurm_script: line 15: /leonardo_work/IscrC_SAME-D/videomae/bin/activate: No such file or directory
-[1,0]<stderr>:[lrdn0045.leonardo.local:990753] MCW rank 0 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]], socket 0[core 4[hwt 0]]: [B/B/B/B/B/././././././././././././././.]
-[1,1]<stderr>:[lrdn0045.leonardo.local:990753] MCW rank 1 bound to socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]], socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]]: [./././././B/B/B/B/B/./././././././././.]
-[1,2]<stderr>:[lrdn0045.leonardo.local:990753] MCW rank 2 bound to socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]], socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]]: [././././././././././B/B/B/B/B/././././.]
-[1,3]<stderr>:[lrdn0045.leonardo.local:990753] MCW rank 3 bound to socket 0[core 15[hwt 0]], socket 0[core 16[hwt 0]], socket 0[core 17[hwt 0]], socket 0[core 18[hwt 0]], socket 0[core 19[hwt 0]]: [./././././././././././././././B/B/B/B/B]
-[1,4]<stderr>:[lrdn0063.leonardo.local:2372620] MCW rank 4 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]], socket 0[core 4[hwt 0]]: [B/B/B/B/B/././././././././././././././.]
-[1,5]<stderr>:[lrdn0063.leonardo.local:2372620] MCW rank 5 bound to socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]], socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]]: [./././././B/B/B/B/B/./././././././././.]
-[1,6]<stderr>:[lrdn0063.leonardo.local:2372620] MCW rank 6 bound to socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]], socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]]: [././././././././././B/B/B/B/B/././././.]
-[1,7]<stderr>:[lrdn0063.leonardo.local:2372620] MCW rank 7 bound to socket 0[core 15[hwt 0]], socket 0[core 16[hwt 0]], socket 0[core 17[hwt 0]], socket 0[core 18[hwt 0]], socket 0[core 19[hwt 0]]: [./././././././././././././././B/B/B/B/B]
-[1,28]<stderr>:[lrdn0285.leonardo.local:2713626] MCW rank 28 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]], socket 0[core 4[hwt 0]]: [B/B/B/B/B/././././././././././././././.]
-[1,29]<stderr>:[lrdn0285.leonardo.local:2713626] MCW rank 29 bound to socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]], socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]]: [./././././B/B/B/B/B/./././././././././.]
-[1,30]<stderr>:[lrdn0285.leonardo.local:2713626] MCW rank 30 bound to socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]], socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]]: [././././././././././B/B/B/B/B/././././.]
-[1,31]<stderr>:[lrdn0285.leonardo.local:2713626] MCW rank 31 bound to socket 0[core 15[hwt 0]], socket 0[core 16[hwt 0]], socket 0[core 17[hwt 0]], socket 0[core 18[hwt 0]], socket 0[core 19[hwt 0]]: [./././././././././././././././B/B/B/B/B]
-[1,24]<stderr>:[lrdn0219.leonardo.local:3539526] MCW rank 24 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]], socket 0[core 4[hwt 0]]: [B/B/B/B/B/././././././././././././././.]
-[1,12]<stderr>:[lrdn0159.leonardo.local:877494] MCW rank 12 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]], socket 0[core 4[hwt 0]]: [B/B/B/B/B/././././././././././././././.]
-[1,25]<stderr>:[lrdn0219.leonardo.local:3539526] MCW rank 25 bound to socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]], socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]]: [./././././B/B/B/B/B/./././././././././.]
-[1,13]<stderr>:[lrdn0159.leonardo.local:877494] MCW rank 13 bound to socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]], socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]]: [./././././B/B/B/B/B/./././././././././.]
-[1,26]<stderr>:[lrdn0219.leonardo.local:3539526] MCW rank 26 bound to socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]], socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]]: [././././././././././B/B/B/B/B/././././.]
-[1,14]<stderr>:[lrdn0159.leonardo.local:877494] MCW rank 14 bound to socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]], socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]]: [././././././././././B/B/B/B/B/././././.]
-[1,15]<stderr>:[lrdn0159.leonardo.local:877494] MCW rank 15 bound to socket 0[core 15[hwt 0]], socket 0[core 16[hwt 0]], socket 0[core 17[hwt 0]], socket 0[core 18[hwt 0]], socket 0[core 19[hwt 0]]: [./././././././././././././././B/B/B/B/B]
-[1,8]<stderr>:[lrdn0121.leonardo.local:579613] MCW rank 8 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]], socket 0[core 4[hwt 0]]: [B/B/B/B/B/././././././././././././././.]
-[1,16]<stderr>:[lrdn0181.leonardo.local:2699121] MCW rank 16 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]], socket 0[core 4[hwt 0]]: [B/B/B/B/B/././././././././././././././.]
-[1,9]<stderr>:[lrdn0121.leonardo.local:579613] MCW rank 9 bound to socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]], socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]]: [./././././B/B/B/B/B/./././././././././.]
-[1,17]<stderr>:[lrdn0181.leonardo.local:2699121] MCW rank 17 bound to socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]], socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]]: [./././././B/B/B/B/B/./././././././././.]
-[1,10]<stderr>:[lrdn0121.leonardo.local:579613] MCW rank 10 bound to socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]], socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]]: [././././././././././B/B/B/B/B/././././.]
-[1,18]<stderr>:[lrdn0181.leonardo.local:2699121] MCW rank 18 bound to socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]], socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]]: [././././././././././B/B/B/B/B/././././.]
-[1,11]<stderr>:[lrdn0121.leonardo.local:579613] MCW rank 11 bound to socket 0[core 15[hwt 0]], socket 0[core 16[hwt 0]], socket 0[core 17[hwt 0]], socket 0[core 18[hwt 0]], socket 0[core 19[hwt 0]]: [./././././././././././././././B/B/B/B/B]
-[1,19]<stderr>:[lrdn0181.leonardo.local:2699121] MCW rank 19 bound to socket 0[core 15[hwt 0]], socket 0[core 16[hwt 0]], socket 0[core 17[hwt 0]], socket 0[core 18[hwt 0]], socket 0[core 19[hwt 0]]: [./././././././././././././././B/B/B/B/B]
-[1,27]<stderr>:[lrdn0219.leonardo.local:3539526] MCW rank 27 bound to socket 0[core 15[hwt 0]], socket 0[core 16[hwt 0]], socket 0[core 17[hwt 0]], socket 0[core 18[hwt 0]], socket 0[core 19[hwt 0]]: [./././././././././././././././B/B/B/B/B]
-[1,20]<stderr>:[lrdn0189.leonardo.local:2190669] MCW rank 20 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]], socket 0[core 4[hwt 0]]: [B/B/B/B/B/././././././././././././././.]
-[1,21]<stderr>:[lrdn0189.leonardo.local:2190669] MCW rank 21 bound to socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]], socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]]: [./././././B/B/B/B/B/./././././././././.]
-[1,22]<stderr>:[lrdn0189.leonardo.local:2190669] MCW rank 22 bound to socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]], socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]]: [././././././././././B/B/B/B/B/././././.]
-[1,23]<stderr>:[lrdn0189.leonardo.local:2190669] MCW rank 23 bound to socket 0[core 15[hwt 0]], socket 0[core 16[hwt 0]], socket 0[core 17[hwt 0]], socket 0[core 18[hwt 0]], socket 0[core 19[hwt 0]]: [./././././././././././././././B/B/B/B/B]
-[1,7]<stderr>:[rank7]:[2026-03-12 12:09:08,234] [2/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,5]<stderr>:[rank5]:[2026-03-12 12:09:08,234] [2/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,6]<stderr>:[rank6]:[2026-03-12 12:09:08,234] [2/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,4]<stderr>:[rank4]:[2026-03-12 12:09:08,234] [2/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,11]<stderr>:[rank11]:[2026-03-12 12:09:08,242] [2/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,10]<stderr>:[rank10]:[2026-03-12 12:09:08,242] [2/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,9]<stderr>:[rank9]:[2026-03-12 12:09:08,242] [2/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,8]<stderr>:[rank8]:[2026-03-12 12:09:08,242] [2/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,3]<stderr>:[rank3]:[2026-03-12 12:09:08,243] [2/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,1]<stderr>:[rank1]:[2026-03-12 12:09:08,243] [2/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,2]<stderr>:[rank2]:[2026-03-12 12:09:08,243] [2/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,21]<stderr>:[rank21]:[2026-03-12 12:09:08,249] [2/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,23]<stderr>:[rank23]:[2026-03-12 12:09:08,250] [2/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,22]<stderr>:[rank22]:[2026-03-12 12:09:08,250] [2/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,20]<stderr>:[rank20]:[2026-03-12 12:09:08,250] [2/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,29]<stderr>:[rank29]:[2026-03-12 12:09:08,303] [2/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,31]<stderr>:[rank31]:[2026-03-12 12:09:08,303] [2/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,28]<stderr>:[rank28]:[2026-03-12 12:09:08,304] [2/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,30]<stderr>:[rank30]:[2026-03-12 12:09:08,304] [2/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,27]<stderr>:[rank27]:[2026-03-12 12:09:08,319] [2/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,24]<stderr>:[rank24]:[2026-03-12 12:09:08,319] [2/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,26]<stderr>:[rank26]:[2026-03-12 12:09:08,319] [2/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,25]<stderr>:[rank25]:[2026-03-12 12:09:08,320] [2/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,18]<stderr>:[rank18]:[2026-03-12 12:09:08,415] [2/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,17]<stderr>:[rank17]:[2026-03-12 12:09:08,415] [2/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,16]<stderr>:[rank16]:[2026-03-12 12:09:08,415] [2/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,19]<stderr>:[rank19]:[2026-03-12 12:09:08,415] [2/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,15]<stderr>:[rank15]:[2026-03-12 12:09:08,420] [2/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,13]<stderr>:[rank13]:[2026-03-12 12:09:08,420] [2/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,14]<stderr>:[rank14]:[2026-03-12 12:09:08,420] [2/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,12]<stderr>:[rank12]:[2026-03-12 12:09:08,420] [2/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,0]<stderr>:[rank0]:[2026-03-12 12:09:08,960] [2/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,7]<stderr>:[rank7]:[2026-03-12 12:10:16,880] [5/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,27]<stderr>:[rank27]:[2026-03-12 12:10:16,900] [5/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,3]<stderr>:[rank3]:[2026-03-12 12:10:16,920] [5/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,23]<stderr>:[rank23]:[2026-03-12 12:10:16,960] [5/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,15]<stderr>:[rank15]:[2026-03-12 12:10:17,115] [5/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,31]<stderr>:[rank31]:[2026-03-12 12:10:17,271] [5/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,29]<stderr>:[rank29]:[2026-03-12 12:10:17,352] [5/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,1]<stderr>:[rank1]:[2026-03-12 12:10:17,370] [5/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,5]<stderr>:[rank5]:[2026-03-12 12:10:17,387] [5/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,21]<stderr>:[rank21]:[2026-03-12 12:10:17,401] [5/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,11]<stderr>:[rank11]:[2026-03-12 12:10:17,555] [5/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,2]<stderr>:[rank2]:[2026-03-12 12:10:17,563] [5/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,6]<stderr>:[rank6]:[2026-03-12 12:10:17,587] [5/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,25]<stderr>:[rank25]:[2026-03-12 12:10:17,616] [5/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,14]<stderr>:[rank14]:[2026-03-12 12:10:17,824] [5/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,12]<stderr>:[rank12]:[2026-03-12 12:10:17,861] [5/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,28]<stderr>:[rank28]:[2026-03-12 12:10:17,921] [5/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,10]<stderr>:[rank10]:[2026-03-12 12:10:17,930] [5/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,22]<stderr>:[rank22]:[2026-03-12 12:10:17,947] [5/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,30]<stderr>:[rank30]:[2026-03-12 12:10:18,029] [5/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,0]<stderr>:[rank0]:[2026-03-12 12:10:18,056] [5/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,24]<stderr>:[rank24]:[2026-03-12 12:10:18,091] [5/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,4]<stderr>:[rank4]:[2026-03-12 12:10:18,112] [5/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,26]<stderr>:[rank26]:[2026-03-12 12:10:18,144] [5/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,13]<stderr>:[rank13]:[2026-03-12 12:10:18,154] [5/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,20]<stderr>:[rank20]:[2026-03-12 12:10:18,165] [5/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,9]<stderr>:[rank9]:[2026-03-12 12:10:18,263] [5/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,8]<stderr>:[rank8]:[2026-03-12 12:10:18,272] [5/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,17]<stderr>:[rank17]:[2026-03-12 12:10:18,413] [5/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,19]<stderr>:[rank19]:[2026-03-12 12:10:18,415] [5/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,16]<stderr>:[rank16]:[2026-03-12 12:10:18,449] [5/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,18]<stderr>:[rank18]:[2026-03-12 12:10:18,636] [5/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,19]<stderr>:[rank19]:[2026-03-12 12:14:14,518] [2/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,11]<stderr>:[rank11]:[2026-03-12 12:14:14,532] [2/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,3]<stderr>:[rank3]:[2026-03-12 12:14:14,535] [2/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,15]<stderr>:[rank15]:[2026-03-12 12:14:14,541] [2/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,23]<stderr>:[rank23]:[2026-03-12 12:14:14,549] [2/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,31]<stderr>:[rank31]:[2026-03-12 12:14:14,552] [2/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,27]<stderr>:[rank27]:[2026-03-12 12:14:14,556] [2/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,7]<stderr>:[rank7]:[2026-03-12 12:14:14,573] [2/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,30]<stderr>:[rank30]:[2026-03-12 12:14:14,622] [2/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,2]<stderr>:[rank2]:[2026-03-12 12:14:14,626] [2/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,4]<stderr>:[rank4]:[2026-03-12 12:14:14,641] [2/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,14]<stderr>:[rank14]:[2026-03-12 12:14:14,645] [2/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,25]<stderr>:[rank25]:[2026-03-12 12:14:14,655] [2/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,24]<stderr>:[rank24]:[2026-03-12 12:14:14,660] [2/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,8]<stderr>:[rank8]:[2026-03-12 12:14:14,662] [2/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,1]<stderr>:[rank1]:[2026-03-12 12:14:14,668] [2/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,17]<stderr>:[rank17]:[2026-03-12 12:14:14,669] [2/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,10]<stderr>:[rank10]:[2026-03-12 12:14:14,669] [2/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,6]<stderr>:[rank6]:[2026-03-12 12:14:14,672] [2/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,18]<stderr>:[rank18]:[2026-03-12 12:14:14,675] [2/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,9]<stderr>:[rank9]:[2026-03-12 12:14:14,678] [2/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,28]<stderr>:[rank28]:[2026-03-12 12:14:14,686] [2/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,26]<stderr>:[rank26]:[2026-03-12 12:14:14,686] [2/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,20]<stderr>:[rank20]:[2026-03-12 12:14:14,694] [2/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,13]<stderr>:[rank13]:[2026-03-12 12:14:14,698] [2/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,16]<stderr>:[rank16]:[2026-03-12 12:14:14,702] [2/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,21]<stderr>:[rank21]:[2026-03-12 12:14:14,702] [2/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,29]<stderr>:[rank29]:[2026-03-12 12:14:14,705] [2/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,5]<stderr>:[rank5]:[2026-03-12 12:14:14,707] [2/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,12]<stderr>:[rank12]:[2026-03-12 12:14:14,709] [2/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,22]<stderr>:[rank22]:[2026-03-12 12:14:14,710] [2/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,0]<stderr>:[rank0]:[2026-03-12 12:14:14,835] [2/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,27]<stderr>:[rank27]:[2026-03-12 12:14:45,203] [5/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,11]<stderr>:[rank11]:[2026-03-12 12:14:45,289] [5/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,7]<stderr>:[rank7]:[2026-03-12 12:14:45,310] [5/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,3]<stderr>:[rank3]:[2026-03-12 12:14:45,328] [5/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,23]<stderr>:[rank23]:[2026-03-12 12:14:45,331] [5/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,8]<stderr>:[rank8]:[2026-03-12 12:14:45,444] [5/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,19]<stderr>:[rank19]:[2026-03-12 12:14:45,453] [5/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,15]<stderr>:[rank15]:[2026-03-12 12:14:45,457] [5/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,9]<stderr>:[rank9]:[2026-03-12 12:14:45,546] [5/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,21]<stderr>:[rank21]:[2026-03-12 12:14:45,566] [5/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,18]<stderr>:[rank18]:[2026-03-12 12:14:45,593] [5/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,6]<stderr>:[rank6]:[2026-03-12 12:14:45,620] [5/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,29]<stderr>:[rank29]:[2026-03-12 12:14:45,655] [5/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,31]<stderr>:[rank31]:[2026-03-12 12:14:45,656] [5/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,17]<stderr>:[rank17]:[2026-03-12 12:14:45,660] [5/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,22]<stderr>:[rank22]:[2026-03-12 12:14:45,688] [5/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,5]<stderr>:[rank5]:[2026-03-12 12:14:45,692] [5/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,14]<stderr>:[rank14]:[2026-03-12 12:14:45,693] [5/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,13]<stderr>:[rank13]:[2026-03-12 12:14:45,695] [5/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,24]<stderr>:[rank24]:[2026-03-12 12:14:45,765] [5/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,25]<stderr>:[rank25]:[2026-03-12 12:14:45,778] [5/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,10]<stderr>:[rank10]:[2026-03-12 12:14:45,778] [5/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,30]<stderr>:[rank30]:[2026-03-12 12:14:45,787] [5/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,1]<stderr>:[rank1]:[2026-03-12 12:14:45,795] [5/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,2]<stderr>:[rank2]:[2026-03-12 12:14:45,795] [5/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,20]<stderr>:[rank20]:[2026-03-12 12:14:45,804] [5/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,26]<stderr>:[rank26]:[2026-03-12 12:14:45,839] [5/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,4]<stderr>:[rank4]:[2026-03-12 12:14:45,912] [5/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,12]<stderr>:[rank12]:[2026-03-12 12:14:45,928] [5/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,28]<stderr>:[rank28]:[2026-03-12 12:14:45,967] [5/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,16]<stderr>:[rank16]:[2026-03-12 12:14:45,986] [5/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,0]<stderr>:[rank0]:[2026-03-12 12:14:46,148] [5/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,3]<stderr>:[rank3]:[2026-03-12 12:15:02,702] [2/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,27]<stderr>:[rank27]:[2026-03-12 12:15:02,883] [2/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,11]<stderr>:[rank11]:[2026-03-12 12:15:02,904] [2/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,23]<stderr>:[rank23]:[2026-03-12 12:15:02,952] [2/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,19]<stderr>:[rank19]:[2026-03-12 12:15:03,068] [2/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,15]<stderr>:[rank15]:[2026-03-12 12:15:03,293] [2/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,31]<stderr>:[rank31]:[2026-03-12 12:15:03,394] [2/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,9]<stderr>:[rank9]:[2026-03-12 12:15:03,679] [2/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,7]<stderr>:[rank7]:[2026-03-12 12:15:03,754] [2/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,18]<stderr>:[rank18]:[2026-03-12 12:15:03,865] [2/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,30]<stderr>:[rank30]:[2026-03-12 12:15:03,988] [2/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,21]<stderr>:[rank21]:[2026-03-12 12:15:03,996] [2/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,29]<stderr>:[rank29]:[2026-03-12 12:15:04,016] [2/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,1]<stderr>:[rank1]:[2026-03-12 12:15:04,036] [2/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,22]<stderr>:[rank22]:[2026-03-12 12:15:04,041] [2/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,8]<stderr>:[rank8]:[2026-03-12 12:15:04,041] [2/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,25]<stderr>:[rank25]:[2026-03-12 12:15:04,093] [2/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,13]<stderr>:[rank13]:[2026-03-12 12:15:04,151] [2/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,14]<stderr>:[rank14]:[2026-03-12 12:15:04,166] [2/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,10]<stderr>:[rank10]:[2026-03-12 12:15:04,166] [2/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,2]<stderr>:[rank2]:[2026-03-12 12:15:04,246] [2/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,26]<stderr>:[rank26]:[2026-03-12 12:15:04,264] [2/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,17]<stderr>:[rank17]:[2026-03-12 12:15:04,325] [2/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,6]<stderr>:[rank6]:[2026-03-12 12:15:04,353] [2/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,24]<stderr>:[rank24]:[2026-03-12 12:15:04,389] [2/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,12]<stderr>:[rank12]:[2026-03-12 12:15:04,508] [2/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,20]<stderr>:[rank20]:[2026-03-12 12:15:04,533] [2/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,16]<stderr>:[rank16]:[2026-03-12 12:15:04,736] [2/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,28]<stderr>:[rank28]:[2026-03-12 12:15:04,853] [2/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,5]<stderr>:[rank5]:[2026-03-12 12:15:04,887] [2/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,0]<stderr>:[rank0]:[2026-03-12 12:15:04,933] [2/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,4]<stderr>:[rank4]:[2026-03-12 12:15:05,176] [2/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,3]<stderr>:[rank3]:[2026-03-12 12:15:42,646] [5/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,27]<stderr>:[rank27]:[2026-03-12 12:15:42,845] [5/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,11]<stderr>:[rank11]:[2026-03-12 12:15:43,031] [5/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,19]<stderr>:[rank19]:[2026-03-12 12:15:43,654] [5/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,15]<stderr>:[rank15]:[2026-03-12 12:15:43,719] [5/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,31]<stderr>:[rank31]:[2026-03-12 12:15:43,724] [5/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,7]<stderr>:[rank7]:[2026-03-12 12:15:43,945] [5/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,23]<stderr>:[rank23]:[2026-03-12 12:15:43,997] [5/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,18]<stderr>:[rank18]:[2026-03-12 12:15:44,039] [5/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,9]<stderr>:[rank9]:[2026-03-12 12:15:44,156] [5/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,1]<stderr>:[rank1]:[2026-03-12 12:15:44,196] [5/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,29]<stderr>:[rank29]:[2026-03-12 12:15:44,332] [5/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,30]<stderr>:[rank30]:[2026-03-12 12:15:44,406] [5/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,25]<stderr>:[rank25]:[2026-03-12 12:15:44,411] [5/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,22]<stderr>:[rank22]:[2026-03-12 12:15:44,414] [5/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,21]<stderr>:[rank21]:[2026-03-12 12:15:44,445] [5/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,10]<stderr>:[rank10]:[2026-03-12 12:15:44,481] [5/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,13]<stderr>:[rank13]:[2026-03-12 12:15:44,553] [5/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,8]<stderr>:[rank8]:[2026-03-12 12:15:44,706] [5/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,6]<stderr>:[rank6]:[2026-03-12 12:15:44,716] [5/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,26]<stderr>:[rank26]:[2026-03-12 12:15:44,837] [5/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,2]<stderr>:[rank2]:[2026-03-12 12:15:44,870] [5/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,14]<stderr>:[rank14]:[2026-03-12 12:15:44,937] [5/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,12]<stderr>:[rank12]:[2026-03-12 12:15:44,981] [5/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,24]<stderr>:[rank24]:[2026-03-12 12:15:45,046] [5/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,16]<stderr>:[rank16]:[2026-03-12 12:15:45,081] [5/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,20]<stderr>:[rank20]:[2026-03-12 12:15:45,153] [5/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,5]<stderr>:[rank5]:[2026-03-12 12:15:45,175] [5/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,0]<stderr>:[rank0]:[2026-03-12 12:15:45,292] [5/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,17]<stderr>:[rank17]:[2026-03-12 12:15:45,306] [5/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,28]<stderr>:[rank28]:[2026-03-12 12:15:45,434] [5/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
-[1,4]<stderr>:[rank4]:[2026-03-12 12:15:45,511] [5/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+/var/spool/slurmd/job37433445/slurm_script: line 15: /leonardo_work/IscrC_SAME-D/videomae/bin/activate: No such file or directory
+[1,20]<stderr>:[lrdn0189.leonardo.local:2209978] MCW rank 20 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]], socket 0[core 4[hwt 0]]: [B/B/B/B/B/././././././././././././././.]
+[1,28]<stderr>:[lrdn0220.leonardo.local:955323] MCW rank 28 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]], socket 0[core 4[hwt 0]]: [B/B/B/B/B/././././././././././././././.]
+[1,4]<stderr>:[lrdn0069.leonardo.local:2283627] MCW rank 4 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]], socket 0[core 4[hwt 0]]: [B/B/B/B/B/././././././././././././././.]
+[1,8]<stderr>:[lrdn0074.leonardo.local:3430034] MCW rank 8 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]], socket 0[core 4[hwt 0]]: [B/B/B/B/B/././././././././././././././.]
+[1,24]<stderr>:[lrdn0214.leonardo.local:2479480] MCW rank 24 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]], socket 0[core 4[hwt 0]]: [B/B/B/B/B/././././././././././././././.]
+[1,12]<stderr>:[lrdn0159.leonardo.local:889760] MCW rank 12 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]], socket 0[core 4[hwt 0]]: [B/B/B/B/B/././././././././././././././.]
+[1,16]<stderr>:[lrdn0166.leonardo.local:872496] MCW rank 16 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]], socket 0[core 4[hwt 0]]: [B/B/B/B/B/././././././././././././././.]
+[1,0]<stderr>:[lrdn0045.leonardo.local:1006108] MCW rank 0 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]], socket 0[core 4[hwt 0]]: [B/B/B/B/B/././././././././././././././.]
+[1,1]<stderr>:[lrdn0045.leonardo.local:1006108] MCW rank 1 bound to socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]], socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]]: [./././././B/B/B/B/B/./././././././././.]
+[1,2]<stderr>:[lrdn0045.leonardo.local:1006108] MCW rank 2 bound to socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]], socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]]: [././././././././././B/B/B/B/B/././././.]
+[1,3]<stderr>:[lrdn0045.leonardo.local:1006108] MCW rank 3 bound to socket 0[core 15[hwt 0]], socket 0[core 16[hwt 0]], socket 0[core 17[hwt 0]], socket 0[core 18[hwt 0]], socket 0[core 19[hwt 0]]: [./././././././././././././././B/B/B/B/B]
+[1,21]<stderr>:[lrdn0189.leonardo.local:2209978] MCW rank 21 bound to socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]], socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]]: [./././././B/B/B/B/B/./././././././././.]
+[1,29]<stderr>:[lrdn0220.leonardo.local:955323] MCW rank 29 bound to socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]], socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]]: [./././././B/B/B/B/B/./././././././././.]
+[1,5]<stderr>:[lrdn0069.leonardo.local:2283627] MCW rank 5 bound to socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]], socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]]: [./././././B/B/B/B/B/./././././././././.]
+[1,9]<stderr>:[lrdn0074.leonardo.local:3430034] MCW rank 9 bound to socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]], socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]]: [./././././B/B/B/B/B/./././././././././.]
+[1,25]<stderr>:[lrdn0214.leonardo.local:2479480] MCW rank 25 bound to socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]], socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]]: [./././././B/B/B/B/B/./././././././././.]
+[1,13]<stderr>:[lrdn0159.leonardo.local:889760] MCW rank 13 bound to socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]], socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]]: [./././././B/B/B/B/B/./././././././././.]
+[1,17]<stderr>:[lrdn0166.leonardo.local:872496] MCW rank 17 bound to socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]], socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]]: [./././././B/B/B/B/B/./././././././././.]
+[1,22]<stderr>:[lrdn0189.leonardo.local:2209978] MCW rank 22 bound to socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]], socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]]: [././././././././././B/B/B/B/B/././././.]
+[1,30]<stderr>:[lrdn0220.leonardo.local:955323] MCW rank 30 bound to socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]], socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]]: [././././././././././B/B/B/B/B/././././.]
+[1,6]<stderr>:[lrdn0069.leonardo.local:2283627] MCW rank 6 bound to socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]], socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]]: [././././././././././B/B/B/B/B/././././.]
+[1,10]<stderr>:[lrdn0074.leonardo.local:3430034] MCW rank 10 bound to socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]], socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]]: [././././././././././B/B/B/B/B/././././.]
+[1,26]<stderr>:[lrdn0214.leonardo.local:2479480] MCW rank 26 bound to socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]], socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]]: [././././././././././B/B/B/B/B/././././.]
+[1,14]<stderr>:[lrdn0159.leonardo.local:889760] MCW rank 14 bound to socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]], socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]]: [././././././././././B/B/B/B/B/././././.]
+[1,18]<stderr>:[lrdn0166.leonardo.local:872496] MCW rank 18 bound to socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]], socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]]: [././././././././././B/B/B/B/B/././././.]
+[1,23]<stderr>:[lrdn0189.leonardo.local:2209978] MCW rank 23 bound to socket 0[core 15[hwt 0]], socket 0[core 16[hwt 0]], socket 0[core 17[hwt 0]], socket 0[core 18[hwt 0]], socket 0[core 19[hwt 0]]: [./././././././././././././././B/B/B/B/B]
+[1,31]<stderr>:[lrdn0220.leonardo.local:955323] MCW rank 31 bound to socket 0[core 15[hwt 0]], socket 0[core 16[hwt 0]], socket 0[core 17[hwt 0]], socket 0[core 18[hwt 0]], socket 0[core 19[hwt 0]]: [./././././././././././././././B/B/B/B/B]
+[1,7]<stderr>:[lrdn0069.leonardo.local:2283627] MCW rank 7 bound to socket 0[core 15[hwt 0]], socket 0[core 16[hwt 0]], socket 0[core 17[hwt 0]], socket 0[core 18[hwt 0]], socket 0[core 19[hwt 0]]: [./././././././././././././././B/B/B/B/B]
+[1,11]<stderr>:[lrdn0074.leonardo.local:3430034] MCW rank 11 bound to socket 0[core 15[hwt 0]], socket 0[core 16[hwt 0]], socket 0[core 17[hwt 0]], socket 0[core 18[hwt 0]], socket 0[core 19[hwt 0]]: [./././././././././././././././B/B/B/B/B]
+[1,27]<stderr>:[lrdn0214.leonardo.local:2479480] MCW rank 27 bound to socket 0[core 15[hwt 0]], socket 0[core 16[hwt 0]], socket 0[core 17[hwt 0]], socket 0[core 18[hwt 0]], socket 0[core 19[hwt 0]]: [./././././././././././././././B/B/B/B/B]
+[1,15]<stderr>:[lrdn0159.leonardo.local:889760] MCW rank 15 bound to socket 0[core 15[hwt 0]], socket 0[core 16[hwt 0]], socket 0[core 17[hwt 0]], socket 0[core 18[hwt 0]], socket 0[core 19[hwt 0]]: [./././././././././././././././B/B/B/B/B]
+[1,19]<stderr>:[lrdn0166.leonardo.local:872496] MCW rank 19 bound to socket 0[core 15[hwt 0]], socket 0[core 16[hwt 0]], socket 0[core 17[hwt 0]], socket 0[core 18[hwt 0]], socket 0[core 19[hwt 0]]: [./././././././././././././././B/B/B/B/B]
+[1,15]<stderr>:2026-03-12 12:58:03.735388: I tensorflow/core/util/port.cc:113] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+[1,13]<stderr>:2026-03-12 12:58:03.735387: I tensorflow/core/util/port.cc:113] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+[1,14]<stderr>:2026-03-12 12:58:03.735390: I tensorflow/core/util/port.cc:113] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+[1,12]<stderr>:2026-03-12 12:58:03.735393: I tensorflow/core/util/port.cc:113] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+[1,8]<stderr>:2026-03-12 12:58:03.753425: I tensorflow/core/util/port.cc:113] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+[1,9]<stderr>:2026-03-12 12:58:03.753429: I tensorflow/core/util/port.cc:113] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+[1,11]<stderr>:2026-03-12 12:58:03.753427: I tensorflow/core/util/port.cc:113] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+[1,10]<stderr>:2026-03-12 12:58:03.753425: I tensorflow/core/util/port.cc:113] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+[1,17]<stderr>:2026-03-12 12:58:03.915851: I tensorflow/core/util/port.cc:113] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+[1,18]<stderr>:2026-03-12 12:58:03.915847: I tensorflow/core/util/port.cc:113] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+[1,16]<stderr>:2026-03-12 12:58:03.915847: I tensorflow/core/util/port.cc:113] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+[1,19]<stderr>:2026-03-12 12:58:03.915850: I tensorflow/core/util/port.cc:113] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+[1,22]<stderr>:2026-03-12 12:58:03.943397: I tensorflow/core/util/port.cc:113] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+[1,23]<stderr>:2026-03-12 12:58:03.943393: I tensorflow/core/util/port.cc:113] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+[1,21]<stderr>:2026-03-12 12:58:03.943391: I tensorflow/core/util/port.cc:113] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+[1,20]<stderr>:2026-03-12 12:58:03.943393: I tensorflow/core/util/port.cc:113] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+[1,4]<stderr>:2026-03-12 12:58:03.974555: I tensorflow/core/util/port.cc:113] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+[1,5]<stderr>:2026-03-12 12:58:03.974557: I tensorflow/core/util/port.cc:113] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+[1,7]<stderr>:2026-03-12 12:58:03.974561: I tensorflow/core/util/port.cc:113] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+[1,6]<stderr>:2026-03-12 12:58:03.974557: I tensorflow/core/util/port.cc:113] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+[1,26]<stderr>:2026-03-12 12:58:04.057404: I tensorflow/core/util/port.cc:113] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+[1,27]<stderr>:2026-03-12 12:58:04.057404: I tensorflow/core/util/port.cc:113] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+[1,24]<stderr>:2026-03-12 12:58:04.057402: I tensorflow/core/util/port.cc:113] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+[1,25]<stderr>:2026-03-12 12:58:04.057404: I tensorflow/core/util/port.cc:113] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+[1,28]<stderr>:2026-03-12 12:58:04.142014: I tensorflow/core/util/port.cc:113] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+[1,29]<stderr>:2026-03-12 12:58:04.142016: I tensorflow/core/util/port.cc:113] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+[1,30]<stderr>:2026-03-12 12:58:04.142013: I tensorflow/core/util/port.cc:113] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+[1,31]<stderr>:2026-03-12 12:58:04.142014: I tensorflow/core/util/port.cc:113] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+[1,0]<stderr>:2026-03-12 12:58:04.188342: I tensorflow/core/util/port.cc:113] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+[1,1]<stderr>:2026-03-12 12:58:04.188349: I tensorflow/core/util/port.cc:113] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+[1,2]<stderr>:2026-03-12 12:58:04.188353: I tensorflow/core/util/port.cc:113] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+[1,3]<stderr>:2026-03-12 12:58:04.188355: I tensorflow/core/util/port.cc:113] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+[1,13]<stderr>:2026-03-12 12:58:04.415708: E external/local_xla/xla/stream_executor/cuda/cuda_dnn.cc:9261] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+[1,15]<stderr>:2026-03-12 12:58:04.415708: E external/local_xla/xla/stream_executor/cuda/cuda_dnn.cc:9261] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+[1,12]<stderr>:2026-03-12 12:58:04.415708: E external/local_xla/xla/stream_executor/cuda/cuda_dnn.cc:9261] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+[1,14]<stderr>:2026-03-12 12:58:04.415712: E external/local_xla/xla/stream_executor/cuda/cuda_dnn.cc:9261] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+[1,14]<stderr>:2026-03-12 12:58:04.416202: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:607] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+[1,12]<stderr>:2026-03-12 12:58:04.416204: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:607] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+[1,15]<stderr>:2026-03-12 12:58:04.416205: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:607] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+[1,13]<stderr>:2026-03-12 12:58:04.416206: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:607] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+[1,10]<stderr>:2026-03-12 12:58:04.456231: E external/local_xla/xla/stream_executor/cuda/cuda_dnn.cc:9261] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+[1,8]<stderr>:2026-03-12 12:58:04.456232: E external/local_xla/xla/stream_executor/cuda/cuda_dnn.cc:9261] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+[1,11]<stderr>:2026-03-12 12:58:04.456230: E external/local_xla/xla/stream_executor/cuda/cuda_dnn.cc:9261] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+[1,9]<stderr>:2026-03-12 12:58:04.456233: E external/local_xla/xla/stream_executor/cuda/cuda_dnn.cc:9261] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+[1,8]<stderr>:2026-03-12 12:58:04.456720: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:607] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+[1,9]<stderr>:2026-03-12 12:58:04.456722: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:607] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+[1,10]<stderr>:2026-03-12 12:58:04.456724: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:607] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+[1,11]<stderr>:2026-03-12 12:58:04.456725: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:607] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+[1,12]<stderr>:2026-03-12 12:58:04.517875: E external/local_xla/xla/stream_executor/cuda/cuda_blas.cc:1515] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+[1,15]<stderr>:2026-03-12 12:58:04.517877: E external/local_xla/xla/stream_executor/cuda/cuda_blas.cc:1515] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+[1,13]<stderr>:2026-03-12 12:58:04.517875: E external/local_xla/xla/stream_executor/cuda/cuda_blas.cc:1515] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+[1,14]<stderr>:2026-03-12 12:58:04.517877: E external/local_xla/xla/stream_executor/cuda/cuda_blas.cc:1515] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+[1,11]<stderr>:2026-03-12 12:58:04.568771: E external/local_xla/xla/stream_executor/cuda/cuda_blas.cc:1515] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+[1,10]<stderr>:2026-03-12 12:58:04.568774: E external/local_xla/xla/stream_executor/cuda/cuda_blas.cc:1515] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+[1,9]<stderr>:2026-03-12 12:58:04.568774: E external/local_xla/xla/stream_executor/cuda/cuda_blas.cc:1515] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+[1,8]<stderr>:2026-03-12 12:58:04.568776: E external/local_xla/xla/stream_executor/cuda/cuda_blas.cc:1515] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+[1,19]<stderr>:2026-03-12 12:58:04.617998: E external/local_xla/xla/stream_executor/cuda/cuda_dnn.cc:9261] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+[1,17]<stderr>:2026-03-12 12:58:04.617997: E external/local_xla/xla/stream_executor/cuda/cuda_dnn.cc:9261] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+[1,18]<stderr>:2026-03-12 12:58:04.617999: E external/local_xla/xla/stream_executor/cuda/cuda_dnn.cc:9261] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+[1,16]<stderr>:2026-03-12 12:58:04.617998: E external/local_xla/xla/stream_executor/cuda/cuda_dnn.cc:9261] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+[1,16]<stderr>:2026-03-12 12:58:04.618499: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:607] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+[1,19]<stderr>:2026-03-12 12:58:04.618501: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:607] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+[1,17]<stderr>:2026-03-12 12:58:04.618503: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:607] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+[1,18]<stderr>:2026-03-12 12:58:04.618505: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:607] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+[1,22]<stderr>:2026-03-12 12:58:04.654786: E external/local_xla/xla/stream_executor/cuda/cuda_dnn.cc:9261] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+[1,23]<stderr>:2026-03-12 12:58:04.654786: E external/local_xla/xla/stream_executor/cuda/cuda_dnn.cc:9261] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+[1,20]<stderr>:2026-03-12 12:58:04.654786: E external/local_xla/xla/stream_executor/cuda/cuda_dnn.cc:9261] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+[1,21]<stderr>:2026-03-12 12:58:04.654786: E external/local_xla/xla/stream_executor/cuda/cuda_dnn.cc:9261] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+[1,23]<stderr>:2026-03-12 12:58:04.655671: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:607] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+[1,20]<stderr>:2026-03-12 12:58:04.655673: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:607] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+[1,22]<stderr>:2026-03-12 12:58:04.655674: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:607] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+[1,21]<stderr>:2026-03-12 12:58:04.655675: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:607] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+[1,5]<stderr>:2026-03-12 12:58:04.681448: E external/local_xla/xla/stream_executor/cuda/cuda_dnn.cc:9261] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+[1,4]<stderr>:2026-03-12 12:58:04.681450: E external/local_xla/xla/stream_executor/cuda/cuda_dnn.cc:9261] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+[1,7]<stderr>:2026-03-12 12:58:04.681454: E external/local_xla/xla/stream_executor/cuda/cuda_dnn.cc:9261] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+[1,6]<stderr>:2026-03-12 12:58:04.681450: E external/local_xla/xla/stream_executor/cuda/cuda_dnn.cc:9261] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+[1,5]<stderr>:2026-03-12 12:58:04.682589: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:607] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+[1,4]<stderr>:2026-03-12 12:58:04.682590: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:607] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+[1,6]<stderr>:2026-03-12 12:58:04.682592: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:607] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+[1,7]<stderr>:2026-03-12 12:58:04.682593: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:607] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+[1,19]<stderr>:2026-03-12 12:58:04.727120: E external/local_xla/xla/stream_executor/cuda/cuda_blas.cc:1515] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+[1,16]<stderr>:2026-03-12 12:58:04.727118: E external/local_xla/xla/stream_executor/cuda/cuda_blas.cc:1515] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+[1,18]<stderr>:2026-03-12 12:58:04.727120: E external/local_xla/xla/stream_executor/cuda/cuda_blas.cc:1515] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+[1,17]<stderr>:2026-03-12 12:58:04.727118: E external/local_xla/xla/stream_executor/cuda/cuda_blas.cc:1515] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+[1,26]<stderr>:2026-03-12 12:58:04.753865: E external/local_xla/xla/stream_executor/cuda/cuda_dnn.cc:9261] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+[1,25]<stderr>:2026-03-12 12:58:04.753867: E external/local_xla/xla/stream_executor/cuda/cuda_dnn.cc:9261] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+[1,27]<stderr>:2026-03-12 12:58:04.753864: E external/local_xla/xla/stream_executor/cuda/cuda_dnn.cc:9261] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+[1,24]<stderr>:2026-03-12 12:58:04.753867: E external/local_xla/xla/stream_executor/cuda/cuda_dnn.cc:9261] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+[1,27]<stderr>:2026-03-12 12:58:04.754649: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:607] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+[1,25]<stderr>:2026-03-12 12:58:04.754650: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:607] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+[1,26]<stderr>:2026-03-12 12:58:04.754651: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:607] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+[1,24]<stderr>:2026-03-12 12:58:04.754653: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:607] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+[1,22]<stderr>:2026-03-12 12:58:04.764664: E external/local_xla/xla/stream_executor/cuda/cuda_blas.cc:1515] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+[1,23]<stderr>:2026-03-12 12:58:04.764667: E external/local_xla/xla/stream_executor/cuda/cuda_blas.cc:1515] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+[1,21]<stderr>:2026-03-12 12:58:04.764665: E external/local_xla/xla/stream_executor/cuda/cuda_blas.cc:1515] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+[1,20]<stderr>:2026-03-12 12:58:04.764669: E external/local_xla/xla/stream_executor/cuda/cuda_blas.cc:1515] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+[1,12]<stderr>:2026-03-12 12:58:04.777190: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+[1,12]<stderr>:To enable the following instructions: AVX2 AVX512F AVX512_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+[1,15]<stderr>:2026-03-12 12:58:04.777193: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+[1,15]<stderr>:To enable the following instructions: AVX2 AVX512F AVX512_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+[1,13]<stderr>:2026-03-12 12:58:04.777192: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+[1,13]<stderr>:To enable the following instructions: AVX2 AVX512F AVX512_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+[1,14]<stderr>:2026-03-12 12:58:04.777194: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+[1,14]<stderr>:To enable the following instructions: AVX2 AVX512F AVX512_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+[1,7]<stderr>:2026-03-12 12:58:04.796861: E external/local_xla/xla/stream_executor/cuda/cuda_blas.cc:1515] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+[1,5]<stderr>:2026-03-12 12:58:04.796858: E external/local_xla/xla/stream_executor/cuda/cuda_blas.cc:1515] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+[1,4]<stderr>:2026-03-12 12:58:04.796862: E external/local_xla/xla/stream_executor/cuda/cuda_blas.cc:1515] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+[1,6]<stderr>:2026-03-12 12:58:04.796858: E external/local_xla/xla/stream_executor/cuda/cuda_blas.cc:1515] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+[1,30]<stderr>:2026-03-12 12:58:04.828726: E external/local_xla/xla/stream_executor/cuda/cuda_dnn.cc:9261] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+[1,31]<stderr>:2026-03-12 12:58:04.828728: E external/local_xla/xla/stream_executor/cuda/cuda_dnn.cc:9261] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+[1,28]<stderr>:2026-03-12 12:58:04.828722: E external/local_xla/xla/stream_executor/cuda/cuda_dnn.cc:9261] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+[1,29]<stderr>:2026-03-12 12:58:04.828722: E external/local_xla/xla/stream_executor/cuda/cuda_dnn.cc:9261] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+[1,28]<stderr>:2026-03-12 12:58:04.829206: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:607] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+[1,29]<stderr>:2026-03-12 12:58:04.829207: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:607] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+[1,31]<stderr>:2026-03-12 12:58:04.829209: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:607] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+[1,30]<stderr>:2026-03-12 12:58:04.829211: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:607] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+[1,11]<stderr>:2026-03-12 12:58:04.843011: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+[1,11]<stderr>:To enable the following instructions: AVX2 AVX512F AVX512_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+[1,9]<stderr>:2026-03-12 12:58:04.843018: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+[1,9]<stderr>:To enable the following instructions: AVX2 AVX512F AVX512_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+[1,8]<stderr>:2026-03-12 12:58:04.843022: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+[1,8]<stderr>:To enable the following instructions: AVX2 AVX512F AVX512_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+[1,10]<stderr>:2026-03-12 12:58:04.843025: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+[1,10]<stderr>:To enable the following instructions: AVX2 AVX512F AVX512_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+[1,27]<stderr>:2026-03-12 12:58:04.862914: E external/local_xla/xla/stream_executor/cuda/cuda_blas.cc:1515] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+[1,25]<stderr>:2026-03-12 12:58:04.862915: E external/local_xla/xla/stream_executor/cuda/cuda_blas.cc:1515] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+[1,24]<stderr>:2026-03-12 12:58:04.862917: E external/local_xla/xla/stream_executor/cuda/cuda_blas.cc:1515] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+[1,26]<stderr>:2026-03-12 12:58:04.862921: E external/local_xla/xla/stream_executor/cuda/cuda_blas.cc:1515] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+[1,2]<stderr>:2026-03-12 12:58:04.903040: E external/local_xla/xla/stream_executor/cuda/cuda_dnn.cc:9261] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+[1,3]<stderr>:2026-03-12 12:58:04.903038: E external/local_xla/xla/stream_executor/cuda/cuda_dnn.cc:9261] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+[1,0]<stderr>:2026-03-12 12:58:04.903036: E external/local_xla/xla/stream_executor/cuda/cuda_dnn.cc:9261] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+[1,1]<stderr>:2026-03-12 12:58:04.903038: E external/local_xla/xla/stream_executor/cuda/cuda_dnn.cc:9261] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+[1,2]<stderr>:2026-03-12 12:58:04.903495: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:607] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+[1,3]<stderr>:2026-03-12 12:58:04.903496: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:607] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+[1,1]<stderr>:2026-03-12 12:58:04.903498: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:607] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+[1,0]<stderr>:2026-03-12 12:58:04.903499: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:607] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+[1,31]<stderr>:2026-03-12 12:58:04.927850: E external/local_xla/xla/stream_executor/cuda/cuda_blas.cc:1515] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+[1,30]<stderr>:2026-03-12 12:58:04.927851: E external/local_xla/xla/stream_executor/cuda/cuda_blas.cc:1515] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+[1,29]<stderr>:2026-03-12 12:58:04.927853: E external/local_xla/xla/stream_executor/cuda/cuda_blas.cc:1515] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+[1,28]<stderr>:2026-03-12 12:58:04.927858: E external/local_xla/xla/stream_executor/cuda/cuda_blas.cc:1515] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+[1,19]<stderr>:2026-03-12 12:58:05.004115: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+[1,19]<stderr>:To enable the following instructions: AVX2 AVX512F AVX512_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+[1,17]<stderr>:2026-03-12 12:58:05.004120: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+[1,17]<stderr>:To enable the following instructions: AVX2 AVX512F AVX512_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+[1,16]<stderr>:2026-03-12 12:58:05.004122: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+[1,16]<stderr>:To enable the following instructions: AVX2 AVX512F AVX512_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+[1,18]<stderr>:2026-03-12 12:58:05.004124: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+[1,18]<stderr>:To enable the following instructions: AVX2 AVX512F AVX512_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+[1,0]<stderr>:2026-03-12 12:58:05.011814: E external/local_xla/xla/stream_executor/cuda/cuda_blas.cc:1515] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+[1,1]<stderr>:2026-03-12 12:58:05.011816: E external/local_xla/xla/stream_executor/cuda/cuda_blas.cc:1515] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+[1,3]<stderr>:2026-03-12 12:58:05.011813: E external/local_xla/xla/stream_executor/cuda/cuda_blas.cc:1515] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+[1,2]<stderr>:2026-03-12 12:58:05.011820: E external/local_xla/xla/stream_executor/cuda/cuda_blas.cc:1515] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+[1,22]<stderr>:2026-03-12 12:58:05.033254: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+[1,22]<stderr>:To enable the following instructions: AVX2 AVX512F AVX512_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+[1,21]<stderr>:2026-03-12 12:58:05.033259: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+[1,21]<stderr>:To enable the following instructions: AVX2 AVX512F AVX512_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+[1,23]<stderr>:2026-03-12 12:58:05.033260: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+[1,23]<stderr>:To enable the following instructions: AVX2 AVX512F AVX512_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+[1,20]<stderr>:2026-03-12 12:58:05.033258: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+[1,20]<stderr>:To enable the following instructions: AVX2 AVX512F AVX512_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+[1,5]<stderr>:2026-03-12 12:58:05.052935: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+[1,5]<stderr>:To enable the following instructions: AVX2 AVX512F AVX512_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+[1,4]<stderr>:2026-03-12 12:58:05.052935: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+[1,4]<stderr>:To enable the following instructions: AVX2 AVX512F AVX512_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+[1,6]<stderr>:2026-03-12 12:58:05.052940: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+[1,6]<stderr>:To enable the following instructions: AVX2 AVX512F AVX512_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+[1,7]<stderr>:2026-03-12 12:58:05.052941: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+[1,7]<stderr>:To enable the following instructions: AVX2 AVX512F AVX512_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+[1,27]<stderr>:2026-03-12 12:58:05.127889: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+[1,27]<stderr>:To enable the following instructions: AVX2 AVX512F AVX512_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+[1,26]<stderr>:2026-03-12 12:58:05.127890: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+[1,26]<stderr>:To enable the following instructions: AVX2 AVX512F AVX512_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+[1,24]<stderr>:2026-03-12 12:58:05.127895: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+[1,24]<stderr>:To enable the following instructions: AVX2 AVX512F AVX512_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+[1,25]<stderr>:2026-03-12 12:58:05.127895: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+[1,25]<stderr>:To enable the following instructions: AVX2 AVX512F AVX512_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+[1,28]<stderr>:2026-03-12 12:58:05.186433: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+[1,28]<stderr>:To enable the following instructions: AVX2 AVX512F AVX512_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+[1,31]<stderr>:2026-03-12 12:58:05.186434: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+[1,31]<stderr>:To enable the following instructions: AVX2 AVX512F AVX512_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+[1,29]<stderr>:2026-03-12 12:58:05.186435: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+[1,29]<stderr>:To enable the following instructions: AVX2 AVX512F AVX512_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+[1,30]<stderr>:2026-03-12 12:58:05.186437: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+[1,30]<stderr>:To enable the following instructions: AVX2 AVX512F AVX512_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+[1,3]<stderr>:2026-03-12 12:58:05.269764: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+[1,3]<stderr>:To enable the following instructions: AVX2 AVX512F AVX512_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+[1,2]<stderr>:2026-03-12 12:58:05.269765: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+[1,2]<stderr>:To enable the following instructions: AVX2 AVX512F AVX512_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+[1,0]<stderr>:2026-03-12 12:58:05.269762: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+[1,0]<stderr>:To enable the following instructions: AVX2 AVX512F AVX512_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+[1,1]<stderr>:2026-03-12 12:58:05.269763: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+[1,1]<stderr>:To enable the following instructions: AVX2 AVX512F AVX512_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+[1,15]<stderr>:2026-03-12 12:58:06.896569: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Could not find TensorRT
+[1,14]<stderr>:2026-03-12 12:58:06.896569: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Could not find TensorRT
+[1,13]<stderr>:2026-03-12 12:58:06.896569: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Could not find TensorRT
+[1,12]<stderr>:2026-03-12 12:58:06.896571: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Could not find TensorRT
+[1,8]<stderr>:2026-03-12 12:58:06.955900: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Could not find TensorRT
+[1,10]<stderr>:2026-03-12 12:58:06.955898: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Could not find TensorRT
+[1,9]<stderr>:2026-03-12 12:58:06.955899: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Could not find TensorRT
+[1,11]<stderr>:2026-03-12 12:58:06.955900: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Could not find TensorRT
+[1,19]<stderr>:2026-03-12 12:58:07.111321: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Could not find TensorRT
+[1,18]<stderr>:2026-03-12 12:58:07.111321: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Could not find TensorRT
+[1,17]<stderr>:2026-03-12 12:58:07.111321: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Could not find TensorRT
+[1,16]<stderr>:2026-03-12 12:58:07.111321: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Could not find TensorRT
+[1,21]<stderr>:2026-03-12 12:58:07.173818: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Could not find TensorRT
+[1,20]<stderr>:2026-03-12 12:58:07.173815: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Could not find TensorRT
+[1,22]<stderr>:2026-03-12 12:58:07.173818: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Could not find TensorRT
+[1,23]<stderr>:2026-03-12 12:58:07.173816: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Could not find TensorRT
+[1,4]<stderr>:2026-03-12 12:58:07.176112: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Could not find TensorRT
+[1,7]<stderr>:2026-03-12 12:58:07.176111: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Could not find TensorRT
+[1,6]<stderr>:2026-03-12 12:58:07.176111: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Could not find TensorRT
+[1,5]<stderr>:2026-03-12 12:58:07.176108: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Could not find TensorRT
+[1,25]<stderr>:2026-03-12 12:58:07.234538: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Could not find TensorRT
+[1,24]<stderr>:2026-03-12 12:58:07.234537: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Could not find TensorRT
+[1,27]<stderr>:2026-03-12 12:58:07.234537: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Could not find TensorRT
+[1,26]<stderr>:2026-03-12 12:58:07.234538: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Could not find TensorRT
+[1,30]<stderr>:2026-03-12 12:58:07.302788: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Could not find TensorRT
+[1,31]<stderr>:2026-03-12 12:58:07.302790: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Could not find TensorRT
+[1,28]<stderr>:2026-03-12 12:58:07.302791: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Could not find TensorRT
+[1,29]<stderr>:2026-03-12 12:58:07.302800: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Could not find TensorRT
+[1,3]<stderr>:2026-03-12 12:58:07.400159: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Could not find TensorRT
+[1,1]<stderr>:2026-03-12 12:58:07.400163: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Could not find TensorRT
+[1,2]<stderr>:2026-03-12 12:58:07.400163: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Could not find TensorRT
+[1,0]<stderr>:2026-03-12 12:58:07.400164: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Could not find TensorRT
+[1,14]<stderr>:Traceback (most recent call last):
+[1,14]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 14, in <module>
+[1,12]<stderr>:Traceback (most recent call last):
+[1,12]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 14, in <module>
+[1,15]<stderr>:Traceback (most recent call last):
+[1,15]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 14, in <module>
+[1,13]<stderr>:Traceback (most recent call last):
+[1,13]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 14, in <module>
+[1,12]<stderr>:    from utils import multiple_pretrain_samples_collate
+[1,14]<stderr>:    from utils import multiple_pretrain_samples_collate
+[1,15]<stderr>:    from utils import multiple_pretrain_samples_collate
+[1,14]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/utils.py", line 65, in <module>
+[1,12]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/utils.py", line 65, in <module>
+[1,15]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/utils.py", line 65, in <module>
+[1,13]<stderr>:    from utils import multiple_pretrain_samples_collate
+[1,13]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/utils.py", line 65, in <module>
+[1,13]<stderr>:    from timm.utils import get_state_dict
+[1,14]<stderr>:    from timm.utils import get_state_dict
+[1,12]<stderr>:    from timm.utils import get_state_dict
+[1,13]<stderr>:ModuleNotFoundError: No module named 'timm'
+[1,14]<stderr>:ModuleNotFoundError: No module named 'timm'
+[1,12]<stderr>:ModuleNotFoundError: No module named 'timm'
+[1,15]<stderr>:    from timm.utils import get_state_dict
+[1,15]<stderr>:ModuleNotFoundError: No module named 'timm'
+[1,9]<stderr>:Traceback (most recent call last):
+[1,9]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 14, in <module>
+[1,10]<stderr>:Traceback (most recent call last):
+[1,10]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 14, in <module>
+[1,11]<stderr>:Traceback (most recent call last):
+[1,11]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 14, in <module>
+[1,8]<stderr>:Traceback (most recent call last):
+[1,8]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 14, in <module>
+[1,11]<stderr>:    from utils import multiple_pretrain_samples_collate
+[1,11]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/utils.py", line 65, in <module>
+[1,9]<stderr>:    from utils import multiple_pretrain_samples_collate
+[1,10]<stderr>:    from utils import multiple_pretrain_samples_collate
+[1,9]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/utils.py", line 65, in <module>
+[1,10]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/utils.py", line 65, in <module>
+[1,8]<stderr>:    from utils import multiple_pretrain_samples_collate
+[1,8]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/utils.py", line 65, in <module>
+[1,8]<stderr>:    from timm.utils import get_state_dict
+[1,10]<stderr>:    from timm.utils import get_state_dict
+[1,11]<stderr>:    from timm.utils import get_state_dict
+[1,8]<stderr>:ModuleNotFoundError: No module named 'timm'
+[1,10]<stderr>:ModuleNotFoundError: No module named 'timm'
+[1,11]<stderr>:ModuleNotFoundError: No module named 'timm'
+[1,9]<stderr>:    from timm.utils import get_state_dict
+[1,9]<stderr>:ModuleNotFoundError: No module named 'timm'
+[1,23]<stderr>:Traceback (most recent call last):
+[1,23]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 14, in <module>
+[1,20]<stderr>:Traceback (most recent call last):
+[1,20]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 14, in <module>
+[1,21]<stderr>:Traceback (most recent call last):
+[1,21]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 14, in <module>
+[1,22]<stderr>:Traceback (most recent call last):
+[1,22]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 14, in <module>
+[1,20]<stderr>:    from utils import multiple_pretrain_samples_collate
+[1,20]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/utils.py", line 65, in <module>
+[1,21]<stderr>:    from utils import multiple_pretrain_samples_collate
+[1,23]<stderr>:    from utils import multiple_pretrain_samples_collate
+[1,23]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/utils.py", line 65, in <module>
+[1,21]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/utils.py", line 65, in <module>
+[1,22]<stderr>:    from utils import multiple_pretrain_samples_collate
+[1,22]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/utils.py", line 65, in <module>
+[1,22]<stderr>:    from timm.utils import get_state_dict
+[1,23]<stderr>:    from timm.utils import get_state_dict
+[1,21]<stderr>:    from timm.utils import get_state_dict
+[1,22]<stderr>:ModuleNotFoundError: No module named 'timm'
+[1,23]<stderr>:ModuleNotFoundError: No module named 'timm'
+[1,21]<stderr>:ModuleNotFoundError: No module named 'timm'
+[1,20]<stderr>:    from timm.utils import get_state_dict
+[1,20]<stderr>:ModuleNotFoundError: No module named 'timm'
+[1,19]<stderr>:Traceback (most recent call last):
+[1,19]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 14, in <module>
+[1,17]<stderr>:Traceback (most recent call last):
+[1,17]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 14, in <module>
+[1,18]<stderr>:Traceback (most recent call last):
+[1,18]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 14, in <module>
+[1,16]<stderr>:Traceback (most recent call last):
+[1,16]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 14, in <module>
+[1,18]<stderr>:    from utils import multiple_pretrain_samples_collate
+[1,17]<stderr>:    from utils import multiple_pretrain_samples_collate
+[1,19]<stderr>:    from utils import multiple_pretrain_samples_collate
+[1,17]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/utils.py", line 65, in <module>
+[1,18]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/utils.py", line 65, in <module>
+[1,19]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/utils.py", line 65, in <module>
+[1,16]<stderr>:    from utils import multiple_pretrain_samples_collate
+[1,16]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/utils.py", line 65, in <module>
+[1,16]<stderr>:    from timm.utils import get_state_dict
+[1,18]<stderr>:    from timm.utils import get_state_dict
+[1,19]<stderr>:    from timm.utils import get_state_dict
+[1,16]<stderr>:ModuleNotFoundError: No module named 'timm'
+[1,18]<stderr>:ModuleNotFoundError: No module named 'timm'
+[1,19]<stderr>:ModuleNotFoundError: No module named 'timm'
+[1,17]<stderr>:    from timm.utils import get_state_dict
+[1,17]<stderr>:ModuleNotFoundError: No module named 'timm'
+[1,7]<stderr>:Traceback (most recent call last):
+[1,7]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 14, in <module>
+[1,4]<stderr>:Traceback (most recent call last):
+[1,4]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 14, in <module>
+[1,5]<stderr>:Traceback (most recent call last):
+[1,5]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 14, in <module>
+[1,6]<stderr>:Traceback (most recent call last):
+[1,6]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 14, in <module>
+[1,4]<stderr>:    from utils import multiple_pretrain_samples_collate
+[1,4]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/utils.py", line 65, in <module>
+[1,5]<stderr>:    from utils import multiple_pretrain_samples_collate
+[1,7]<stderr>:    from utils import multiple_pretrain_samples_collate
+[1,5]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/utils.py", line 65, in <module>
+[1,7]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/utils.py", line 65, in <module>
+[1,6]<stderr>:    from utils import multiple_pretrain_samples_collate
+[1,6]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/utils.py", line 65, in <module>
+[1,6]<stderr>:    from timm.utils import get_state_dict
+[1,5]<stderr>:    from timm.utils import get_state_dict
+[1,4]<stderr>:    from timm.utils import get_state_dict
+[1,6]<stderr>:ModuleNotFoundError: No module named 'timm'
+[1,5]<stderr>:ModuleNotFoundError: No module named 'timm'
+[1,4]<stderr>:ModuleNotFoundError: No module named 'timm'
+[1,7]<stderr>:    from timm.utils import get_state_dict
+[1,7]<stderr>:ModuleNotFoundError: No module named 'timm'
+[1,27]<stderr>:Traceback (most recent call last):
+[1,27]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 14, in <module>
+[1,24]<stderr>:Traceback (most recent call last):
+[1,24]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 14, in <module>
+[1,26]<stderr>:Traceback (most recent call last):
+[1,26]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 14, in <module>
+[1,25]<stderr>:Traceback (most recent call last):
+[1,25]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 14, in <module>
+[1,27]<stderr>:    from utils import multiple_pretrain_samples_collate
+[1,24]<stderr>:    from utils import multiple_pretrain_samples_collate
+[1,26]<stderr>:    from utils import multiple_pretrain_samples_collate
+[1,27]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/utils.py", line 65, in <module>
+[1,24]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/utils.py", line 65, in <module>
+[1,26]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/utils.py", line 65, in <module>
+[1,25]<stderr>:    from utils import multiple_pretrain_samples_collate
+[1,25]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/utils.py", line 65, in <module>
+[1,25]<stderr>:    from timm.utils import get_state_dict
+[1,26]<stderr>:    from timm.utils import get_state_dict
+[1,27]<stderr>:    from timm.utils import get_state_dict
+[1,25]<stderr>:ModuleNotFoundError: No module named 'timm'
+[1,26]<stderr>:ModuleNotFoundError: No module named 'timm'
+[1,27]<stderr>:ModuleNotFoundError: No module named 'timm'
+[1,24]<stderr>:    from timm.utils import get_state_dict
+[1,24]<stderr>:ModuleNotFoundError: No module named 'timm'
+[1,30]<stderr>:Traceback (most recent call last):
+[1,30]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 14, in <module>
+[1,28]<stderr>:Traceback (most recent call last):
+[1,28]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 14, in <module>
+[1,31]<stderr>:Traceback (most recent call last):
+[1,31]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 14, in <module>
+[1,29]<stderr>:Traceback (most recent call last):
+[1,29]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 14, in <module>
+[1,31]<stderr>:    from utils import multiple_pretrain_samples_collate
+[1,30]<stderr>:    from utils import multiple_pretrain_samples_collate
+[1,28]<stderr>:    from utils import multiple_pretrain_samples_collate
+[1,31]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/utils.py", line 65, in <module>
+[1,30]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/utils.py", line 65, in <module>
+[1,28]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/utils.py", line 65, in <module>
+[1,29]<stderr>:    from utils import multiple_pretrain_samples_collate
+[1,29]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/utils.py", line 65, in <module>
+[1,29]<stderr>:    from timm.utils import get_state_dict
+[1,30]<stderr>:    from timm.utils import get_state_dict
+[1,28]<stderr>:    from timm.utils import get_state_dict
+[1,29]<stderr>:ModuleNotFoundError: No module named 'timm'
+[1,28]<stderr>:ModuleNotFoundError: No module named 'timm'
+[1,30]<stderr>:ModuleNotFoundError: No module named 'timm'
+[1,31]<stderr>:    from timm.utils import get_state_dict
+[1,31]<stderr>:ModuleNotFoundError: No module named 'timm'
+[1,3]<stderr>:Traceback (most recent call last):
+[1,3]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 14, in <module>
+[1,1]<stderr>:Traceback (most recent call last):
+[1,1]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 14, in <module>
+[1,0]<stderr>:Traceback (most recent call last):
+[1,0]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 14, in <module>
+[1,2]<stderr>:Traceback (most recent call last):
+[1,2]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 14, in <module>
+[1,0]<stderr>:    from utils import multiple_pretrain_samples_collate
+[1,3]<stderr>:    from utils import multiple_pretrain_samples_collate
+[1,1]<stderr>:    from utils import multiple_pretrain_samples_collate
+[1,0]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/utils.py", line 65, in <module>
+[1,1]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/utils.py", line 65, in <module>
+[1,3]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/utils.py", line 65, in <module>
+[1,2]<stderr>:    from utils import multiple_pretrain_samples_collate
+[1,2]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/utils.py", line 65, in <module>
+[1,2]<stderr>:    from timm.utils import get_state_dict
+[1,0]<stderr>:    from timm.utils import get_state_dict
+[1,1]<stderr>:    from timm.utils import get_state_dict
+[1,2]<stderr>:ModuleNotFoundError: No module named 'timm'
+[1,1]<stderr>:ModuleNotFoundError: No module named 'timm'
+[1,0]<stderr>:ModuleNotFoundError: No module named 'timm'
+[1,3]<stderr>:    from timm.utils import get_state_dict
+[1,3]<stderr>:ModuleNotFoundError: No module named 'timm'
+--------------------------------------------------------------------------
+Primary job  terminated normally, but 1 process returned
+a non-zero exit code. Per user-direction, the job has been aborted.
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+mpirun detected that one or more processes exited with non-zero status, thus causing
+the job to be terminated. The first process to do so was:
+
+  Process name: [[21983,1],15]
+  Exit code:    1
+--------------------------------------------------------------------------
