@@ -108,6 +108,12 @@ def prepare_args(machine=None):
         'dist_url': 'env://',
         'dist_backend': 'nccl',
         'enable_deepspeed': False,
+        # DDP communication/perf knobs
+        'ddp_find_unused_parameters': False,
+        'ddp_static_graph': True,
+        'ddp_gradient_as_bucket_view': True,
+        'ddp_bucket_cap_mb': 64,
+        'ddp_broadcast_buffers': False,
         # Compile/precision/performance flags
         'compile_model': True,
         'compile_backend': 'eager',
@@ -160,6 +166,11 @@ def prepare_args(machine=None):
         'decoder_depth': 4,
         'testing_epochs': 5,
         # Performance defaults for specialization on A100/HPC
+        'ddp_find_unused_parameters': False,
+        'ddp_static_graph': True,
+        'ddp_gradient_as_bucket_view': True,
+        'ddp_bucket_cap_mb': 64,
+        'ddp_broadcast_buffers': False,
         'compile_backend': 'inductor',
         'compile_mode': 'default',
         'amp_dtype': 'bf16',
@@ -167,7 +178,7 @@ def prepare_args(machine=None):
         'use_sdpa': True,
         'sdpa_kernel': 'auto',
         'disable_inductor_cudagraphs': False,
-        'perf_profile_every': 50,
+        'perf_profile_every': 0,
         'perf_profile_warmup': 20,
         'with_checkpoint': False,
         # Set True to disable GroupMultiScaleCrop in specialization.

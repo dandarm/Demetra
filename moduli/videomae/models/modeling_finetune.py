@@ -103,9 +103,13 @@ class CosAttention(nn.Module):
         if qkv_bias:
             self.q_bias = nn.Parameter(torch.zeros(all_head_dim))
             self.v_bias = nn.Parameter(torch.zeros(all_head_dim))
+            self.register_buffer(
+                "zero_qkv_bias", torch.zeros(all_head_dim), persistent=False
+            )
         else:
             self.q_bias = None
             self.v_bias = None
+            self.zero_qkv_bias = None
 
         self.attn_drop = nn.Dropout(attn_drop)
         self.proj = nn.Linear(all_head_dim, dim)
@@ -115,10 +119,7 @@ class CosAttention(nn.Module):
         B, N, C = x.shape
         qkv_bias = None
         if self.q_bias is not None:
-            qkv_bias = torch.cat(
-                (self.q_bias,
-                 torch.zeros_like(self.v_bias,
-                                  requires_grad=False), self.v_bias))
+            qkv_bias = torch.cat((self.q_bias, self.zero_qkv_bias, self.v_bias))
         qkv = F.linear(input=x, weight=self.qkv.weight, bias=qkv_bias)
         qkv = qkv.reshape(B, N, 3, self.num_heads, -1).permute(2, 0, 3, 1, 4)
         q, k, v = qkv[0], qkv[1], qkv[
@@ -165,9 +166,13 @@ class Attention(nn.Module):
         if qkv_bias:
             self.q_bias = nn.Parameter(torch.zeros(all_head_dim))
             self.v_bias = nn.Parameter(torch.zeros(all_head_dim))
+            self.register_buffer(
+                "zero_qkv_bias", torch.zeros(all_head_dim), persistent=False
+            )
         else:
             self.q_bias = None
             self.v_bias = None
+            self.zero_qkv_bias = None
 
         self.attn_drop = nn.Dropout(attn_drop)
         self.proj = nn.Linear(all_head_dim, dim)
@@ -187,10 +192,7 @@ class Attention(nn.Module):
         B, N, C = x.shape
         qkv_bias = None
         if self.q_bias is not None:
-            qkv_bias = torch.cat(
-                (self.q_bias,
-                 torch.zeros_like(self.v_bias,
-                                  requires_grad=False), self.v_bias))
+            qkv_bias = torch.cat((self.q_bias, self.zero_qkv_bias, self.v_bias))
         qkv = F.linear(input=x, weight=self.qkv.weight, bias=qkv_bias)
         qkv = qkv.reshape(B, N, 3, self.num_heads, -1).permute(2, 0, 3, 1, 4)
         q, k, v = qkv[0], qkv[1], qkv[
@@ -393,9 +395,13 @@ class VisionTransformer(nn.Module):
             self.pos_embed = nn.Parameter(
                 torch.zeros(1, num_patches, embed_dim))
         else:
-            # sine-cosine positional embeddings is on the way
-            self.pos_embed = get_sinusoid_encoding_table(
-                num_patches, embed_dim)
+            # Sine-cos positional embeddings as non-persistent buffer so they
+            # follow .to(device) without entering checkpoints.
+            self.register_buffer(
+                "pos_embed",
+                get_sinusoid_encoding_table(num_patches, embed_dim),
+                persistent=False,
+            )
 
         self.pos_drop = nn.Dropout(p=drop_rate)
 
@@ -464,7 +470,7 @@ class VisionTransformer(nn.Module):
         x = self.patch_embed(x)
 
         if self.pos_embed is not None:
-            x = x + self.pos_embed.expand(B, -1, -1).type_as(x).to(x.device).clone().detach()
+            x = x + self.pos_embed.expand(B, -1, -1).to(dtype=x.dtype)
         x = self.pos_drop(x)
 
         for blk in self.blocks:

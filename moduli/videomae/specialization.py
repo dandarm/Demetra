@@ -4,6 +4,7 @@ import datetime
 import time
 import argparse
 import math
+import inspect
 from pathlib import Path
 from PIL import Image
 import json
@@ -146,6 +147,11 @@ def _model_non_finite_summary(model, max_examples=10):
 
 def launch_specialization_training(terminal_args):
     args = prepare_args(machine=terminal_args.on)
+    if getattr(terminal_args, "compile", "auto") == "on":
+        args.compile_model = True
+    elif getattr(terminal_args, "compile", "auto") == "off":
+        args.compile_model = False
+
     # Backward compatibility: historical pretraining config used `data_path`
     # for train CSV, while DataManager expects `train_path`.
     if not getattr(args, "train_path", None):
@@ -155,6 +161,7 @@ def launch_specialization_training(terminal_args):
     print(
         f"Perf config: with_checkpoint={getattr(args, 'with_checkpoint', None)}, "
         f"amp_dtype={getattr(args, 'amp_dtype', 'fp16')}, "
+        f"compile_model={getattr(args, 'compile_model', True)}, "
         f"compile_backend={getattr(args, 'compile_backend', 'eager')}, "
         f"use_sdpa={getattr(args, 'use_sdpa', False)}, "
         f"disable_inductor_cudagraphs={getattr(args, 'disable_inductor_cudagraphs', False)}, "
@@ -295,9 +302,26 @@ def launch_specialization_training(terminal_args):
     #print('number of params: {} M'.format(n_parameters / 1e6))
 
     if args.distributed:
-        pretrained_model = torch.nn.parallel.DistributedDataParallel(
-            pretrained_model, device_ids=[args.gpu], output_device=args.gpu, 
-            find_unused_parameters=False)
+        ddp_kwargs = {
+            "device_ids": [args.gpu],
+            "output_device": args.gpu,
+            "find_unused_parameters": bool(getattr(args, "ddp_find_unused_parameters", False)),
+        }
+
+        # Apply optional DDP perf flags only if supported by current torch runtime.
+        ddp_sig = inspect.signature(torch.nn.parallel.DistributedDataParallel.__init__)
+        if "static_graph" in ddp_sig.parameters:
+            ddp_kwargs["static_graph"] = bool(getattr(args, "ddp_static_graph", True))
+        if "gradient_as_bucket_view" in ddp_sig.parameters:
+            ddp_kwargs["gradient_as_bucket_view"] = bool(getattr(args, "ddp_gradient_as_bucket_view", True))
+        if "bucket_cap_mb" in ddp_sig.parameters:
+            ddp_kwargs["bucket_cap_mb"] = int(getattr(args, "ddp_bucket_cap_mb", 64))
+        if "broadcast_buffers" in ddp_sig.parameters:
+            ddp_kwargs["broadcast_buffers"] = bool(getattr(args, "ddp_broadcast_buffers", False))
+
+        if rank == 0:
+            print(f"DDP kwargs: {ddp_kwargs}")
+        pretrained_model = torch.nn.parallel.DistributedDataParallel(pretrained_model, **ddp_kwargs)
         model_without_ddp = pretrained_model.module
 
 
@@ -572,6 +596,12 @@ if __name__ == '__main__':
         type=str,
         default='leonardo',
         help='[ewc, leonardo]'
+    )
+    parser.add_argument('--compile',
+        type=str,
+        default='auto',
+        choices=['auto', 'on', 'off'],
+        help='Override compile_model: auto=usa arguments.py, on=True, off=False'
     )
     args = parser.parse_args()
     launch_specialization_training(args)

@@ -28,5 +28,10 @@ export VECLIB_MAXIMUM_THREADS=1
 export NUMEXPR_NUM_THREADS=1
 export OPENCV_FOR_THREADS_NUM=1
 
-mpirun --map-by socket:PE=5 --report-bindings --tag-output python -u specialization.py --on leonardo
+# A/B rapido compile:
+#   sbatch --export=ALL,COMPILE_OVERRIDE=off sbatch_specialization.sh
+#   sbatch --export=ALL,COMPILE_OVERRIDE=on  sbatch_specialization.sh
+COMPILE_OVERRIDE=${COMPILE_OVERRIDE:-auto}
+
+mpirun --map-by socket:PE=5 --report-bindings --tag-output python -u specialization.py --on leonardo --compile "${COMPILE_OVERRIDE}"
     

@@ -71,9 +71,13 @@ class PretrainVisionTransformerEncoder(nn.Module):
             self.pos_embed = nn.Parameter(
                 torch.zeros(1, num_patches + 1, embed_dim))
         else:
-            # sine-cosine positional embeddings
-            self.pos_embed = get_sinusoid_encoding_table(
-                num_patches, embed_dim)
+            # Sine-cos positional embeddings as non-persistent buffer so they
+            # follow .to(device) without entering checkpoints.
+            self.register_buffer(
+                "pos_embed",
+                get_sinusoid_encoding_table(num_patches, embed_dim),
+                persistent=False,
+            )
 
         dpr = [x.item() for x in torch.linspace(0, drop_path_rate, depth)
                ]  # stochastic depth decay rule
@@ -127,8 +131,7 @@ class PretrainVisionTransformerEncoder(nn.Module):
 
     def forward_features(self, x, mask):
         x = self.patch_embed(x)
-
-        x = x + self.pos_embed.type_as(x).to(x.device).clone().detach()
+        x = x + self.pos_embed.to(dtype=x.dtype)
 
         B, _, C = x.shape
         mask = mask.bool()  # Se è un tensore con 0/1
@@ -326,9 +329,13 @@ class PretrainVisionTransformer(nn.Module):
             encoder_embed_dim, decoder_embed_dim, bias=False)
 
         self.mask_token = nn.Parameter(torch.zeros(1, 1, decoder_embed_dim))
-
-        self.pos_embed = get_sinusoid_encoding_table(
-            self.encoder.patch_embed.num_patches, decoder_embed_dim)
+        self.register_buffer(
+            "pos_embed",
+            get_sinusoid_encoding_table(
+                self.encoder.patch_embed.num_patches, decoder_embed_dim
+            ),
+            persistent=False,
+        )
 
         trunc_normal_(self.mask_token, std=.02)
 
@@ -358,8 +365,7 @@ class PretrainVisionTransformer(nn.Module):
 
         # we don't unshuffle the correct visible token order,
         # but shuffle the pos embedding accorddingly.
-        expand_pos_embed = self.pos_embed.expand(B, -1, -1).type_as(x).to(
-            x.device).clone().detach()
+        expand_pos_embed = self.pos_embed.expand(B, -1, -1).to(dtype=x.dtype)
         pos_emd_vis = expand_pos_embed[~mask].reshape(B, -1, C)
         pos_emd_mask = expand_pos_embed[decode_vis].reshape(B, -1, C)
 
