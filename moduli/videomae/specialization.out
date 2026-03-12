@@ -214,3 +214,27 @@
 [1,0]<stdout>:[PERF][STEP] epoch=4 step=200 h2d=0.0069s targets=0.0014s fwd_loss=0.0984s bwd_opt=0.7165s total=0.8232s[1,0]<stdout>:
 [1,0]<stdout>:Epoch: [4]  [200/279]  eta: 0:01:14  loss: 0.5716 (0.5708)  time: 0.7317 (0.6659 -- 0.9415)  data: 0.0006 (0.0001 -- 0.0013)  max mem: 34850
 [1,0]<stdout>:Epoch: [4]  [220/279]  eta: 0:00:54  loss: 0.5825 (0.5715)  time: 0.7155 (0.6561 -- 0.9878)  data: 0.0005 (0.0001 -- 0.0015)  max mem: 34850
+[1,0]<stdout>:Epoch: [4]  [240/279]  eta: 0:00:35  loss: 0.5747 (0.5717)  time: 0.7079 (0.6493 -- 0.9139)  data: 0.0006 (0.0001 -- 0.0014)  max mem: 34850
+[1,0]<stdout>:[PERF][STEP] epoch=4 step=250 h2d=0.0053s targets=0.0014s fwd_loss=0.0986s bwd_opt=0.5671s total=0.6724s[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [4]  [260/279]  eta: 0:00:17  loss: 0.5642 (0.5713)  time: 0.7264 (0.6345 -- 1.0521)  data: 0.0006 (0.0001 -- 0.0013)  max mem: 34850
+[1,0]<stdout>:Epoch: [4]  [278/279]  eta: 0:00:00  loss: 0.5573 (0.5705)  time: 0.6859 (0.6345 -- 0.8190)  data: 0.0006 (0.0001 -- 0.0014)  max mem: 34850
+[1,0]<stdout>:Epoch: [4] Total time: 0:04:06 (0.8823 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.5573 (0.5707)
+[1,0]<stdout>:Epoch: [5]  [  0/279]  eta: 0:08:50  loss: 0.5550 (0.5550)  time: 1.9007 (1.9007 -- 1.9007)  data: 0.9189 (0.9189 -- 0.9189)  max mem: 34850
+[1,0]<stdout>:Epoch: [5]  [ 20/279]  eta: 0:03:14  loss: 0.5688 (0.5718)  time: 0.6943 (0.6210 -- 0.9583)  data: 0.0006 (0.0001 -- 0.0013)  max mem: 34850
+[1,0]<stdout>:Epoch: [5]  [ 40/279]  eta: 0:02:56  loss: 0.5667 (0.5706)  time: 0.7287 (0.6580 -- 0.9735)  data: 0.0006 (0.0001 -- 0.0011)  max mem: 34850
+[1,0]<stdout>:[PERF][STEP] epoch=5 step=50 h2d=0.0053s targets=0.0014s fwd_loss=0.0982s bwd_opt=0.6492s total=0.7542s[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [5]  [ 60/279]  eta: 0:02:39  loss: 0.5707 (0.5693)  time: 0.6975 (0.6375 -- 0.8930)  data: 0.0006 (0.0001 -- 0.0013)  max mem: 34850
+[1,0]<stdout>:Epoch: [5]  [ 80/279]  eta: 0:02:26  loss: 0.5670 (0.5683)  time: 0.7603 (0.6529 -- 0.9408)  data: 0.0006 (0.0001 -- 0.0011)  max mem: 34850
+[1,0]<stdout>:[PERF][STEP] epoch=5 step=100 h2d=0.0062s targets=0.0014s fwd_loss=0.0989s bwd_opt=0.5691s total=0.6756s[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [5]  [100/279]  eta: 0:02:10  loss: 0.5596 (0.5675)  time: 0.7039 (0.6731 -- 0.9348)  data: 0.0005 (0.0001 -- 0.0009)  max mem: 34850
+[1,0]<stdout>:Epoch: [5]  [120/279]  eta: 0:01:55  loss: 0.5643 (0.5678)  time: 0.7303 (0.6429 -- 0.9791)  data: 0.0006 (0.0001 -- 0.0013)  max mem: 34850
+[1,0]<stdout>:Epoch: [5]  [140/279]  eta: 0:01:43  loss: 0.5694 (0.5682)  time: 0.8148 (0.6877 -- 1.1746)  data: 0.0005 (0.0001 -- 0.0011)  max mem: 34850
+[1,0]<stdout>:[PERF][STEP] epoch=5 step=150 h2d=0.0055s targets=0.0014s fwd_loss=0.0983s bwd_opt=0.7066s total=0.8119s
+[1,0]<stdout>:Epoch: [5]  [160/279]  eta: 0:01:29  loss: 0.5675 (0.5682)  time: 0.8499 (0.6662 -- 1.1466)  data: 0.0003 (0.0001 -- 0.0007)  max mem: 34850
+[1,0]<stdout>:Epoch: [5]  [180/279]  eta: 0:01:15  loss: 0.5572 (0.5676)  time: 0.8140 (0.6578 -- 0.9920)  data: 0.0005 (0.0001 -- 0.0012)  max mem: 34850
+[1,0]<stdout>:[PERF][STEP] epoch=5 step=200 h2d=0.0059s targets=0.0014s fwd_loss=0.1006s bwd_opt=0.7021s total=0.8100s
+[1,0]<stdout>:Epoch: [5]  [200/279]  eta: 0:01:00  loss: 0.5571 (0.5669)  time: 0.8444 (0.6717 -- 1.0567)  data: 0.0004 (0.0001 -- 0.0010)  max mem: 34850
+[1,0]<stdout>:Epoch: [5]  [220/279]  eta: 0:00:45  loss: 0.5594 (0.5663)  time: 0.8631 (0.6486 -- 1.1384)  data: 0.0009 (0.0001 -- 0.0086)  max mem: 34850
+[1,0]<stdout>:Epoch: [5]  [240/279]  eta: 0:00:30  loss: 0.5706 (0.5664)  time: 0.8022 (0.6336 -- 1.4908)  data: 0.0005 (0.0001 -- 0.0015)  max mem: 34850
+[1,0]<stdout>:[PERF][STEP] epoch=5 step=250 h2d=0.0054s targets=0.0014s fwd_loss=0.0976s bwd_opt=0.6636s total=0.7680s
