@@ -12,7 +12,7 @@
 
 module load profile/deeplrn
 module load cineca-ai/4.3.0
-source $WORK/videomae/bin/activate
+source $WORK/videomae2/bin/activate
 
 export MASTER_ADDR=$(scontrol show hostnames $SLURM_JOB_NODELIST | head -n 1)
 export MASTER_PORT=12340
