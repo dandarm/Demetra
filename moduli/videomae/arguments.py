@@ -148,7 +148,7 @@ def prepare_args(machine=None):
         'mask_ratio': 0.75,
         'decoder_mask_type': 'run_cell',
         'decoder_mask_ratio': 0.5,
-        'batch_size': 12,
+        'batch_size': 14,
         'num_sample': 1,
         'num_frames': 16,
         'sampling_rate': 1,  # voglio tutti i frame temporali
@@ -179,7 +179,7 @@ def prepare_args(machine=None):
         'sdpa_kernel': 'auto',
         'disable_inductor_cudagraphs': False,
         'perf_profile_every': 0,
-        'perf_profile_warmup': 20,
+        'perf_profile_warmup': 0,
         'with_checkpoint': False,
         # Set True to disable GroupMultiScaleCrop in specialization.
         'no_data_aug': True,
