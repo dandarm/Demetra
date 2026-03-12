@@ -161,6 +161,7 @@ def prepare_args(machine=None):
         'enable_tf32': True,
         'use_sdpa': True,
         'sdpa_kernel': 'auto',
+        'with_checkpoint': False,
         # Set True to disable GroupMultiScaleCrop in specialization.
         'no_data_aug': True,
     }
