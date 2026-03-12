@@ -1,32 +1,225 @@
-[1,16]<stderr>:[lrdn1804.leonardo.local:1570724] MCW rank 16 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]], socket 0[core 4[hwt 0]]: [B/B/B/B/B/././././././././././././././.]
-[1,4]<stderr>:[lrdn1767.leonardo.local:1775249] MCW rank 4 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]], socket 0[core 4[hwt 0]]: [B/B/B/B/B/././././././././././././././.]
-[1,20]<stderr>:[lrdn1824.leonardo.local:827189] MCW rank 20 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]], socket 0[core 4[hwt 0]]: [B/B/B/B/B/././././././././././././././.]
-[1,0]<stderr>:[lrdn1694.leonardo.local:2045479] MCW rank 0 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]], socket 0[core 4[hwt 0]]: [B/B/B/B/B/././././././././././././././.]
-[1,1]<stderr>:[lrdn1694.leonardo.local:2045479] MCW rank 1 bound to socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]], socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]]: [./././././B/B/B/B/B/./././././././././.]
-[1,2]<stderr>:[lrdn1694.leonardo.local:2045479] MCW rank 2 bound to socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]], socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]]: [././././././././././B/B/B/B/B/././././.]
-[1,3]<stderr>:[lrdn1694.leonardo.local:2045479] MCW rank 3 bound to socket 0[core 15[hwt 0]], socket 0[core 16[hwt 0]], socket 0[core 17[hwt 0]], socket 0[core 18[hwt 0]], socket 0[core 19[hwt 0]]: [./././././././././././././././B/B/B/B/B]
-[1,17]<stderr>:[lrdn1804.leonardo.local:1570724] MCW rank 17 bound to socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]], socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]]: [./././././B/B/B/B/B/./././././././././.]
-[1,5]<stderr>:[lrdn1767.leonardo.local:1775249] MCW rank 5 bound to socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]], socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]]: [./././././B/B/B/B/B/./././././././././.]
-[1,21]<stderr>:[lrdn1824.leonardo.local:827189] MCW rank 21 bound to socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]], socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]]: [./././././B/B/B/B/B/./././././././././.]
-[1,8]<stderr>:[lrdn1778.leonardo.local:507896] MCW rank 8 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]], socket 0[core 4[hwt 0]]: [B/B/B/B/B/././././././././././././././.]
-[1,18]<stderr>:[lrdn1804.leonardo.local:1570724] MCW rank 18 bound to socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]], socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]]: [././././././././././B/B/B/B/B/././././.]
-[1,6]<stderr>:[lrdn1767.leonardo.local:1775249] MCW rank 6 bound to socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]], socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]]: [././././././././././B/B/B/B/B/././././.]
-[1,22]<stderr>:[lrdn1824.leonardo.local:827189] MCW rank 22 bound to socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]], socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]]: [././././././././././B/B/B/B/B/././././.]
-[1,9]<stderr>:[lrdn1778.leonardo.local:507896] MCW rank 9 bound to socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]], socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]]: [./././././B/B/B/B/B/./././././././././.]
-[1,28]<stderr>:[lrdn1962.leonardo.local:3157102] MCW rank 28 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]], socket 0[core 4[hwt 0]]: [B/B/B/B/B/././././././././././././././.]
-[1,19]<stderr>:[lrdn1804.leonardo.local:1570724] MCW rank 19 bound to socket 0[core 15[hwt 0]], socket 0[core 16[hwt 0]], socket 0[core 17[hwt 0]], socket 0[core 18[hwt 0]], socket 0[core 19[hwt 0]]: [./././././././././././././././B/B/B/B/B]
-[1,7]<stderr>:[lrdn1767.leonardo.local:1775249] MCW rank 7 bound to socket 0[core 15[hwt 0]], socket 0[core 16[hwt 0]], socket 0[core 17[hwt 0]], socket 0[core 18[hwt 0]], socket 0[core 19[hwt 0]]: [./././././././././././././././B/B/B/B/B]
-[1,23]<stderr>:[lrdn1824.leonardo.local:827189] MCW rank 23 bound to socket 0[core 15[hwt 0]], socket 0[core 16[hwt 0]], socket 0[core 17[hwt 0]], socket 0[core 18[hwt 0]], socket 0[core 19[hwt 0]]: [./././././././././././././././B/B/B/B/B]
-[1,10]<stderr>:[lrdn1778.leonardo.local:507896] MCW rank 10 bound to socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]], socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]]: [././././././././././B/B/B/B/B/././././.]
-[1,29]<stderr>:[lrdn1962.leonardo.local:3157102] MCW rank 29 bound to socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]], socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]]: [./././././B/B/B/B/B/./././././././././.]
-[1,11]<stderr>:[lrdn1778.leonardo.local:507896] MCW rank 11 bound to socket 0[core 15[hwt 0]], socket 0[core 16[hwt 0]], socket 0[core 17[hwt 0]], socket 0[core 18[hwt 0]], socket 0[core 19[hwt 0]]: [./././././././././././././././B/B/B/B/B]
-[1,30]<stderr>:[lrdn1962.leonardo.local:3157102] MCW rank 30 bound to socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]], socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]]: [././././././././././B/B/B/B/B/././././.]
-[1,31]<stderr>:[lrdn1962.leonardo.local:3157102] MCW rank 31 bound to socket 0[core 15[hwt 0]], socket 0[core 16[hwt 0]], socket 0[core 17[hwt 0]], socket 0[core 18[hwt 0]], socket 0[core 19[hwt 0]]: [./././././././././././././././B/B/B/B/B]
-[1,24]<stderr>:[lrdn1844.leonardo.local:1246931] MCW rank 24 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]], socket 0[core 4[hwt 0]]: [B/B/B/B/B/././././././././././././././.]
-[1,25]<stderr>:[lrdn1844.leonardo.local:1246931] MCW rank 25 bound to socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]], socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]]: [./././././B/B/B/B/B/./././././././././.]
-[1,26]<stderr>:[lrdn1844.leonardo.local:1246931] MCW rank 26 bound to socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]], socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]]: [././././././././././B/B/B/B/B/././././.]
-[1,27]<stderr>:[lrdn1844.leonardo.local:1246931] MCW rank 27 bound to socket 0[core 15[hwt 0]], socket 0[core 16[hwt 0]], socket 0[core 17[hwt 0]], socket 0[core 18[hwt 0]], socket 0[core 19[hwt 0]]: [./././././././././././././././B/B/B/B/B]
-[1,12]<stderr>:[lrdn1787.leonardo.local:204080] MCW rank 12 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]], socket 0[core 4[hwt 0]]: [B/B/B/B/B/././././././././././././././.]
-[1,13]<stderr>:[lrdn1787.leonardo.local:204080] MCW rank 13 bound to socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]], socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]]: [./././././B/B/B/B/B/./././././././././.]
-[1,14]<stderr>:[lrdn1787.leonardo.local:204080] MCW rank 14 bound to socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]], socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]]: [././././././././././B/B/B/B/B/././././.]
-[1,15]<stderr>:[lrdn1787.leonardo.local:204080] MCW rank 15 bound to socket 0[core 15[hwt 0]], socket 0[core 16[hwt 0]], socket 0[core 17[hwt 0]], socket 0[core 18[hwt 0]], socket 0[core 19[hwt 0]]: [./././././././././././././././B/B/B/B/B]
+/var/spool/slurmd/job37430166/slurm_script: line 15: /leonardo_work/IscrC_SAME-D/videomae/bin/activate: No such file or directory
+[1,0]<stderr>:[lrdn0045.leonardo.local:990753] MCW rank 0 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]], socket 0[core 4[hwt 0]]: [B/B/B/B/B/././././././././././././././.]
+[1,1]<stderr>:[lrdn0045.leonardo.local:990753] MCW rank 1 bound to socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]], socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]]: [./././././B/B/B/B/B/./././././././././.]
+[1,2]<stderr>:[lrdn0045.leonardo.local:990753] MCW rank 2 bound to socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]], socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]]: [././././././././././B/B/B/B/B/././././.]
+[1,3]<stderr>:[lrdn0045.leonardo.local:990753] MCW rank 3 bound to socket 0[core 15[hwt 0]], socket 0[core 16[hwt 0]], socket 0[core 17[hwt 0]], socket 0[core 18[hwt 0]], socket 0[core 19[hwt 0]]: [./././././././././././././././B/B/B/B/B]
+[1,4]<stderr>:[lrdn0063.leonardo.local:2372620] MCW rank 4 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]], socket 0[core 4[hwt 0]]: [B/B/B/B/B/././././././././././././././.]
+[1,5]<stderr>:[lrdn0063.leonardo.local:2372620] MCW rank 5 bound to socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]], socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]]: [./././././B/B/B/B/B/./././././././././.]
+[1,6]<stderr>:[lrdn0063.leonardo.local:2372620] MCW rank 6 bound to socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]], socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]]: [././././././././././B/B/B/B/B/././././.]
+[1,7]<stderr>:[lrdn0063.leonardo.local:2372620] MCW rank 7 bound to socket 0[core 15[hwt 0]], socket 0[core 16[hwt 0]], socket 0[core 17[hwt 0]], socket 0[core 18[hwt 0]], socket 0[core 19[hwt 0]]: [./././././././././././././././B/B/B/B/B]
+[1,28]<stderr>:[lrdn0285.leonardo.local:2713626] MCW rank 28 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]], socket 0[core 4[hwt 0]]: [B/B/B/B/B/././././././././././././././.]
+[1,29]<stderr>:[lrdn0285.leonardo.local:2713626] MCW rank 29 bound to socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]], socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]]: [./././././B/B/B/B/B/./././././././././.]
+[1,30]<stderr>:[lrdn0285.leonardo.local:2713626] MCW rank 30 bound to socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]], socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]]: [././././././././././B/B/B/B/B/././././.]
+[1,31]<stderr>:[lrdn0285.leonardo.local:2713626] MCW rank 31 bound to socket 0[core 15[hwt 0]], socket 0[core 16[hwt 0]], socket 0[core 17[hwt 0]], socket 0[core 18[hwt 0]], socket 0[core 19[hwt 0]]: [./././././././././././././././B/B/B/B/B]
+[1,24]<stderr>:[lrdn0219.leonardo.local:3539526] MCW rank 24 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]], socket 0[core 4[hwt 0]]: [B/B/B/B/B/././././././././././././././.]
+[1,12]<stderr>:[lrdn0159.leonardo.local:877494] MCW rank 12 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]], socket 0[core 4[hwt 0]]: [B/B/B/B/B/././././././././././././././.]
+[1,25]<stderr>:[lrdn0219.leonardo.local:3539526] MCW rank 25 bound to socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]], socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]]: [./././././B/B/B/B/B/./././././././././.]
+[1,13]<stderr>:[lrdn0159.leonardo.local:877494] MCW rank 13 bound to socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]], socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]]: [./././././B/B/B/B/B/./././././././././.]
+[1,26]<stderr>:[lrdn0219.leonardo.local:3539526] MCW rank 26 bound to socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]], socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]]: [././././././././././B/B/B/B/B/././././.]
+[1,14]<stderr>:[lrdn0159.leonardo.local:877494] MCW rank 14 bound to socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]], socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]]: [././././././././././B/B/B/B/B/././././.]
+[1,15]<stderr>:[lrdn0159.leonardo.local:877494] MCW rank 15 bound to socket 0[core 15[hwt 0]], socket 0[core 16[hwt 0]], socket 0[core 17[hwt 0]], socket 0[core 18[hwt 0]], socket 0[core 19[hwt 0]]: [./././././././././././././././B/B/B/B/B]
+[1,8]<stderr>:[lrdn0121.leonardo.local:579613] MCW rank 8 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]], socket 0[core 4[hwt 0]]: [B/B/B/B/B/././././././././././././././.]
+[1,16]<stderr>:[lrdn0181.leonardo.local:2699121] MCW rank 16 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]], socket 0[core 4[hwt 0]]: [B/B/B/B/B/././././././././././././././.]
+[1,9]<stderr>:[lrdn0121.leonardo.local:579613] MCW rank 9 bound to socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]], socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]]: [./././././B/B/B/B/B/./././././././././.]
+[1,17]<stderr>:[lrdn0181.leonardo.local:2699121] MCW rank 17 bound to socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]], socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]]: [./././././B/B/B/B/B/./././././././././.]
+[1,10]<stderr>:[lrdn0121.leonardo.local:579613] MCW rank 10 bound to socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]], socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]]: [././././././././././B/B/B/B/B/././././.]
+[1,18]<stderr>:[lrdn0181.leonardo.local:2699121] MCW rank 18 bound to socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]], socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]]: [././././././././././B/B/B/B/B/././././.]
+[1,11]<stderr>:[lrdn0121.leonardo.local:579613] MCW rank 11 bound to socket 0[core 15[hwt 0]], socket 0[core 16[hwt 0]], socket 0[core 17[hwt 0]], socket 0[core 18[hwt 0]], socket 0[core 19[hwt 0]]: [./././././././././././././././B/B/B/B/B]
+[1,19]<stderr>:[lrdn0181.leonardo.local:2699121] MCW rank 19 bound to socket 0[core 15[hwt 0]], socket 0[core 16[hwt 0]], socket 0[core 17[hwt 0]], socket 0[core 18[hwt 0]], socket 0[core 19[hwt 0]]: [./././././././././././././././B/B/B/B/B]
+[1,27]<stderr>:[lrdn0219.leonardo.local:3539526] MCW rank 27 bound to socket 0[core 15[hwt 0]], socket 0[core 16[hwt 0]], socket 0[core 17[hwt 0]], socket 0[core 18[hwt 0]], socket 0[core 19[hwt 0]]: [./././././././././././././././B/B/B/B/B]
+[1,20]<stderr>:[lrdn0189.leonardo.local:2190669] MCW rank 20 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]], socket 0[core 4[hwt 0]]: [B/B/B/B/B/././././././././././././././.]
+[1,21]<stderr>:[lrdn0189.leonardo.local:2190669] MCW rank 21 bound to socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]], socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]]: [./././././B/B/B/B/B/./././././././././.]
+[1,22]<stderr>:[lrdn0189.leonardo.local:2190669] MCW rank 22 bound to socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]], socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]]: [././././././././././B/B/B/B/B/././././.]
+[1,23]<stderr>:[lrdn0189.leonardo.local:2190669] MCW rank 23 bound to socket 0[core 15[hwt 0]], socket 0[core 16[hwt 0]], socket 0[core 17[hwt 0]], socket 0[core 18[hwt 0]], socket 0[core 19[hwt 0]]: [./././././././././././././././B/B/B/B/B]
+[1,7]<stderr>:[rank7]:[2026-03-12 12:09:08,234] [2/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,5]<stderr>:[rank5]:[2026-03-12 12:09:08,234] [2/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,6]<stderr>:[rank6]:[2026-03-12 12:09:08,234] [2/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,4]<stderr>:[rank4]:[2026-03-12 12:09:08,234] [2/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,11]<stderr>:[rank11]:[2026-03-12 12:09:08,242] [2/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,10]<stderr>:[rank10]:[2026-03-12 12:09:08,242] [2/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,9]<stderr>:[rank9]:[2026-03-12 12:09:08,242] [2/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,8]<stderr>:[rank8]:[2026-03-12 12:09:08,242] [2/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,3]<stderr>:[rank3]:[2026-03-12 12:09:08,243] [2/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,1]<stderr>:[rank1]:[2026-03-12 12:09:08,243] [2/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,2]<stderr>:[rank2]:[2026-03-12 12:09:08,243] [2/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,21]<stderr>:[rank21]:[2026-03-12 12:09:08,249] [2/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,23]<stderr>:[rank23]:[2026-03-12 12:09:08,250] [2/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,22]<stderr>:[rank22]:[2026-03-12 12:09:08,250] [2/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,20]<stderr>:[rank20]:[2026-03-12 12:09:08,250] [2/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,29]<stderr>:[rank29]:[2026-03-12 12:09:08,303] [2/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,31]<stderr>:[rank31]:[2026-03-12 12:09:08,303] [2/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,28]<stderr>:[rank28]:[2026-03-12 12:09:08,304] [2/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,30]<stderr>:[rank30]:[2026-03-12 12:09:08,304] [2/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,27]<stderr>:[rank27]:[2026-03-12 12:09:08,319] [2/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,24]<stderr>:[rank24]:[2026-03-12 12:09:08,319] [2/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,26]<stderr>:[rank26]:[2026-03-12 12:09:08,319] [2/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,25]<stderr>:[rank25]:[2026-03-12 12:09:08,320] [2/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,18]<stderr>:[rank18]:[2026-03-12 12:09:08,415] [2/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,17]<stderr>:[rank17]:[2026-03-12 12:09:08,415] [2/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,16]<stderr>:[rank16]:[2026-03-12 12:09:08,415] [2/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,19]<stderr>:[rank19]:[2026-03-12 12:09:08,415] [2/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,15]<stderr>:[rank15]:[2026-03-12 12:09:08,420] [2/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,13]<stderr>:[rank13]:[2026-03-12 12:09:08,420] [2/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,14]<stderr>:[rank14]:[2026-03-12 12:09:08,420] [2/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,12]<stderr>:[rank12]:[2026-03-12 12:09:08,420] [2/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,0]<stderr>:[rank0]:[2026-03-12 12:09:08,960] [2/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,7]<stderr>:[rank7]:[2026-03-12 12:10:16,880] [5/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,27]<stderr>:[rank27]:[2026-03-12 12:10:16,900] [5/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,3]<stderr>:[rank3]:[2026-03-12 12:10:16,920] [5/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,23]<stderr>:[rank23]:[2026-03-12 12:10:16,960] [5/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,15]<stderr>:[rank15]:[2026-03-12 12:10:17,115] [5/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,31]<stderr>:[rank31]:[2026-03-12 12:10:17,271] [5/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,29]<stderr>:[rank29]:[2026-03-12 12:10:17,352] [5/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,1]<stderr>:[rank1]:[2026-03-12 12:10:17,370] [5/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,5]<stderr>:[rank5]:[2026-03-12 12:10:17,387] [5/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,21]<stderr>:[rank21]:[2026-03-12 12:10:17,401] [5/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,11]<stderr>:[rank11]:[2026-03-12 12:10:17,555] [5/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,2]<stderr>:[rank2]:[2026-03-12 12:10:17,563] [5/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,6]<stderr>:[rank6]:[2026-03-12 12:10:17,587] [5/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,25]<stderr>:[rank25]:[2026-03-12 12:10:17,616] [5/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,14]<stderr>:[rank14]:[2026-03-12 12:10:17,824] [5/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,12]<stderr>:[rank12]:[2026-03-12 12:10:17,861] [5/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,28]<stderr>:[rank28]:[2026-03-12 12:10:17,921] [5/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,10]<stderr>:[rank10]:[2026-03-12 12:10:17,930] [5/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,22]<stderr>:[rank22]:[2026-03-12 12:10:17,947] [5/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,30]<stderr>:[rank30]:[2026-03-12 12:10:18,029] [5/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,0]<stderr>:[rank0]:[2026-03-12 12:10:18,056] [5/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,24]<stderr>:[rank24]:[2026-03-12 12:10:18,091] [5/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,4]<stderr>:[rank4]:[2026-03-12 12:10:18,112] [5/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,26]<stderr>:[rank26]:[2026-03-12 12:10:18,144] [5/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,13]<stderr>:[rank13]:[2026-03-12 12:10:18,154] [5/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,20]<stderr>:[rank20]:[2026-03-12 12:10:18,165] [5/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,9]<stderr>:[rank9]:[2026-03-12 12:10:18,263] [5/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,8]<stderr>:[rank8]:[2026-03-12 12:10:18,272] [5/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,17]<stderr>:[rank17]:[2026-03-12 12:10:18,413] [5/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,19]<stderr>:[rank19]:[2026-03-12 12:10:18,415] [5/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,16]<stderr>:[rank16]:[2026-03-12 12:10:18,449] [5/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,18]<stderr>:[rank18]:[2026-03-12 12:10:18,636] [5/0_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,19]<stderr>:[rank19]:[2026-03-12 12:14:14,518] [2/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,11]<stderr>:[rank11]:[2026-03-12 12:14:14,532] [2/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,3]<stderr>:[rank3]:[2026-03-12 12:14:14,535] [2/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,15]<stderr>:[rank15]:[2026-03-12 12:14:14,541] [2/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,23]<stderr>:[rank23]:[2026-03-12 12:14:14,549] [2/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,31]<stderr>:[rank31]:[2026-03-12 12:14:14,552] [2/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,27]<stderr>:[rank27]:[2026-03-12 12:14:14,556] [2/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,7]<stderr>:[rank7]:[2026-03-12 12:14:14,573] [2/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,30]<stderr>:[rank30]:[2026-03-12 12:14:14,622] [2/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,2]<stderr>:[rank2]:[2026-03-12 12:14:14,626] [2/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,4]<stderr>:[rank4]:[2026-03-12 12:14:14,641] [2/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,14]<stderr>:[rank14]:[2026-03-12 12:14:14,645] [2/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,25]<stderr>:[rank25]:[2026-03-12 12:14:14,655] [2/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,24]<stderr>:[rank24]:[2026-03-12 12:14:14,660] [2/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,8]<stderr>:[rank8]:[2026-03-12 12:14:14,662] [2/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,1]<stderr>:[rank1]:[2026-03-12 12:14:14,668] [2/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,17]<stderr>:[rank17]:[2026-03-12 12:14:14,669] [2/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,10]<stderr>:[rank10]:[2026-03-12 12:14:14,669] [2/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,6]<stderr>:[rank6]:[2026-03-12 12:14:14,672] [2/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,18]<stderr>:[rank18]:[2026-03-12 12:14:14,675] [2/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,9]<stderr>:[rank9]:[2026-03-12 12:14:14,678] [2/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,28]<stderr>:[rank28]:[2026-03-12 12:14:14,686] [2/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,26]<stderr>:[rank26]:[2026-03-12 12:14:14,686] [2/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,20]<stderr>:[rank20]:[2026-03-12 12:14:14,694] [2/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,13]<stderr>:[rank13]:[2026-03-12 12:14:14,698] [2/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,16]<stderr>:[rank16]:[2026-03-12 12:14:14,702] [2/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,21]<stderr>:[rank21]:[2026-03-12 12:14:14,702] [2/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,29]<stderr>:[rank29]:[2026-03-12 12:14:14,705] [2/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,5]<stderr>:[rank5]:[2026-03-12 12:14:14,707] [2/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,12]<stderr>:[rank12]:[2026-03-12 12:14:14,709] [2/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,22]<stderr>:[rank22]:[2026-03-12 12:14:14,710] [2/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,0]<stderr>:[rank0]:[2026-03-12 12:14:14,835] [2/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,27]<stderr>:[rank27]:[2026-03-12 12:14:45,203] [5/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,11]<stderr>:[rank11]:[2026-03-12 12:14:45,289] [5/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,7]<stderr>:[rank7]:[2026-03-12 12:14:45,310] [5/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,3]<stderr>:[rank3]:[2026-03-12 12:14:45,328] [5/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,23]<stderr>:[rank23]:[2026-03-12 12:14:45,331] [5/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,8]<stderr>:[rank8]:[2026-03-12 12:14:45,444] [5/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,19]<stderr>:[rank19]:[2026-03-12 12:14:45,453] [5/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,15]<stderr>:[rank15]:[2026-03-12 12:14:45,457] [5/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,9]<stderr>:[rank9]:[2026-03-12 12:14:45,546] [5/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,21]<stderr>:[rank21]:[2026-03-12 12:14:45,566] [5/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,18]<stderr>:[rank18]:[2026-03-12 12:14:45,593] [5/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,6]<stderr>:[rank6]:[2026-03-12 12:14:45,620] [5/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,29]<stderr>:[rank29]:[2026-03-12 12:14:45,655] [5/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,31]<stderr>:[rank31]:[2026-03-12 12:14:45,656] [5/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,17]<stderr>:[rank17]:[2026-03-12 12:14:45,660] [5/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,22]<stderr>:[rank22]:[2026-03-12 12:14:45,688] [5/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,5]<stderr>:[rank5]:[2026-03-12 12:14:45,692] [5/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,14]<stderr>:[rank14]:[2026-03-12 12:14:45,693] [5/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,13]<stderr>:[rank13]:[2026-03-12 12:14:45,695] [5/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,24]<stderr>:[rank24]:[2026-03-12 12:14:45,765] [5/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,25]<stderr>:[rank25]:[2026-03-12 12:14:45,778] [5/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,10]<stderr>:[rank10]:[2026-03-12 12:14:45,778] [5/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,30]<stderr>:[rank30]:[2026-03-12 12:14:45,787] [5/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,1]<stderr>:[rank1]:[2026-03-12 12:14:45,795] [5/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,2]<stderr>:[rank2]:[2026-03-12 12:14:45,795] [5/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,20]<stderr>:[rank20]:[2026-03-12 12:14:45,804] [5/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,26]<stderr>:[rank26]:[2026-03-12 12:14:45,839] [5/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,4]<stderr>:[rank4]:[2026-03-12 12:14:45,912] [5/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,12]<stderr>:[rank12]:[2026-03-12 12:14:45,928] [5/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,28]<stderr>:[rank28]:[2026-03-12 12:14:45,967] [5/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,16]<stderr>:[rank16]:[2026-03-12 12:14:45,986] [5/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,0]<stderr>:[rank0]:[2026-03-12 12:14:46,148] [5/1_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,3]<stderr>:[rank3]:[2026-03-12 12:15:02,702] [2/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,27]<stderr>:[rank27]:[2026-03-12 12:15:02,883] [2/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,11]<stderr>:[rank11]:[2026-03-12 12:15:02,904] [2/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,23]<stderr>:[rank23]:[2026-03-12 12:15:02,952] [2/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,19]<stderr>:[rank19]:[2026-03-12 12:15:03,068] [2/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,15]<stderr>:[rank15]:[2026-03-12 12:15:03,293] [2/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,31]<stderr>:[rank31]:[2026-03-12 12:15:03,394] [2/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,9]<stderr>:[rank9]:[2026-03-12 12:15:03,679] [2/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,7]<stderr>:[rank7]:[2026-03-12 12:15:03,754] [2/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,18]<stderr>:[rank18]:[2026-03-12 12:15:03,865] [2/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,30]<stderr>:[rank30]:[2026-03-12 12:15:03,988] [2/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,21]<stderr>:[rank21]:[2026-03-12 12:15:03,996] [2/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,29]<stderr>:[rank29]:[2026-03-12 12:15:04,016] [2/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,1]<stderr>:[rank1]:[2026-03-12 12:15:04,036] [2/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,22]<stderr>:[rank22]:[2026-03-12 12:15:04,041] [2/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,8]<stderr>:[rank8]:[2026-03-12 12:15:04,041] [2/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,25]<stderr>:[rank25]:[2026-03-12 12:15:04,093] [2/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,13]<stderr>:[rank13]:[2026-03-12 12:15:04,151] [2/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,14]<stderr>:[rank14]:[2026-03-12 12:15:04,166] [2/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,10]<stderr>:[rank10]:[2026-03-12 12:15:04,166] [2/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,2]<stderr>:[rank2]:[2026-03-12 12:15:04,246] [2/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,26]<stderr>:[rank26]:[2026-03-12 12:15:04,264] [2/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,17]<stderr>:[rank17]:[2026-03-12 12:15:04,325] [2/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,6]<stderr>:[rank6]:[2026-03-12 12:15:04,353] [2/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,24]<stderr>:[rank24]:[2026-03-12 12:15:04,389] [2/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,12]<stderr>:[rank12]:[2026-03-12 12:15:04,508] [2/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,20]<stderr>:[rank20]:[2026-03-12 12:15:04,533] [2/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,16]<stderr>:[rank16]:[2026-03-12 12:15:04,736] [2/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,28]<stderr>:[rank28]:[2026-03-12 12:15:04,853] [2/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,5]<stderr>:[rank5]:[2026-03-12 12:15:04,887] [2/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,0]<stderr>:[rank0]:[2026-03-12 12:15:04,933] [2/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,4]<stderr>:[rank4]:[2026-03-12 12:15:05,176] [2/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,3]<stderr>:[rank3]:[2026-03-12 12:15:42,646] [5/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,27]<stderr>:[rank27]:[2026-03-12 12:15:42,845] [5/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,11]<stderr>:[rank11]:[2026-03-12 12:15:43,031] [5/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,19]<stderr>:[rank19]:[2026-03-12 12:15:43,654] [5/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,15]<stderr>:[rank15]:[2026-03-12 12:15:43,719] [5/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,31]<stderr>:[rank31]:[2026-03-12 12:15:43,724] [5/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,7]<stderr>:[rank7]:[2026-03-12 12:15:43,945] [5/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,23]<stderr>:[rank23]:[2026-03-12 12:15:43,997] [5/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,18]<stderr>:[rank18]:[2026-03-12 12:15:44,039] [5/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,9]<stderr>:[rank9]:[2026-03-12 12:15:44,156] [5/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,1]<stderr>:[rank1]:[2026-03-12 12:15:44,196] [5/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,29]<stderr>:[rank29]:[2026-03-12 12:15:44,332] [5/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,30]<stderr>:[rank30]:[2026-03-12 12:15:44,406] [5/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,25]<stderr>:[rank25]:[2026-03-12 12:15:44,411] [5/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,22]<stderr>:[rank22]:[2026-03-12 12:15:44,414] [5/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,21]<stderr>:[rank21]:[2026-03-12 12:15:44,445] [5/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,10]<stderr>:[rank10]:[2026-03-12 12:15:44,481] [5/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,13]<stderr>:[rank13]:[2026-03-12 12:15:44,553] [5/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,8]<stderr>:[rank8]:[2026-03-12 12:15:44,706] [5/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,6]<stderr>:[rank6]:[2026-03-12 12:15:44,716] [5/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,26]<stderr>:[rank26]:[2026-03-12 12:15:44,837] [5/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,2]<stderr>:[rank2]:[2026-03-12 12:15:44,870] [5/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,14]<stderr>:[rank14]:[2026-03-12 12:15:44,937] [5/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,12]<stderr>:[rank12]:[2026-03-12 12:15:44,981] [5/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,24]<stderr>:[rank24]:[2026-03-12 12:15:45,046] [5/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,16]<stderr>:[rank16]:[2026-03-12 12:15:45,081] [5/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,20]<stderr>:[rank20]:[2026-03-12 12:15:45,153] [5/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,5]<stderr>:[rank5]:[2026-03-12 12:15:45,175] [5/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,0]<stderr>:[rank0]:[2026-03-12 12:15:45,292] [5/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,17]<stderr>:[rank17]:[2026-03-12 12:15:45,306] [5/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,28]<stderr>:[rank28]:[2026-03-12 12:15:45,434] [5/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
+[1,4]<stderr>:[rank4]:[2026-03-12 12:15:45,511] [5/2_1] torch._inductor.utils: [WARNING] DeviceCopy in input program
