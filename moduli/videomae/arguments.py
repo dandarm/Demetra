@@ -116,6 +116,11 @@ def prepare_args(machine=None):
         'enable_tf32': True,
         'use_sdpa': False,
         'sdpa_kernel': 'auto',  # auto | flash | mem_efficient | math
+        # Inductor CUDA Graphs can speed up stable workloads, but may be unstable on some runtimes.
+        'disable_inductor_cudagraphs': False,
+        # Lightweight step profiler for specialization (0 disables).
+        'perf_profile_every': 0,
+        'perf_profile_warmup': 20,
         ### solo per pretraining,
         'normlize_target': True,
         # Specialization-only: disable spatial data augmentation (keeps MAE masking).
@@ -161,6 +166,9 @@ def prepare_args(machine=None):
         'enable_tf32': True,
         'use_sdpa': True,
         'sdpa_kernel': 'auto',
+        'disable_inductor_cudagraphs': False,
+        'perf_profile_every': 50,
+        'perf_profile_warmup': 20,
         'with_checkpoint': False,
         # Set True to disable GroupMultiScaleCrop in specialization.
         'no_data_aug': True,

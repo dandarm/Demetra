@@ -7,6 +7,7 @@
 # --------------------------------------------------------'
 import math
 import sys
+import time
 from typing import Iterable
 from contextlib import nullcontext
 
@@ -15,10 +16,6 @@ from einops import rearrange
 from timm.data.constants import IMAGENET_DEFAULT_MEAN, IMAGENET_DEFAULT_STD
 
 import utils
-
-import os
-os.environ["INDUCTOR_DISABLE_CUDAGRAPHS"] = "1"
-
 
 def train_one_epoch(model: torch.nn.Module,
                     data_loader: Iterable,
@@ -34,7 +31,9 @@ def train_one_epoch(model: torch.nn.Module,
                     lr_scheduler=None,
                     start_steps=None,
                     lr_schedule_values=None,
-                    wd_schedule_values=None):
+                    wd_schedule_values=None,
+                    perf_profile_every: int = 0,
+                    perf_profile_warmup: int = 0):
     model.train()
     metric_logger = utils.MetricLogger(delimiter="  ")
     #metric_logger.add_meter('lr', utils.SmoothedValue(window_size=1, fmt='{value:.6f}'))
@@ -52,6 +51,14 @@ def train_one_epoch(model: torch.nn.Module,
         autocast_dtype = None
 
     for step, batch in enumerate(metric_logger.log_every(data_loader, print_freq, header)):
+        step_t0 = time.perf_counter()
+        profile_now = (
+            perf_profile_every is not None
+            and perf_profile_every > 0
+            and step >= int(max(perf_profile_warmup, 0))
+            and (step % int(perf_profile_every) == 0)
+        )
+
         # assign learning rate & weight decay for each step
         it = start_steps + step  # global training iteration
         if lr_schedule_values is not None or wd_schedule_values is not None:
@@ -69,6 +76,9 @@ def train_one_epoch(model: torch.nn.Module,
         images = images.to(device, non_blocking=True)
         bool_masked_pos = bool_masked_pos.to(device, non_blocking=True).flatten(1).to(torch.bool)
         decode_masked_pos = decode_masked_pos.to(device, non_blocking=True).flatten(1).to(torch.bool)
+        if profile_now and device.type == "cuda":
+            torch.cuda.synchronize(device)
+        step_t_after_h2d = time.perf_counter()
 
         with torch.no_grad():
             # calculate the predict label
@@ -89,6 +99,9 @@ def train_one_epoch(model: torch.nn.Module,
 
             B, N, C = images_patch.shape
             labels = images_patch[~decode_masked_pos].reshape(B, -1, C)
+        if profile_now and device.type == "cuda":
+            torch.cuda.synchronize(device)
+        step_t_after_targets = time.perf_counter()
 
         if loss_scaler is None: # TODO: inserire anche in questo caso il autocast
             outputs = model(images, bool_masked_pos, decode_masked_pos)
@@ -116,6 +129,9 @@ def train_one_epoch(model: torch.nn.Module,
                     print("Empty cal_loss_mask detected, stopping training")
                     sys.exit(2)
                 loss = (loss * cal_loss_mask).sum() / mask_denom
+        if profile_now and device.type == "cuda":
+            torch.cuda.synchronize(device)
+        step_t_after_fwd = time.perf_counter()
 
         loss_value = loss.item()
 
@@ -145,6 +161,9 @@ def train_one_epoch(model: torch.nn.Module,
                 parameters=model.parameters(),
                 create_graph=is_second_order)
             loss_scale_value = loss_scaler.state_dict()["scale"]
+        if profile_now and device.type == "cuda":
+            torch.cuda.synchronize(device)
+        step_t_after_bwd = time.perf_counter()
 
         metric_logger.update(loss=loss_value)
         #metric_logger.update(loss_scale=loss_scale_value)
@@ -175,6 +194,18 @@ def train_one_epoch(model: torch.nn.Module,
 
         if lr_scheduler is not None:
             lr_scheduler.step_update(start_steps + step)
+
+        if profile_now and utils.is_main_process():
+            t_h2d = step_t_after_h2d - step_t0
+            t_targets = step_t_after_targets - step_t_after_h2d
+            t_forward = step_t_after_fwd - step_t_after_targets
+            t_backward = step_t_after_bwd - step_t_after_fwd
+            t_total = step_t_after_bwd - step_t0
+            print(
+                f"[PERF][STEP] epoch={epoch} step={step} "
+                f"h2d={t_h2d:.4f}s targets={t_targets:.4f}s "
+                f"fwd_loss={t_forward:.4f}s bwd_opt={t_backward:.4f}s total={t_total:.4f}s"
+            )
     # gather the stats from all processes
     metric_logger.synchronize_between_processes()
     print("Averaged stats:", metric_logger)

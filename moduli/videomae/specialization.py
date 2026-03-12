@@ -156,7 +156,9 @@ def launch_specialization_training(terminal_args):
         f"Perf config: with_checkpoint={getattr(args, 'with_checkpoint', None)}, "
         f"amp_dtype={getattr(args, 'amp_dtype', 'fp16')}, "
         f"compile_backend={getattr(args, 'compile_backend', 'eager')}, "
-        f"use_sdpa={getattr(args, 'use_sdpa', False)}"
+        f"use_sdpa={getattr(args, 'use_sdpa', False)}, "
+        f"disable_inductor_cudagraphs={getattr(args, 'disable_inductor_cudagraphs', False)}, "
+        f"perf_profile_every={getattr(args, 'perf_profile_every', 0)}"
     )
 
     # Resolve relative paths from this module directory, not from caller CWD.
@@ -267,6 +269,19 @@ def launch_specialization_training(terminal_args):
         os.makedirs(args.log_dir)
 
     setup_for_distributed(rank == 0)
+
+    # Optional control for torch.compile (Inductor) CUDA Graphs.
+    # Must be configured before get_model() calls torch.compile.
+    disable_cudagraphs = bool(getattr(args, "disable_inductor_cudagraphs", False))
+    if disable_cudagraphs:
+        os.environ["INDUCTOR_DISABLE_CUDAGRAPHS"] = "1"
+    else:
+        os.environ.pop("INDUCTOR_DISABLE_CUDAGRAPHS", None)
+    if rank == 0:
+        print(
+            f"Inductor CUDA Graphs disabled: {disable_cudagraphs} "
+            f"(INDUCTOR_DISABLE_CUDAGRAPHS={os.environ.get('INDUCTOR_DISABLE_CUDAGRAPHS', '0')})"
+        )
 
 
     # LOAD MODEL
@@ -447,7 +462,9 @@ def launch_specialization_training(terminal_args):
             wd_schedule_values=wd_schedule_values,
             patch_size=patch_size[0],
             normlize_target=args.normlize_target,
-            amp_dtype=getattr(args, "amp_dtype", "fp16"))
+            amp_dtype=getattr(args, "amp_dtype", "fp16"),
+            perf_profile_every=int(getattr(args, "perf_profile_every", 0) or 0),
+            perf_profile_warmup=int(getattr(args, "perf_profile_warmup", 20) or 0))
 
         log_stats = {
             **{f'train_{k}': v for k, v in train_stats.items()}, 'epoch': epoch,
