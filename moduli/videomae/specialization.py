@@ -165,7 +165,8 @@ def launch_specialization_training(terminal_args):
         f"compile_backend={getattr(args, 'compile_backend', 'eager')}, "
         f"use_sdpa={getattr(args, 'use_sdpa', False)}, "
         f"disable_inductor_cudagraphs={getattr(args, 'disable_inductor_cudagraphs', False)}, "
-        f"perf_profile_every={getattr(args, 'perf_profile_every', 0)}"
+        f"perf_profile_every={getattr(args, 'perf_profile_every', 0)}, "
+        f"enable_weight_drift_logging={getattr(args, 'enable_weight_drift_logging', False)}"
     )
 
     # Resolve relative paths from this module directory, not from caller CWD.
@@ -432,7 +433,7 @@ def launch_specialization_training(terminal_args):
         loss_scaler=loss_scaler)
 
     weight_reference_params = None
-    if utils.is_main_process():
+    if bool(getattr(args, "enable_weight_drift_logging", False)) and utils.is_main_process():
         print("Capturing reference weights for per-layer drift logging...")
         weight_reference_params = _capture_reference_params(model_without_ddp)
         print(f"[DRIFT] reference tensors captured: {len(weight_reference_params)}")
@@ -506,7 +507,11 @@ def launch_specialization_training(terminal_args):
                         patch_size=patch_size[0], normlize_target=args.normlize_target,
                         log_writer=log_writer, amp_dtype=getattr(args, "amp_dtype", "fp16"))
             test_log_stats = {**{f'test_{k}': v for k, v in test_stats.items()}, 'epoch': epoch}  #, 'n_parameters': n_parameters}
-            if utils.is_main_process() and weight_reference_params is not None:
+            if (
+                bool(getattr(args, "enable_weight_drift_logging", False))
+                and utils.is_main_process()
+                and weight_reference_params is not None
+            ):
                 drift_stats = _compute_weight_drift_by_layer(model_without_ddp, weight_reference_params)
                 _print_weight_drift_summary(drift_stats, top_k=10)
                 test_log_stats["weight_drift_overall_rel_l2"] = float(drift_stats["overall_rel_l2"])

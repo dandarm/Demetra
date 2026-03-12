@@ -4,7 +4,7 @@
 #SBATCH --partition=boost_usr_prod
 #SBATCH --gres=gpu:4
 #SBATCH --cpus-per-task=5
-#SBATCH --time=00:05:00
+#SBATCH --time=05:00:00
 #SBATCH --error=specialization.err
 #SBATCH --output=specialization.out
 #SBATCH --account=iscrc_same-d2

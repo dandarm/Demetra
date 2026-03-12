@@ -127,6 +127,8 @@ def prepare_args(machine=None):
         # Lightweight step profiler for specialization (0 disables).
         'perf_profile_every': 0,
         'perf_profile_warmup': 20,
+        # Optional heavy logging of layer-wise parameter drift (costly on large models).
+        'enable_weight_drift_logging': False,
         ### solo per pretraining,
         'normlize_target': True,
         # Specialization-only: disable spatial data augmentation (keeps MAE masking).
@@ -145,7 +147,7 @@ def prepare_args(machine=None):
         'output_dir': './output',
         'data_set': 'medicanes',
         'mask_type': 'tube',
-        'mask_ratio': 0.75,
+        'mask_ratio': 0.88,
         'decoder_mask_type': 'run_cell',
         'decoder_mask_ratio': 0.5,
         'batch_size': 32,
@@ -154,17 +156,17 @@ def prepare_args(machine=None):
         'sampling_rate': 1,  # voglio tutti i frame temporali
         'num_workers': 4,     
         'opt': 'adamw',
-        'lr': 7e-3,
+        'lr': 1e-3,
         'opt_betas': [0.9, 0.95],
         'warmup_epochs': 5,
         'layer_decay': 0.98,
         'weight_decay': 0.02,
         'warmup_lr': 1e-6,
-        'min_lr': 9e-4,
+        'min_lr': 5e-4,
         'epochs': 150,
         'save_ckpt_freq': 20,
         'decoder_depth': 4,
-        'testing_epochs': 5,
+        'testing_epochs': 10,
         # Performance defaults for specialization on A100/HPC
         'ddp_find_unused_parameters': False,
         'ddp_static_graph': True,
@@ -180,6 +182,7 @@ def prepare_args(machine=None):
         'disable_inductor_cudagraphs': False,
         'perf_profile_every': 0,
         'perf_profile_warmup': 0,
+        'enable_weight_drift_logging': False,
         'with_checkpoint': False,
         # Set True to disable GroupMultiScaleCrop in specialization.
         'no_data_aug': True,
