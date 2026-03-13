@@ -169,13 +169,13 @@ def plot_training_curves(*tuple_vars, plot_file_name=None, labels=None, log=Fals
         color = next(run_color_cycle)
         run_label = labels[idx]
 
-        ax1.plot(train_epochs, train_losses, marker='.', linestyle='-', color=color, label=f'{run_label} - Training Loss')
+        ax1.plot(train_epochs, train_losses, marker='.', linestyle='-', color=color, label=f'{run_label} - Train')
         if test_losses is not None and len(test_losses) > 0:
-            ax1.plot(test_epochs, test_losses, linestyle='--', color=color, alpha=0.8, label=f'{run_label} - Test Loss')
+            ax1.plot(test_epochs, test_losses, linestyle='--', color=color, alpha=0.8, label=f'{run_label} - Test')
         if val_losses is not None and len(val_losses) > 0:
-            ax1.plot(val_epochs, val_losses, marker='.', linestyle='-.', color=color, alpha=0.85, label=f'{run_label} - Validation Loss')
+            ax1.plot(val_epochs, val_losses, marker='.', linestyle='-.', color=color, alpha=0.85, label=f'{run_label} - Val')
         if val2_losses is not None and len(val2_losses) > 0:
-            ax1.plot(val_epochs, val2_losses, marker='.', linestyle=':', color=color, alpha=0.85, label=f'{run_label} - Validation2 Loss')
+            ax1.plot(val_epochs, val2_losses, marker='.', linestyle=':', color=color, alpha=0.85, label=f'{run_label} - Val')
 
         if idx == 0:
             first_val_accs = val_accs

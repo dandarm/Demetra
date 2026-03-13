@@ -380,14 +380,34 @@ def create_gif_pil(image_paths, output_gif, duration=100, loop=0):
 
 
 
-def display_video_clip(frames_tensors, interval=200, save_path=None):
+def display_video_clip(
+    frames_tensors,
+    interval=200,
+    save_path=None,
+    dpi=96,
+    crop_border=True,
+):
     """Crea l'animazione e (opzionalmente) la salva su file.
 
     frames_tensors: array di shape (T, H, W, 3) in formato RGB normalizzato 0-1
     interval: intervallo in millisecondi tra i frame dell'animazione
     save_path: path di output. Se None, l'animazione non viene salvata
+    dpi: risoluzione della figura di esportazione
+    crop_border: se True rimuove il bordo bianco esterno in export
     """
-    fig = plt.figure()
+    if frames_tensors is None or len(frames_tensors) == 0:
+        raise ValueError("`frames_tensors` non puo' essere vuoto.")
+
+    first_frame = frames_tensors[0].detach().cpu().numpy() if torch.is_tensor(frames_tensors[0]) else np.asarray(frames_tensors[0])
+    if first_frame.ndim != 3 or first_frame.shape[-1] not in (3, 4):
+        raise ValueError("Ogni frame deve avere shape [H, W, 3/4].")
+    frame_h, frame_w = first_frame.shape[:2]
+
+    fig = plt.figure(figsize=(frame_w / dpi, frame_h / dpi), dpi=dpi, frameon=False)
+    ax = fig.add_axes([0, 0, 1, 1])
+    ax.set_axis_off()
+    fig.patch.set_alpha(0.0)
+    ax.set_facecolor((0, 0, 0, 0))
     ims = []
 
     for i in range(len(frames_tensors)):
@@ -395,9 +415,7 @@ def display_video_clip(frames_tensors, interval=200, save_path=None):
         # Se frames_tensors[i] è un tensore Torch, converti in numpy
         frame_np = frames_tensors[i].detach().cpu().numpy() if torch.is_tensor(frames_tensors[i]) else frames_tensors[i]
         # Assumi che sia [H, W, 3] con valori in [0,1]
-        im = plt.imshow(frame_np, animated=True)
-        plt.xticks([])
-        plt.yticks([])
+        im = ax.imshow(frame_np, animated=True, interpolation="nearest")
         ims.append([im])
 
     ani = animation.ArtistAnimation(fig, ims, interval=interval, blit=True, repeat_delay=1000)
@@ -418,7 +436,15 @@ def display_video_clip(frames_tensors, interval=200, save_path=None):
                     )
                 matplotlib.rcParams['animation.ffmpeg_path'] = ffmpeg_exec
                 writer = animation.FFMpegWriter(fps=fps)
-            ani.save(str(save_path), writer=writer)
+            savefig_kwargs = {}
+            if crop_border:
+                savefig_kwargs = {"pad_inches": 0, "bbox_inches": "tight"}
+            ani.save(
+                str(save_path),
+                writer=writer,
+                dpi=dpi,
+                savefig_kwargs=savefig_kwargs,
+            )
         except Exception as exc:
             plt.close(fig)
             raise RuntimeError(f"Impossibile salvare l'animazione in '{save_path}': {exc}") from exc
