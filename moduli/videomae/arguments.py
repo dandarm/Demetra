@@ -138,8 +138,8 @@ def prepare_args(machine=None):
     user_args_pretrain = {
         'model': 'pretrain_videomae_giant_patch14_224',  # 'pretrain_videomae_base_patch16_224',
         'pretrained': True,  # Abilita il caricamento del checkpoint
-        'finetune': './vit_g_hybrid_pt_1200e.pth', #'./output/checkpoint-590_rand1.pth', #
-        'init_ckpt': './vit_g_hybrid_pt_1200e.pth', # './output/checkpoint-590_rand1.pth', #
+        'finetune': './pytorch_model_large.bin',   #'./vit_g_hybrid_pt_1200e.pth', #'./output/checkpoint-590_rand1.pth', #
+        'init_ckpt': './pytorch_model_large.bin',   #'./vit_g_hybrid_pt_1200e.pth', # './output/checkpoint-590_rand1.pth', #
         'auto_resume': False,
         'train_path': './UNtrain_random_tiles.csv',
         'test_path': './UNtest_random_tiles.csv',
@@ -156,13 +156,13 @@ def prepare_args(machine=None):
         'sampling_rate': 1,  # voglio tutti i frame temporali
         'num_workers': 4,     
         'opt': 'adamw',
-        'lr': 3e-4,
+        'lr': 1e-3,
         'opt_betas': [0.9, 0.95],
         'warmup_epochs': 5,
-        'layer_decay': 0.85,
+        'layer_decay': 0.9,
         'weight_decay': 0.03,
         'warmup_lr': 1e-6,
-        'min_lr': 1e-6,
+        'min_lr': 3e-4,
         'epochs': 100,
         'save_ckpt_freq': 20,
         'decoder_depth': 4,
@@ -201,7 +201,7 @@ def prepare_args(machine=None):
     if machine:
         machine_args_override = {}
         if machine == 'leonardo':
-            ckpath = '$FAST/vit_g_hybrid_pt_1200e.pth'
+            ckpath = '$FAST/pytorch_model_large.bin'
             exp_path = os.path.expandvars(ckpath)
             if "$HOME" in exp_path:
                 raise EnvironmentError("La variabile d'ambiente HOME non è definita.")

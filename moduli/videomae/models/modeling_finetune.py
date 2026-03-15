@@ -623,8 +623,18 @@ def load_checkpoint(model, checkpoint_path, load_for_test_mode=False):
         if removed_head:
             print("Testa del modello rimossa dal checkpoint per evitare mismatch di numero di classi col preaddestrato.")
 
-    # Carica i pesi nel modello
-    model.load_state_dict(new_state_dict, strict=False)
+    # Carica i pesi nel modello e stampa eventuali mismatch non fatali.
+    incompatible = model.load_state_dict(new_state_dict, strict=False)
+    missing_keys = list(getattr(incompatible, "missing_keys", []))
+    unexpected_keys = list(getattr(incompatible, "unexpected_keys", []))
+    print(
+        "Checkpoint load summary: "
+        f"loaded={len(new_state_dict)}, missing={len(missing_keys)}, unexpected={len(unexpected_keys)}"
+    )
+    if missing_keys:
+        print(f"Missing keys (first 20): {missing_keys[:20]}")
+    if unexpected_keys:
+        print(f"Unexpected keys (first 20): {unexpected_keys[:20]}")
     print("Checkpoint caricato con successo!")
 
     return model
