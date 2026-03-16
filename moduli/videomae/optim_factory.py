@@ -218,3 +218,117 @@ def create_optimizer(args,
             optimizer = Lookahead(optimizer)
 
     return optimizer
+
+
+def create_split_adamw_optimizer(args, model):
+    decoder_lr = float(args.decoder_lr)
+    encoder_lr = float(args.encoder_lr)
+    if decoder_lr <= 0 or encoder_lr <= 0:
+        raise ValueError(
+            f"decoder_lr and encoder_lr must be > 0, got decoder_lr={decoder_lr}, encoder_lr={encoder_lr}"
+        )
+
+    encoder_depth = (
+        int(model.encoder.get_num_layers())
+        if hasattr(model, "encoder") and hasattr(model.encoder, "get_num_layers")
+        else 0
+    )
+    decoder_depth = (
+        int(model.decoder.get_num_layers())
+        if hasattr(model, "decoder") and hasattr(model.decoder, "get_num_layers")
+        else 0
+    )
+
+    layer_decay = float(getattr(args, "layer_decay", 1.0) or 1.0)
+    if layer_decay <= 0:
+        raise ValueError(f"layer_decay must be > 0, got {layer_decay}")
+
+    encoder_scales = [layer_decay ** (encoder_depth - i + 1) for i in range(encoder_depth + 2)]
+    decoder_scales = [layer_decay ** (decoder_depth - i + 1) for i in range(decoder_depth + 2)]
+
+    def _encoder_layer_id(name):
+        name = _strip_known_prefixes(name)
+        if name.startswith("encoder."):
+            name = name[len("encoder."):]
+        if name in ("cls_token", "mask_token", "pos_embed"):
+            return 0
+        if name.startswith("patch_embed"):
+            return 0
+        if name.startswith("blocks."):
+            return int(name.split(".")[1]) + 1
+        return encoder_depth + 1
+
+    def _decoder_layer_id(name):
+        name = _strip_known_prefixes(name)
+        if name.startswith("decoder."):
+            stripped = name[len("decoder."):]
+            if stripped.startswith("blocks."):
+                return int(stripped.split(".")[1]) + 1
+            return decoder_depth + 1
+        if name.startswith("encoder_to_decoder") or name in ("mask_token", "pos_embed"):
+            return 0
+        return decoder_depth + 1
+
+    parameter_group_vars = {}
+    encoder_param_count = 0
+    decoder_param_count = 0
+
+    for name, param in model.named_parameters():
+        if not param.requires_grad:
+            continue
+
+        if name.startswith("encoder."):
+            branch = "encoder"
+            layer_id = _encoder_layer_id(name)
+            base_lr = encoder_lr
+            base_scale = encoder_lr / decoder_lr
+            layer_scale = encoder_scales[layer_id]
+            encoder_param_count += 1
+        else:
+            branch = "decoder"
+            layer_id = _decoder_layer_id(name)
+            base_lr = decoder_lr
+            base_scale = 1.0
+            layer_scale = decoder_scales[layer_id]
+            decoder_param_count += 1
+
+        group_name = f"{branch}_layer_{layer_id}"
+        if group_name not in parameter_group_vars:
+            parameter_group_vars[group_name] = {
+                "params": [],
+                "lr": base_lr * layer_scale,
+                "lr_scale": base_scale * layer_scale,
+                "weight_decay": float(args.weight_decay),
+                "group_name": group_name,
+            }
+        parameter_group_vars[group_name]["params"].append(param)
+
+    if encoder_param_count == 0:
+        raise ValueError("No encoder parameters found for split AdamW optimizer.")
+    if decoder_param_count == 0:
+        raise ValueError("No decoder-side parameters found for split AdamW optimizer.")
+
+    opt_args = dict(
+        lr=decoder_lr,
+        weight_decay=float(args.weight_decay),
+    )
+    if hasattr(args, 'opt_eps') and args.opt_eps is not None:
+        opt_args['eps'] = args.opt_eps
+    if hasattr(args, 'opt_betas') and args.opt_betas is not None:
+        opt_args['betas'] = args.opt_betas
+
+    print(
+        "optimizer settings:",
+        {
+            **opt_args,
+            "encoder_lr": encoder_lr,
+            "decoder_lr": decoder_lr,
+            "layer_decay": layer_decay,
+            "encoder_group_count": sum(1 for k in parameter_group_vars if k.startswith("encoder_")),
+            "decoder_group_count": sum(1 for k in parameter_group_vars if k.startswith("decoder_")),
+            "encoder_params": encoder_param_count,
+            "decoder_params": decoder_param_count,
+        },
+    )
+    optimizer = optim.AdamW(list(parameter_group_vars.values()), **opt_args)
+    return optimizer
