@@ -64,7 +64,7 @@ def train_one_epoch(model: torch.nn.Module,
         if lr_schedule_values is not None or wd_schedule_values is not None:
             for i, param_group in enumerate(optimizer.param_groups):
                 if lr_schedule_values is not None:
-                    param_group["lr"] = lr_schedule_values[it] * param_group["lr_scale"]
+                    param_group["lr"] = lr_schedule_values[it] * param_group.get("lr_scale", 1.0)
                 if wd_schedule_values is not None and param_group["weight_decay"] > 0:
                     param_group["weight_decay"] = wd_schedule_values[it]
 

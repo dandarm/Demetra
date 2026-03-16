@@ -129,6 +129,10 @@ def prepare_args(machine=None):
         'perf_profile_warmup': 20,
         # Optional heavy logging of layer-wise parameter drift (costly on large models).
         'enable_weight_drift_logging': False,
+        'use_split_encoder_decoder_lr': False,
+        'encoder_lr': 1e-6,
+        'decoder_lr': 1e-4,
+        'freeze_encoder_epochs': 10,
         ### solo per pretraining,
         'normlize_target': True,
         # Specialization-only: disable spatial data augmentation (keeps MAE masking).
@@ -136,10 +140,10 @@ def prepare_args(machine=None):
     }
     # user argument values
     user_args_pretrain = {
-        'model': 'pretrain_videomae_giant_patch14_224',  # 'pretrain_videomae_base_patch16_224',
+        'model': 'pretrain_videomae_large_patch16_224',  # 'pretrain_videomae_base_patch16_224',
         'pretrained': True,  # Abilita il caricamento del checkpoint
-        'finetune': './pytorch_model_large.bin',   #'./vit_g_hybrid_pt_1200e.pth', #'./output/checkpoint-590_rand1.pth', #
-        'init_ckpt': './pytorch_model_large.bin',   #'./vit_g_hybrid_pt_1200e.pth', # './output/checkpoint-590_rand1.pth', #
+        'finetune': './pytorch_model.bin',   #'./vit_g_hybrid_pt_1200e.pth', #'./output/checkpoint-590_rand1.pth', #
+        'init_ckpt': './pytorch_model.bin',   #'./vit_g_hybrid_pt_1200e.pth', # './output/checkpoint-590_rand1.pth', #
         'auto_resume': False,
         'train_path': './UNtrain_random_tiles.csv',
         'test_path': './UNtest_random_tiles.csv',
@@ -183,6 +187,10 @@ def prepare_args(machine=None):
         'perf_profile_every': 0,
         'perf_profile_warmup': 0,
         'enable_weight_drift_logging': False,
+        'use_split_encoder_decoder_lr': True,
+        'encoder_lr': 1e-6,
+        'decoder_lr': 1e-4,
+        'freeze_encoder_epochs': 10,
         'with_checkpoint': False,
         # Set True to disable GroupMultiScaleCrop in specialization.
         'no_data_aug': True,

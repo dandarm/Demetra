@@ -601,8 +601,11 @@ def load_checkpoint(model, checkpoint_path, load_for_test_mode=False):
     if checkpoint_model is None:
         checkpoint_model = checkpoint  # Se non ha una chiave specifica, usa tutto il dict
 
-    # Rimuove il prefisso "backbone." o "module." se presente
-    new_state_dict = {k.replace("backbone.", "").replace("module.", "").replace("_orig_mod.",""): v for k, v in checkpoint_model.items()}
+    # Rimuove i prefissi noti se presenti
+    new_state_dict = {
+        k.replace("backbone.", "").replace("module.", "").replace("_orig_mod.", ""): v
+        for k, v in checkpoint_model.items()
+    }
 
     # Rinomina la testa di classificazione
     if "cls_head.fc_cls.weight" in new_state_dict and "cls_head.fc_cls.bias" in new_state_dict:
@@ -623,18 +626,83 @@ def load_checkpoint(model, checkpoint_path, load_for_test_mode=False):
         if removed_head:
             print("Testa del modello rimossa dal checkpoint per evitare mismatch di numero di classi col preaddestrato.")
 
+    model_state = model.state_dict()
+    filtered_state = {}
+    unexpected_keys = []
+    shape_mismatch = []
+    for key, value in new_state_dict.items():
+        if key not in model_state:
+            unexpected_keys.append(key)
+            continue
+        if tuple(value.shape) != tuple(model_state[key].shape):
+            shape_mismatch.append(
+                f"{key}: ckpt{tuple(value.shape)} != model{tuple(model_state[key].shape)}"
+            )
+            continue
+        filtered_state[key] = value
+
+    load_mode = "full_model"
+    load_target = model
+    load_state = filtered_state
+    load_unexpected = unexpected_keys
+    load_shape_mismatch = shape_mismatch
+
+    # Some pretrained finetuning checkpoints contain only the backbone without the
+    # MAE-specific prefix `encoder.`. In that case, it is better to load the
+    # checkpoint directly into the encoder and leave decoder/MAE-only modules
+    # initialized from the current model definition.
+    if hasattr(model, "encoder"):
+        encoder_state = model.encoder.state_dict()
+        encoder_state_dict = {}
+        encoder_unexpected = []
+        encoder_shape_mismatch = []
+        for key, value in new_state_dict.items():
+            if key.startswith("head."):
+                encoder_unexpected.append(key)
+                continue
+
+            mapped_key = key
+            if key.startswith("fc_norm."):
+                mapped_key = "norm." + key[len("fc_norm."):]
+
+            if mapped_key not in encoder_state:
+                encoder_unexpected.append(key)
+                continue
+            if tuple(value.shape) != tuple(encoder_state[mapped_key].shape):
+                encoder_shape_mismatch.append(
+                    f"{key}->{mapped_key}: ckpt{tuple(value.shape)} != encoder{tuple(encoder_state[mapped_key].shape)}"
+                )
+                continue
+            encoder_state_dict[mapped_key] = value
+
+        if len(encoder_state_dict) > len(filtered_state):
+            load_mode = "encoder_only"
+            load_target = model.encoder
+            load_state = encoder_state_dict
+            load_unexpected = encoder_unexpected
+            load_shape_mismatch = encoder_shape_mismatch
+            print(
+                "Detected encoder-only checkpoint layout; "
+                "loading checkpoint into model.encoder and keeping decoder/MAE-specific weights from model init."
+            )
+
     # Carica i pesi nel modello e stampa eventuali mismatch non fatali.
-    incompatible = model.load_state_dict(new_state_dict, strict=False)
+    incompatible = load_target.load_state_dict(load_state, strict=False)
     missing_keys = list(getattr(incompatible, "missing_keys", []))
-    unexpected_keys = list(getattr(incompatible, "unexpected_keys", []))
+    unexpected_after_load = list(getattr(incompatible, "unexpected_keys", []))
+    if unexpected_after_load:
+        load_unexpected = list(load_unexpected) + unexpected_after_load
     print(
         "Checkpoint load summary: "
-        f"loaded={len(new_state_dict)}, missing={len(missing_keys)}, unexpected={len(unexpected_keys)}"
+        f"mode={load_mode}, loaded={len(load_state)}, missing={len(missing_keys)}, "
+        f"unexpected={len(load_unexpected)}, shape_mismatch={len(load_shape_mismatch)}"
     )
     if missing_keys:
         print(f"Missing keys (first 20): {missing_keys[:20]}")
-    if unexpected_keys:
-        print(f"Unexpected keys (first 20): {unexpected_keys[:20]}")
+    if load_unexpected:
+        print(f"Unexpected keys (first 20): {load_unexpected[:20]}")
+    if load_shape_mismatch:
+        print(f"Shape mismatches (first 20): {load_shape_mismatch[:20]}")
     print("Checkpoint caricato con successo!")
 
     return model

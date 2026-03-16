@@ -18,7 +18,7 @@ from functools import partial
 import utils
 from utils import NativeScalerWithGradNormCount as NativeScaler
 from utils import multiple_pretrain_samples_collate, setup_for_distributed
-from optim_factory import LayerDecayValueAssigner, create_optimizer
+from optim_factory import LayerDecayValueAssigner, create_optimizer, create_split_adamw_optimizer
 #from dataset import build_pretraining_dataset
 from utils import get_model
 from engine_for_pretraining import train_one_epoch, test
@@ -129,6 +129,13 @@ def _print_weight_drift_summary(drift_stats, top_k=10):
         print(f"[DRIFT][TOP] {layer_key} rel_l2={rel_value:.6e}")
 
 
+def _set_encoder_trainable(model, trainable):
+    if not hasattr(model, "encoder"):
+        return
+    for param in model.encoder.parameters():
+        param.requires_grad = bool(trainable)
+
+
 def _model_non_finite_summary(model, max_examples=10):
     bad_tensors = 0
     bad_elems = 0
@@ -166,7 +173,11 @@ def launch_specialization_training(terminal_args):
         f"use_sdpa={getattr(args, 'use_sdpa', False)}, "
         f"disable_inductor_cudagraphs={getattr(args, 'disable_inductor_cudagraphs', False)}, "
         f"perf_profile_every={getattr(args, 'perf_profile_every', 0)}, "
-        f"enable_weight_drift_logging={getattr(args, 'enable_weight_drift_logging', False)}"
+        f"enable_weight_drift_logging={getattr(args, 'enable_weight_drift_logging', False)}, "
+        f"use_split_encoder_decoder_lr={getattr(args, 'use_split_encoder_decoder_lr', False)}, "
+        f"encoder_lr={getattr(args, 'encoder_lr', None)}, "
+        f"decoder_lr={getattr(args, 'decoder_lr', None)}, "
+        f"freeze_encoder_epochs={getattr(args, 'freeze_encoder_epochs', 0)}"
     )
 
     # Resolve relative paths from this module directory, not from caller CWD.
@@ -364,10 +375,32 @@ def launch_specialization_training(terminal_args):
             f"batch_size={args.batch_size}, world_size={num_tasks}. "
             "Riduci batch_size o aumenta il numero di sample nel manifest."
         )
-    # scale the lr
-    args.lr = args.lr * total_batch_size / 256
-    args.min_lr = args.min_lr * total_batch_size / 256
-    args.warmup_lr = args.warmup_lr * total_batch_size / 256
+    use_split_encoder_decoder_lr = bool(
+        getattr(args, "use_split_encoder_decoder_lr", False)
+        and hasattr(model_without_ddp, "encoder")
+        and hasattr(model_without_ddp, "decoder")
+    )
+    if use_split_encoder_decoder_lr:
+        legacy_base_lr = float(args.lr)
+        legacy_min_lr = float(args.min_lr)
+        legacy_warmup_lr = float(args.warmup_lr)
+        args.lr = float(args.decoder_lr)
+        if legacy_base_lr <= 0:
+            raise ValueError(f"args.lr must be > 0 for split LR scheduling, got {legacy_base_lr}")
+        args.min_lr = args.lr * (legacy_min_lr / legacy_base_lr)
+        args.warmup_lr = args.lr * (legacy_warmup_lr / legacy_base_lr)
+        print(
+            "Split encoder/decoder LR enabled: "
+            f"encoder_lr={float(args.encoder_lr):.8f}, "
+            f"decoder_lr={float(args.decoder_lr):.8f}, "
+            f"scheduler_base_lr={args.lr:.8f}, min_lr={args.min_lr:.8f}, warmup_lr={args.warmup_lr:.8f}"
+        )
+        print("Linear LR scaling by total batch size disabled for split encoder/decoder LR mode.")
+    else:
+        # scale the lr
+        args.lr = args.lr * total_batch_size / 256
+        args.min_lr = args.min_lr * total_batch_size / 256
+        args.warmup_lr = args.warmup_lr * total_batch_size / 256
     if args.warmup_epochs > 0 and args.warmup_lr <= 0:
         raise ValueError(
             f"warmup_lr deve essere > 0 quando warmup_epochs > 0 (attuale warmup_lr={args.warmup_lr})."
@@ -380,7 +413,7 @@ def launch_specialization_training(terminal_args):
 
 
     assigner = None
-    if hasattr(args, "layer_decay") and args.layer_decay is not None and args.layer_decay < 1.0:
+    if (not use_split_encoder_decoder_lr) and hasattr(args, "layer_decay") and args.layer_decay is not None and args.layer_decay < 1.0:
         encoder_layers = None
         if hasattr(model_without_ddp, "encoder") and hasattr(model_without_ddp.encoder, "get_num_layers"):
             encoder_layers = model_without_ddp.encoder.get_num_layers()
@@ -398,12 +431,19 @@ def launch_specialization_training(terminal_args):
                 f"encoder_layers={encoder_layers}, num_layers={num_layers}"
             )
 
-    optimizer = create_optimizer(
-        args,
-        model_without_ddp,
-        get_num_layer=assigner.get_layer_id if assigner is not None else None,
-        get_layer_scale=assigner.get_scale if assigner is not None else None,
-    )
+    if use_split_encoder_decoder_lr:
+        print(
+            f"Split optimizer with branch-specific layer decay enabled: "
+            f"layer_decay={getattr(args, 'layer_decay', None)}"
+        )
+        optimizer = create_split_adamw_optimizer(args, model_without_ddp)
+    else:
+        optimizer = create_optimizer(
+            args,
+            model_without_ddp,
+            get_num_layer=assigner.get_layer_id if assigner is not None else None,
+            get_layer_scale=assigner.get_scale if assigner is not None else None,
+        )
     loss_scaler = NativeScaler()
 
     print("Use step level LR & WD scheduler!")
@@ -469,6 +509,18 @@ def launch_specialization_training(terminal_args):
     print(f"Start training for {args.epochs} epochs")
     start_time = time.time()
     for epoch in range(args.start_epoch, args.epochs):
+        freeze_encoder_epochs = int(getattr(args, "freeze_encoder_epochs", 0) or 0)
+        encoder_trainable = epoch >= freeze_encoder_epochs
+        _set_encoder_trainable(model_without_ddp, encoder_trainable)
+        if utils.is_main_process():
+            if epoch == args.start_epoch:
+                state_label = "trainable" if encoder_trainable else "frozen"
+                print(
+                    f"Encoder freeze schedule: freeze_encoder_epochs={freeze_encoder_epochs}, "
+                    f"encoder is {state_label} at epoch {epoch}"
+                )
+            elif freeze_encoder_epochs > 0 and epoch == freeze_encoder_epochs:
+                print(f"Encoder unfrozen at epoch {epoch}")
         if args.distributed:
             data_loader_train.sampler.set_epoch(epoch)
         if log_writer is not None:
