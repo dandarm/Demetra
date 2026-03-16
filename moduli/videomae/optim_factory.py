@@ -277,16 +277,18 @@ def create_split_adamw_optimizer(args, model):
         if not param.requires_grad:
             continue
 
-        if name.startswith("encoder."):
+        clean_name = _strip_known_prefixes(name)
+
+        if clean_name.startswith("encoder."):
             branch = "encoder"
-            layer_id = _encoder_layer_id(name)
+            layer_id = _encoder_layer_id(clean_name)
             base_lr = encoder_lr
             base_scale = encoder_lr / decoder_lr
             layer_scale = encoder_scales[layer_id]
             encoder_param_count += 1
         else:
             branch = "decoder"
-            layer_id = _decoder_layer_id(name)
+            layer_id = _decoder_layer_id(clean_name)
             base_lr = decoder_lr
             base_scale = 1.0
             layer_scale = decoder_scales[layer_id]
