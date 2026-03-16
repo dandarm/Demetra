@@ -9,39 +9,39 @@ Loading cineca-ai/4.3.0
     libffi/3.4.4-6r7brdq libxcrypt/4.4.35-ss2rzin sqlite/3.43.2
     util-linux-uuid/2.38.1-jkdi7kv python/3.11.6--gcc--8.5.0 cmake/3.27.7
     openjdk/11.0.20.1_1
-[1,11]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=1e-06, decoder_lr=0.0001, freeze_encoder_epochs=10
-[1,9]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=1e-06, decoder_lr=0.0001, freeze_encoder_epochs=10
-[1,0]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=1e-06, decoder_lr=0.0001, freeze_encoder_epochs=10
-[1,3]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=1e-06, decoder_lr=0.0001, freeze_encoder_epochs=10
-[1,2]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=1e-06, decoder_lr=0.0001, freeze_encoder_epochs=10
-[1,1]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=1e-06, decoder_lr=0.0001, freeze_encoder_epochs=10
-[1,8]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=1e-06, decoder_lr=0.0001, freeze_encoder_epochs=10
-[1,10]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=1e-06, decoder_lr=0.0001, freeze_encoder_epochs=10
-[1,19]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=1e-06, decoder_lr=0.0001, freeze_encoder_epochs=10
-[1,18]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=1e-06, decoder_lr=0.0001, freeze_encoder_epochs=10
-[1,17]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=1e-06, decoder_lr=0.0001, freeze_encoder_epochs=10
-[1,16]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=1e-06, decoder_lr=0.0001, freeze_encoder_epochs=10
-[1,0]<stdout>:launch with mpirun
-[1,20]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=1e-06, decoder_lr=0.0001, freeze_encoder_epochs=10
-[1,21]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=1e-06, decoder_lr=0.0001, freeze_encoder_epochs=10
-[1,22]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=1e-06, decoder_lr=0.0001, freeze_encoder_epochs=10
-[1,23]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=1e-06, decoder_lr=0.0001, freeze_encoder_epochs=10
-[1,15]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=1e-06, decoder_lr=0.0001, freeze_encoder_epochs=10
+[1,31]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=1e-06, decoder_lr=0.0001, freeze_encoder_epochs=10
+[1,28]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=1e-06, decoder_lr=0.0001, freeze_encoder_epochs=10
+[1,30]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=1e-06, decoder_lr=0.0001, freeze_encoder_epochs=10
+[1,29]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=1e-06, decoder_lr=0.0001, freeze_encoder_epochs=10
+[1,14]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=1e-06, decoder_lr=0.0001, freeze_encoder_epochs=10
 [1,12]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=1e-06, decoder_lr=0.0001, freeze_encoder_epochs=10
 [1,13]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=1e-06, decoder_lr=0.0001, freeze_encoder_epochs=10
-[1,14]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=1e-06, decoder_lr=0.0001, freeze_encoder_epochs=10
+[1,15]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=1e-06, decoder_lr=0.0001, freeze_encoder_epochs=10
+[1,4]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=1e-06, decoder_lr=0.0001, freeze_encoder_epochs=10
+[1,6]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=1e-06, decoder_lr=0.0001, freeze_encoder_epochs=10
+[1,5]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=1e-06, decoder_lr=0.0001, freeze_encoder_epochs=10
+[1,7]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=1e-06, decoder_lr=0.0001, freeze_encoder_epochs=10
+[1,23]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=1e-06, decoder_lr=0.0001, freeze_encoder_epochs=10
+[1,22]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=1e-06, decoder_lr=0.0001, freeze_encoder_epochs=10
+[1,20]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=1e-06, decoder_lr=0.0001, freeze_encoder_epochs=10
+[1,21]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=1e-06, decoder_lr=0.0001, freeze_encoder_epochs=10
 [1,26]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=1e-06, decoder_lr=0.0001, freeze_encoder_epochs=10
 [1,25]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=1e-06, decoder_lr=0.0001, freeze_encoder_epochs=10
 [1,24]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=1e-06, decoder_lr=0.0001, freeze_encoder_epochs=10
 [1,27]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=1e-06, decoder_lr=0.0001, freeze_encoder_epochs=10
-[1,28]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=1e-06, decoder_lr=0.0001, freeze_encoder_epochs=10
-[1,31]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=1e-06, decoder_lr=0.0001, freeze_encoder_epochs=10
-[1,29]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=1e-06, decoder_lr=0.0001, freeze_encoder_epochs=10
-[1,30]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=1e-06, decoder_lr=0.0001, freeze_encoder_epochs=10
-[1,7]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=1e-06, decoder_lr=0.0001, freeze_encoder_epochs=10
-[1,4]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=1e-06, decoder_lr=0.0001, freeze_encoder_epochs=10
-[1,5]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=1e-06, decoder_lr=0.0001, freeze_encoder_epochs=10
-[1,6]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=1e-06, decoder_lr=0.0001, freeze_encoder_epochs=10
+[1,19]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=1e-06, decoder_lr=0.0001, freeze_encoder_epochs=10
+[1,17]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=1e-06, decoder_lr=0.0001, freeze_encoder_epochs=10
+[1,16]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=1e-06, decoder_lr=0.0001, freeze_encoder_epochs=10
+[1,18]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=1e-06, decoder_lr=0.0001, freeze_encoder_epochs=10
+[1,9]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=1e-06, decoder_lr=0.0001, freeze_encoder_epochs=10
+[1,10]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=1e-06, decoder_lr=0.0001, freeze_encoder_epochs=10
+[1,8]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=1e-06, decoder_lr=0.0001, freeze_encoder_epochs=10
+[1,11]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=1e-06, decoder_lr=0.0001, freeze_encoder_epochs=10
+[1,1]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=1e-06, decoder_lr=0.0001, freeze_encoder_epochs=10
+[1,2]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=1e-06, decoder_lr=0.0001, freeze_encoder_epochs=10
+[1,3]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=1e-06, decoder_lr=0.0001, freeze_encoder_epochs=10
+[1,0]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=1e-06, decoder_lr=0.0001, freeze_encoder_epochs=10
+[1,0]<stdout>:launch with mpirun
 [1,0]<stdout>:TF32 enabled: True
 [1,0]<stdout>:SDPA kernel config: mode=auto, flash=True, mem_efficient=True, math=True
 [1,0]<stdout>:Inductor CUDA Graphs disabled: False (INDUCTOR_DISABLE_CUDAGRAPHS=0)
@@ -67,16 +67,16 @@ Loading cineca-ai/4.3.0
 [1,0]<stdout>:Data Aug = (DataAugmentationForVideoMAEv2,
 [1,0]<stdout>:  transform = Compose(
 [1,0]<stdout>:    Lambda()
-[1,0]<stdout>:    <dataset.transforms.Stack object at 0x1491a43824d0>
-[1,0]<stdout>:    <dataset.transforms.ToTorchFormatTensor object at 0x1491a411e910>
-[1,0]<stdout>:    <dataset.transforms.GroupNormalize object at 0x1491a40b8350>
+[1,0]<stdout>:    <dataset.transforms.Stack object at 0x1479c1416550>
+[1,0]<stdout>:    <dataset.transforms.ToTorchFormatTensor object at 0x1479c127ebd0>
+[1,0]<stdout>:    <dataset.transforms.GroupNormalize object at 0x1479c140bf10>
 [1,0]<stdout>:),
 [1,0]<stdout>:  Encoder Masking Generator = Tube Masking: total patches 1568, mask patches 1328,
 [1,0]<stdout>:  Decoder Masking Generator = Running Cell Masking with mask ratio 0.5,
 [1,0]<stdout>:)
 [1,0]<stdout>:DATASET length: 107441
 [1,0]<stdout>:Creo il DistributedSampler con world_size 32 e rank 0
-[1,0]<stdout>:Sampler_train = <torch.utils.data.distributed.DistributedSampler object at 0x1491a4400e10>
+[1,0]<stdout>:Sampler_train = <torch.utils.data.distributed.DistributedSampler object at 0x1479c1c9ec90>
 [1,0]<stdout>:Batch_size: 36
 [1,0]<stdout>:Getting dataset...
 [1,0]<stdout>:no_data_aug=True
@@ -84,16 +84,16 @@ Loading cineca-ai/4.3.0
 [1,0]<stdout>:Data Aug = (DataAugmentationForVideoMAEv2,
 [1,0]<stdout>:  transform = Compose(
 [1,0]<stdout>:    Lambda()
-[1,0]<stdout>:    <dataset.transforms.Stack object at 0x1491a40a2510>
-[1,0]<stdout>:    <dataset.transforms.ToTorchFormatTensor object at 0x1491a4107dd0>
-[1,0]<stdout>:    <dataset.transforms.GroupNormalize object at 0x1491a40dc790>
+[1,0]<stdout>:    <dataset.transforms.Stack object at 0x1479c1242910>
+[1,0]<stdout>:    <dataset.transforms.ToTorchFormatTensor object at 0x1479c13b8390>
+[1,0]<stdout>:    <dataset.transforms.GroupNormalize object at 0x1479c1416890>
 [1,0]<stdout>:),
 [1,0]<stdout>:  Encoder Masking Generator = Tube Masking: total patches 1568, mask patches 1328,
 [1,0]<stdout>:  Decoder Masking Generator = Running Cell Masking with mask ratio 0.5,
 [1,0]<stdout>:)
 [1,0]<stdout>:DATASET length: 19999
 [1,0]<stdout>:Creo il DistributedSampler con world_size 32 e rank 0
-[1,0]<stdout>:Sampler_train = <torch.utils.data.distributed.DistributedSampler object at 0x149199f3aa50>
+[1,0]<stdout>:Sampler_train = <torch.utils.data.distributed.DistributedSampler object at 0x1479c12bbb50>
 [1,0]<stdout>:Batch_size: 36
 [1,0]<stdout>:Split encoder/decoder LR enabled: encoder_lr=0.00000100, decoder_lr=0.00010000, scheduler_base_lr=0.00010000, min_lr=0.00003000, warmup_lr=0.00000010
 [1,0]<stdout>:Linear LR scaling by total batch size disabled for split encoder/decoder LR mode.
@@ -102,3 +102,8 @@ Loading cineca-ai/4.3.0
 [1,0]<stdout>:Number of training steps = 93
 [1,0]<stdout>:Number of training examples per epoch = 107136
 [1,0]<stdout>:Split optimizer with branch-specific layer decay enabled: layer_decay=0.9
+[1,0]<stdout>:optimizer settings: {'lr': 0.0001, 'weight_decay': 0.03, 'eps': 1e-08, 'betas': [0.9, 0.95], 'encoder_lr': 1e-06, 'decoder_lr': 0.0001, 'layer_decay': 0.9, 'encoder_group_count': 26, 'decoder_group_count': 6, 'encoder_params': 316, 'decoder_params': 58}
+[1,0]<stdout>:Use step level LR & WD scheduler!
+[1,0]<stdout>:Set warmup steps = 465
+[1,0]<stdout>:Set warmup steps = 0
+[1,0]<stdout>:Max WD = 0.0300000, Min WD = 0.0300000
