@@ -1,32 +1,331 @@
-[1,0]<stderr>:[lrdn1974.leonardo.local:3051142] MCW rank 0 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]], socket 0[core 4[hwt 0]]: [B/B/B/B/B/././././././././././././././.]
-[1,1]<stderr>:[lrdn1974.leonardo.local:3051142] MCW rank 1 bound to socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]], socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]]: [./././././B/B/B/B/B/./././././././././.]
-[1,2]<stderr>:[lrdn1974.leonardo.local:3051142] MCW rank 2 bound to socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]], socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]]: [././././././././././B/B/B/B/B/././././.]
-[1,3]<stderr>:[lrdn1974.leonardo.local:3051142] MCW rank 3 bound to socket 0[core 15[hwt 0]], socket 0[core 16[hwt 0]], socket 0[core 17[hwt 0]], socket 0[core 18[hwt 0]], socket 0[core 19[hwt 0]]: [./././././././././././././././B/B/B/B/B]
-[1,20]<stderr>:[lrdn2048.leonardo.local:12593] MCW rank 20 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]], socket 0[core 4[hwt 0]]: [B/B/B/B/B/././././././././././././././.]
-[1,21]<stderr>:[lrdn2048.leonardo.local:12593] MCW rank 21 bound to socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]], socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]]: [./././././B/B/B/B/B/./././././././././.]
-[1,22]<stderr>:[lrdn2048.leonardo.local:12593] MCW rank 22 bound to socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]], socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]]: [././././././././././B/B/B/B/B/././././.]
-[1,23]<stderr>:[lrdn2048.leonardo.local:12593] MCW rank 23 bound to socket 0[core 15[hwt 0]], socket 0[core 16[hwt 0]], socket 0[core 17[hwt 0]], socket 0[core 18[hwt 0]], socket 0[core 19[hwt 0]]: [./././././././././././././././B/B/B/B/B]
-[1,16]<stderr>:[lrdn2018.leonardo.local:824593] MCW rank 16 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]], socket 0[core 4[hwt 0]]: [B/B/B/B/B/././././././././././././././.]
-[1,24]<stderr>:[lrdn2051.leonardo.local:786137] MCW rank 24 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]], socket 0[core 4[hwt 0]]: [B/B/B/B/B/././././././././././././././.]
-[1,17]<stderr>:[lrdn2018.leonardo.local:824593] MCW rank 17 bound to socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]], socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]]: [./././././B/B/B/B/B/./././././././././.]
-[1,18]<stderr>:[lrdn2018.leonardo.local:824593] MCW rank 18 bound to socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]], socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]]: [././././././././././B/B/B/B/B/././././.]
-[1,19]<stderr>:[lrdn2018.leonardo.local:824593] MCW rank 19 bound to socket 0[core 15[hwt 0]], socket 0[core 16[hwt 0]], socket 0[core 17[hwt 0]], socket 0[core 18[hwt 0]], socket 0[core 19[hwt 0]]: [./././././././././././././././B/B/B/B/B]
-[1,25]<stderr>:[lrdn2051.leonardo.local:786137] MCW rank 25 bound to socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]], socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]]: [./././././B/B/B/B/B/./././././././././.]
-[1,26]<stderr>:[lrdn2051.leonardo.local:786137] MCW rank 26 bound to socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]], socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]]: [././././././././././B/B/B/B/B/././././.]
-[1,27]<stderr>:[lrdn2051.leonardo.local:786137] MCW rank 27 bound to socket 0[core 15[hwt 0]], socket 0[core 16[hwt 0]], socket 0[core 17[hwt 0]], socket 0[core 18[hwt 0]], socket 0[core 19[hwt 0]]: [./././././././././././././././B/B/B/B/B]
-[1,4]<stderr>:[lrdn1987.leonardo.local:2454233] MCW rank 4 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]], socket 0[core 4[hwt 0]]: [B/B/B/B/B/././././././././././././././.]
-[1,5]<stderr>:[lrdn1987.leonardo.local:2454233] MCW rank 5 bound to socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]], socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]]: [./././././B/B/B/B/B/./././././././././.]
-[1,6]<stderr>:[lrdn1987.leonardo.local:2454233] MCW rank 6 bound to socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]], socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]]: [././././././././././B/B/B/B/B/././././.]
-[1,7]<stderr>:[lrdn1987.leonardo.local:2454233] MCW rank 7 bound to socket 0[core 15[hwt 0]], socket 0[core 16[hwt 0]], socket 0[core 17[hwt 0]], socket 0[core 18[hwt 0]], socket 0[core 19[hwt 0]]: [./././././././././././././././B/B/B/B/B]
-[1,8]<stderr>:[lrdn1989.leonardo.local:4023189] MCW rank 8 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]], socket 0[core 4[hwt 0]]: [B/B/B/B/B/././././././././././././././.]
-[1,9]<stderr>:[lrdn1989.leonardo.local:4023189] MCW rank 9 bound to socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]], socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]]: [./././././B/B/B/B/B/./././././././././.]
-[1,10]<stderr>:[lrdn1989.leonardo.local:4023189] MCW rank 10 bound to socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]], socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]]: [././././././././././B/B/B/B/B/././././.]
-[1,11]<stderr>:[lrdn1989.leonardo.local:4023189] MCW rank 11 bound to socket 0[core 15[hwt 0]], socket 0[core 16[hwt 0]], socket 0[core 17[hwt 0]], socket 0[core 18[hwt 0]], socket 0[core 19[hwt 0]]: [./././././././././././././././B/B/B/B/B]
-[1,28]<stderr>:[lrdn2092.leonardo.local:1240510] MCW rank 28 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]], socket 0[core 4[hwt 0]]: [B/B/B/B/B/././././././././././././././.]
-[1,29]<stderr>:[lrdn2092.leonardo.local:1240510] MCW rank 29 bound to socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]], socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]]: [./././././B/B/B/B/B/./././././././././.]
-[1,30]<stderr>:[lrdn2092.leonardo.local:1240510] MCW rank 30 bound to socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]], socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]]: [././././././././././B/B/B/B/B/././././.]
-[1,31]<stderr>:[lrdn2092.leonardo.local:1240510] MCW rank 31 bound to socket 0[core 15[hwt 0]], socket 0[core 16[hwt 0]], socket 0[core 17[hwt 0]], socket 0[core 18[hwt 0]], socket 0[core 19[hwt 0]]: [./././././././././././././././B/B/B/B/B]
-[1,12]<stderr>:[lrdn2006.leonardo.local:266830] MCW rank 12 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]], socket 0[core 4[hwt 0]]: [B/B/B/B/B/././././././././././././././.]
-[1,13]<stderr>:[lrdn2006.leonardo.local:266830] MCW rank 13 bound to socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]], socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]]: [./././././B/B/B/B/B/./././././././././.]
-[1,14]<stderr>:[lrdn2006.leonardo.local:266830] MCW rank 14 bound to socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]], socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]]: [././././././././././B/B/B/B/B/././././.]
-[1,15]<stderr>:[lrdn2006.leonardo.local:266830] MCW rank 15 bound to socket 0[core 15[hwt 0]], socket 0[core 16[hwt 0]], socket 0[core 17[hwt 0]], socket 0[core 18[hwt 0]], socket 0[core 19[hwt 0]]: [./././././././././././././././B/B/B/B/B]
+[1,0]<stderr>:[lrdn0401.leonardo.local:1753065] MCW rank 0 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]], socket 0[core 4[hwt 0]]: [B/B/B/B/B/././././././././././././././.]
+[1,1]<stderr>:[lrdn0401.leonardo.local:1753065] MCW rank 1 bound to socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]], socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]]: [./././././B/B/B/B/B/./././././././././.]
+[1,2]<stderr>:[lrdn0401.leonardo.local:1753065] MCW rank 2 bound to socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]], socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]]: [././././././././././B/B/B/B/B/././././.]
+[1,3]<stderr>:[lrdn0401.leonardo.local:1753065] MCW rank 3 bound to socket 0[core 15[hwt 0]], socket 0[core 16[hwt 0]], socket 0[core 17[hwt 0]], socket 0[core 18[hwt 0]], socket 0[core 19[hwt 0]]: [./././././././././././././././B/B/B/B/B]
+[1,16]<stderr>:[lrdn0761.leonardo.local:2145613] MCW rank 16 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]], socket 0[core 4[hwt 0]]: [B/B/B/B/B/././././././././././././././.]
+[1,17]<stderr>:[lrdn0761.leonardo.local:2145613] MCW rank 17 bound to socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]], socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]]: [./././././B/B/B/B/B/./././././././././.]
+[1,12]<stderr>:[lrdn0734.leonardo.local:1827197] MCW rank 12 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]], socket 0[core 4[hwt 0]]: [B/B/B/B/B/././././././././././././././.]
+[1,18]<stderr>:[lrdn0761.leonardo.local:2145613] MCW rank 18 bound to socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]], socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]]: [././././././././././B/B/B/B/B/././././.]
+[1,13]<stderr>:[lrdn0734.leonardo.local:1827197] MCW rank 13 bound to socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]], socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]]: [./././././B/B/B/B/B/./././././././././.]
+[1,19]<stderr>:[lrdn0761.leonardo.local:2145613] MCW rank 19 bound to socket 0[core 15[hwt 0]], socket 0[core 16[hwt 0]], socket 0[core 17[hwt 0]], socket 0[core 18[hwt 0]], socket 0[core 19[hwt 0]]: [./././././././././././././././B/B/B/B/B]
+[1,14]<stderr>:[lrdn0734.leonardo.local:1827197] MCW rank 14 bound to socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]], socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]]: [././././././././././B/B/B/B/B/././././.]
+[1,15]<stderr>:[lrdn0734.leonardo.local:1827197] MCW rank 15 bound to socket 0[core 15[hwt 0]], socket 0[core 16[hwt 0]], socket 0[core 17[hwt 0]], socket 0[core 18[hwt 0]], socket 0[core 19[hwt 0]]: [./././././././././././././././B/B/B/B/B]
+[1,20]<stderr>:[lrdn0850.leonardo.local:623718] MCW rank 20 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]], socket 0[core 4[hwt 0]]: [B/B/B/B/B/././././././././././././././.]
+[1,21]<stderr>:[lrdn0850.leonardo.local:623718] MCW rank 21 bound to socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]], socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]]: [./././././B/B/B/B/B/./././././././././.]
+[1,22]<stderr>:[lrdn0850.leonardo.local:623718] MCW rank 22 bound to socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]], socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]]: [././././././././././B/B/B/B/B/././././.]
+[1,4]<stderr>:[lrdn0435.leonardo.local:2742038] MCW rank 4 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]], socket 0[core 4[hwt 0]]: [B/B/B/B/B/././././././././././././././.]
+[1,8]<stderr>:[lrdn0480.leonardo.local:970926] MCW rank 8 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]], socket 0[core 4[hwt 0]]: [B/B/B/B/B/././././././././././././././.]
+[1,23]<stderr>:[lrdn0850.leonardo.local:623718] MCW rank 23 bound to socket 0[core 15[hwt 0]], socket 0[core 16[hwt 0]], socket 0[core 17[hwt 0]], socket 0[core 18[hwt 0]], socket 0[core 19[hwt 0]]: [./././././././././././././././B/B/B/B/B]
+[1,5]<stderr>:[lrdn0435.leonardo.local:2742038] MCW rank 5 bound to socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]], socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]]: [./././././B/B/B/B/B/./././././././././.]
+[1,9]<stderr>:[lrdn0480.leonardo.local:970926] MCW rank 9 bound to socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]], socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]]: [./././././B/B/B/B/B/./././././././././.]
+[1,6]<stderr>:[lrdn0435.leonardo.local:2742038] MCW rank 6 bound to socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]], socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]]: [././././././././././B/B/B/B/B/././././.]
+[1,10]<stderr>:[lrdn0480.leonardo.local:970926] MCW rank 10 bound to socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]], socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]]: [././././././././././B/B/B/B/B/././././.]
+[1,7]<stderr>:[lrdn0435.leonardo.local:2742038] MCW rank 7 bound to socket 0[core 15[hwt 0]], socket 0[core 16[hwt 0]], socket 0[core 17[hwt 0]], socket 0[core 18[hwt 0]], socket 0[core 19[hwt 0]]: [./././././././././././././././B/B/B/B/B]
+[1,11]<stderr>:[lrdn0480.leonardo.local:970926] MCW rank 11 bound to socket 0[core 15[hwt 0]], socket 0[core 16[hwt 0]], socket 0[core 17[hwt 0]], socket 0[core 18[hwt 0]], socket 0[core 19[hwt 0]]: [./././././././././././././././B/B/B/B/B]
+[1,28]<stderr>:[lrdn0958.leonardo.local:2152929] MCW rank 28 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]], socket 0[core 4[hwt 0]]: [B/B/B/B/B/././././././././././././././.]
+[1,29]<stderr>:[lrdn0958.leonardo.local:2152929] MCW rank 29 bound to socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]], socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]]: [./././././B/B/B/B/B/./././././././././.]
+[1,24]<stderr>:[lrdn0937.leonardo.local:1885718] MCW rank 24 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]], socket 0[core 4[hwt 0]]: [B/B/B/B/B/././././././././././././././.]
+[1,30]<stderr>:[lrdn0958.leonardo.local:2152929] MCW rank 30 bound to socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]], socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]]: [././././././././././B/B/B/B/B/././././.]
+[1,25]<stderr>:[lrdn0937.leonardo.local:1885718] MCW rank 25 bound to socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]], socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]]: [./././././B/B/B/B/B/./././././././././.]
+[1,31]<stderr>:[lrdn0958.leonardo.local:2152929] MCW rank 31 bound to socket 0[core 15[hwt 0]], socket 0[core 16[hwt 0]], socket 0[core 17[hwt 0]], socket 0[core 18[hwt 0]], socket 0[core 19[hwt 0]]: [./././././././././././././././B/B/B/B/B]
+[1,26]<stderr>:[lrdn0937.leonardo.local:1885718] MCW rank 26 bound to socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]], socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]]: [././././././././././B/B/B/B/B/././././.]
+[1,27]<stderr>:[lrdn0937.leonardo.local:1885718] MCW rank 27 bound to socket 0[core 15[hwt 0]], socket 0[core 16[hwt 0]], socket 0[core 17[hwt 0]], socket 0[core 18[hwt 0]], socket 0[core 19[hwt 0]]: [./././././././././././././././B/B/B/B/B]
+[1,7]<stderr>:Traceback (most recent call last):
+[1,7]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 664, in <module>
+[1,5]<stderr>:Traceback (most recent call last):
+[1,5]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 664, in <module>
+[1,7]<stderr>:    launch_specialization_training(args)
+[1,7]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 439, in launch_specialization_training
+[1,5]<stderr>:    launch_specialization_training(args)
+[1,5]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 439, in launch_specialization_training
+[1,7]<stderr>:    optimizer = create_split_adamw_optimizer(args, model_without_ddp)
+[1,7]<stderr>:      [1,7]<stderr>:          ^[1,7]<stderr>:^^^^^^^^^^^^^^^^^^^^^^^^^^^[1,7]<stderr>:^^^^^^^^^^^^^^^^[1,7]<stderr>:^^^^^^^^^
+[1,7]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/optim_factory.py", line 307, in create_split_adamw_optimizer
+[1,5]<stderr>:    optimizer = create_split_adamw_optimizer(args, model_without_ddp)
+[1,5]<stderr>:      [1,5]<stderr>:          ^[1,5]<stderr>:^^^^^^^^^^^^^^^^^^^^^^^^^^[1,6]<stderr>:Traceback (most recent call last):
+[1,6]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 664, in <module>
+[1,5]<stderr>:^^^^^^^^^^^^^^^^^^^^^^^^^^
+[1,5]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/optim_factory.py", line 307, in create_split_adamw_optimizer
+[1,7]<stderr>:    raise ValueError("No encoder parameters found for split AdamW optimizer.")
+[1,7]<stderr>:ValueError: No encoder parameters found for split AdamW optimizer.
+[1,5]<stderr>:    raise ValueError("No encoder parameters found for split AdamW optimizer.")
+[1,5]<stderr>:ValueError: No encoder parameters found for split AdamW optimizer.
+[1,6]<stderr>:    launch_specialization_training(args)
+[1,6]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 439, in launch_specialization_training
+[1,11]<stderr>:Traceback (most recent call last):
+[1,11]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 664, in <module>
+[1,6]<stderr>:    optimizer = create_split_adamw_optimizer(args, model_without_ddp)
+[1,6]<stderr>:                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[1,6]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/optim_factory.py", line 307, in create_split_adamw_optimizer
+[1,6]<stderr>:    raise ValueError("No encoder parameters found for split AdamW optimizer.")
+[1,6]<stderr>:ValueError: No encoder parameters found for split AdamW optimizer.[1,6]<stderr>:
+[1,11]<stderr>:    launch_specialization_training(args)
+[1,11]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 439, in launch_specialization_training
+[1,10]<stderr>:Traceback (most recent call last):
+[1,10]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 664, in <module>
+[1,9]<stderr>:Traceback (most recent call last):
+[1,9]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 664, in <module>
+[1,11]<stderr>:    optimizer = create_split_adamw_optimizer(args, model_without_ddp)
+[1,11]<stderr>:      [1,11]<stderr>:          ^^^^^^[1,11]<stderr>:^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[1,11]<stderr>:^^^^^^^^^^^^
+[1,11]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/optim_factory.py", line 307, in create_split_adamw_optimizer
+[1,9]<stderr>:    launch_specialization_training(args)
+[1,9]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 439, in launch_specialization_training
+[1,4]<stderr>:Traceback (most recent call last):
+[1,4]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 664, in <module>
+[1,10]<stderr>:    launch_specialization_training(args)
+[1,10]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 439, in launch_specialization_training
+[1,3]<stderr>:Traceback (most recent call last):
+[1,3]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 664, in <module>
+[1,4]<stderr>:    launch_specialization_training(args)
+[1,4]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 439, in launch_specialization_training
+[1,4]<stderr>:    optimizer = create_split_adamw_optimizer(args, model_without_ddp)
+[1,4]<stderr>:      [1,4]<stderr>:          ^[1,4]<stderr>:^^^^^^^^^^^^^^^^^^^^^^^^^^[1,4]<stderr>:^^^^^^^^^^^^^^^^[1,4]<stderr>:^^^^^^^^^^
+[1,4]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/optim_factory.py", line 307, in create_split_adamw_optimizer
+[1,27]<stderr>:Traceback (most recent call last):
+[1,27]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 664, in <module>
+[1,11]<stderr>:    raise ValueError("No encoder parameters found for split AdamW optimizer.")
+[1,9]<stderr>:    optimizer = create_split_adamw_optimizer(args, model_without_ddp)
+[1,11]<stderr>:ValueError: No encoder parameters found for split AdamW optimizer.[1,11]<stderr>:
+[1,9]<stderr>:    [1,9]<stderr>:           [1,9]<stderr>: ^^^^^^^^^^^^^^^^^^^[1,9]<stderr>:^^^^^^^^^^^^^^^^^^[1,9]<stderr>:^^^^^^^^^^^^^^^^
+[1,9]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/optim_factory.py", line 307, in create_split_adamw_optimizer
+[1,4]<stderr>:    raise ValueError("No encoder parameters found for split AdamW optimizer.")
+[1,4]<stderr>:ValueError: No encoder parameters found for split AdamW optimizer.
+[1,3]<stderr>:    launch_specialization_training(args)
+[1,27]<stderr>:    launch_specialization_training(args)
+[1,3]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 439, in launch_specialization_training
+[1,27]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 439, in launch_specialization_training
+[1,19]<stderr>:Traceback (most recent call last):
+[1,19]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 664, in <module>
+[1,3]<stderr>:    optimizer = create_split_adamw_optimizer(args, model_without_ddp)
+[1,27]<stderr>:    optimizer = create_split_adamw_optimizer(args, model_without_ddp)
+[1,27]<stderr>:      [1,3]<stderr>:           [1,3]<stderr>:     [1,3]<stderr>:^^^^^^^^^^^^^^^^^^^[1,3]<stderr>:^^^^[1,3]<stderr>:^^^^^^^^^^^^^^^^^^^^[1,27]<stderr>:          ^[1,3]<stderr>:^^^^^^^^^^
+[1,3]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/optim_factory.py", line 307, in create_split_adamw_optimizer
+[1,27]<stderr>:^^^^^^^^^^^^^^^^^^^^^^^^^^^^[1,27]<stderr>:^^^^^^^^^^^^^^^^[1,27]<stderr>:^^^^^^^^
+[1,27]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/optim_factory.py", line 307, in create_split_adamw_optimizer
+[1,10]<stderr>:    optimizer = create_split_adamw_optimizer(args, model_without_ddp)
+[1,19]<stderr>:    launch_specialization_training(args)
+[1,10]<stderr>:           [1,10]<stderr>:     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[1,19]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 439, in launch_specialization_training
+[1,27]<stderr>:    raise ValueError("No encoder parameters found for split AdamW optimizer.")
+[1,9]<stderr>:    raise ValueError("No encoder parameters found for split AdamW optimizer.")
+[1,10]<stderr>:^^^^^^^^^^^^^^^^
+[1,9]<stderr>:ValueError: No encoder parameters found for split AdamW optimizer.
+[1,10]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/optim_factory.py", line 307, in create_split_adamw_optimizer
+[1,27]<stderr>:ValueError: No encoder parameters found for split AdamW optimizer.
+[1,3]<stderr>:    raise ValueError("No encoder parameters found for split AdamW optimizer.")
+[1,3]<stderr>:ValueError: No encoder parameters found for split AdamW optimizer.
+[1,19]<stderr>:    optimizer = create_split_adamw_optimizer(args, model_without_ddp)
+[1,19]<stderr>:      [1,19]<stderr>:          ^[1,19]<stderr>:^^^^^^^^^^^^^^^^^^^^^^^^^^[1,19]<stderr>:^^^^^^^^^^^^^^^^[1,19]<stderr>:^^^^^^^^^^
+[1,19]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/optim_factory.py", line 307, in create_split_adamw_optimizer
+[1,19]<stderr>:    raise ValueError("No encoder parameters found for split AdamW optimizer.")
+[1,19]<stderr>:ValueError: No encoder parameters found for split AdamW optimizer.
+[1,2]<stderr>:Traceback (most recent call last):
+[1,2]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 664, in <module>
+[1,25]<stderr>:Traceback (most recent call last):
+[1,25]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 664, in <module>
+[1,26]<stderr>:Traceback (most recent call last):
+[1,26]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 664, in <module>
+[1,25]<stderr>:    launch_specialization_training(args)
+[1,25]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 439, in launch_specialization_training
+[1,1]<stderr>:Traceback (most recent call last):
+[1,1]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 664, in <module>
+[1,2]<stderr>:    launch_specialization_training(args)
+[1,2]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 439, in launch_specialization_training
+[1,26]<stderr>:    launch_specialization_training(args)
+[1,26]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 439, in launch_specialization_training
+[1,25]<stderr>:    optimizer = create_split_adamw_optimizer(args, model_without_ddp)
+[1,25]<stderr>:      [1,25]<stderr>:          ^[1,25]<stderr>:^^^^^^^^^^^^^^^^^^^^^^^^^^[1,25]<stderr>:^^^^^^^^^^^^^^^^[1,25]<stderr>:^^^^^^^^^^
+[1,15]<stderr>:Traceback (most recent call last):
+[1,15]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 664, in <module>
+[1,25]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/optim_factory.py", line 307, in create_split_adamw_optimizer
+[1,14]<stderr>:Traceback (most recent call last):
+[1,14]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 664, in <module>
+[1,13]<stderr>:Traceback (most recent call last):
+[1,26]<stderr>:    optimizer = create_split_adamw_optimizer(args, model_without_ddp)
+[1,26]<stderr>:      [1,26]<stderr>:          ^[1,23]<stderr>:Traceback (most recent call last):
+[1,23]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 664, in <module>
+[1,26]<stderr>:^^^^^^^^^^^^^^^^^^^^^^^^^^^[1,26]<stderr>:^^^^^^^^^^^^^^^^[1,26]<stderr>:^^^^^^^^^
+[1,26]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/optim_factory.py", line 307, in create_split_adamw_optimizer
+[1,1]<stderr>:    launch_specialization_training(args)
+[1,13]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 664, in <module>
+[1,1]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 439, in launch_specialization_training
+[1,25]<stderr>:    raise ValueError("No encoder parameters found for split AdamW optimizer.")
+[1,31]<stderr>:Traceback (most recent call last):
+[1,31]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 664, in <module>
+[1,25]<stderr>:ValueError: No encoder parameters found for split AdamW optimizer.
+[1,29]<stderr>:Traceback (most recent call last):
+[1,29]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 664, in <module>
+[1,2]<stderr>:    optimizer = create_split_adamw_optimizer(args, model_without_ddp)
+[1,26]<stderr>:    raise ValueError("No encoder parameters found for split AdamW optimizer.")
+[1,2]<stderr>:       [1,2]<stderr>:         ^^^^^[1,10]<stderr>:    raise ValueError("No encoder parameters found for split AdamW optimizer.")
+[1,10]<stderr>:ValueError: No encoder parameters found for split AdamW optimizer.
+[1,2]<stderr>:^^^^^^^^^^^^^^^^^^^^^^^^^^[1,26]<stderr>:ValueError: No encoder parameters found for split AdamW optimizer.
+[1,2]<stderr>:^^^^^^^^^^^^^^^^^^^^^^
+[1,2]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/optim_factory.py", line 307, in create_split_adamw_optimizer
+[1,1]<stderr>:    optimizer = create_split_adamw_optimizer(args, model_without_ddp)
+[1,8]<stderr>:Traceback (most recent call last):
+[1,8]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 664, in <module>
+[1,30]<stderr>:Traceback (most recent call last):
+[1,1]<stderr>:                [1,1]<stderr>:^^^^[1,1]<stderr>:^^^^^^^^^^^^^^^^^^^[1,15]<stderr>:    launch_specialization_training(args)
+[1,1]<stderr>:^^^^^^^^^^^^^^^^^^^[1,15]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 439, in launch_specialization_training
+[1,31]<stderr>:    launch_specialization_training(args)
+[1,1]<stderr>:^^^^^^^^^^^
+[1,1]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/optim_factory.py", line 307, in create_split_adamw_optimizer
+[1,30]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 664, in <module>
+[1,31]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 439, in launch_specialization_training
+[1,14]<stderr>:    launch_specialization_training(args)
+[1,14]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 439, in launch_specialization_training
+[1,29]<stderr>:    launch_specialization_training(args)
+[1,29]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 439, in launch_specialization_training
+[1,15]<stderr>:    optimizer = create_split_adamw_optimizer(args, model_without_ddp)
+[1,13]<stderr>:    launch_specialization_training(args)
+[1,31]<stderr>:    optimizer = create_split_adamw_optimizer(args, model_without_ddp)
+[1,31]<stderr>:      [1,31]<stderr>:          ^^[1,15]<stderr>:      [1,15]<stderr>:          ^^^[1,30]<stderr>:    launch_specialization_training(args)
+[1,13]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 439, in launch_specialization_training
+[1,31]<stderr>:^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[1,15]<stderr>:^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[1,31]<stderr>:^^^^^^^^^^^^^^^^^^^^^^[1,30]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 439, in launch_specialization_training
+[1,31]<stderr>:
+[1,31]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/optim_factory.py", line 307, in create_split_adamw_optimizer
+[1,15]<stderr>:^^^^^^^^^^^^^^^^
+[1,14]<stderr>:    optimizer = create_split_adamw_optimizer(args, model_without_ddp)
+[1,29]<stderr>:    optimizer = create_split_adamw_optimizer(args, model_without_ddp)
+[1,15]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/optim_factory.py", line 307, in create_split_adamw_optimizer
+[1,14]<stderr>:               [1,14]<stderr>: ^^^^^^^^^^^^^[1,14]<stderr>:^^^^^^^^^^^^^^[1,29]<stderr>:      [1,14]<stderr>:^^^^^^^^^^^^^^^^^^^[1,29]<stderr>:          ^^[1,14]<stderr>:^^^^^^^
+[1,14]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/optim_factory.py", line 307, in create_split_adamw_optimizer
+[1,23]<stderr>:    launch_specialization_training(args)
+[1,13]<stderr>:    optimizer = create_split_adamw_optimizer(args, model_without_ddp)
+[1,29]<stderr>:^^^^^^^^^^^^^^^^^^^^^^^^^^^[1,29]<stderr>:^^^^^^^^^^^^^^^^[1,23]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 439, in launch_specialization_training
+[1,29]<stderr>:^^^^^^^^
+[1,13]<stderr>:      [1,29]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/optim_factory.py", line 307, in create_split_adamw_optimizer
+[1,13]<stderr>:          ^^[1,31]<stderr>:    raise ValueError("No encoder parameters found for split AdamW optimizer.")
+[1,13]<stderr>:^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[1,2]<stderr>:    raise ValueError("No encoder parameters found for split AdamW optimizer.")
+[1,31]<stderr>:ValueError: No encoder parameters found for split AdamW optimizer.
+[1,13]<stderr>:^^^^^^^^^^^^^^^^[1,1]<stderr>:    raise ValueError("No encoder parameters found for split AdamW optimizer.")
+[1,2]<stderr>:ValueError: No encoder parameters found for split AdamW optimizer.
+[1,13]<stderr>:^^^^^^
+[1,13]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/optim_factory.py", line 307, in create_split_adamw_optimizer
+[1,8]<stderr>:    launch_specialization_training(args)
+[1,1]<stderr>:ValueError: No encoder parameters found for split AdamW optimizer.
+[1,15]<stderr>:    raise ValueError("No encoder parameters found for split AdamW optimizer.")
+[1,8]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 439, in launch_specialization_training
+[1,29]<stderr>:    raise ValueError("No encoder parameters found for split AdamW optimizer.")
+[1,15]<stderr>:ValueError: No encoder parameters found for split AdamW optimizer.
+[1,29]<stderr>:ValueError: No encoder parameters found for split AdamW optimizer.
+[1,13]<stderr>:    raise ValueError("No encoder parameters found for split AdamW optimizer.")
+[1,30]<stderr>:    optimizer = create_split_adamw_optimizer(args, model_without_ddp)
+[1,13]<stderr>:ValueError: No encoder parameters found for split AdamW optimizer.
+[1,30]<stderr>:      [1,14]<stderr>:    raise ValueError("No encoder parameters found for split AdamW optimizer.")
+[1,30]<stderr>:          ^^[1,14]<stderr>:ValueError: No encoder parameters found for split AdamW optimizer.
+[1,30]<stderr>:^^^^^^^^^^^^^^^^^^^^^^^^^[1,30]<stderr>:^^^^^^^^^^^^^^^^[1,18]<stderr>:Traceback (most recent call last):
+[1,18]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 664, in <module>
+[1,18]<stderr>:    launch_specialization_training(args)
+[1,18]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 439, in launch_specialization_training
+[1,30]<stderr>:^^^^^^^^^^
+[1,17]<stderr>:Traceback (most recent call last):
+[1,17]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 664, in <module>
+[1,23]<stderr>:    optimizer = create_split_adamw_optimizer(args, model_without_ddp)
+[1,30]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/optim_factory.py", line 307, in create_split_adamw_optimizer
+[1,18]<stderr>:    optimizer = create_split_adamw_optimizer(args, model_without_ddp)
+[1,23]<stderr>:      [1,23]<stderr>:          ^^^^^^^[1,18]<stderr>:       [1,18]<stderr>:         ^^^^^^^[1,23]<stderr>:^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[1,18]<stderr>:^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[1,23]<stderr>:^^^^^^
+[1,23]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/optim_factory.py", line 307, in create_split_adamw_optimizer
+[1,18]<stderr>:^^^^^^^^^^^^^^^
+[1,18]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/optim_factory.py", line 307, in create_split_adamw_optimizer
+[1,17]<stderr>:    launch_specialization_training(args)
+[1,0]<stderr>:Traceback (most recent call last):
+[1,0]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 664, in <module>
+[1,17]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 439, in launch_specialization_training
+[1,30]<stderr>:    raise ValueError("No encoder parameters found for split AdamW optimizer.")
+[1,30]<stderr>:ValueError: No encoder parameters found for split AdamW optimizer.
+[1,23]<stderr>:    raise ValueError("No encoder parameters found for split AdamW optimizer.")
+[1,23]<stderr>:ValueError: No encoder parameters found for split AdamW optimizer.
+[1,18]<stderr>:    raise ValueError("No encoder parameters found for split AdamW optimizer.")
+[1,18]<stderr>:ValueError: No encoder parameters found for split AdamW optimizer.
+[1,17]<stderr>:    optimizer = create_split_adamw_optimizer(args, model_without_ddp)
+[1,17]<stderr>:      [1,17]<stderr>:          ^[1,17]<stderr>:^^^^^^^^^^^^^^^^^^^^^^^^^[1,17]<stderr>:^^^^^^^^^^^^^^^^[1,17]<stderr>:^^^^^^^^^^^
+[1,17]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/optim_factory.py", line 307, in create_split_adamw_optimizer
+[1,0]<stderr>:    launch_specialization_training(args)
+[1,0]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 439, in launch_specialization_training
+[1,17]<stderr>:    raise ValueError("No encoder parameters found for split AdamW optimizer.")
+[1,17]<stderr>:ValueError: No encoder parameters found for split AdamW optimizer.
+[1,8]<stderr>:    optimizer = create_split_adamw_optimizer(args, model_without_ddp)
+[1,8]<stderr>:      [1,0]<stderr>:    optimizer = create_split_adamw_optimizer(args, model_without_ddp)
+[1,0]<stderr>:      [1,0]<stderr>:          ^^[1,8]<stderr>:          ^^^^^^^^[1,0]<stderr>:^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[1,8]<stderr>:^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[1,0]<stderr>:^^^^^^^^^^^^^^^^^^^^^
+[1,0]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/optim_factory.py", line 307, in create_split_adamw_optimizer
+[1,8]<stderr>:^^^^^^^^^^^^
+[1,8]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/optim_factory.py", line 307, in create_split_adamw_optimizer
+[1,24]<stderr>:Traceback (most recent call last):
+[1,24]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 664, in <module>
+[1,0]<stderr>:    raise ValueError("No encoder parameters found for split AdamW optimizer.")
+[1,0]<stderr>:ValueError: No encoder parameters found for split AdamW optimizer.
+[1,12]<stderr>:Traceback (most recent call last):
+[1,12]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 664, in <module>
+[1,24]<stderr>:    launch_specialization_training(args)
+[1,24]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 439, in launch_specialization_training
+[1,12]<stderr>:    launch_specialization_training(args)
+[1,8]<stderr>:    raise ValueError("No encoder parameters found for split AdamW optimizer.")
+[1,22]<stderr>:Traceback (most recent call last):
+[1,12]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 439, in launch_specialization_training
+[1,8]<stderr>:ValueError: No encoder parameters found for split AdamW optimizer.
+[1,22]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 664, in <module>
+[1,24]<stderr>:    optimizer = create_split_adamw_optimizer(args, model_without_ddp)
+[1,24]<stderr>:      [1,28]<stderr>:Traceback (most recent call last):
+[1,28]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 664, in <module>
+[1,24]<stderr>:          ^[1,24]<stderr>:^^^^^^^^^^^^^^^^^^^^^^^^^^[1,24]<stderr>:^^^^^^^^^^^^^^^^[1,24]<stderr>:^^^^^^^^^^
+[1,24]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/optim_factory.py", line 307, in create_split_adamw_optimizer
+[1,12]<stderr>:    optimizer = create_split_adamw_optimizer(args, model_without_ddp)
+[1,12]<stderr>:      [1,12]<stderr>:          ^^[1,12]<stderr>:^^^^^^^^^^^^^^^^^^^^^^^^^^[1,12]<stderr>:^^^^^^^^^^^^^^^^[1,12]<stderr>:^^^^^^^^^
+[1,22]<stderr>:    launch_specialization_training(args)
+[1,24]<stderr>:    raise ValueError("No encoder parameters found for split AdamW optimizer.")
+[1,22]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 439, in launch_specialization_training
+[1,12]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/optim_factory.py", line 307, in create_split_adamw_optimizer
+[1,24]<stderr>:ValueError: No encoder parameters found for split AdamW optimizer.
+[1,28]<stderr>:    launch_specialization_training(args)
+[1,28]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 439, in launch_specialization_training
+[1,12]<stderr>:    raise ValueError("No encoder parameters found for split AdamW optimizer.")
+[1,12]<stderr>:ValueError: No encoder parameters found for split AdamW optimizer.
+[1,22]<stderr>:    optimizer = create_split_adamw_optimizer(args, model_without_ddp)
+[1,22]<stderr>:      [1,22]<stderr>:          ^^[1,16]<stderr>:Traceback (most recent call last):
+[1,16]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 664, in <module>
+[1,28]<stderr>:    optimizer = create_split_adamw_optimizer(args, model_without_ddp)
+[1,22]<stderr>:^^^^^^^^^^^^^^^^^^^^^^^^^[1,28]<stderr>:       [1,22]<stderr>:^^^^^^^^^^^^^^^^[1,28]<stderr>:         ^^[1,22]<stderr>:^^^^^^^^^^
+[1,28]<stderr>:^^^^^^^^^^^^^^^^^^^^^^^^^[1,22]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/optim_factory.py", line 307, in create_split_adamw_optimizer
+[1,28]<stderr>:^^^^^^^^^^^^^^^^[1,21]<stderr>:Traceback (most recent call last):
+[1,21]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 664, in <module>
+[1,28]<stderr>:^^^^^^^^^^
+[1,28]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/optim_factory.py", line 307, in create_split_adamw_optimizer
+[1,22]<stderr>:    raise ValueError("No encoder parameters found for split AdamW optimizer.")
+[1,22]<stderr>:ValueError: No encoder parameters found for split AdamW optimizer.
+[1,28]<stderr>:    raise ValueError("No encoder parameters found for split AdamW optimizer.")
+[1,16]<stderr>:    launch_specialization_training(args)
+[1,28]<stderr>:ValueError: No encoder parameters found for split AdamW optimizer.
+[1,16]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 439, in launch_specialization_training
+[1,21]<stderr>:    launch_specialization_training(args)
+[1,21]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 439, in launch_specialization_training
+[1,16]<stderr>:    optimizer = create_split_adamw_optimizer(args, model_without_ddp)
+[1,16]<stderr>:      [1,16]<stderr>:          ^[1,16]<stderr>:^^^^^^^^^^^^^^^^^^^^^^^^^^[1,16]<stderr>:^^^^^^^^^^^^^^^^[1,16]<stderr>:^^^^^^^^^^
+[1,16]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/optim_factory.py", line 307, in create_split_adamw_optimizer
+[1,21]<stderr>:    optimizer = create_split_adamw_optimizer(args, model_without_ddp)
+[1,21]<stderr>:       [1,21]<stderr>:         ^^^^[1,21]<stderr>:^^^^^^^^^^^^^^^^^^^^^^^^^^^^[1,21]<stderr>:^^^^^^^^^^^^^^^^[1,21]<stderr>:^^^^^
+[1,21]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/optim_factory.py", line 307, in create_split_adamw_optimizer
+[1,16]<stderr>:    raise ValueError("No encoder parameters found for split AdamW optimizer.")
+[1,16]<stderr>:ValueError: No encoder parameters found for split AdamW optimizer.
+[1,21]<stderr>:    raise ValueError("No encoder parameters found for split AdamW optimizer.")
+[1,21]<stderr>:ValueError: No encoder parameters found for split AdamW optimizer.
+[1,20]<stderr>:Traceback (most recent call last):
+[1,20]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 664, in <module>
+[1,20]<stderr>:    launch_specialization_training(args)
+[1,20]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/specialization.py", line 439, in launch_specialization_training
+[1,20]<stderr>:    optimizer = create_split_adamw_optimizer(args, model_without_ddp)
+[1,20]<stderr>:      [1,20]<stderr>:          ^^[1,20]<stderr>:^^^^^^^^^^^^^^^^^^^^^^^^^[1,20]<stderr>:^^^^^^^^^^^^^^^[1,20]<stderr>:^^^^^^^^^^^
+[1,20]<stderr>:  File "/leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/optim_factory.py", line 307, in create_split_adamw_optimizer
+[1,20]<stderr>:    raise ValueError("No encoder parameters found for split AdamW optimizer.")
+[1,20]<stderr>:ValueError: No encoder parameters found for split AdamW optimizer.
+--------------------------------------------------------------------------
+Primary job  terminated normally, but 1 process returned
+a non-zero exit code. Per user-direction, the job has been aborted.
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+mpirun detected that one or more processes exited with non-zero status, thus causing
+the job to be terminated. The first process to do so was:
+
+  Process name: [[54773,1],15]
+  Exit code:    1
+--------------------------------------------------------------------------
