@@ -11,6 +11,7 @@ import shutil
 import subprocess
 import sys
 import time
+import zipfile
 from contextlib import ExitStack
 from datetime import datetime
 from functools import lru_cache
@@ -61,6 +62,7 @@ from download_airmassRGB import (  # noqa: E402
 from create_airmassRGB_from_hrseviri_local import (  # noqa: E402
     parse_dt_from_zip_name,
     process_one_zip,
+    slot_dt_from_zip_name,
 )
 
 
@@ -261,6 +263,16 @@ def _get_thread_datastore(consumer_key: str, consumer_secret: str) -> eumdac.Dat
     _THREAD_LOCAL.datastore = datastore
     _THREAD_LOCAL.credentials = current_credentials
     return datastore
+
+
+def is_valid_eumetsat_zip(zip_path: Path) -> bool:
+    if not zip_path.exists() or zip_path.stat().st_size <= 0:
+        return False
+    try:
+        with zipfile.ZipFile(zip_path, "r") as zf:
+            return any(name.lower().endswith(".nat") for name in zf.namelist())
+    except (zipfile.BadZipFile, OSError):
+        return False
 
 
 @lru_cache(maxsize=1)
@@ -470,12 +482,32 @@ def download_products_from_eumetsat(
     if not product_ids:
         return []
 
+    cached_paths: List[Path] = []
+    pending_product_ids: List[str] = []
+    for product_id in product_ids:
+        out_path = raw_dir / f"{product_id}.zip"
+        if is_valid_eumetsat_zip(out_path):
+            cached_paths.append(out_path)
+            LOG.debug("Cache hit %s", out_path.name)
+            continue
+        if out_path.exists():
+            LOG.warning("ZIP locale non valido, riscarico %s", out_path.name)
+            out_path.unlink()
+        pending_product_ids.append(product_id)
+
+    LOG.info(
+        "ZIP EUMETSAT gia validi in cache: %d | da scaricare: %d",
+        len(cached_paths),
+        len(pending_product_ids),
+    )
+    if not pending_product_ids:
+        return sorted(
+            cached_paths,
+            key=lambda p: (parse_dt_from_zip_name(p.name) or datetime.min, p.name),
+        )
+
     def _download_one(product_id: str) -> Path:
         out_path = raw_dir / f"{product_id}.zip"
-        if out_path.exists() and out_path.stat().st_size > 0:
-            LOG.info("Cache hit %s", out_path.name)
-            return out_path
-
         tmp_path = out_path.with_suffix(".zip.part")
         last_error: Exception | None = None
         for attempt in range(1, max_retries + 2):
@@ -508,11 +540,19 @@ def download_products_from_eumetsat(
                     timeout=(30, read_timeout),
                 ) as response:
                     response.raise_for_status()
+                    expected_bytes = response.headers.get("Content-Length")
                     with tmp_path.open("wb") as fdst:
                         for chunk in response.iter_content(chunk_size=1024 * 1024):
                             if chunk:
                                 fdst.write(chunk)
+                if expected_bytes is not None and tmp_path.stat().st_size != int(expected_bytes):
+                    raise RuntimeError(
+                        f"Download incompleto per {out_path.name}: "
+                        f"{tmp_path.stat().st_size} != {expected_bytes} byte"
+                    )
                 tmp_path.replace(out_path)
+                if not is_valid_eumetsat_zip(out_path):
+                    raise RuntimeError(f"ZIP corrotto o privo di .nat: {out_path.name}")
                 LOG.info("Done %s (%.1f MB)", out_path.name, out_path.stat().st_size / 1e6)
                 return out_path
             except Exception as exc:
@@ -532,7 +572,7 @@ def download_products_from_eumetsat(
 
         raise RuntimeError(f"Download fallito per {product_id}: {last_error}")
 
-    zip_paths: List[Path] = []
+    zip_paths: List[Path] = list(cached_paths)
     workers = max(1, int(download_workers))
     LOG.info(
         "Avvio download concorrente EUMETSAT con %d worker, %d retry max, read timeout %ss",
@@ -546,12 +586,12 @@ def download_products_from_eumetsat(
     ) as executor:
         future_to_idx = {
             executor.submit(_download_one, product_id): (idx, product_id)
-            for idx, product_id in enumerate(product_ids, start=1)
+            for idx, product_id in enumerate(pending_product_ids, start=1)
         }
         for future in concurrent.futures.as_completed(future_to_idx):
             idx, product_id = future_to_idx[future]
             out_path = future.result()
-            LOG.info("[%d/%d] Completed %s", idx, len(product_ids), product_id)
+            LOG.info("[%d/%d] Completed %s", idx, len(pending_product_ids), product_id)
             zip_paths.append(out_path)
 
     return sorted(
@@ -577,12 +617,38 @@ def convert_eumetsat_zips_to_frames(zip_paths: Iterable[Path], frames_dir: Path)
     if not zip_list:
         return created
 
-    for i, zip_path in enumerate(zip_list, start=1):
-        LOG.info("[%d/%d] Convert %s", i, len(zip_list), zip_path.name)
+    cached_pngs: List[Path] = []
+    pending_zips: List[Path] = []
+    for zip_path in zip_list:
+        t_hint = slot_dt_from_zip_name(zip_path.name)
+        if t_hint is not None:
+            out_hint = frames_dir / f"airmass_rgb_{t_hint.strftime('%Y%m%d_%H%M')}.png"
+            if out_hint.exists() and out_hint.stat().st_size > 0:
+                cached_pngs.append(out_hint)
+                continue
+        pending_zips.append(zip_path)
+
+    LOG.info(
+        "PNG Airmass RGB gia presenti: %d | ZIP da convertire: %d",
+        len(cached_pngs),
+        len(pending_zips),
+    )
+    if not pending_zips:
+        return cached_pngs
+
+    for i, zip_path in enumerate(pending_zips, start=1):
+        LOG.info("[%d/%d] Convert %s", i, len(pending_zips), zip_path.name)
+        if not is_valid_eumetsat_zip(zip_path):
+            if zip_path.exists():
+                zip_path.unlink()
+            raise RuntimeError(
+                f"ZIP non valido rilevato prima della conversione: {zip_path}. "
+                "Rilancia la run: i file PNG gia prodotti verranno riusati e il file corrotto verra riscaricato."
+            )
         out_path = process_one_zip(zip_path, output_dir=frames_dir)
         created.append(out_path)
         LOG.info("  -> PNG: %s", out_path.name)
-    return created
+    return cached_pngs + created
 
 
 def run_inference_pipeline(

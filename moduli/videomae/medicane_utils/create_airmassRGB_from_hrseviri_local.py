@@ -96,6 +96,13 @@ def parse_dt_from_zip_name(zip_name: str) -> dt.datetime | None:
         return None
 
 
+def slot_dt_from_zip_name(zip_name: str) -> dt.datetime | None:
+    parsed = parse_dt_from_zip_name(zip_name)
+    if parsed is None:
+        return None
+    return parsed.replace(minute=(parsed.minute // 5) * 5, second=0, microsecond=0)
+
+
 def _to_numpy_2d(data) -> np.ndarray:
     if hasattr(data, "compute"):
         data = data.compute()
@@ -163,7 +170,7 @@ def extract_nat_from_zip(zip_path: Path, tmp_dir: Path) -> Path:
 
 def process_one_zip(zip_path: Path, output_dir: Path) -> Path:
     # Fast path: evita riprocessamento completo in caso di restart.
-    t_hint = parse_dt_from_zip_name(zip_path.name)
+    t_hint = slot_dt_from_zip_name(zip_path.name)
     if t_hint is not None:
         out_hint = output_dir / f"airmass_rgb_{t_hint.strftime('%Y%m%d_%H%M')}.png"
         if out_hint.exists() and out_hint.stat().st_size > 0:
@@ -216,7 +223,7 @@ def process_one_zip(zip_path: Path, output_dir: Path) -> Path:
 
         t = scn["WV_062"].attrs.get("start_time")
         if not isinstance(t, dt.datetime):
-            t = parse_dt_from_zip_name(zip_path.name)
+            t = slot_dt_from_zip_name(zip_path.name)
         if t is None:
             raise RuntimeError("Impossibile ricavare timestamp per il naming output")
         out_name = f"airmass_rgb_{t.strftime('%Y%m%d_%H%M')}.png"
