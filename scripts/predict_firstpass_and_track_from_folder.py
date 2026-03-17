@@ -25,6 +25,8 @@ from typing import Dict, List, Optional, Sequence, Tuple
 REPO_ROOT = Path(__file__).resolve().parents[1]
 VIDEOMAE_ROOT = REPO_ROOT / "moduli" / "videomae"
 FIRSTPASS_ROOT_DEFAULT = REPO_ROOT / "moduli" / "firstpass"
+FIRSTPASS_MODEL_DEFAULT = REPO_ROOT / "trained_models" / "firstpass_model.ckpt"
+TRACKING_MODEL_DEFAULT = REPO_ROOT / "trained_models" / "checkpoint-tracking-best_1.pth"
 if str(VIDEOMAE_ROOT) not in sys.path:
     sys.path.insert(0, str(VIDEOMAE_ROOT))
 
@@ -73,8 +75,16 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--input_dir", required=True, help="Cartella immagini originali full-resolution.")
     parser.add_argument("--output_dir", required=True, help="Cartella output della pipeline.")
-    parser.add_argument("--firstpass_model_path", required=True, help="Checkpoint first-pass.")
-    parser.add_argument("--tracking_model_path", required=True, help="Checkpoint tracking VideoMAE.")
+    parser.add_argument(
+        "--firstpass_model_path",
+        default=str(FIRSTPASS_MODEL_DEFAULT),
+        help="Checkpoint first-pass.",
+    )
+    parser.add_argument(
+        "--tracking_model_path",
+        default=str(TRACKING_MODEL_DEFAULT),
+        help="Checkpoint tracking VideoMAE.",
+    )
     parser.add_argument(
         "--firstpass_root",
         default=None,
