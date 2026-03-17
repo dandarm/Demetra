@@ -160,7 +160,7 @@ def prepare_args(machine=None):
         'sampling_rate': 1,  # voglio tutti i frame temporali
         'num_workers': 4,     
         'opt': 'adamw',
-        'lr': 1e-3,
+        'lr': 3e-3,
         'opt_betas': [0.9, 0.95],
         'warmup_epochs': 10,
         'layer_decay': 0.9,
