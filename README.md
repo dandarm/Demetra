@@ -7,8 +7,10 @@
 
 
 ## Quick start
-Launch the folowing script to download image data from Eumetsat (using your account keys) and track with DeMeTra
+Launch the following script to download image data from Eumetsat (using your account keys) and track with DeMeTra
 
 ```bash
+export EUMETSAT_CONSUMER_KEY=<your_consumer_key>
+export EUMETSAT_CONSUMER_SECRET=<your_consumer_secret>
 python scripts/download_and_track_range.py   --start 15-03-2026   --end 17-03-2026   --download_source eumetsat
 ```

@@ -30,6 +30,7 @@ Questo documento descrive lo script `scripts/predict_firstpass_and_track_from_fo
 - `--firstpass_image_size`: lato immagini stretched per first-pass (default 224).
 - `--num_frames`: numero frame per clip/tile (default 16).
 - `--tile_size`: lato tile HR (default 224).
+- `--standard_tiling`: attivo di default; usa la tile della griglia standard che contiene il centro first-pass.
 - `--manos_file`: GT opzionale per tracking.
 - `--make_video`: genera anche il video ROI-firstpass finale.
 - `--only_video`: crea solo MP4 da frame già renderizzati (richiede `--make_video`).

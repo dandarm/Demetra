@@ -151,10 +151,10 @@ def prepare_args(machine=None):
         'output_dir': './output',
         'data_set': 'medicanes',
         'mask_type': 'tube',
-        'mask_ratio': 0.90,
+        'mask_ratio': 0.7,
         'decoder_mask_type': 'run_cell',
         'decoder_mask_ratio': 0.25,
-        'batch_size': 256,
+        'batch_size': 64,
         'num_sample': 1,
         'num_frames': 16,
         'sampling_rate': 1,  # voglio tutti i frame temporali
@@ -162,11 +162,11 @@ def prepare_args(machine=None):
         'opt': 'adamw',
         'lr': 1e-3,  # non serve per il large poiché ha lr separati encoder decoder
         'opt_betas': [0.9, 0.95],
-        'warmup_epochs': 6,
+        'warmup_epochs': 8,
         'layer_decay': 0.9,
         'weight_decay': 0.03,
-        'warmup_lr': 1e-4,
-        'min_lr': 9e-4,
+        'warmup_lr': 3e-5,
+        'min_lr': 5e-4,
         'epochs': 101,
         'save_ckpt_freq': 20,
         'decoder_depth': 4,
@@ -191,8 +191,8 @@ def prepare_args(machine=None):
         # encoder - decoder lr separation and encoder freezing for specialization - large model
         'use_split_encoder_decoder_lr': True,
         'encoder_lr': 1e-4,
-        'decoder_lr': 7e-3,
-        'freeze_encoder_epochs': 2,
+        'decoder_lr': 2e-3,
+        'freeze_encoder_epochs': 3,
         
         # Set True to disable GroupMultiScaleCrop in specialization.
         'no_data_aug': True,

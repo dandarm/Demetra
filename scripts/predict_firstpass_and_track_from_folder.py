@@ -149,7 +149,8 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--standard_tiling",
-        action="store_true",
+        action=argparse.BooleanOptionalAction,
+        default=True,
         help=(
             "Se attivo, per ogni centro first-pass usa la tile della griglia standard "
             "(stride default) che contiene il centro, invece del crop centrato."
