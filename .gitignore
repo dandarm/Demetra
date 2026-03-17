@@ -206,7 +206,7 @@ marimo/_static/
 marimo/_lsp/
 __marimo__/
 
-
+*.gif
 *.png
 *.mp4
 frames.txt
@@ -215,3 +215,7 @@ frames.txt
 *.ckpt
 
 *.csv
+
+output/
+notebooks/generated_tracking_tiles/
+atbd/

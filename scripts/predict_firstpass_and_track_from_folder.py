@@ -98,7 +98,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--firstpass_threshold",
         type=float,
-        default=0.5,
+        default=0.2,
         help="Soglia presenza first-pass per selezionare le clip da tracciare.",
     )
     parser.add_argument(

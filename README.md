@@ -1,7 +1,7 @@
 <div align="center">
 <h1> DeMeTra </h1>
 <br>
-<img src="moduli/videomae/misc/readme_img_earth.png" alt="Project Icon" width="200" />
+<img src="moduli/videomae/misc/readme_img_earth.png" alt="Project Icon" width="400" />
 <h3> Medicanes detection and tracking </h3>
 </div>
 

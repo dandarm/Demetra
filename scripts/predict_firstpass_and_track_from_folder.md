@@ -56,7 +56,7 @@ python3 scripts/predict_firstpass_and_track_from_folder.py \
   --output_dir ../airmassRGB/firstpass_track \
   --firstpass_model_path ../firstpass/outputs/runs/exp1/checkpoints/best.ckpt \
   --tracking_model_path ./output/checkpoint-tracking-best.pth \
-  --firstpass_threshold 0.5 \
+  --firstpass_threshold 0.2 \
   --make_video \
   --video_name mediterraneo_firstpass_track \
 ```
