@@ -244,8 +244,6 @@ def create_split_adamw_optimizer(args, model):
         raise ValueError(f"layer_decay must be > 0, got {layer_decay}")
 
     encoder_scales = [layer_decay ** (encoder_depth - i + 1) for i in range(encoder_depth + 2)]
-    decoder_scales = [layer_decay ** (decoder_depth - i + 1) for i in range(decoder_depth + 2)]
-
     def _encoder_layer_id(name):
         name = _strip_known_prefixes(name)
         if name.startswith("encoder."):
@@ -286,15 +284,15 @@ def create_split_adamw_optimizer(args, model):
             base_scale = encoder_lr / decoder_lr
             layer_scale = encoder_scales[layer_id]
             encoder_param_count += 1
+            group_name = f"{branch}_layer_{layer_id}"
         else:
             branch = "decoder"
-            layer_id = _decoder_layer_id(clean_name)
+            layer_id = 0
             base_lr = decoder_lr
             base_scale = 1.0
-            layer_scale = decoder_scales[layer_id]
+            layer_scale = 1.0
             decoder_param_count += 1
-
-        group_name = f"{branch}_layer_{layer_id}"
+            group_name = branch
         if group_name not in parameter_group_vars:
             parameter_group_vars[group_name] = {
                 "params": [],
@@ -327,7 +325,7 @@ def create_split_adamw_optimizer(args, model):
             "decoder_lr": decoder_lr,
             "layer_decay": layer_decay,
             "encoder_group_count": sum(1 for k in parameter_group_vars if k.startswith("encoder_")),
-            "decoder_group_count": sum(1 for k in parameter_group_vars if k.startswith("decoder_")),
+            "decoder_group_count": sum(1 for k in parameter_group_vars if k == "decoder" or k.startswith("decoder_")),
             "encoder_params": encoder_param_count,
             "decoder_params": decoder_param_count,
         },
