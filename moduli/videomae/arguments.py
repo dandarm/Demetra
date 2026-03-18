@@ -508,10 +508,10 @@ def prepare_tracking_args(machine=None):
 
     # Custom overrides for tracking defaults
     user_args_tracking = {
-        'model': 'vit_giant_patch14_224',
+        'model': 'vit_large_patch16_224',  # vit_giant_patch14_224
         'pretrained': True,
-        'init_ckpt': './output/checkpoint_88k.pth',           #'./output/checkpoint-best-lr-again2.pth',
-        'auto_resume': True,
+        'init_ckpt': '/media/isacDisk2/demetra_trained_models/checkpoint_large_new.pth',           #'./output/checkpoint-best-lr-again2.pth',
+        'auto_resume': False,
         #'resume_checkpoint': './output/checkpoint-tracking-augmented.pth',
         'load_for_test_mode': False,
         'data_path': './',
@@ -528,7 +528,7 @@ def prepare_tracking_args(machine=None):
         'mask_ratio': 0.8,
         'decoder_mask_type': 'run_cell',
         'decoder_mask_ratio': 0.5,
-        'batch_size': 1,
+        'batch_size': 2,
         'num_sample': 1,
         'num_frames': 16,
         'sampling_rate': 1,
@@ -544,7 +544,7 @@ def prepare_tracking_args(machine=None):
         'use_class_weight': False,
 
         'start_epoch': 0,
-        'epochs': 300,
+        'epochs': 30,
         'start_epoch_for_saving_best_ckpt': 30,
         'momentum': 0.9,
         'weight_decay': 0.05,
@@ -553,7 +553,7 @@ def prepare_tracking_args(machine=None):
         'layer_decay': 0.75,
         'warmup_lr': 1e-6,
         'min_lr': 9e-5,
-        'warmup_epochs': 100,
+        'warmup_epochs': 10,
         'warmup_steps': -1,
 
         'val_split_fraction': 0.0,
@@ -583,7 +583,7 @@ def prepare_tracking_args(machine=None):
             machine_args_override['pretrained'] = True
         elif machine == 'ewc':
             #machine_args_override['device'] = 'cuda'
-            machine_args_override['train_path'] = 'moduli/videomae/train_tracking_selezionati_augmented_leonardo_short.csv'
+            machine_args_override['train_path'] = 'train_tracking_selezionati.csv'
 
 
 

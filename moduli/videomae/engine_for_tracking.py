@@ -66,8 +66,8 @@ def batch_geo_distance_km(
     if predictions.numel() == 0 or targets.numel() == 0:
         return None
 
-    pred_np = predictions.detach().cpu().numpy()
-    target_np = targets.detach().cpu().numpy()
+    pred_np = predictions.detach().to(dtype=torch.float32).cpu().numpy()
+    target_np = targets.detach().to(dtype=torch.float32).cpu().numpy()
     if not (np.isfinite(pred_np).all() and np.isfinite(target_np).all()):
         return None
 
@@ -101,6 +101,7 @@ def train_one_epoch(
     amp_dtype: str = "fp32",
     max_norm: float = 0,
     log_writer: Optional[utils.TensorboardLogger] = None,
+    compute_geo_metric: bool = False,
     *,
     start_steps: Optional[int] = None,
     lr_schedule_values: Optional[Sequence[float]] = None,
@@ -188,7 +189,7 @@ def train_one_epoch(
             optimizer.zero_grad(set_to_none=True)
             continue
 
-        geo_err = batch_geo_distance_km(output, target, paths)
+        geo_err = batch_geo_distance_km(output, target, paths) if compute_geo_metric else None
 
         optimizer.zero_grad(set_to_none=True)
         if loss_scaler is not None:

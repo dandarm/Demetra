@@ -372,6 +372,7 @@ def launch_tracking(terminal_args: argparse.Namespace) -> None:
             epoch=epoch,
             loss_scaler=loss_scaler,
             amp_dtype=getattr(args, "amp_dtype", "fp32"),
+            compute_geo_metric=False,
             start_steps=epoch * num_training_steps_per_epoch,
             lr_schedule_values=lr_schedule_values,
             wd_schedule_values=wd_schedule_values,
