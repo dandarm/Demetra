@@ -4,7 +4,6 @@ import datetime
 import time
 import argparse
 import math
-import inspect
 from pathlib import Path
 from PIL import Image
 import json
@@ -154,10 +153,7 @@ def _model_non_finite_summary(model, max_examples=10):
 
 def launch_specialization_training(terminal_args):
     args = prepare_args(machine=terminal_args.on)
-    if getattr(terminal_args, "compile", "auto") == "on":
-        args.compile_model = True
-    elif getattr(terminal_args, "compile", "auto") == "off":
-        args.compile_model = False
+    utils.apply_compile_override(args, getattr(terminal_args, "compile", "auto"))
 
     # Backward compatibility: historical pretraining config used `data_path`
     # for train CSV, while DataManager expects `train_path`.
@@ -165,53 +161,26 @@ def launch_specialization_training(terminal_args):
         args.train_path = args.data_path
     if not getattr(args, "test_path", None):
         args.test_path = args.data_path
-    print(
-        f"Perf config: with_checkpoint={getattr(args, 'with_checkpoint', None)}, "
-        f"amp_dtype={getattr(args, 'amp_dtype', 'fp16')}, "
-        f"compile_model={getattr(args, 'compile_model', True)}, "
-        f"compile_backend={getattr(args, 'compile_backend', 'eager')}, "
-        f"use_sdpa={getattr(args, 'use_sdpa', False)}, "
-        f"disable_inductor_cudagraphs={getattr(args, 'disable_inductor_cudagraphs', False)}, "
-        f"perf_profile_every={getattr(args, 'perf_profile_every', 0)}, "
-        f"enable_weight_drift_logging={getattr(args, 'enable_weight_drift_logging', False)}, "
-        f"use_split_encoder_decoder_lr={getattr(args, 'use_split_encoder_decoder_lr', False)}, "
-        f"encoder_lr={getattr(args, 'encoder_lr', None)}, "
-        f"decoder_lr={getattr(args, 'decoder_lr', None)}, "
-        f"freeze_encoder_epochs={getattr(args, 'freeze_encoder_epochs', 0)}"
+    utils.print_perf_config(
+        args,
+        extra_keys=[
+            "perf_profile_every",
+            "enable_weight_drift_logging",
+            "use_split_encoder_decoder_lr",
+            "encoder_lr",
+            "decoder_lr",
+            "freeze_encoder_epochs",
+        ],
     )
-
-    # Resolve relative paths from this module directory, not from caller CWD.
-    module_dir = Path(__file__).resolve().parent
-    def _resolve_path(value):
-        if value is None or value == "":
-            return value
-        p = Path(str(value)).expanduser()
-        if p.is_absolute():
-            return str(p)
-        return str((module_dir / p).resolve())
-
-    args.train_path = _resolve_path(args.train_path)
-    args.test_path = _resolve_path(args.test_path)
-    args.output_dir = _resolve_path(args.output_dir)
-    args.log_dir = _resolve_path(args.log_dir)
-    args.init_ckpt = _resolve_path(args.init_ckpt)
-    if getattr(args, "resume", None):
-        args.resume = _resolve_path(args.resume)
+    utils.resolve_args_paths(
+        args,
+        __file__,
+        ["train_path", "test_path", "output_dir", "log_dir", "init_ckpt", "resume"],
+    )
 
     # Prefer latest training checkpoint for resume when available.
     if args.auto_resume and not args.resume:
-        out_dir = Path(args.output_dir)
-        latest_ckpt = -1
-        latest_path = None
-        for ckpt in out_dir.glob("checkpoint-*.pth"):
-            t = ckpt.stem.split("-")[-1]
-            if t.isdigit():
-                n = int(t)
-                if n > latest_ckpt:
-                    latest_ckpt = n
-                    latest_path = ckpt
-        if latest_path is not None:
-            args.resume = str(latest_path)
+        args.resume = utils.find_latest_numbered_checkpoint(args.output_dir, "checkpoint-*.pth")
 
     # If resuming, initialize model from that checkpoint too (same weights path).
     if args.resume and Path(args.resume).exists():
@@ -248,40 +217,7 @@ def launch_specialization_training(terminal_args):
         args.rank = 0
     #print(device)
 
-    if device.type == "cuda":
-        enable_tf32 = bool(getattr(args, "enable_tf32", True))
-        torch.backends.cuda.matmul.allow_tf32 = enable_tf32
-        if hasattr(torch.backends, "cudnn"):
-            torch.backends.cudnn.allow_tf32 = enable_tf32
-            torch.backends.cudnn.benchmark = True
-        if rank == 0:
-            print(f"TF32 enabled: {enable_tf32}")
-
-        sdpa_kernel = str(getattr(args, "sdpa_kernel", "auto") or "auto").lower()
-        if hasattr(torch.backends, "cuda") and hasattr(torch.backends.cuda, "enable_flash_sdp"):
-            flash = mem_eff = math_sdp = True
-            if sdpa_kernel == "flash":
-                mem_eff = False
-                math_sdp = False
-            elif sdpa_kernel in ("mem_efficient", "memory_efficient"):
-                flash = False
-                math_sdp = False
-            elif sdpa_kernel == "math":
-                flash = False
-                mem_eff = False
-            torch.backends.cuda.enable_flash_sdp(flash)
-            torch.backends.cuda.enable_mem_efficient_sdp(mem_eff)
-            torch.backends.cuda.enable_math_sdp(math_sdp)
-            if rank == 0:
-                print(
-                    f"SDPA kernel config: mode={sdpa_kernel}, "
-                    f"flash={flash}, mem_efficient={mem_eff}, math={math_sdp}"
-                )
-        elif bool(getattr(args, "use_sdpa", False)) and rank == 0:
-            print(
-                "[WARN] use_sdpa=True ma backend SDPA non disponibile in questo runtime "
-                "(torch.backends.cuda.enable_*_sdp assenti). Fallback automatico al path attention standard."
-            )
+    utils.configure_cuda_runtime(args, device, rank)
 
     # logging
     if args.log_dir and not os.path.exists(args.log_dir):
@@ -291,16 +227,7 @@ def launch_specialization_training(terminal_args):
 
     # Optional control for torch.compile (Inductor) CUDA Graphs.
     # Must be configured before get_model() calls torch.compile.
-    disable_cudagraphs = bool(getattr(args, "disable_inductor_cudagraphs", False))
-    if disable_cudagraphs:
-        os.environ["INDUCTOR_DISABLE_CUDAGRAPHS"] = "1"
-    else:
-        os.environ.pop("INDUCTOR_DISABLE_CUDAGRAPHS", None)
-    if rank == 0:
-        print(
-            f"Inductor CUDA Graphs disabled: {disable_cudagraphs} "
-            f"(INDUCTOR_DISABLE_CUDAGRAPHS={os.environ.get('INDUCTOR_DISABLE_CUDAGRAPHS', '0')})"
-        )
+    utils.configure_inductor_cudagraphs(args, rank)
 
 
     # LOAD MODEL
@@ -313,28 +240,7 @@ def launch_specialization_training(terminal_args):
     #print("Model = %s" % str(model_without_ddp))
     #print('number of params: {} M'.format(n_parameters / 1e6))
 
-    if args.distributed:
-        ddp_kwargs = {
-            "device_ids": [args.gpu],
-            "output_device": args.gpu,
-            "find_unused_parameters": bool(getattr(args, "ddp_find_unused_parameters", False)),
-        }
-
-        # Apply optional DDP perf flags only if supported by current torch runtime.
-        ddp_sig = inspect.signature(torch.nn.parallel.DistributedDataParallel.__init__)
-        if "static_graph" in ddp_sig.parameters:
-            ddp_kwargs["static_graph"] = bool(getattr(args, "ddp_static_graph", True))
-        if "gradient_as_bucket_view" in ddp_sig.parameters:
-            ddp_kwargs["gradient_as_bucket_view"] = bool(getattr(args, "ddp_gradient_as_bucket_view", True))
-        if "bucket_cap_mb" in ddp_sig.parameters:
-            ddp_kwargs["bucket_cap_mb"] = int(getattr(args, "ddp_bucket_cap_mb", 64))
-        if "broadcast_buffers" in ddp_sig.parameters:
-            ddp_kwargs["broadcast_buffers"] = bool(getattr(args, "ddp_broadcast_buffers", False))
-
-        if rank == 0:
-            print(f"DDP kwargs: {ddp_kwargs}")
-        pretrained_model = torch.nn.parallel.DistributedDataParallel(pretrained_model, **ddp_kwargs)
-        model_without_ddp = pretrained_model.module
+    pretrained_model, model_without_ddp = utils.wrap_model_distributed(pretrained_model, args, rank)
 
 
 

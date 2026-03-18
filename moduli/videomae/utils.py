@@ -10,6 +10,7 @@
 
 import datetime
 import io
+import inspect
 import json
 import math
 import os
@@ -615,6 +616,235 @@ def get_resources():
     return rank, local_rank, world_size, local_size, num_workers
 
 
+def apply_compile_override(args, compile_override):
+    override = str(compile_override or "auto").lower()
+    if override == "on":
+        args.compile_model = True
+    elif override == "off":
+        args.compile_model = False
+    return args
+
+
+def print_perf_config(args, extra_keys=None):
+    keys = [
+        "with_checkpoint",
+        "amp_dtype",
+        "compile_model",
+        "compile_backend",
+        "compile_mode",
+        "use_sdpa",
+        "sdpa_kernel",
+        "disable_inductor_cudagraphs",
+        "ddp_static_graph",
+        "ddp_gradient_as_bucket_view",
+        "ddp_bucket_cap_mb",
+        "ddp_broadcast_buffers",
+    ]
+    if extra_keys:
+        keys.extend(list(extra_keys))
+    parts = []
+    seen = set()
+    for key in keys:
+        if key in seen:
+            continue
+        seen.add(key)
+        parts.append(f"{key}={getattr(args, key, None)}")
+    print("Perf config: " + ", ".join(parts))
+
+
+def _resolve_relative_path(module_dir: Path, value):
+    if value is None or value == "":
+        return value
+    p = Path(str(value)).expanduser()
+    if p.is_absolute():
+        return str(p)
+    return str((module_dir / p).resolve())
+
+
+def resolve_args_paths(args, module_file, fields):
+    module_dir = Path(module_file).resolve().parent
+    for field in fields:
+        if hasattr(args, field):
+            setattr(args, field, _resolve_relative_path(module_dir, getattr(args, field)))
+    return args
+
+
+def find_latest_numbered_checkpoint(output_dir, pattern="checkpoint-*.pth"):
+    output_dir = Path(output_dir)
+    latest_ckpt = -1
+    latest_path = None
+    for ckpt in output_dir.glob(pattern):
+        token = ckpt.stem.split("-")[-1]
+        if token.isdigit():
+            number = int(token)
+            if number > latest_ckpt:
+                latest_ckpt = number
+                latest_path = ckpt
+    return str(latest_path) if latest_path is not None else ""
+
+
+def configure_cuda_runtime(args, device, rank=0):
+    if device.type != "cuda":
+        return
+
+    enable_tf32 = bool(getattr(args, "enable_tf32", True))
+    torch.backends.cuda.matmul.allow_tf32 = enable_tf32
+    if hasattr(torch.backends, "cudnn"):
+        torch.backends.cudnn.allow_tf32 = enable_tf32
+        torch.backends.cudnn.benchmark = True
+    if rank == 0:
+        print(f"TF32 enabled: {enable_tf32}")
+
+    sdpa_kernel = str(getattr(args, "sdpa_kernel", "auto") or "auto").lower()
+    if hasattr(torch.backends, "cuda") and hasattr(torch.backends.cuda, "enable_flash_sdp"):
+        flash = mem_eff = math_sdp = True
+        if sdpa_kernel == "flash":
+            mem_eff = False
+            math_sdp = False
+        elif sdpa_kernel in ("mem_efficient", "memory_efficient"):
+            flash = False
+            math_sdp = False
+        elif sdpa_kernel == "math":
+            flash = False
+            mem_eff = False
+        torch.backends.cuda.enable_flash_sdp(flash)
+        torch.backends.cuda.enable_mem_efficient_sdp(mem_eff)
+        torch.backends.cuda.enable_math_sdp(math_sdp)
+        if rank == 0:
+            print(
+                f"SDPA kernel config: mode={sdpa_kernel}, "
+                f"flash={flash}, mem_efficient={mem_eff}, math={math_sdp}"
+            )
+    elif bool(getattr(args, "use_sdpa", False)) and rank == 0:
+        print(
+            "[WARN] use_sdpa=True ma backend SDPA non disponibile in questo runtime "
+            "(torch.backends.cuda.enable_*_sdp assenti). Fallback automatico al path attention standard."
+        )
+
+
+def configure_inductor_cudagraphs(args, rank=0):
+    disable_cudagraphs = bool(getattr(args, "disable_inductor_cudagraphs", False))
+    if disable_cudagraphs:
+        os.environ["INDUCTOR_DISABLE_CUDAGRAPHS"] = "1"
+    else:
+        os.environ.pop("INDUCTOR_DISABLE_CUDAGRAPHS", None)
+    if rank == 0:
+        print(
+            f"Inductor CUDA Graphs disabled: {disable_cudagraphs} "
+            f"(INDUCTOR_DISABLE_CUDAGRAPHS={os.environ.get('INDUCTOR_DISABLE_CUDAGRAPHS', '0')})"
+        )
+
+
+def get_ddp_kwargs(args):
+    ddp_kwargs = {
+        "device_ids": [args.gpu],
+        "output_device": args.gpu,
+        "find_unused_parameters": bool(getattr(args, "ddp_find_unused_parameters", False)),
+    }
+    ddp_sig = inspect.signature(torch.nn.parallel.DistributedDataParallel.__init__)
+    if "static_graph" in ddp_sig.parameters:
+        ddp_kwargs["static_graph"] = bool(getattr(args, "ddp_static_graph", True))
+    if "gradient_as_bucket_view" in ddp_sig.parameters:
+        ddp_kwargs["gradient_as_bucket_view"] = bool(getattr(args, "ddp_gradient_as_bucket_view", True))
+    if "bucket_cap_mb" in ddp_sig.parameters:
+        ddp_kwargs["bucket_cap_mb"] = int(getattr(args, "ddp_bucket_cap_mb", 64))
+    if "broadcast_buffers" in ddp_sig.parameters:
+        ddp_kwargs["broadcast_buffers"] = bool(getattr(args, "ddp_broadcast_buffers", False))
+    return ddp_kwargs
+
+
+def wrap_model_distributed(model, args, rank=0):
+    if not getattr(args, "distributed", False):
+        return model, model
+    ddp_kwargs = get_ddp_kwargs(args)
+    if rank == 0:
+        print(f"DDP kwargs: {ddp_kwargs}")
+    wrapped = torch.nn.parallel.DistributedDataParallel(model, **ddp_kwargs)
+    return wrapped, wrapped.module
+
+
+def maybe_compile_model(model, args):
+    torch_version = torch.__version__.split('+')[0]
+    if pkg_version.parse(torch_version) <= pkg_version.parse('1.13.1'):
+        return model
+
+    if getattr(args, "enable_tf32", True):
+        torch.set_float32_matmul_precision('high')
+    else:
+        torch.set_float32_matmul_precision('highest')
+
+    compile_model = bool(getattr(args, "compile_model", True))
+    compile_backend = str(getattr(args, "compile_backend", "eager") or "eager").lower()
+    compile_mode = getattr(args, "compile_mode", None)
+    if compile_model and compile_backend not in ("none", "off", "false", "disable", "disabled"):
+        try:
+            if compile_mode:
+                model = torch.compile(model, backend=compile_backend, mode=compile_mode)
+            else:
+                model = torch.compile(model, backend=compile_backend)
+            print(f"torch.compile enabled: backend={compile_backend}, mode={compile_mode}")
+        except Exception as e:
+            print(f"[WARN] torch.compile failed (backend={compile_backend}, mode={compile_mode}): {e}")
+            print("[WARN][TRACEBACK] torch.compile traceback completo:")
+            print(traceback.format_exc())
+            print("[INFO] Continuing without torch.compile.")
+    return model
+
+
+def get_autocast_dtype(amp_dtype):
+    amp_name = str(amp_dtype or "").lower()
+    if amp_name in ("bf16", "bfloat16"):
+        return torch.bfloat16
+    if amp_name in ("fp16", "float16", "half"):
+        return torch.float16
+    return None
+
+
+def strip_known_prefixes(key):
+    prefixes = ("module.", "_orig_mod.", "backbone.")
+    changed = True
+    while changed:
+        changed = False
+        for p in prefixes:
+            if key.startswith(p):
+                key = key[len(p):]
+                changed = True
+    return key
+
+
+def load_state_dict_with_alignment(target_model, checkpoint_state, rank=0, strict=False):
+    try:
+        return target_model.load_state_dict(checkpoint_state, strict=strict)
+    except RuntimeError as e:
+        first_line = str(e).splitlines()[0] if str(e) else "load_state_dict failed"
+        if rank == 0:
+            print(f"[WARN] strict load_state_dict fallita: {first_line}")
+            print("[WARN][TRACEBACK] strict load_state_dict traceback completo:")
+            print(traceback.format_exc())
+            print("[INFO] Provo riallineamento chiavi checkpoint (module/_orig_mod/backbone).")
+
+    stripped_ckpt = {strip_known_prefixes(k): v for k, v in checkpoint_state.items()}
+    aligned_state = {}
+    for model_key in target_model.state_dict().keys():
+        base_key = strip_known_prefixes(model_key)
+        if base_key in stripped_ckpt:
+            aligned_state[model_key] = stripped_ckpt[base_key]
+
+    if not aligned_state:
+        raise RuntimeError(
+            "Impossibile riallineare le chiavi del checkpoint per il resume: "
+            "nessuna chiave compatibile trovata."
+        )
+
+    missing, unexpected = target_model.load_state_dict(aligned_state, strict=False)
+    if rank == 0:
+        print(
+            f"[INFO] Resume caricato con riallineamento: "
+            f"matched={len(aligned_state)}, missing={len(missing)}, unexpected={len(unexpected)}"
+        )
+    return torch.nn.modules.module._IncompatibleKeys(missing, unexpected)
+
+
 ### Carica un modello tra quelli di VideoMAE
 def get_model(args):
     print(f"Creating model: {args.model}")
@@ -637,31 +867,7 @@ def get_model(args):
     except:
         print(f"Impossibile usare dynamo config optimize_ddp")
 
-    torch_version = torch.__version__.split('+')[0]
-    if pkg_version.parse(torch_version) > pkg_version.parse('1.13.1'):
-        # TF32 tuning is handled in specialization/classification entrypoints.
-        if getattr(args, "enable_tf32", True):
-            torch.set_float32_matmul_precision('high')
-        else:
-            torch.set_float32_matmul_precision('highest')
-
-        compile_model = bool(getattr(args, "compile_model", True))
-        compile_backend = str(getattr(args, "compile_backend", "eager") or "eager").lower()
-        compile_mode = getattr(args, "compile_mode", None)
-        if compile_model and compile_backend not in ("none", "off", "false", "disable", "disabled"):
-            try:
-                if compile_mode:
-                    model = torch.compile(model, backend=compile_backend, mode=compile_mode)
-                else:
-                    model = torch.compile(model, backend=compile_backend)
-                print(f"torch.compile enabled: backend={compile_backend}, mode={compile_mode}")
-            except Exception as e:
-                print(f"[WARN] torch.compile failed (backend={compile_backend}, mode={compile_mode}): {e}")
-                print("[WARN][TRACEBACK] torch.compile traceback completo:")
-                print(traceback.format_exc())
-                print("[INFO] Continuing without torch.compile.")
-
-    return model
+    return maybe_compile_model(model, args)
 
 
 def load_state_dict(model,
@@ -849,50 +1055,8 @@ def auto_load_model(args,
                     loss_scaler,
                     model_ema=None):
     # serve solo a ricaricare un checkpoint di training precedente per proseguirlo
-    def _strip_known_prefixes(key):
-        prefixes = ("module.", "_orig_mod.", "backbone.")
-        changed = True
-        while changed:
-            changed = False
-            for p in prefixes:
-                if key.startswith(p):
-                    key = key[len(p):]
-                    changed = True
-        return key
-
     def _load_resume_state_dict(target_model, checkpoint_model_state):
-        try:
-            target_model.load_state_dict(checkpoint_model_state)
-            return
-        except RuntimeError as e:
-            first_line = str(e).splitlines()[0] if str(e) else "load_state_dict failed"
-            print(f"[WARN] strict load_state_dict fallita: {first_line}")
-            print("[WARN][TRACEBACK] strict load_state_dict traceback completo:")
-            print(traceback.format_exc())
-            print("[INFO] Provo riallineamento chiavi checkpoint (module/_orig_mod/backbone).")
-
-        stripped_ckpt = {}
-        for k, v in checkpoint_model_state.items():
-            stripped_ckpt[_strip_known_prefixes(k)] = v
-
-        aligned_state = {}
-        target_keys = target_model.state_dict().keys()
-        for mk in target_keys:
-            base_k = _strip_known_prefixes(mk)
-            if base_k in stripped_ckpt:
-                aligned_state[mk] = stripped_ckpt[base_k]
-
-        if not aligned_state:
-            raise RuntimeError(
-                "Impossibile riallineare le chiavi del checkpoint per il resume: "
-                "nessuna chiave compatibile trovata."
-            )
-
-        missing, unexpected = target_model.load_state_dict(aligned_state, strict=False)
-        print(
-            f"[INFO] Resume caricato con riallineamento: "
-            f"matched={len(aligned_state)}, missing={len(missing)}, unexpected={len(unexpected)}"
-        )
+        load_state_dict_with_alignment(target_model, checkpoint_model_state, rank=get_rank(), strict=True)
 
     output_dir = Path(args.output_dir)
     if loss_scaler is not None:

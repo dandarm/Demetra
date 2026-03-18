@@ -97,6 +97,8 @@ def train_one_epoch(
     optimizer: torch.optim.Optimizer,
     device: torch.device,
     epoch: int,
+    loss_scaler=None,
+    amp_dtype: str = "fp32",
     max_norm: float = 0,
     log_writer: Optional[utils.TensorboardLogger] = None,
     *,
@@ -115,6 +117,7 @@ def train_one_epoch(
     metric_logger.add_meter('lr', utils.SmoothedValue(window_size=1, fmt='{value:.6f}'))
 
     header = f"Epoch: [{epoch}]"
+    autocast_dtype = utils.get_autocast_dtype(amp_dtype)
     if num_training_steps_per_epoch is not None and start_steps is None:
         start_steps = epoch * num_training_steps_per_epoch
     for batch_idx, (samples, target, paths) in enumerate(metric_logger.log_every(data_loader, 20, header)):
@@ -151,7 +154,14 @@ def train_one_epoch(
         if not torch.isfinite(target).all():
             print(f"[WARN] Non-finite target at batch {batch_idx}: values={target}")
 
-        output = model(samples)
+        if device.type == "cuda" and autocast_dtype is not None:
+            with torch.cuda.amp.autocast(dtype=autocast_dtype):
+                output = model(samples)
+                loss = criterion(output, target)
+        else:
+            output = model(samples)
+            loss = criterion(output, target)
+
         # Shape sanity check
         if output.ndim != target.ndim or output.shape[-1] != target.shape[-1]:
             try:
@@ -167,7 +177,6 @@ def train_one_epoch(
             o_max = float(torch.nanmax(output).detach().cpu()) if o_nan == 0 else float('nan')
             print(f"[WARN] Non-finite output at batch {batch_idx}: nan={o_nan}, inf={o_inf}, min={o_min}, max={o_max}")
 
-        loss = criterion(output, target)
         loss_value = loss.item()
 
         # Guard: skip update on non-finite loss to avoid poisoning training
@@ -182,10 +191,18 @@ def train_one_epoch(
         geo_err = batch_geo_distance_km(output, target, paths)
 
         optimizer.zero_grad(set_to_none=True)
-        loss.backward()
-        if max_norm > 0:
-            torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm)
-        optimizer.step()
+        if loss_scaler is not None:
+            loss_scaler(
+                loss,
+                optimizer,
+                clip_grad=max_norm if max_norm > 0 else None,
+                parameters=model.parameters(),
+            )
+        else:
+            loss.backward()
+            if max_norm > 0:
+                torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm)
+            optimizer.step()
 
 
 
@@ -211,17 +228,24 @@ def evaluate(
     criterion: torch.nn.Module,
     data_loader: Iterable,
     device: torch.device,
+    amp_dtype: str = "fp32",
 ) -> dict:
     """Evaluate the model."""
     model.eval()
     metric_logger = utils.MetricLogger(delimiter="  ")
     header = "Test:"
+    autocast_dtype = utils.get_autocast_dtype(amp_dtype)
     for batch_idx, (samples, target, paths) in enumerate(metric_logger.log_every(data_loader, 20, header)):
         samples = samples.to(device, non_blocking=True)
         target = target.to(device, non_blocking=True)
 
-        output = model(samples)
-        loss = criterion(output, target)
+        if device.type == "cuda" and autocast_dtype is not None:
+            with torch.cuda.amp.autocast(dtype=autocast_dtype):
+                output = model(samples)
+                loss = criterion(output, target)
+        else:
+            output = model(samples)
+            loss = criterion(output, target)
         if not torch.isfinite(loss):
             print(f"[ERROR][EVAL] Non-finite loss at batch {batch_idx}: loss={loss.item() if loss.numel()==1 else loss}, paths[0]={paths[0] if isinstance(paths, (list, tuple)) and len(paths)>0 else paths}")
 

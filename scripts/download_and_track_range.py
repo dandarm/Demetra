@@ -30,7 +30,7 @@ from dask.distributed import Client, LocalCluster
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-AIRMAss_OUTPUT_ROOT_DEFAULT = Path("/media/isacDisk2/airmassRGB")
+AIRMAss_OUTPUT_ROOT_DEFAULT = Path("/media/isacDisk2/demetra_output")
 PYTHON_EXEC_DEFAULT = Path("/home/isac/miniconda3/envs/videomae/bin/python")
 PUBLIC_BUCKET_BASE = (
     "public-datasets-eumetsat-solar-forecasting/satellite/EUMETSAT/SEVIRI_RSS/v4"
@@ -39,7 +39,7 @@ EUMETSAT_COLLECTION_ID_DEFAULT = "EO:EUM:DAT:MSG:MSG15-RSS"
 FRAME_RE = re.compile(r"airmass_rgb_(\d{8}_\d{4})\.png$")
 
 FIRSTPASS_MODEL_DEFAULT = REPO_ROOT / "trained_models" / "firstpass_model.ckpt"
-TRACKING_MODEL_DEFAULT = REPO_ROOT / "trained_models" / "checkpoint-tracking-best_1.pth"
+TRACKING_MODEL_DEFAULT = Path("/media/isacDisk2/demetra_trained_models/checkpoint-tracking-best_1.pth")
 MANOS_FILE_DEFAULT = (
     REPO_ROOT / "moduli" / "videomae" / "medicane_data_input" / "medicanes_new_windows.csv"
 )
@@ -88,7 +88,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--output_root",
         default=str(AIRMAss_OUTPUT_ROOT_DEFAULT),
-        help="Root dove creare la cartella di run (default: /media/isacDisk2/airmassRGB).",
+        help="Root dove creare la cartella di run (default: /media/isacDisk2/demetra_output).",
     )
     parser.add_argument(
         "--eumetsat_collection",

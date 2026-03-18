@@ -3,24 +3,19 @@ import argparse
 import json
 import os
 import time
-import random
+from pathlib import Path
 from typing import Optional, Tuple
 
-import numpy as np
 import torch
 import torch.distributed as dist
 from torch import nn
-import torch.backends.cudnn as cudnn
-from torch.utils.data import DataLoader, DistributedSampler
 from arguments import prepare_tracking_args
 from optim_factory import create_optimizer
-from dataset.datasets import MedicanesTrackDataset
 from dataset.data_manager import DataManager
 from engine_for_tracking import train_one_epoch, evaluate
 from models.tracking_model import create_tracking_model
 from models.modeling_finetune import load_checkpoint as load_finetune_checkpoint
 import utils
-from utils import setup_for_distributed
 
 
 utils.suppress_transformers_pytree_warning()
@@ -75,6 +70,7 @@ def _resume_from_checkpoint(
     model: torch.nn.Module,
     optimizer: Optional[torch.optim.Optimizer],
     checkpoint_path: str,
+    loss_scaler=None,
     rank: int = 0,
 ) -> Tuple[Optional[int], Optional[float]]:
     """Restore model (and optimizer) state from a checkpoint if possible."""
@@ -104,10 +100,9 @@ def _resume_from_checkpoint(
         best_loss = checkpoint["best_loss"] if isinstance(checkpoint, dict) and "best_loss" in checkpoint else None
         return resume_epoch, best_loss
 
-    cleaned_state_dict = {}
-    for key, value in state_dict.items():
-        cleaned_key = key.replace("backbone.", "").replace("module.", "").replace("_orig_mod.", "")
-        cleaned_state_dict[cleaned_key] = value
+    cleaned_state_dict = {
+        utils.strip_known_prefixes(key): value for key, value in state_dict.items()
+    }
 
     model_state = model.state_dict()
     head_keys_to_drop = []
@@ -120,7 +115,12 @@ def _resume_from_checkpoint(
     for key in head_keys_to_drop:
         cleaned_state_dict.pop(key, None)
 
-    load_result = model.load_state_dict(cleaned_state_dict, strict=False)
+    load_result = utils.load_state_dict_with_alignment(
+        model,
+        cleaned_state_dict,
+        rank=rank,
+        strict=True,
+    )
     if rank == 0:
         missing = sorted(load_result.missing_keys)
         unexpected = sorted(load_result.unexpected_keys)
@@ -129,10 +129,40 @@ def _resume_from_checkpoint(
         if unexpected:
             print(f"[WARN] Unexpected keys in checkpoint: {unexpected}")
 
+    optimizer_loaded = False
     if optimizer is not None and isinstance(checkpoint, dict) and "optimizer" in checkpoint:
-        optimizer.load_state_dict(checkpoint["optimizer"])
+        try:
+            optimizer.load_state_dict(checkpoint["optimizer"])
+            optimizer_loaded = True
+        except Exception as exc:
+            if rank == 0:
+                print(f"[WARN] Failed to restore optimizer state: {exc}")
     elif optimizer is not None and rank == 0:
         print("[WARN] Optimizer state not found in checkpoint; continuing with fresh optimizer parameters.")
+
+    scaler_loaded = False
+    if loss_scaler is not None and isinstance(checkpoint, dict) and "scaler" in checkpoint:
+        try:
+            loss_scaler.load_state_dict(checkpoint["scaler"])
+            scaler_loaded = True
+        except Exception as exc:
+            if rank == 0:
+                print(f"[WARN] Failed to restore scaler state: {exc}")
+
+    rng_loaded = False
+    if isinstance(checkpoint, dict):
+        try:
+            rng_payload = checkpoint.get("rng_state_all_ranks", checkpoint.get("rng_state", None))
+            rng_loaded = utils.restore_rng_state(rng_payload)
+        except Exception as exc:
+            if rank == 0:
+                print(f"[WARN] Failed to restore RNG state: {exc}")
+
+    if rank == 0:
+        print(
+            f"[INFO] Resume summary: optimizer_loaded={optimizer_loaded}, "
+            f"scaler_loaded={scaler_loaded}, rng_loaded={rng_loaded}"
+        )
 
     resume_epoch = checkpoint["epoch"] if isinstance(checkpoint, dict) and "epoch" in checkpoint else None
     best_loss = checkpoint["best_loss"] if isinstance(checkpoint, dict) and "best_loss" in checkpoint else None
@@ -142,6 +172,21 @@ def _resume_from_checkpoint(
 def launch_tracking(terminal_args: argparse.Namespace) -> None:
     """Launch the training process for the tracking task."""
     args = prepare_tracking_args(machine=terminal_args.on)
+    utils.apply_compile_override(args, getattr(terminal_args, "compile", "auto"))
+    utils.resolve_args_paths(
+        args,
+        __file__,
+        [
+            "train_path",
+            "test_path",
+            "val_path",
+            "output_dir",
+            "log_dir",
+            "init_ckpt",
+            "resume",
+            "resume_checkpoint",
+        ],
+    )
 
     # seed = args.seed
     # torch.manual_seed(seed)
@@ -172,14 +217,28 @@ def launch_tracking(terminal_args: argparse.Namespace) -> None:
 
     if args.log_dir and not os.path.exists(args.log_dir):
         os.makedirs(args.log_dir)
-    setup_for_distributed(rank == 0)
+    utils.setup_for_distributed(rank == 0)
     # endregion ------------------------ distributed setup ------------------------
 
-    #region logging
-    if args.log_dir and not os.path.exists(args.log_dir):
-        os.makedirs(args.log_dir)
-    setup_for_distributed(rank == 0)
-    # endregion logging
+    utils.print_perf_config(args, extra_keys=["disable_scheduler"])
+    utils.configure_cuda_runtime(args, device, rank)
+    utils.configure_inductor_cudagraphs(args, rank)
+
+    if args.auto_resume and not getattr(args, "resume_checkpoint", "") and not getattr(args, "resume", ""):
+        output_dir = Path(args.output_dir)
+        resume_candidates = [
+            output_dir / "last_checkpoint-tracking.pth",
+            output_dir / "checkpoint-tracking-best.pth",
+        ]
+        latest_generic = utils.find_latest_numbered_checkpoint(args.output_dir, "checkpoint-*.pth")
+        if latest_generic:
+            resume_candidates.append(Path(latest_generic))
+        for candidate in resume_candidates:
+            if candidate and Path(candidate).exists():
+                args.resume_checkpoint = str(candidate)
+                if args.rank == 0:
+                    print(f"[INFO] Auto-resume checkpoint detected: {args.resume_checkpoint}")
+                break
 
     # ------------------------------- datasets via DataManager -------------------------------
     train_m = DataManager(is_train=True, args=args, type_t='supervised', world_size=world_size, rank=rank)
@@ -211,6 +270,7 @@ def launch_tracking(terminal_args: argparse.Namespace) -> None:
         args.model,
         **args.__dict__
     )
+    model = utils.maybe_compile_model(model, args)
 
     # Informative print: confirm regression head is active
     try:
@@ -222,16 +282,20 @@ def launch_tracking(terminal_args: argparse.Namespace) -> None:
 
     model.to(device)
     model_without_ddp = model
-    if args.distributed:
-        model = torch.nn.parallel.DistributedDataParallel(
-            model, device_ids=[args.gpu], output_device=args.gpu
-        )
-        model_without_ddp = model.module
+    model, model_without_ddp = utils.wrap_model_distributed(model, args, rank)
 
     # endregion ------------------------------ model ---------------------------------
 
     criterion = nn.MSELoss()
     optimizer = create_optimizer(args, model_without_ddp)
+    autocast_dtype = utils.get_autocast_dtype(getattr(args, "amp_dtype", "fp32"))
+    use_fp16_scaler = device.type == "cuda" and autocast_dtype == torch.float16
+    loss_scaler = utils.NativeScalerWithGradNormCount() if use_fp16_scaler else None
+    if args.rank == 0:
+        print(
+            f"[INFO] Tracking AMP config: amp_dtype={getattr(args, 'amp_dtype', 'fp32')}, "
+            f"autocast_dtype={autocast_dtype}, scaler_enabled={loss_scaler is not None}"
+        )
 
     best_loss = float("inf")
     if getattr(args, "auto_resume", False):
@@ -242,6 +306,7 @@ def launch_tracking(terminal_args: argparse.Namespace) -> None:
                     model=model_without_ddp,
                     optimizer=optimizer,
                     checkpoint_path=resume_path,
+                    loss_scaler=loss_scaler,
                     rank=args.rank,
                 )
                 if resume_epoch is not None:
@@ -265,7 +330,13 @@ def launch_tracking(terminal_args: argparse.Namespace) -> None:
         print(f"[WARN] Training config has epochs={args.epochs} and start_epoch={args.start_epoch}; loop will exit immediately.")
 
     total_batch_size = args.batch_size * world_size
-    num_training_steps_per_epoch = train_m.dataset_len// total_batch_size
+    num_training_steps_per_epoch = len(train_loader)
+    if num_training_steps_per_epoch <= 0:
+        raise ValueError(
+            "num_training_steps_per_epoch=0: dataset troppo piccolo rispetto al batch effettivo. "
+            f"dataset_len={train_m.dataset_len}, total_batch_size={total_batch_size}, "
+            f"batch_size={args.batch_size}, world_size={world_size}."
+        )
     if args.weight_decay_end is None:
         args.weight_decay_end = args.weight_decay
     lr_schedule_values = None
@@ -276,12 +347,15 @@ def launch_tracking(terminal_args: argparse.Namespace) -> None:
         lr_schedule_values = utils.cosine_scheduler(
             args.lr, args.min_lr, args.epochs, num_training_steps_per_epoch,
             warmup_epochs=args.warmup_epochs, start_warmup_value=args.warmup_lr, warmup_steps=args.warmup_steps)
-        print(f"lr_schedule_values {lr_schedule_values}")
         wd_schedule_values = utils.cosine_scheduler(
             args.weight_decay, args.weight_decay_end,
             args.epochs, num_training_steps_per_epoch
         )
-        print(f"wd_schedule_values {wd_schedule_values}")
+        print(
+            f"[INFO] Scheduler enabled: steps_per_epoch={num_training_steps_per_epoch}, "
+            f"lr_start={float(lr_schedule_values[0]):.8g}, lr_end={float(lr_schedule_values[-1]):.8g}, "
+            f"wd_max={float(max(wd_schedule_values)):.8g}, wd_min={float(min(wd_schedule_values)):.8g}"
+        )
 
 
 
@@ -296,6 +370,8 @@ def launch_tracking(terminal_args: argparse.Namespace) -> None:
             optimizer=optimizer,
             device=device,
             epoch=epoch,
+            loss_scaler=loss_scaler,
+            amp_dtype=getattr(args, "amp_dtype", "fp32"),
             start_steps=epoch * num_training_steps_per_epoch,
             lr_schedule_values=lr_schedule_values,
             wd_schedule_values=wd_schedule_values,
@@ -304,27 +380,42 @@ def launch_tracking(terminal_args: argparse.Namespace) -> None:
         print("train step")
         last_epoch_ran = epoch
         # Evaluate on test and optionally validation
-        test_stats = evaluate(model, criterion, test_loader, device)
-        val_stats = evaluate(model, criterion, val_loader, device) if val_loader is not None else None
+        test_stats = evaluate(model, criterion, test_loader, device, amp_dtype=getattr(args, "amp_dtype", "fp32"))
+        val_stats = evaluate(model, criterion, val_loader, device, amp_dtype=getattr(args, "amp_dtype", "fp32")) if val_loader is not None else None
         print("eval step")
         test_loss = test_stats.get("loss", float("inf"))
         val_loss = val_stats.get("loss", float("inf")) if val_stats is not None else float("inf")
         monitor_loss = min(test_loss, val_loss)
-        if args.output_dir and monitor_loss < best_loss and args.rank == 0 and epoch > args.start_epoch_for_saving_best_ckpt:
+        is_new_best = monitor_loss < best_loss and epoch > args.start_epoch_for_saving_best_ckpt
+        best_rng_state_payload = None
+        if args.output_dir and is_new_best:
+            local_rng_state = utils.capture_rng_state()
+            best_rng_state_payload = utils.gather_rng_state_all_ranks(local_rng_state)
+        if args.output_dir and is_new_best and args.rank == 0:
             best_loss = monitor_loss
             checkpoint_path = os.path.join(args.output_dir, "checkpoint-tracking-best.pth")
             model_state = model_without_ddp.state_dict()
+            checkpoint_payload = {
+                "model": model_state,
+                "state_dict": model_state,
+                "optimizer": optimizer.state_dict(),
+                "epoch": epoch,
+                "best_loss": best_loss,
+                "args": args.__dict__,
+            }
+            if loss_scaler is not None:
+                checkpoint_payload["scaler"] = loss_scaler.state_dict()
+            if isinstance(best_rng_state_payload, list):
+                checkpoint_payload["rng_state_all_ranks"] = best_rng_state_payload
+            elif best_rng_state_payload is not None:
+                checkpoint_payload["rng_state"] = best_rng_state_payload
             torch.save(
-                {
-                    "state_dict": model_state,
-                    "optimizer": optimizer.state_dict(),
-                    "epoch": epoch,
-                    "best_loss": best_loss,
-                    "args": args.__dict__,
-                },
+                checkpoint_payload,
                 checkpoint_path,
             )
             print(f"[INFO] Best checkpoint saved at {checkpoint_path}")
+        if is_new_best:
+            best_loss = monitor_loss
 
         log_stats = {
             "epoch": epoch,
@@ -350,17 +441,29 @@ def launch_tracking(terminal_args: argparse.Namespace) -> None:
     print(f"Training time {total_time_str}")
 
     # ultimo salvataggio per riprendere da dove abbiamo lasciato
+    final_rng_state_payload = None
+    if args.output_dir:
+        local_rng_state = utils.capture_rng_state()
+        final_rng_state_payload = utils.gather_rng_state_all_ranks(local_rng_state)
     if args.output_dir and args.rank == 0:
         last_checkpoint_path = os.path.join(args.output_dir, "last_checkpoint-tracking.pth")
         model_state = model_without_ddp.state_dict()
+        checkpoint_payload = {
+            "model": model_state,
+            "state_dict": model_state,
+            "optimizer": optimizer.state_dict(),
+            "epoch": last_epoch_ran,
+            "best_loss": best_loss,
+            "args": args.__dict__,
+        }
+        if loss_scaler is not None:
+            checkpoint_payload["scaler"] = loss_scaler.state_dict()
+        if isinstance(final_rng_state_payload, list):
+            checkpoint_payload["rng_state_all_ranks"] = final_rng_state_payload
+        elif final_rng_state_payload is not None:
+            checkpoint_payload["rng_state"] = final_rng_state_payload
         torch.save(
-            {
-                "state_dict": model_state,
-                "optimizer": optimizer.state_dict(),
-                "epoch": last_epoch_ran,
-                "best_loss": best_loss,
-                "args": args.__dict__,
-            },
+            checkpoint_payload,
             last_checkpoint_path,
         )
         print(f"[INFO] Last checkpoint saved at {last_checkpoint_path} (epoch={last_epoch_ran})")
@@ -379,6 +482,13 @@ def parse_args() -> argparse.Namespace:
         "--dry_run",
         action="store_true",
         help="Build tracking dataloaders, print dataset counts, and exit.",
+    )
+    parser.add_argument(
+        '--compile',
+        type=str,
+        default='auto',
+        choices=['auto', 'on', 'off'],
+        help='Override compile_model: auto=usa arguments.py, on=True, off=False'
     )
     return parser.parse_args()
 

@@ -19,6 +19,23 @@ class Args:
         return None
 
 
+COMMON_RUNTIME_ARGS = {
+    'ddp_find_unused_parameters': False,
+    'ddp_static_graph': True,
+    'ddp_gradient_as_bucket_view': True,
+    'ddp_bucket_cap_mb': 64,
+    'ddp_broadcast_buffers': False,
+    'compile_model': True,
+    'compile_backend': 'eager',
+    'compile_mode': None,
+    'amp_dtype': 'fp16',
+    'enable_tf32': True,
+    'use_sdpa': False,
+    'sdpa_kernel': 'auto',
+    'disable_inductor_cudagraphs': False,
+}
+
+
 def prepare_args(machine=None):
     # Default arguments from get_args()
     default_args = {
@@ -108,22 +125,7 @@ def prepare_args(machine=None):
         'dist_url': 'env://',
         'dist_backend': 'nccl',
         'enable_deepspeed': False,
-        # DDP communication/perf knobs
-        'ddp_find_unused_parameters': False,
-        'ddp_static_graph': True,
-        'ddp_gradient_as_bucket_view': True,
-        'ddp_bucket_cap_mb': 64,
-        'ddp_broadcast_buffers': False,
-        # Compile/precision/performance flags
-        'compile_model': True,
-        'compile_backend': 'eager',
-        'compile_mode': None,
-        'amp_dtype': 'fp16',   # one of: fp16, bf16
-        'enable_tf32': True,
-        'use_sdpa': False,
-        'sdpa_kernel': 'auto',  # auto | flash | mem_efficient | math
-        # Inductor CUDA Graphs can speed up stable workloads, but may be unstable on some runtimes.
-        'disable_inductor_cudagraphs': False,
+        **COMMON_RUNTIME_ARGS,
         # Lightweight step profiler for specialization (0 disables).
         'perf_profile_every': 0,
         'perf_profile_warmup': 20,
@@ -498,6 +500,7 @@ def prepare_tracking_args(machine=None):
         'dist_on_itp': False,
         'dist_url': 'env://',
         'enable_deepspeed': False,
+        **COMMON_RUNTIME_ARGS,
         'normlize_target': True,
         'use_class_weight': False,
         'disable_scheduler': False,
@@ -555,6 +558,15 @@ def prepare_tracking_args(machine=None):
 
         'val_split_fraction': 0.0,
         'disable_scheduler': True,
+        # Performance defaults aligned with specialization runtime.
+        'with_checkpoint': False,
+        'compile_backend': 'inductor',
+        'compile_mode': 'default',
+        'amp_dtype': 'bf16',
+        'enable_tf32': True,
+        'use_sdpa': True,
+        'sdpa_kernel': 'auto',
+        'disable_inductor_cudagraphs': False,
     }
 
     args_dict = {**default_args, **user_args_tracking}
@@ -562,8 +574,8 @@ def prepare_tracking_args(machine=None):
     if machine:
         machine_args_override = {}
         if machine == 'leonardo':
-            machine_args_override['batch_size'] = 2
-            ckpath = '$FAST/checkpoint-149.pth'
+            machine_args_override['batch_size'] = 8
+            ckpath = '$FAST/checkpoint_large_new.pth'
             exp_path = os.path.expandvars(ckpath)
             if "$HOME" in exp_path:
                 raise EnvironmentError("La variabile d'ambiente HOME non è definita.")

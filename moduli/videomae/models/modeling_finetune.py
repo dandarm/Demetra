@@ -537,6 +537,8 @@ def vit_large_patch16_224(pretrained=False, **kwargs):
         norm_layer=partial(nn.LayerNorm, eps=1e-6),
         **kwargs)
     model.default_cfg = _cfg()
+    if pretrained:
+        model = load_checkpoint(model, kwargs["init_ckpt"], load_for_test_mode=kwargs.get('load_for_test_mode'))
     return model
 
 
@@ -552,6 +554,8 @@ def vit_huge_patch16_224(pretrained=False, **kwargs):
         norm_layer=partial(nn.LayerNorm, eps=1e-6),
         **kwargs)
     model.default_cfg = _cfg()
+    if pretrained:
+        model = load_checkpoint(model, kwargs["init_ckpt"], load_for_test_mode=kwargs.get('load_for_test_mode'))
     return model
 
 
@@ -647,6 +651,41 @@ def load_checkpoint(model, checkpoint_path, load_for_test_mode=False):
     load_unexpected = unexpected_keys
     load_shape_mismatch = shape_mismatch
 
+    def _build_mae_encoder_to_finetune_state():
+        model_state_local = model.state_dict()
+        mae_state = {}
+        mae_unexpected = []
+        mae_shape_mismatch = []
+
+        for key, value in new_state_dict.items():
+            if key.startswith(("decoder.", "mask_token", "encoder_to_decoder")):
+                mae_unexpected.append(key)
+                continue
+            if key.startswith("head."):
+                mae_unexpected.append(key)
+                continue
+
+            mapped_key = key
+            if mapped_key.startswith("encoder."):
+                mapped_key = mapped_key[len("encoder."):]
+
+            if mapped_key == "norm.weight" and "fc_norm.weight" in model_state_local:
+                mapped_key = "fc_norm.weight"
+            elif mapped_key == "norm.bias" and "fc_norm.bias" in model_state_local:
+                mapped_key = "fc_norm.bias"
+
+            if mapped_key not in model_state_local:
+                mae_unexpected.append(key)
+                continue
+            if tuple(value.shape) != tuple(model_state_local[mapped_key].shape):
+                mae_shape_mismatch.append(
+                    f"{key}->{mapped_key}: ckpt{tuple(value.shape)} != model{tuple(model_state_local[mapped_key].shape)}"
+                )
+                continue
+            mae_state[mapped_key] = value
+
+        return mae_state, mae_unexpected, mae_shape_mismatch
+
     # Some pretrained finetuning checkpoints contain only the backbone without the
     # MAE-specific prefix `encoder.`. In that case, it is better to load the
     # checkpoint directly into the encoder and leave decoder/MAE-only modules
@@ -684,6 +723,24 @@ def load_checkpoint(model, checkpoint_path, load_for_test_mode=False):
             print(
                 "Detected encoder-only checkpoint layout; "
                 "loading checkpoint into model.encoder and keeping decoder/MAE-specific weights from model init."
+            )
+
+    # Finetuning/tracking/classification models do not expose `model.encoder`, but
+    # their backbone corresponds to the MAE encoder with flattened key names
+    # (encoder.blocks.* -> blocks.*, encoder.patch_embed.* -> patch_embed.*).
+    # Support direct finetuning from MAE specialization/pretraining checkpoints by
+    # remapping only the encoder weights and dropping decoder-only tensors.
+    if load_mode == "full_model":
+        mae_state, mae_unexpected, mae_shape_mismatch = _build_mae_encoder_to_finetune_state()
+        if len(mae_state) > len(load_state):
+            load_mode = "mae_encoder_to_finetune"
+            load_target = model
+            load_state = mae_state
+            load_unexpected = mae_unexpected
+            load_shape_mismatch = mae_shape_mismatch
+            print(
+                "Detected MAE pretraining/specialization checkpoint layout; "
+                "loading only encoder weights into finetuning backbone and ignoring decoder-only tensors."
             )
 
     # Carica i pesi nel modello e stampa eventuali mismatch non fatali.
