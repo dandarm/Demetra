@@ -544,8 +544,8 @@ def prepare_tracking_args(machine=None):
         'use_class_weight': False,
 
         'start_epoch': 0,
-        'epochs': 30,
-        'start_epoch_for_saving_best_ckpt': 30,
+        'epochs': 100,
+        'start_epoch_for_saving_best_ckpt': 20,
         'momentum': 0.9,
         'weight_decay': 0.05,
         'weight_decay_end': None,
@@ -574,7 +574,7 @@ def prepare_tracking_args(machine=None):
     if machine:
         machine_args_override = {}
         if machine == 'leonardo':
-            machine_args_override['batch_size'] = 8
+            machine_args_override['batch_size'] = 16
             ckpath = '$FAST/checkpoint_large_new.pth'
             exp_path = os.path.expandvars(ckpath)
             if "$HOME" in exp_path:
