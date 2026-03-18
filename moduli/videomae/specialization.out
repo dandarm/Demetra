@@ -9,39 +9,39 @@ Loading cineca-ai/4.3.0
     libffi/3.4.4-6r7brdq libxcrypt/4.4.35-ss2rzin sqlite/3.43.2
     util-linux-uuid/2.38.1-jkdi7kv python/3.11.6--gcc--8.5.0 cmake/3.27.7
     openjdk/11.0.20.1_1
-[1,23]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=0.0001, decoder_lr=0.001, freeze_encoder_epochs=5
-[1,20]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=0.0001, decoder_lr=0.001, freeze_encoder_epochs=5
-[1,21]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=0.0001, decoder_lr=0.001, freeze_encoder_epochs=5
-[1,18]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=0.0001, decoder_lr=0.001, freeze_encoder_epochs=5
-[1,22]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=0.0001, decoder_lr=0.001, freeze_encoder_epochs=5
-[1,17]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=0.0001, decoder_lr=0.001, freeze_encoder_epochs=5
-[1,16]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=0.0001, decoder_lr=0.001, freeze_encoder_epochs=5
-[1,19]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=0.0001, decoder_lr=0.001, freeze_encoder_epochs=5
-[1,3]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=0.0001, decoder_lr=0.001, freeze_encoder_epochs=5
-[1,2]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=0.0001, decoder_lr=0.001, freeze_encoder_epochs=5
-[1,0]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=0.0001, decoder_lr=0.001, freeze_encoder_epochs=5
-[1,1]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=0.0001, decoder_lr=0.001, freeze_encoder_epochs=5
-[1,27]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=0.0001, decoder_lr=0.001, freeze_encoder_epochs=5
-[1,25]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=0.0001, decoder_lr=0.001, freeze_encoder_epochs=5
-[1,24]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=0.0001, decoder_lr=0.001, freeze_encoder_epochs=5
-[1,26]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=0.0001, decoder_lr=0.001, freeze_encoder_epochs=5
+[1,13]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=0.0001, decoder_lr=0.002, freeze_encoder_epochs=3
+[1,27]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=0.0001, decoder_lr=0.002, freeze_encoder_epochs=3
+[1,14]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=0.0001, decoder_lr=0.002, freeze_encoder_epochs=3
+[1,24]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=0.0001, decoder_lr=0.002, freeze_encoder_epochs=3
+[1,4]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=0.0001, decoder_lr=0.002, freeze_encoder_epochs=3
+[1,12]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=0.0001, decoder_lr=0.002, freeze_encoder_epochs=3
+[1,26]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=0.0001, decoder_lr=0.002, freeze_encoder_epochs=3
+[1,5]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=0.0001, decoder_lr=0.002, freeze_encoder_epochs=3
+[1,11]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=0.0001, decoder_lr=0.002, freeze_encoder_epochs=3
+[1,18]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=0.0001, decoder_lr=0.002, freeze_encoder_epochs=3
+[1,15]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=0.0001, decoder_lr=0.002, freeze_encoder_epochs=3
+[1,25]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=0.0001, decoder_lr=0.002, freeze_encoder_epochs=3
+[1,6]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=0.0001, decoder_lr=0.002, freeze_encoder_epochs=3
+[1,10]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=0.0001, decoder_lr=0.002, freeze_encoder_epochs=3
+[1,16]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=0.0001, decoder_lr=0.002, freeze_encoder_epochs=3
+[1,7]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=0.0001, decoder_lr=0.002, freeze_encoder_epochs=3
+[1,9]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=0.0001, decoder_lr=0.002, freeze_encoder_epochs=3
+[1,17]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=0.0001, decoder_lr=0.002, freeze_encoder_epochs=3
+[1,8]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=0.0001, decoder_lr=0.002, freeze_encoder_epochs=3
+[1,19]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=0.0001, decoder_lr=0.002, freeze_encoder_epochs=3
+[1,23]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=0.0001, decoder_lr=0.002, freeze_encoder_epochs=3
+[1,21]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=0.0001, decoder_lr=0.002, freeze_encoder_epochs=3
+[1,22]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=0.0001, decoder_lr=0.002, freeze_encoder_epochs=3
+[1,20]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=0.0001, decoder_lr=0.002, freeze_encoder_epochs=3
+[1,1]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=0.0001, decoder_lr=0.002, freeze_encoder_epochs=3
+[1,0]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=0.0001, decoder_lr=0.002, freeze_encoder_epochs=3
+[1,2]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=0.0001, decoder_lr=0.002, freeze_encoder_epochs=3
+[1,3]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=0.0001, decoder_lr=0.002, freeze_encoder_epochs=3
 [1,0]<stdout>:launch with mpirun
-[1,11]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=0.0001, decoder_lr=0.001, freeze_encoder_epochs=5
-[1,9]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=0.0001, decoder_lr=0.001, freeze_encoder_epochs=5
-[1,10]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=0.0001, decoder_lr=0.001, freeze_encoder_epochs=5
-[1,8]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=0.0001, decoder_lr=0.001, freeze_encoder_epochs=5
-[1,29]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=0.0001, decoder_lr=0.001, freeze_encoder_epochs=5
-[1,12]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=0.0001, decoder_lr=0.001, freeze_encoder_epochs=5
-[1,28]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=0.0001, decoder_lr=0.001, freeze_encoder_epochs=5
-[1,13]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=0.0001, decoder_lr=0.001, freeze_encoder_epochs=5
-[1,30]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=0.0001, decoder_lr=0.001, freeze_encoder_epochs=5
-[1,14]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=0.0001, decoder_lr=0.001, freeze_encoder_epochs=5
-[1,31]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=0.0001, decoder_lr=0.001, freeze_encoder_epochs=5
-[1,15]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=0.0001, decoder_lr=0.001, freeze_encoder_epochs=5
-[1,5]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=0.0001, decoder_lr=0.001, freeze_encoder_epochs=5
-[1,6]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=0.0001, decoder_lr=0.001, freeze_encoder_epochs=5
-[1,4]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=0.0001, decoder_lr=0.001, freeze_encoder_epochs=5
-[1,7]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=0.0001, decoder_lr=0.001, freeze_encoder_epochs=5
+[1,29]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=0.0001, decoder_lr=0.002, freeze_encoder_epochs=3
+[1,28]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=0.0001, decoder_lr=0.002, freeze_encoder_epochs=3
+[1,30]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=0.0001, decoder_lr=0.002, freeze_encoder_epochs=3
+[1,31]<stdout>:Perf config: with_checkpoint=False, amp_dtype=bf16, compile_model=True, compile_backend=inductor, use_sdpa=True, disable_inductor_cudagraphs=False, perf_profile_every=0, enable_weight_drift_logging=False, use_split_encoder_decoder_lr=True, encoder_lr=0.0001, decoder_lr=0.002, freeze_encoder_epochs=3
 [1,0]<stdout>:TF32 enabled: True
 [1,0]<stdout>:SDPA kernel config: mode=auto, flash=True, mem_efficient=True, math=True
 [1,0]<stdout>:Inductor CUDA Graphs disabled: False (INDUCTOR_DISABLE_CUDAGRAPHS=0)
@@ -67,16 +67,16 @@ Loading cineca-ai/4.3.0
 [1,0]<stdout>:Data Aug = (DataAugmentationForVideoMAEv2,
 [1,0]<stdout>:  transform = Compose(
 [1,0]<stdout>:    Lambda()
-[1,0]<stdout>:    <dataset.transforms.Stack object at 0x1458b4508f50>
-[1,0]<stdout>:    <dataset.transforms.ToTorchFormatTensor object at 0x1458b4509290>
-[1,0]<stdout>:    <dataset.transforms.GroupNormalize object at 0x1458b4893010>
+[1,0]<stdout>:    <dataset.transforms.Stack object at 0x151f78405650>
+[1,0]<stdout>:    <dataset.transforms.ToTorchFormatTensor object at 0x151f7844b010>
+[1,0]<stdout>:    <dataset.transforms.GroupNormalize object at 0x151f7cba10d0>
 [1,0]<stdout>:),
-[1,0]<stdout>:  Encoder Masking Generator = Tube Masking: total patches 1568, mask patches 1408,
+[1,0]<stdout>:  Encoder Masking Generator = Tube Masking: total patches 1568, mask patches 1096,
 [1,0]<stdout>:  Decoder Masking Generator = Running Cell Masking with mask ratio 0.25,
 [1,0]<stdout>:)
 [1,0]<stdout>:DATASET length: 107441
 [1,0]<stdout>:Creo il DistributedSampler con world_size 32 e rank 0
-[1,0]<stdout>:Sampler_train = <torch.utils.data.distributed.DistributedSampler object at 0x1458b49b1690>
+[1,0]<stdout>:Sampler_train = <torch.utils.data.distributed.DistributedSampler object at 0x151f66b07390>
 [1,0]<stdout>:Batch_size: 64
 [1,0]<stdout>:Getting dataset...
 [1,0]<stdout>:no_data_aug=True
@@ -84,130 +84,691 @@ Loading cineca-ai/4.3.0
 [1,0]<stdout>:Data Aug = (DataAugmentationForVideoMAEv2,
 [1,0]<stdout>:  transform = Compose(
 [1,0]<stdout>:    Lambda()
-[1,0]<stdout>:    <dataset.transforms.Stack object at 0x1458b4886450>
-[1,0]<stdout>:    <dataset.transforms.ToTorchFormatTensor object at 0x1458b4893d50>
-[1,0]<stdout>:    <dataset.transforms.GroupNormalize object at 0x1458b4894c50>
+[1,0]<stdout>:    <dataset.transforms.Stack object at 0x151f7a41be50>
+[1,0]<stdout>:    <dataset.transforms.ToTorchFormatTensor object at 0x151f7a41bd90>
+[1,0]<stdout>:    <dataset.transforms.GroupNormalize object at 0x151f7844ab90>
 [1,0]<stdout>:),
-[1,0]<stdout>:  Encoder Masking Generator = Tube Masking: total patches 1568, mask patches 1408,
+[1,0]<stdout>:  Encoder Masking Generator = Tube Masking: total patches 1568, mask patches 1096,
 [1,0]<stdout>:  Decoder Masking Generator = Running Cell Masking with mask ratio 0.25,
 [1,0]<stdout>:)
 [1,0]<stdout>:DATASET length: 19999
 [1,0]<stdout>:Creo il DistributedSampler con world_size 32 e rank 0
-[1,0]<stdout>:Sampler_train = <torch.utils.data.distributed.DistributedSampler object at 0x1458b4537a10>
+[1,0]<stdout>:Sampler_train = <torch.utils.data.distributed.DistributedSampler object at 0x151f78283090>
 [1,0]<stdout>:Batch_size: 64
-[1,0]<stdout>:Split encoder/decoder LR enabled: encoder_lr=0.00010000, decoder_lr=0.00100000, scheduler_base_lr=0.00100000, min_lr=0.00016667, warmup_lr=0.00000333
+[1,0]<stdout>:Split encoder/decoder LR enabled: encoder_lr=0.00010000, decoder_lr=0.00200000, scheduler_base_lr=0.00200000, min_lr=0.00100000, warmup_lr=0.00006000
 [1,0]<stdout>:Linear LR scaling by total batch size disabled for split encoder/decoder LR mode.
-[1,0]<stdout>:LR = 0.00100000
+[1,0]<stdout>:LR = 0.00200000
 [1,0]<stdout>:Batch size = 2048
 [1,0]<stdout>:Number of training steps = 52
 [1,0]<stdout>:Number of training examples per epoch = 106496
 [1,0]<stdout>:Split optimizer with branch-specific layer decay enabled: layer_decay=0.9
-[1,0]<stdout>:optimizer settings: [1,0]<stdout>:{'lr': 0.001, 'weight_decay': 0.03, 'eps': 1e-08, 'betas': [0.9, 0.95], 'encoder_lr': 0.0001, 'decoder_lr': 0.001, 'layer_decay': 0.9, 'encoder_group_count': 26, 'decoder_group_count': 1, 'encoder_params': 316, 'decoder_params': 58}
+[1,0]<stdout>:optimizer settings: [1,0]<stdout>:{'lr': 0.002, 'weight_decay': 0.03, 'eps': 1e-08, 'betas': [0.9, 0.95], 'encoder_lr': 0.0001, 'decoder_lr': 0.002, 'layer_decay': 0.9, 'encoder_group_count': 26, 'decoder_group_count': 1, 'encoder_params': 316, 'decoder_params': 58}
 [1,0]<stdout>:Use step level LR & WD scheduler!
-[1,0]<stdout>:Set warmup steps = 520
+[1,0]<stdout>:Set warmup steps = 416
 [1,0]<stdout>:Set warmup steps = 0
 [1,0]<stdout>:Max WD = 0.0300000, Min WD = 0.0300000
 [1,0]<stdout>:Start training for 101 epochs
-[1,0]<stdout>:Encoder freeze schedule: freeze_encoder_epochs=5, encoder is frozen at epoch 0
-[1,0]<stdout>:Epoch: [0]  [ 0/52]  eta: 0:46:26  loss: 1.4396 (1.4396)  time: 53.5880 (53.5880 -- 53.5880)  data: 5.2031 (5.2031 -- 5.2031)  max mem: 13383
-[1,0]<stdout>:Epoch: [0]  [20/52]  eta: 0:01:47  loss: 1.2266 (1.2634)  time: 0.8522 (0.2340 -- 2.8307)  data: 0.2246 (0.0001 -- 1.9050)  max mem: 13495
-[1,0]<stdout>:Epoch: [0]  [40/52]  eta: 0:00:27  loss: 0.9846 (1.1359)  time: 1.2235 (0.4565 -- 3.3251)  data: 0.4403 (0.0002 -- 2.0381)  max mem: 13495
-[1,0]<stdout>:Epoch: [0]  [51/52]  eta: 0:00:02  loss: 0.9590 (1.0973)  time: 1.1077 (0.2705 -- 3.2625)  data: 0.4864 (0.0001 -- 2.2308)  max mem: 13495
-[1,0]<stdout>:Epoch: [0] Total time: 0:01:47 (2.0633 s / it)
-[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.9590 (1.0947)
-[1,0]<stdout>:TEST...   [ 0/10]  eta: 0:05:21  loss: 0.9671 (0.9671)  time: 32.1527 (32.1527 -- 32.1527)  data: 4.7518 (4.7518 -- 4.7518)  max mem: 13495
-[1,0]<stdout>:TEST...   [ 9/10]  eta: 0:00:07  loss: 0.9514 (0.9527)  time: 7.6494 (0.1057 -- 43.4935)  data: 0.6925 (0.0001 -- 4.7518)  max mem: 13495
-[1,0]<stdout>:TEST...  Total time: 0:01:16 (7.6496 s / it)
-[1,0]<stdout>:Averaged stats: loss: 0.9514 (0.9503)
-[1,0]<stdout>:[CKPT] Saved improved checkpoint: /leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/output/checkpoint-0.pth (test_loss 0.950271, prev None)
-[1,0]<stdout>:Epoch: [1]  [ 0/52]  eta: 0:04:01  loss: 0.9768 (0.9768)  time: 4.6465 (4.6465 -- 4.6465)  data: 4.0550 (4.0550 -- 4.0550)  max mem: 13499
-[1,0]<stdout>:Epoch: [1]  [20/52]  eta: 0:00:43  loss: 0.9477 (0.9490)  time: 1.1968 (0.5053 -- 3.1112)  data: 0.4785 (0.0001 -- 2.0478)  max mem: 13499
-[1,0]<stdout>:Epoch: [1]  [40/52]  eta: 0:00:15  loss: 0.9459 (0.9472)  time: 1.1515 (0.3468 -- 3.1724)  data: 0.4942 (0.0001 -- 2.0747)  max mem: 13499
-[1,0]<stdout>:Epoch: [1]  [51/52]  eta: 0:00:01  loss: 0.9454 (0.9465)  time: 1.0845 (0.2547 -- 3.3839)  data: 0.5539 (0.0001 -- 2.8034)  max mem: 13499
-[1,0]<stdout>:Epoch: [1] Total time: 0:01:00 (1.1718 s / it)
-[1,0]<stdout>:Averaged stats: loss: 0.9454 (0.9465)
-[1,0]<stdout>:Epoch: [2]  [ 0/52]  eta: 0:04:48  loss: 0.9706 (0.9706)  time: 5.5459 (5.5459 -- 5.5459)  data: 4.4021 (4.4021 -- 4.4021)  max mem: 13499
-[1,0]<stdout>:Epoch: [2]  [20/52]  eta: 0:00:44  loss: 0.9395 (0.9407)  time: 1.1698 (0.5941 -- 2.5034)  data: 0.2808 (0.0001 -- 1.3353)  max mem: 13499
-[1,0]<stdout>:Epoch: [2]  [40/52]  eta: 0:00:15  loss: 0.9409 (0.9425)  time: 1.1599 (0.3529 -- 3.2373)  data: 0.4325 (0.0001 -- 1.9906)  max mem: 13499[1,0]<stdout>:
-[1,0]<stdout>:Epoch: [2]  [51/52]  eta: 0:00:01  loss: 0.9404 (0.9418)  time: 1.0928 (0.2918 -- 3.2373)  data: 0.4729 (0.0001 -- 1.9906)  max mem: 13499
-[1,0]<stdout>:Epoch: [2] Total time: 0:01:01 (1.1879 s / it)
-[1,0]<stdout>:Averaged stats: loss: 0.9404 (0.9436)
-[1,0]<stdout>:Epoch: [3]  [ 0/52]  eta: 0:04:47  loss: 0.9480 (0.9480)  time: 5.5254 (5.5254 -- 5.5254)  data: 4.1941 (4.1941 -- 4.1941)  max mem: 13499
-[1,0]<stdout>:Epoch: [3]  [20/52]  eta: 0:00:43  loss: 0.9389 (0.9429)  time: 1.1565 (0.5643 -- 2.8299)  data: 0.3328 (0.0002 -- 1.7633)  max mem: 13499
-[1,0]<stdout>:Epoch: [3]  [40/52]  eta: 0:00:15  loss: 0.9380 (0.9409)  time: 1.1540 (0.4008 -- 3.1259)  data: 0.3314 (0.0001 -- 1.4388)  max mem: 13499
-[1,0]<stdout>:Epoch: [3]  [51/52]  eta: 0:00:01  loss: 0.9380 (0.9410)  time: 1.0896 (0.2401 -- 3.2265)  data: 0.3556 (0.0001 -- 1.5010)  max mem: 13499
-[1,0]<stdout>:Epoch: [3] Total time: 0:01:01 (1.1790 s / it)
-[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.9380 (0.9421)
-[1,0]<stdout>:Epoch: [4]  [ 0/52]  eta: 0:04:45  loss: 0.9396 (0.9396)  time: 5.4848 (5.4848 -- 5.4848)  data: 4.3947 (4.3947 -- 4.3947)  max mem: 13499
-[1,0]<stdout>:Epoch: [4]  [20/52]  eta: 0:00:44  loss: 0.9376 (0.9354)  time: 1.1715 (0.5338 -- 2.7435)  data: 0.2498 (0.0002 -- 1.4213)  max mem: 13499
-[1,0]<stdout>:Epoch: [4]  [40/52]  eta: 0:00:15  loss: 0.9379 (0.9357)  time: 1.1420 (0.3464 -- 3.0378)  data: 0.3637 (0.0001 -- 1.8898)  max mem: 13499
-[1,0]<stdout>:Epoch: [4]  [51/52]  eta: 0:00:01  loss: 0.9344 (0.9338)  time: 1.0572 (0.2435 -- 3.1694)  data: 0.4692 (0.0001 -- 2.5052)  max mem: 13499
-[1,0]<stdout>:Epoch: [4] Total time: 0:01:01 (1.1750 s / it)
-[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.9344 (0.9353)
-[1,0]<stdout>:Encoder unfrozen at epoch 5
-[1,0]<stdout>:Epoch: [5]  [ 0/52]  eta: 0:04:44  loss: 0.9263 (0.9263)  time: 5.4769 (5.4769 -- 5.4769)  data: 3.9415 (3.9415 -- 3.9415)  max mem: 13499
-[1,0]<stdout>:Epoch: [5]  [20/52]  eta: 0:00:44  loss: 0.9241 (0.9255)  time: 1.1814 (0.5992 -- 2.6325)  data: 0.1865 (0.0003 -- 0.9994)  max mem: 13499
-[1,0]<stdout>:Epoch: [5]  [40/52]  eta: 0:00:15  loss: 0.9217 (0.9246)  time: 1.1763 (0.3154 -- 3.4770)  data: 0.3762 (0.0001 -- 1.7449)  max mem: 13499
-[1,0]<stdout>:Epoch: [5]  [51/52]  eta: 0:00:01  loss: 0.9176 (0.9233)  time: 1.1044 (0.2641 -- 3.4770)  data: 0.3736 (0.0001 -- 1.7449)  max mem: 13499
-[1,0]<stdout>:Epoch: [5] Total time: 0:01:01 (1.1911 s / it)
-[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.9176 (0.9241)
-[1,0]<stdout>:Epoch: [6]  [ 0/52]  eta: 0:04:42  loss: 0.9302 (0.9302)  time: 5.4298 (5.4298 -- 5.4298)  data: 4.1970 (4.1970 -- 4.1970)  max mem: 13499[1,0]<stdout>:
-[1,0]<stdout>:Epoch: [6]  [20/52]  eta: 0:00:43  loss: 0.9195 (0.9226)  time: 1.1663 (0.4771 -- 2.8775)  data: 0.2740 (0.0001 -- 1.6690)  max mem: 13499
-[1,0]<stdout>:Epoch: [6]  [40/52]  eta: 0:00:15  loss: 0.9149 (0.9190)  time: 1.1380 (0.3479 -- 3.1615)  data: 0.3816 (0.0001 -- 1.7040)  max mem: 13499[1,0]<stdout>:
-[1,0]<stdout>:Epoch: [6]  [51/52]  eta: 0:00:01  loss: 0.9176 (0.9188)  time: 1.0640 (0.2504 -- 3.2344)  data: 0.4643 (0.0001 -- 2.5328)  max mem: 13499
-[1,0]<stdout>:Epoch: [6] Total time: 0:01:00 (1.1693 s / it)
-[1,0]<stdout>:Averaged stats: loss: 0.9176 (0.9172)
-[1,0]<stdout>:Epoch: [7]  [ 0/52]  eta: 0:04:42  loss: 0.9214 (0.9214)  time: 5.4251 (5.4251 -- 5.4251)  data: 4.4316 (4.4316 -- 4.4316)  max mem: 13499
-[1,0]<stdout>:Epoch: [7]  [20/52]  eta: 0:00:44  loss: 0.9145 (0.9133)  time: 1.1779 (0.6045 -- 2.7566)  data: 0.2973 (0.0001 -- 1.3961)  max mem: 13499[1,0]<stdout>:
-[1,0]<stdout>:Epoch: [7]  [40/52]  eta: 0:00:15  loss: 0.9068 (0.9099)  time: 1.1371 (0.4124 -- 2.9598)  data: 0.3881 (0.0001 -- 1.6096)  max mem: 13499
-[1,0]<stdout>:Epoch: [7]  [51/52]  eta: 0:00:01  loss: 0.9083 (0.9083)  time: 1.0725 (0.2602 -- 3.2678)  data: 0.3951 (0.0001 -- 1.9128)  max mem: 13499
-[1,0]<stdout>:Epoch: [7] Total time: 0:01:01 (1.1759 s / it)
-[1,0]<stdout>:Averaged stats: loss: 0.9083 (0.9103)
-[1,0]<stdout>:Epoch: [8]  [ 0/52]  eta: 0:04:40  loss: 0.8914 (0.8914)  time: 5.3931 (5.3931 -- 5.3931)  data: 4.6981 (4.6981 -- 4.6981)  max mem: 13499
-[1,0]<stdout>:Epoch: [8]  [20/52]  eta: 0:00:44  loss: 0.9070 (0.9077)  time: 1.1772 (0.5829 -- 2.9466)  data: 0.3286 (0.0002 -- 1.8831)  max mem: 13499
-[1,0]<stdout>:Epoch: [8]  [40/52]  eta: 0:00:15  loss: 0.9003 (0.9035)  time: 1.1427 (0.3456 -- 3.1359)  data: 0.3578 (0.0002 -- 1.7268)  max mem: 13499
-[1,0]<stdout>:Epoch: [8]  [51/52]  eta: 0:00:01  loss: 0.9003 (0.9038)  time: 1.0779 (0.2611 -- 3.3929)  data: 0.4319 (0.0001 -- 2.0845)  max mem: 13499
-[1,0]<stdout>:Epoch: [8] Total time: 0:01:01 (1.1796 s / it)
-[1,0]<stdout>:Averaged stats: loss: 0.9003 (0.9032)
-[1,0]<stdout>:Epoch: [9]  [ 0/52]  eta: 0:04:52  loss: 0.9159 (0.9159)  time: 5.6249 (5.6249 -- 5.6249)  data: 4.7329 (4.7329 -- 4.7329)  max mem: 13499
-[1,0]<stdout>:Epoch: [9]  [20/52]  eta: 0:00:44  loss: 0.8910 (0.8972)  time: 1.1798 (0.4029 -- 2.9118)  data: 0.1921 (0.0001 -- 1.0189)  max mem: 13499
-[1,0]<stdout>:Epoch: [9]  [40/52]  eta: 0:00:15  loss: 0.8927 (0.8950)  time: 1.1445 (0.2941 -- 3.2531)  data: 0.4389 (0.0001 -- 1.8778)  max mem: 13499
-[1,0]<stdout>:Epoch: [9]  [51/52]  eta: 0:00:01  loss: 0.8907 (0.8950)  time: 1.0715 (0.2570 -- 3.2531)  data: 0.4336 (0.0000 -- 1.8778)  max mem: 13499
-[1,0]<stdout>:Epoch: [9] Total time: 0:01:01 (1.1794 s / it)
-[1,0]<stdout>:Averaged stats: loss: 0.8907 (0.8954)
-[1,0]<stdout>:Epoch: [10]  [ 0/52]  eta: 0:04:37  loss: 0.9051 (0.9051)  time: 5.3349 (5.3349 -- 5.3349)  data: 3.9508 (3.9508 -- 3.9508)  max mem: 13499
-[1,0]<stdout>:Epoch: [10]  [20/52]  eta: 0:00:43  loss: 0.8931 (0.8942)  time: 1.1610 (0.5214 -- 2.8990)  data: 0.3428 (0.0002 -- 1.6881)  max mem: 13499
-[1,0]<stdout>:Epoch: [10]  [40/52]  eta: 0:00:15  loss: 0.8895 (0.8921)  time: 1.1436 (0.4111 -- 3.0455)  data: 0.4057 (0.0001 -- 2.0495)  max mem: 13499
-[1,0]<stdout>:Epoch: [10]  [51/52]  eta: 0:00:01  loss: 0.8881 (0.8921)  time: 1.0665 (0.2630 -- 3.4309)  data: 0.4791 (0.0001 -- 2.3922)  max mem: 13499
-[1,0]<stdout>:Epoch: [10] Total time: 0:01:00 (1.1722 s / it)
-[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.8881 (0.8892)
-[1,0]<stdout>:TEST...   [ 0/10]  eta: 0:00:43  loss: 0.9003 (0.9003)  time: 4.3438 (4.3438 -- 4.3438)  data: 4.2267 (4.2267 -- 4.2267)  max mem: 13499[1,0]<stdout>:
-[1,0]<stdout>:TEST...   [ 9/10]  eta: 0:00:01  loss: 0.8824 (0.8853)  time: 1.2188 (0.0883 -- 4.3438)  data: 1.1094 (0.0002 -- 4.2267)  max mem: 13499
-[1,0]<stdout>:TEST...  Total time: 0:00:12 (1.2189 s / it)
-[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.8824 (0.8806)
-[1,0]<stdout>:[CKPT] Saved improved checkpoint: /leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/output/checkpoint-10.pth (test_loss 0.880599, prev 0.9502713192254305)
-[1,0]<stdout>:Epoch: [11]  [ 0/52]  eta: 0:04:25  loss: 0.8975 (0.8975)  time: 5.0988 (5.0988 -- 5.0988)  data: 4.4054 (4.4054 -- 4.4054)  max mem: 13499
-[1,0]<stdout>:Epoch: [11]  [20/52]  eta: 0:00:42  loss: 0.8872 (0.8863)  time: 1.1326 (0.4595 -- 2.9006)  data: 0.4749 (0.0002 -- 2.1797)  max mem: 13499
-[1,0]<stdout>:Epoch: [11]  [40/52]  eta: 0:00:14  loss: 0.8767 (0.8830)  time: 1.1348 (0.4298 -- 2.8781)  data: 0.4467 (0.0001 -- 1.9708)  max mem: 13499
-[1,0]<stdout>:Epoch: [11]  [51/52]  eta: 0:00:01  loss: 0.8706 (0.8795)  time: 1.0685 (0.2585 -- 3.3117)  data: 0.4922 (0.0001 -- 2.2485)  max mem: 13499
-[1,0]<stdout>:Epoch: [11] Total time: 0:00:59 (1.1530 s / it)
-[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.8706 (0.8793)
-[1,0]<stdout>:Epoch: [12]  [ 0/52]  eta: 0:04:40  loss: 0.8845 (0.8845)  time: 5.3875 (5.3875 -- 5.3875)  data: 4.2114 (4.2114 -- 4.2114)  max mem: 13499[1,0]<stdout>:
-[1,0]<stdout>:Epoch: [12]  [20/52]  eta: 0:00:44  loss: 0.8776 (0.8769)  time: 1.1751 (0.5644 -- 2.9295)  data: 0.3192 (0.0002 -- 1.5942)  max mem: 13499
-[1,0]<stdout>:Epoch: [12]  [40/52]  eta: 0:00:15  loss: 0.8713 (0.8744)  time: 1.1435 (0.3550 -- 3.0997)  data: 0.3826 (0.0001 -- 1.7530)  max mem: 13499
-[1,0]<stdout>:Epoch: [12]  [51/52]  eta: 0:00:01  loss: 0.8651 (0.8720)  time: 1.0966 (0.2482 -- 3.2367)  data: 0.3948 (0.0001 -- 1.8952)  max mem: 13499
-[1,0]<stdout>:Epoch: [12] Total time: 0:01:01 (1.1806 s / it)
-[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.8651 (0.8711)
-[1,0]<stdout>:Epoch: [13]  [ 0/52]  eta: 0:04:38  loss: 0.8475 (0.8475)  time: 5.3506 (5.3506 -- 5.3506)  data: 4.6595 (4.6595 -- 4.6595)  max mem: 13499
-[1,0]<stdout>:Epoch: [13]  [20/52]  eta: 0:00:44  loss: 0.8557 (0.8563)  time: 1.1862 (0.4209 -- 3.1609)  data: 0.3946 (0.0001 -- 1.9871)  max mem: 13499
-[1,0]<stdout>:Epoch: [13]  [40/52]  eta: 0:00:15  loss: 0.8613 (0.8596)  time: 1.1560 (0.4672 -- 3.1364)  data: 0.3743 (0.0001 -- 1.9591)  max mem: 13499
-[1,0]<stdout>:Epoch: [13]  [51/52]  eta: 0:00:01  loss: 0.8618 (0.8610)  time: 1.0664 (0.2586 -- 3.1364)  data: 0.4377 (0.0001 -- 2.0743)  max mem: 13499
-[1,0]<stdout>:Epoch: [13] Total time: 0:01:01 (1.1824 s / it)
-[1,0]<stdout>:Averaged stats: loss: 0.8618 (0.8637)
-[1,0]<stdout>:Epoch: [14]  [ 0/52]  eta: 0:04:42  loss: 0.8681 (0.8681)  time: 5.4249 (5.4249 -- 5.4249)  data: 4.2324 (4.2324 -- 4.2324)  max mem: 13499[1,0]<stdout>:
-[1,0]<stdout>:Epoch: [14]  [20/52]  eta: 0:00:43  loss: 0.8594 (0.8604)  time: 1.1665 (0.5897 -- 2.7855)  data: 0.2267 (0.0001 -- 1.2280)  max mem: 13499
-[1,0]<stdout>:Epoch: [14]  [40/52]  eta: 0:00:15  loss: 0.8572 (0.8590)  time: 1.1425 (0.4029 -- 2.9814)  data: 0.4454 (0.0002 -- 2.0558)  max mem: 13499[1,0]<stdout>:
-[1,0]<stdout>:Epoch: [14]  [51/52]  eta: 0:00:01  loss: 0.8524 (0.8579)  time: 1.0653 (0.2422 -- 3.0117)  data: 0.4990 (0.0001 -- 2.2069)  max mem: 13499
-[1,0]<stdout>:Epoch: [14] Total time: 0:01:01 (1.1754 s / it)
-[1,0]<stdout>:Averaged stats: loss: 0.8524 (0.8571)
-[1,0]<stdout>:Epoch: [15]  [ 0/52]  eta: 0:04:45  loss: 0.8499 (0.8499)  time: 5.4861 (5.4861 -- 5.4861)  data: 4.7528 (4.7528 -- 4.7528)  max mem: 13499[1,0]<stdout>:
+[1,0]<stdout>:Encoder freeze schedule: freeze_encoder_epochs=3, encoder is frozen at epoch 0
+[1,0]<stdout>:Epoch: [0]  [ 0/52]  eta: 0:50:06  loss: 1.4648 (1.4648)  time: 57.8127 (57.8127 -- 57.8127)  data: 7.7505 (7.7505 -- 7.7505)  max mem: 14703
+[1,0]<stdout>:Epoch: [0]  [20/52]  eta: 0:01:58  loss: 0.9906 (1.0693)  time: 0.9835 (0.3252 -- 3.8221)  data: 0.4027 (0.0001 -- 3.2092)  max mem: 14812
+[1,0]<stdout>:Epoch: [0]  [40/52]  eta: 0:00:31  loss: 0.9539 (1.0140)  time: 1.4254 (0.3335 -- 4.6544)  data: 1.0095 (0.0002 -- 4.2894)  max mem: 14812
+[1,0]<stdout>:Epoch: [0]  [51/52]  eta: 0:00:02  loss: 0.9487 (0.9991)  time: 1.4032 (0.3147 -- 4.6544)  data: 1.0448 (0.0002 -- 4.2894)  max mem: 14812
+[1,0]<stdout>:Epoch: [0] Total time: 0:02:02 (2.3463 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.9487 (0.9965)
+[1,0]<stdout>:TEST...   [ 0/10]  eta: 0:05:35  loss: 0.9614 (0.9614)  time: 33.5097 (33.5097 -- 33.5097)  data: 5.7915 (5.7915 -- 5.7915)  max mem: 14812
+[1,0]<stdout>:TEST...   [ 9/10]  eta: 0:00:07  loss: 0.9461 (0.9467)  time: 7.8664 (0.1717 -- 43.7733)  data: 0.8516 (0.0001 -- 5.7915)  max mem: 14812
+[1,0]<stdout>:TEST...  Total time: 0:01:18 (7.8665 s / it)
+[1,0]<stdout>:Averaged stats: loss: 0.9461 (0.9440)
+[1,0]<stdout>:[CKPT] Saved improved checkpoint: /leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/output/checkpoint-0.pth (test_loss 0.944019, prev None)
+[1,0]<stdout>:Epoch: [1]  [ 0/52]  eta: 0:05:22  loss: 0.9691 (0.9691)  time: 6.1951 (6.1951 -- 6.1951)  data: 5.6310 (5.6310 -- 5.6310)  max mem: 14817
+[1,0]<stdout>:Epoch: [1]  [20/52]  eta: 0:00:52  loss: 0.9428 (0.9443)  time: 1.4291 (0.3520 -- 4.4678)  data: 0.9508 (0.0001 -- 4.1169)  max mem: 14817
+[1,0]<stdout>:Epoch: [1]  [40/52]  eta: 0:00:18  loss: 0.9455 (0.9437)  time: 1.4659 (0.3274 -- 4.8666)  data: 1.1192 (0.0001 -- 4.5468)  max mem: 14817
+[1,0]<stdout>:Epoch: [1]  [51/52]  eta: 0:00:01  loss: 0.9434 (0.9436)  time: 1.4150 (0.3205 -- 4.8642)  data: 1.0758 (0.0002 -- 4.5281)  max mem: 14817
+[1,0]<stdout>:Epoch: [1] Total time: 0:01:16 (1.4633 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.9434 (0.9437)
+[1,0]<stdout>:Epoch: [2]  [ 0/52]  eta: 0:05:30  loss: 0.9697 (0.9697)  time: 6.3608 (6.3608 -- 6.3608)  data: 5.4184 (5.4184 -- 5.4184)  max mem: 14817
+[1,0]<stdout>:Epoch: [2]  [20/52]  eta: 0:00:51  loss: 0.9393 (0.9398)  time: 1.3767 (0.3642 -- 4.3855)  data: 0.8442 (0.0001 -- 3.9802)  max mem: 14817
+[1,0]<stdout>:Epoch: [2]  [40/52]  eta: 0:00:18  loss: 0.9410 (0.9413)  time: 1.3939 (0.3284 -- 4.6200)  data: 1.0148 (0.0001 -- 4.3026)  max mem: 14817
+[1,0]<stdout>:Epoch: [2]  [51/52]  eta: 0:00:01  loss: 0.9363 (0.9398)  time: 1.3481 (0.3137 -- 4.6200)  data: 1.0052 (0.0001 -- 4.3026)  max mem: 14817
+[1,0]<stdout>:Epoch: [2] Total time: 0:01:13 (1.4056 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.9363 (0.9418)
+[1,0]<stdout>:Encoder unfrozen at epoch 3
+[1,0]<stdout>:Epoch: [3]  [ 0/52]  eta: 0:05:29  loss: 0.9419 (0.9419)  time: 6.3333 (6.3333 -- 6.3333)  data: 5.6905 (5.6905 -- 5.6905)  max mem: 14817
+[1,0]<stdout>:Epoch: [3]  [20/52]  eta: 0:00:48  loss: 0.9342 (0.9341)  time: 1.2793 (0.3557 -- 3.7501)  data: 0.6926 (0.0001 -- 3.4005)  max mem: 14817
+[1,0]<stdout>:Epoch: [3]  [40/52]  eta: 0:00:17  loss: 0.9173 (0.9275)  time: 1.3154 (0.3645 -- 3.9283)  data: 0.8301 (0.0001 -- 3.5834)  max mem: 14817
+[1,0]<stdout>:Epoch: [3]  [51/52]  eta: 0:00:01  loss: 0.9161 (0.9258)  time: 1.2849 (0.3209 -- 3.9283)  data: 0.8835 (0.0002 -- 3.5834)  max mem: 14817
+[1,0]<stdout>:Epoch: [3] Total time: 0:01:09 (1.3416 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.9161 (0.9267)
+[1,0]<stdout>:Epoch: [4]  [ 0/52]  eta: 0:05:11  loss: 0.9160 (0.9160)  time: 5.9838 (5.9838 -- 5.9838)  data: 5.4071 (5.4071 -- 5.4071)  max mem: 14817
+[1,0]<stdout>:Epoch: [4]  [20/52]  eta: 0:00:49  loss: 0.9062 (0.9077)  time: 1.3129 (0.4021 -- 3.7470)  data: 0.7492 (0.0001 -- 3.3621)  max mem: 14817
+[1,0]<stdout>:Epoch: [4]  [40/52]  eta: 0:00:17  loss: 0.9049 (0.9049)  time: 1.3310 (0.3633 -- 4.0048)  data: 0.9054 (0.0001 -- 3.6384)  max mem: 14817
+[1,0]<stdout>:Epoch: [4]  [51/52]  eta: 0:00:01  loss: 0.8945 (0.9007)  time: 1.3052 (0.3173 -- 4.0453)  data: 0.9570 (0.0001 -- 3.7264)  max mem: 14817
+[1,0]<stdout>:Epoch: [4] Total time: 0:01:10 (1.3517 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.8945 (0.9020)
+[1,0]<stdout>:Epoch: [5]  [ 0/52]  eta: 0:05:15  loss: 0.8766 (0.8766)  time: 6.0739 (6.0739 -- 6.0739)  data: 5.4122 (5.4122 -- 5.4122)  max mem: 14817
+[1,0]<stdout>:Epoch: [5]  [20/52]  eta: 0:00:49  loss: 0.8705 (0.8748)  time: 1.3261 (0.3460 -- 4.2321)  data: 0.7725 (0.0002 -- 3.8514)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [5]  [40/52]  eta: 0:00:17  loss: 0.8654 (0.8700)  time: 1.3525 (0.3855 -- 4.0641)  data: 0.8562 (0.0002 -- 3.6969)  max mem: 14817
+[1,0]<stdout>:Epoch: [5]  [51/52]  eta: 0:00:01  loss: 0.8524 (0.8661)  time: 1.3324 (0.3154 -- 4.3084)  data: 0.8878 (0.0001 -- 3.9775)  max mem: 14817
+[1,0]<stdout>:Epoch: [5] Total time: 0:01:11 (1.3656 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.8524 (0.8672)
+[1,0]<stdout>:Epoch: [6]  [ 0/52]  eta: 0:05:14  loss: 0.8599 (0.8599)  time: 6.0410 (6.0410 -- 6.0410)  data: 5.3906 (5.3906 -- 5.3906)  max mem: 14817
+[1,0]<stdout>:Epoch: [6]  [20/52]  eta: 0:00:49  loss: 0.8470 (0.8488)  time: 1.3152 (0.3583 -- 3.6789)  data: 0.7661 (0.0002 -- 3.3432)  max mem: 14817
+[1,0]<stdout>:Epoch: [6]  [40/52]  eta: 0:00:17  loss: 0.8387 (0.8438)  time: 1.3417 (0.4122 -- 3.7444)  data: 0.9695 (0.0002 -- 3.3969)  max mem: 14817
+[1,0]<stdout>:Epoch: [6]  [51/52]  eta: 0:00:01  loss: 0.8341 (0.8419)  time: 1.3256 (0.3232 -- 3.5764)  data: 0.9813 (0.0001 -- 3.2178)  max mem: 14817
+[1,0]<stdout>:Epoch: [6] Total time: 0:01:11 (1.3707 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.8341 (0.8401)
+[1,0]<stdout>:Epoch: [7]  [ 0/52]  eta: 0:05:27  loss: 0.8342 (0.8342)  time: 6.3045 (6.3045 -- 6.3045)  data: 5.2168 (5.2168 -- 5.2168)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [7]  [20/52]  eta: 0:00:50  loss: 0.8316 (0.8287)  time: 1.3399 (0.3673 -- 4.1256)  data: 0.7930 (0.0001 -- 3.7670)  max mem: 14817
+[1,0]<stdout>:Epoch: [7]  [40/52]  eta: 0:00:17  loss: 0.8165 (0.8235)  time: 1.2977 (0.3648 -- 3.9806)  data: 0.8954 (0.0001 -- 3.6414)  max mem: 14817
+[1,0]<stdout>:Epoch: [7]  [51/52]  eta: 0:00:01  loss: 0.8190 (0.8214)  time: 1.3064 (0.3137 -- 4.1009)  data: 0.9377 (0.0001 -- 3.7807)  max mem: 14817
+[1,0]<stdout>:Epoch: [7] Total time: 0:01:10 (1.3618 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.8190 (0.8232)
+[1,0]<stdout>:Epoch: [8]  [ 0/52]  eta: 0:05:24  loss: 0.8031 (0.8031)  time: 6.2313 (6.2313 -- 6.2313)  data: 5.5250 (5.5250 -- 5.5250)  max mem: 14817
+[1,0]<stdout>:Epoch: [8]  [20/52]  eta: 0:00:50  loss: 0.8156 (0.8147)  time: 1.3472 (0.3903 -- 4.0399)  data: 0.7644 (0.0002 -- 3.6899)  max mem: 14817
+[1,0]<stdout>:Epoch: [8]  [40/52]  eta: 0:00:17  loss: 0.8059 (0.8102)  time: 1.3224 (0.3218 -- 4.5576)  data: 0.9477 (0.0001 -- 4.1990)  max mem: 14817
+[1,0]<stdout>:Epoch: [8]  [51/52]  eta: 0:00:01  loss: 0.8053 (0.8092)  time: 1.3073 (0.3329 -- 4.5507)  data: 0.9353 (0.0001 -- 4.2341)  max mem: 14817
+[1,0]<stdout>:Epoch: [8] Total time: 0:01:11 (1.3747 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.8053 (0.8088)
+[1,0]<stdout>:Epoch: [9]  [ 0/52]  eta: 0:04:58  loss: 0.8136 (0.8136)  time: 5.7357 (5.7357 -- 5.7357)  data: 5.1772 (5.1772 -- 5.1772)  max mem: 14817
+[1,0]<stdout>:Epoch: [9]  [20/52]  eta: 0:00:49  loss: 0.7921 (0.7986)  time: 1.3443 (0.3867 -- 3.9666)  data: 0.7617 (0.0002 -- 3.3548)  max mem: 14817
+[1,0]<stdout>:Epoch: [9]  [40/52]  eta: 0:00:17  loss: 0.7916 (0.7962)  time: 1.3178 (0.3968 -- 4.1213)  data: 0.8947 (0.0002 -- 3.7539)  max mem: 14817
+[1,0]<stdout>:Epoch: [9]  [51/52]  eta: 0:00:01  loss: 0.7901 (0.7955)  time: 1.3278 (0.3289 -- 4.1645)  data: 0.9684 (0.0002 -- 3.7949)  max mem: 14817
+[1,0]<stdout>:Epoch: [9] Total time: 0:01:10 (1.3637 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.7901 (0.7959)
+[1,0]<stdout>:Epoch: [10]  [ 0/52]  eta: 0:05:04  loss: 0.7932 (0.7932)  time: 5.8567 (5.8567 -- 5.8567)  data: 5.0757 (5.0757 -- 5.0757)  max mem: 14817
+[1,0]<stdout>:Epoch: [10]  [20/52]  eta: 0:00:50  loss: 0.7866 (0.7882)  time: 1.3527 (0.3480 -- 3.9596)  data: 0.8038 (0.0001 -- 3.6098)  max mem: 14817
+[1,0]<stdout>:Epoch: [10]  [40/52]  eta: 0:00:17  loss: 0.7790 (0.7857)  time: 1.3389 (0.3434 -- 4.2608)  data: 0.9444 (0.0002 -- 3.9128)  max mem: 14817
+[1,0]<stdout>:Epoch: [10]  [51/52]  eta: 0:00:01  loss: 0.7850 (0.7856)  time: 1.3080 (0.3123 -- 4.2608)  data: 0.9414 (0.0001 -- 3.9128)  max mem: 14817
+[1,0]<stdout>:Epoch: [10] Total time: 0:01:10 (1.3643 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.7850 (0.7836)
+[1,0]<stdout>:TEST...   [ 0/10]  eta: 0:01:02  loss: 0.7908 (0.7908)  time: 6.2998 (6.2998 -- 6.2998)  data: 6.1142 (6.1142 -- 6.1142)  max mem: 14817
+[1,0]<stdout>:TEST...   [ 9/10]  eta: 0:00:01  loss: 0.7722 (0.7767)  time: 1.5863 (0.1382 -- 6.2998)  data: 1.4112 (0.0001 -- 6.1142)  max mem: 14817
+[1,0]<stdout>:TEST...  Total time: 0:00:15 (1.5865 s / it)
+[1,0]<stdout>:Averaged stats: loss: 0.7722 (0.7735)
+[1,0]<stdout>:[CKPT] Saved improved checkpoint: /leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/output/checkpoint-10.pth (test_loss 0.773508, prev 0.9440192468464375)
+[1,0]<stdout>:Epoch: [11]  [ 0/52]  eta: 0:05:24  loss: 0.7892 (0.7892)  time: 6.2457 (6.2457 -- 6.2457)  data: 5.4657 (5.4657 -- 5.4657)  max mem: 14817
+[1,0]<stdout>:Epoch: [11]  [20/52]  eta: 0:00:48  loss: 0.7768 (0.7789)  time: 1.2886 (0.4447 -- 3.9804)  data: 0.7374 (0.0001 -- 3.4954)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [11]  [40/52]  eta: 0:00:16  loss: 0.7657 (0.7749)  time: 1.2642 (0.3859 -- 4.0736)  data: 0.8643 (0.0001 -- 3.7289)  max mem: 14817
+[1,0]<stdout>:Epoch: [11]  [51/52]  eta: 0:00:01  loss: 0.7599 (0.7713)  time: 1.2481 (0.3187 -- 3.9083)  data: 0.8755 (0.0001 -- 3.5875)  max mem: 14817
+[1,0]<stdout>:Epoch: [11] Total time: 0:01:08 (1.3149 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.7599 (0.7715)
+[1,0]<stdout>:Epoch: [12]  [ 0/52]  eta: 0:05:14  loss: 0.7794 (0.7794)  time: 6.0546 (6.0546 -- 6.0546)  data: 5.2967 (5.2967 -- 5.2967)  max mem: 14817
+[1,0]<stdout>:Epoch: [12]  [20/52]  eta: 0:00:48  loss: 0.7679 (0.7675)  time: 1.2738 (0.3809 -- 3.4935)  data: 0.6867 (0.0001 -- 3.1324)  max mem: 14817
+[1,0]<stdout>:Epoch: [12]  [40/52]  eta: 0:00:16  loss: 0.7603 (0.7632)  time: 1.2866 (0.3537 -- 4.0614)  data: 0.8180 (0.0001 -- 3.7458)  max mem: 14817
+[1,0]<stdout>:Epoch: [12]  [51/52]  eta: 0:00:01  loss: 0.7539 (0.7606)  time: 1.2286 (0.3122 -- 4.0614)  data: 0.8390 (0.0001 -- 3.7458)  max mem: 14817
+[1,0]<stdout>:Epoch: [12] Total time: 0:01:07 (1.3003 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.7539 (0.7590)
+[1,0]<stdout>:Epoch: [13]  [ 0/52]  eta: 0:05:14  loss: 0.7394 (0.7394)  time: 6.0477 (6.0477 -- 6.0477)  data: 5.1474 (5.1474 -- 5.1474)  max mem: 14817
+[1,0]<stdout>:Epoch: [13]  [20/52]  eta: 0:00:47  loss: 0.7413 (0.7430)  time: 1.2445 (0.4207 -- 3.5777)  data: 0.6549 (0.0001 -- 3.2199)  max mem: 14817
+[1,0]<stdout>:Epoch: [13]  [40/52]  eta: 0:00:16  loss: 0.7460 (0.7448)  time: 1.2625 (0.3829 -- 4.0619)  data: 0.7903 (0.0001 -- 3.7222)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [13]  [51/52]  eta: 0:00:01  loss: 0.7459 (0.7459)  time: 1.2077 (0.3131 -- 3.9802)  data: 0.7809 (0.0001 -- 3.6344)  max mem: 14817
+[1,0]<stdout>:Epoch: [13] Total time: 0:01:06 (1.2865 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.7459 (0.7478)
+[1,0]<stdout>:Epoch: [14]  [ 0/52]  eta: 0:05:00  loss: 0.7501 (0.7501)  time: 5.7848 (5.7848 -- 5.7848)  data: 5.0997 (5.0997 -- 5.0997)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [14]  [20/52]  eta: 0:00:46  loss: 0.7403 (0.7420)  time: 1.2383 (0.3959 -- 3.6268)  data: 0.6180 (0.0002 -- 3.2822)  max mem: 14817
+[1,0]<stdout>:Epoch: [14]  [40/52]  eta: 0:00:16  loss: 0.7404 (0.7415)  time: 1.2602 (0.3841 -- 3.9336)  data: 0.7929 (0.0002 -- 3.5722)  max mem: 14817
+[1,0]<stdout>:Epoch: [14]  [51/52]  eta: 0:00:01  loss: 0.7353 (0.7399)  time: 1.2105 (0.3132 -- 3.9336)  data: 0.7849 (0.0001 -- 3.5722)  max mem: 14817
+[1,0]<stdout>:Epoch: [14] Total time: 0:01:06 (1.2750 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.7353 (0.7389)
+[1,0]<stdout>:Epoch: [15]  [ 0/52]  eta: 0:05:06  loss: 0.7253 (0.7253)  time: 5.9002 (5.9002 -- 5.9002)  data: 5.2808 (5.2808 -- 5.2808)  max mem: 14817
+[1,0]<stdout>:Epoch: [15]  [20/52]  eta: 0:00:45  loss: 0.7333 (0.7341)  time: 1.2139 (0.4054 -- 3.3694)  data: 0.5815 (0.0001 -- 2.9202)  max mem: 14817
+[1,0]<stdout>:Epoch: [15]  [40/52]  eta: 0:00:15  loss: 0.7272 (0.7317)  time: 1.2190 (0.3665 -- 4.0347)  data: 0.7759 (0.0002 -- 3.6345)  max mem: 14817
+[1,0]<stdout>:Epoch: [15]  [51/52]  eta: 0:00:01  loss: 0.7294 (0.7314)  time: 1.1863 (0.3180 -- 4.0347)  data: 0.7965 (0.0002 -- 3.6345)  max mem: 14817
+[1,0]<stdout>:Epoch: [15] Total time: 0:01:04 (1.2479 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.7294 (0.7304)
+[1,0]<stdout>:Epoch: [16]  [ 0/52]  eta: 0:05:05  loss: 0.7308 (0.7308)  time: 5.8728 (5.8728 -- 5.8728)  data: 5.3021 (5.3021 -- 5.3021)  max mem: 14817
+[1,0]<stdout>:Epoch: [16]  [20/52]  eta: 0:00:45  loss: 0.7261 (0.7267)  time: 1.1920 (0.4450 -- 2.9778)  data: 0.4968 (0.0001 -- 2.3208)  max mem: 14817
+[1,0]<stdout>:Epoch: [16]  [40/52]  eta: 0:00:15  loss: 0.7175 (0.7243)  time: 1.1923 (0.3706 -- 3.3936)  data: 0.7322 (0.0001 -- 3.0196)  max mem: 14817
+[1,0]<stdout>:Epoch: [16]  [51/52]  eta: 0:00:01  loss: 0.7169 (0.7225)  time: 1.1424 (0.3174 -- 3.5841)  data: 0.7409 (0.0001 -- 3.2573)  max mem: 14817
+[1,0]<stdout>:Epoch: [16] Total time: 0:01:03 (1.2268 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.7169 (0.7232)
+[1,0]<stdout>:Epoch: [17]  [ 0/52]  eta: 0:04:55  loss: 0.7289 (0.7289)  time: 5.6810 (5.6810 -- 5.6810)  data: 5.0701 (5.0701 -- 5.0701)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [17]  [20/52]  eta: 0:00:45  loss: 0.7156 (0.7159)  time: 1.2045 (0.4669 -- 3.1658)  data: 0.5335 (0.0001 -- 2.8133)  max mem: 14817
+[1,0]<stdout>:Epoch: [17]  [40/52]  eta: 0:00:15  loss: 0.7161 (0.7157)  time: 1.1606 (0.3761 -- 3.5122)  data: 0.6788 (0.0001 -- 3.1556)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [17]  [51/52]  eta: 0:00:01  loss: 0.7147 (0.7158)  time: 1.1506 (0.3171 -- 3.6579)  data: 0.7171 (0.0001 -- 3.3269)  max mem: 14817
+[1,0]<stdout>:Epoch: [17] Total time: 0:01:03 (1.2226 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.7147 (0.7163)
+[1,0]<stdout>:Epoch: [18]  [ 0/52]  eta: 0:04:53  loss: 0.7162 (0.7162)  time: 5.6393 (5.6393 -- 5.6393)  data: 4.8152 (4.8152 -- 4.8152)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [18]  [20/52]  eta: 0:00:45  loss: 0.7090 (0.7082)  time: 1.1953 (0.5495 -- 2.7623)  data: 0.4818 (0.0001 -- 2.2790)  max mem: 14817
+[1,0]<stdout>:Epoch: [18]  [40/52]  eta: 0:00:15  loss: 0.7037 (0.7071)  time: 1.1785 (0.3707 -- 3.4845)  data: 0.7203 (0.0001 -- 3.1465)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [18]  [51/52]  eta: 0:00:01  loss: 0.7101 (0.7073)  time: 1.1301 (0.3134 -- 3.4845)  data: 0.7434 (0.0001 -- 3.1465)  max mem: 14817
+[1,0]<stdout>:Epoch: [18] Total time: 0:01:03 (1.2120 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.7101 (0.7096)
+[1,0]<stdout>:Epoch: [19]  [ 0/52]  eta: 0:04:50  loss: 0.7192 (0.7192)  time: 5.5813 (5.5813 -- 5.5813)  data: 4.2281 (4.2281 -- 4.2281)  max mem: 14817
+[1,0]<stdout>:Epoch: [19]  [20/52]  eta: 0:00:44  loss: 0.7067 (0.7065)  time: 1.1760 (0.5407 -- 2.6615)  data: 0.4243 (0.0002 -- 2.1445)  max mem: 14817
+[1,0]<stdout>:Epoch: [19]  [40/52]  eta: 0:00:15  loss: 0.7057 (0.7056)  time: 1.1621 (0.3510 -- 3.3633)  data: 0.6537 (0.0003 -- 3.0178)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [19]  [51/52]  eta: 0:00:01  loss: 0.7047 (0.7053)  time: 1.1271 (0.3149 -- 3.3633)  data: 0.7229 (0.0001 -- 3.0241)  max mem: 14817
+[1,0]<stdout>:Epoch: [19] Total time: 0:01:02 (1.2013 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.7047 (0.7030)
+[1,0]<stdout>:Epoch: [20]  [ 0/52]  eta: 0:04:46  loss: 0.7161 (0.7161)  time: 5.5011 (5.5011 -- 5.5011)  data: 4.6057 (4.6057 -- 4.6057)  max mem: 14817
+[1,0]<stdout>:Epoch: [20]  [20/52]  eta: 0:00:44  loss: 0.7039 (0.7013)  time: 1.1817 (0.4431 -- 2.7346)  data: 0.4673 (0.0002 -- 1.9557)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [20]  [40/52]  eta: 0:00:15  loss: 0.6929 (0.6968)  time: 1.1506 (0.4143 -- 3.0560)  data: 0.6354 (0.0001 -- 2.7388)  max mem: 14817
+[1,0]<stdout>:Epoch: [20]  [51/52]  eta: 0:00:01  loss: 0.6946 (0.6962)  time: 1.0903 (0.3210 -- 3.2185)  data: 0.6717 (0.0002 -- 2.8978)  max mem: 14817
+[1,0]<stdout>:Epoch: [20] Total time: 0:01:01 (1.1914 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6946 (0.6985)
+[1,0]<stdout>:TEST...   [ 0/10]  eta: 0:00:48  loss: 0.6982 (0.6982)  time: 4.8226 (4.8226 -- 4.8226)  data: 4.6379 (4.6379 -- 4.6379)  max mem: 14817
+[1,0]<stdout>:TEST...   [ 9/10]  eta: 0:00:01  loss: 0.6891 (0.6909)  time: 1.2903 (0.1413 -- 4.8226)  data: 1.1145 (0.0002 -- 4.6379)  max mem: 14817
+[1,0]<stdout>:TEST...  Total time: 0:00:12 (1.2904 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6891 (0.6889)
+[1,0]<stdout>:[CKPT] Saved improved checkpoint: /leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/output/checkpoint-20.pth (test_loss 0.688911, prev 0.7735077388584614)
+[1,0]<stdout>:Epoch: [21]  [ 0/52]  eta: 0:04:25  loss: 0.6866 (0.6866)  time: 5.1030 (5.1030 -- 5.1030)  data: 4.4095 (4.4095 -- 4.4095)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [21]  [20/52]  eta: 0:00:43  loss: 0.6958 (0.6953)  time: 1.1702 (0.3951 -- 3.0864)  data: 0.5200 (0.0002 -- 2.7489)  max mem: 14817
+[1,0]<stdout>:Epoch: [21]  [40/52]  eta: 0:00:15  loss: 0.6879 (0.6922)  time: 1.1464 (0.3630 -- 3.3212)  data: 0.6653 (0.0002 -- 2.9853)  max mem: 14817
+[1,0]<stdout>:Epoch: [21]  [51/52]  eta: 0:00:01  loss: 0.6856 (0.6912)  time: 1.0787 (0.3140 -- 3.1944)  data: 0.6619 (0.0001 -- 2.8381)  max mem: 14817
+[1,0]<stdout>:Epoch: [21] Total time: 0:01:00 (1.1705 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6856 (0.6930)
+[1,0]<stdout>:Epoch: [22]  [ 0/52]  eta: 0:04:52  loss: 0.6838 (0.6838)  time: 5.6257 (5.6257 -- 5.6257)  data: 4.7904 (4.7904 -- 4.7904)  max mem: 14817
+[1,0]<stdout>:Epoch: [22]  [20/52]  eta: 0:00:44  loss: 0.6894 (0.6907)  time: 1.1839 (0.6568 -- 2.7540)  data: 0.4061 (0.0001 -- 1.8002)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [22]  [40/52]  eta: 0:00:15  loss: 0.6897 (0.6893)  time: 1.1573 (0.4058 -- 3.2612)  data: 0.5956 (0.0002 -- 2.8286)  max mem: 14817
+[1,0]<stdout>:Epoch: [22]  [51/52]  eta: 0:00:01  loss: 0.6871 (0.6882)  time: 1.1163 (0.3167 -- 3.2612)  data: 0.6829 (0.0001 -- 2.8286)  max mem: 14817
+[1,0]<stdout>:Epoch: [22] Total time: 0:01:02 (1.2005 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6871 (0.6877)
+[1,0]<stdout>:Epoch: [23]  [ 0/52]  eta: 0:04:56  loss: 0.6881 (0.6881)  time: 5.6949 (5.6949 -- 5.6949)  data: 4.4185 (4.4185 -- 4.4185)  max mem: 14817
+[1,0]<stdout>:Epoch: [23]  [20/52]  eta: 0:00:44  loss: 0.6772 (0.6802)  time: 1.1858 (0.4796 -- 2.9882)  data: 0.4325 (0.0001 -- 2.2481)  max mem: 14817
+[1,0]<stdout>:Epoch: [23]  [40/52]  eta: 0:00:15  loss: 0.6808 (0.6811)  time: 1.1483 (0.4422 -- 3.1522)  data: 0.6402 (0.0001 -- 2.7710)  max mem: 14817
+[1,0]<stdout>:Epoch: [23]  [51/52]  eta: 0:00:01  loss: 0.6836 (0.6804)  time: 1.1135 (0.3199 -- 3.4810)  data: 0.6796 (0.0001 -- 3.1696)  max mem: 14817
+[1,0]<stdout>:Epoch: [23] Total time: 0:01:02 (1.1988 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6836 (0.6813)
+[1,0]<stdout>:Epoch: [24]  [ 0/52]  eta: 0:04:49  loss: 0.6633 (0.6633)  time: 5.5586 (5.5586 -- 5.5586)  data: 4.8943 (4.8943 -- 4.8943)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [24]  [20/52]  eta: 0:00:44  loss: 0.6802 (0.6783)  time: 1.1887 (0.5017 -- 2.7514)  data: 0.4367 (0.0002 -- 2.1122)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [24]  [40/52]  eta: 0:00:15  loss: 0.6751 (0.6760)  time: 1.1481 (0.4087 -- 3.0850)  data: 0.6190 (0.0002 -- 2.7019)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [24]  [51/52]  eta: 0:00:01  loss: 0.6778 (0.6767)  time: 1.1029 (0.3151 -- 3.1873)  data: 0.6704 (0.0001 -- 2.8717)  max mem: 14817
+[1,0]<stdout>:Epoch: [24] Total time: 0:01:02 (1.1964 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6778 (0.6775)
+[1,0]<stdout>:Epoch: [25]  [ 0/52]  eta: 0:04:48  loss: 0.6682 (0.6682)  time: 5.5415 (5.5415 -- 5.5415)  data: 4.9005 (4.9005 -- 4.9005)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [25]  [20/52]  eta: 0:00:44  loss: 0.6714 (0.6707)  time: 1.1883 (0.6045 -- 2.9563)  data: 0.3711 (0.0002 -- 2.3438)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [25]  [40/52]  eta: 0:00:15  loss: 0.6729 (0.6722)  time: 1.1311 (0.3601 -- 3.1547)  data: 0.5996 (0.0002 -- 2.8013)  max mem: 14817
+[1,0]<stdout>:Epoch: [25]  [51/52]  eta: 0:00:01  loss: 0.6731 (0.6718)  time: 1.0877 (0.3158 -- 3.1547)  data: 0.6378 (0.0001 -- 2.8013)  max mem: 14817
+[1,0]<stdout>:Epoch: [25] Total time: 0:01:01 (1.1871 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6731 (0.6716)
+[1,0]<stdout>:Epoch: [26]  [ 0/52]  eta: 0:04:48  loss: 0.6675 (0.6675)  time: 5.5537 (5.5537 -- 5.5537)  data: 4.6691 (4.6691 -- 4.6691)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [26]  [20/52]  eta: 0:00:44  loss: 0.6667 (0.6684)  time: 1.1734 (0.6409 -- 2.6350)  data: 0.3709 (0.0003 -- 1.7046)  max mem: 14817
+[1,0]<stdout>:Epoch: [26]  [40/52]  eta: 0:00:15  loss: 0.6692 (0.6682)  time: 1.1497 (0.4938 -- 2.8993)  data: 0.5892 (0.0002 -- 2.5402)  max mem: 14817
+[1,0]<stdout>:Epoch: [26]  [51/52]  eta: 0:00:01  loss: 0.6658 (0.6677)  time: 1.1202 (0.3257 -- 3.5487)  data: 0.6731 (0.0001 -- 3.2361)  max mem: 14817
+[1,0]<stdout>:Epoch: [26] Total time: 0:01:02 (1.1992 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6658 (0.6673)
+[1,0]<stdout>:Epoch: [27]  [ 0/52]  eta: 0:04:41  loss: 0.6728 (0.6728)  time: 5.4187 (5.4187 -- 5.4187)  data: 4.1233 (4.1233 -- 4.1233)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [27]  [20/52]  eta: 0:00:43  loss: 0.6674 (0.6679)  time: 1.1705 (0.6180 -- 2.4785)  data: 0.3205 (0.0002 -- 1.6117)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [27]  [40/52]  eta: 0:00:15  loss: 0.6619 (0.6639)  time: 1.1452 (0.4090 -- 3.0402)  data: 0.5875 (0.0002 -- 2.7050)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [27]  [51/52]  eta: 0:00:01  loss: 0.6619 (0.6638)  time: 1.0776 (0.3257 -- 3.1539)  data: 0.6259 (0.0002 -- 2.7050)  max mem: 14817
+[1,0]<stdout>:Epoch: [27] Total time: 0:01:01 (1.1787 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6619 (0.6640)
+[1,0]<stdout>:Epoch: [28]  [ 0/52]  eta: 0:04:47  loss: 0.6741 (0.6741)  time: 5.5351 (5.5351 -- 5.5351)  data: 4.3042 (4.3042 -- 4.3042)  max mem: 14817
+[1,0]<stdout>:Epoch: [28]  [20/52]  eta: 0:00:44  loss: 0.6643 (0.6655)  time: 1.1760 (0.5311 -- 2.9415)  data: 0.3993 (0.0001 -- 2.3093)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [28]  [40/52]  eta: 0:00:15  loss: 0.6628 (0.6643)  time: 1.1520 (0.4078 -- 3.2724)  data: 0.5519 (0.0002 -- 2.3596)  max mem: 14817
+[1,0]<stdout>:Epoch: [28]  [51/52]  eta: 0:00:01  loss: 0.6584 (0.6627)  time: 1.1128 (0.3133 -- 3.2724)  data: 0.5794 (0.0001 -- 2.6901)  max mem: 14817
+[1,0]<stdout>:Epoch: [28] Total time: 0:01:02 (1.1931 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6584 (0.6606)
+[1,0]<stdout>:Epoch: [29]  [ 0/52]  eta: 0:04:50  loss: 0.6653 (0.6653)  time: 5.5793 (5.5793 -- 5.5793)  data: 4.6351 (4.6351 -- 4.6351)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [29]  [20/52]  eta: 0:00:44  loss: 0.6575 (0.6593)  time: 1.1753 (0.5525 -- 2.6420)  data: 0.3611 (0.0002 -- 1.8118)  max mem: 14817
+[1,0]<stdout>:Epoch: [29]  [40/52]  eta: 0:00:15  loss: 0.6590 (0.6590)  time: 1.1385 (0.3948 -- 2.9599)  data: 0.5355 (0.0002 -- 2.5170)  max mem: 14817
+[1,0]<stdout>:Epoch: [29]  [51/52]  eta: 0:00:01  loss: 0.6583 (0.6581)  time: 1.0945 (0.3334 -- 2.9599)  data: 0.6246 (0.0001 -- 2.5170)  max mem: 14817
+[1,0]<stdout>:Epoch: [29] Total time: 0:01:01 (1.1884 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6583 (0.6571)
+[1,0]<stdout>:Epoch: [30]  [ 0/52]  eta: 0:04:45  loss: 0.6568 (0.6568)  time: 5.4968 (5.4968 -- 5.4968)  data: 4.3042 (4.3042 -- 4.3042)  max mem: 14817
+[1,0]<stdout>:Epoch: [30]  [20/52]  eta: 0:00:44  loss: 0.6584 (0.6573)  time: 1.1787 (0.5579 -- 2.6823)  data: 0.3620 (0.0001 -- 1.8364)  max mem: 14817
+[1,0]<stdout>:Epoch: [30]  [40/52]  eta: 0:00:15  loss: 0.6521 (0.6544)  time: 1.1264 (0.3946 -- 2.9261)  data: 0.5826 (0.0001 -- 2.5323)  max mem: 14817
+[1,0]<stdout>:Epoch: [30]  [51/52]  eta: 0:00:01  loss: 0.6521 (0.6535)  time: 1.1027 (0.3208 -- 3.4206)  data: 0.6699 (0.0001 -- 3.1028)  max mem: 14817
+[1,0]<stdout>:Epoch: [30] Total time: 0:01:01 (1.1880 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6521 (0.6546)
+[1,0]<stdout>:TEST...   [ 0/10]  eta: 0:00:44  loss: 0.6520 (0.6520)  time: 4.4616 (4.4616 -- 4.4616)  data: 4.2797 (4.2797 -- 4.2797)  max mem: 14817
+[1,0]<stdout>:TEST...   [ 9/10]  eta: 0:00:01  loss: 0.6476 (0.6479)  time: 1.2629 (0.1355 -- 4.4616)  data: 1.0882 (0.0002 -- 4.2797)  max mem: 14817
+[1,0]<stdout>:TEST...  Total time: 0:00:12 (1.2631 s / it)
+[1,0]<stdout>:Averaged stats: loss: 0.6476 (0.6455)
+[1,0]<stdout>:[CKPT] Saved improved checkpoint: /leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/output/checkpoint-30.pth (test_loss 0.645460, prev 0.6889112751930953)
+[1,0]<stdout>:Epoch: [31]  [ 0/52]  eta: 0:04:15  loss: 0.6427 (0.6427)  time: 4.9191 (4.9191 -- 4.9191)  data: 4.1601 (4.1601 -- 4.1601)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [31]  [20/52]  eta: 0:00:42  loss: 0.6518 (0.6523)  time: 1.1630 (0.4387 -- 2.9770)  data: 0.5496 (0.0002 -- 2.4898)  max mem: 14817
+[1,0]<stdout>:Epoch: [31]  [40/52]  eta: 0:00:14  loss: 0.6534 (0.6538)  time: 1.1223 (0.3860 -- 3.0422)  data: 0.6526 (0.0001 -- 2.6338)  max mem: 14817
+[1,0]<stdout>:Epoch: [31]  [51/52]  eta: 0:00:01  loss: 0.6534 (0.6531)  time: 1.0999 (0.3178 -- 3.4797)  data: 0.6807 (0.0001 -- 3.1640)  max mem: 14817
+[1,0]<stdout>:Epoch: [31] Total time: 0:01:00 (1.1680 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6534 (0.6520)
+[1,0]<stdout>:Epoch: [32]  [ 0/52]  eta: 0:04:39  loss: 0.6564 (0.6564)  time: 5.3748 (5.3748 -- 5.3748)  data: 4.3531 (4.3531 -- 4.3531)  max mem: 14817
+[1,0]<stdout>:Epoch: [32]  [20/52]  eta: 0:00:43  loss: 0.6530 (0.6547)  time: 1.1742 (0.6388 -- 2.6192)  data: 0.3938 (0.0002 -- 1.8871)  max mem: 14817
+[1,0]<stdout>:Epoch: [32]  [40/52]  eta: 0:00:15  loss: 0.6503 (0.6521)  time: 1.1357 (0.4462 -- 3.0057)  data: 0.5316 (0.0002 -- 2.5854)  max mem: 14817
+[1,0]<stdout>:Epoch: [32]  [51/52]  eta: 0:00:01  loss: 0.6476 (0.6511)  time: 1.0810 (0.3271 -- 3.0613)  data: 0.6196 (0.0001 -- 2.6793)  max mem: 14817
+[1,0]<stdout>:Epoch: [32] Total time: 0:01:01 (1.1795 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6476 (0.6505)
+[1,0]<stdout>:Epoch: [33]  [ 0/52]  eta: 0:04:51  loss: 0.6563 (0.6563)  time: 5.6135 (5.6135 -- 5.6135)  data: 4.2340 (4.2340 -- 4.2340)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [33]  [20/52]  eta: 0:00:46  loss: 0.6492 (0.6518)  time: 1.2416 (0.4593 -- 3.6885)  data: 0.5828 (0.0001 -- 3.3355)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [33]  [40/52]  eta: 0:00:16  loss: 0.6391 (0.6460)  time: 1.3209 (0.3544 -- 3.2146)  data: 0.8759 (0.0002 -- 2.8481)  max mem: 14817
+[1,0]<stdout>:Epoch: [33]  [51/52]  eta: 0:00:01  loss: 0.6426 (0.6465)  time: 1.2845 (0.3284 -- 3.3516)  data: 0.9017 (0.0002 -- 2.8481)  max mem: 14817
+[1,0]<stdout>:Epoch: [33] Total time: 0:01:08 (1.3243 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6426 (0.6479)
+[1,0]<stdout>:Epoch: [34]  [ 0/52]  eta: 0:05:13  loss: 0.6468 (0.6468)  time: 6.0256 (6.0256 -- 6.0256)  data: 4.8604 (4.8604 -- 4.8604)  max mem: 14817
+[1,0]<stdout>:Epoch: [34]  [20/52]  eta: 0:00:48  loss: 0.6454 (0.6454)  time: 1.2911 (0.3537 -- 3.9769)  data: 0.7016 (0.0002 -- 3.6515)  max mem: 14817
+[1,0]<stdout>:Epoch: [34]  [40/52]  eta: 0:00:17  loss: 0.6421 (0.6441)  time: 1.3392 (0.3603 -- 3.9587)  data: 0.8989 (0.0002 -- 3.6014)  max mem: 14817
+[1,0]<stdout>:Epoch: [34]  [51/52]  eta: 0:00:01  loss: 0.6443 (0.6450)  time: 1.3080 (0.3234 -- 3.6601)  data: 0.9462 (0.0001 -- 3.2914)  max mem: 14817
+[1,0]<stdout>:Epoch: [34] Total time: 0:01:10 (1.3531 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6443 (0.6462)
+[1,0]<stdout>:Epoch: [35]  [ 0/52]  eta: 0:05:21  loss: 0.6369 (0.6369)  time: 6.1880 (6.1880 -- 6.1880)  data: 5.1925 (5.1925 -- 5.1925)  max mem: 14817
+[1,0]<stdout>:Epoch: [35]  [20/52]  eta: 0:00:50  loss: 0.6440 (0.6439)  time: 1.3371 (0.4075 -- 3.9623)  data: 0.7736 (0.0001 -- 3.5638)  max mem: 14817
+[1,0]<stdout>:Epoch: [35]  [40/52]  eta: 0:00:17  loss: 0.6408 (0.6429)  time: 1.3284 (0.3406 -- 4.2175)  data: 0.9484 (0.0001 -- 3.8855)  max mem: 14817
+[1,0]<stdout>:Epoch: [35]  [51/52]  eta: 0:00:01  loss: 0.6451 (0.6428)  time: 1.3006 (0.3208 -- 4.2175)  data: 0.9509 (0.0001 -- 3.8855)  max mem: 14817
+[1,0]<stdout>:Epoch: [35] Total time: 0:01:10 (1.3609 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6451 (0.6438)
+[1,0]<stdout>:Epoch: [36]  [ 0/52]  eta: 0:05:21  loss: 0.6337 (0.6337)  time: 6.1818 (6.1818 -- 6.1818)  data: 5.2373 (5.2373 -- 5.2373)  max mem: 14817
+[1,0]<stdout>:Epoch: [36]  [20/52]  eta: 0:00:49  loss: 0.6429 (0.6414)  time: 1.3129 (0.4048 -- 3.6617)  data: 0.7307 (0.0002 -- 3.2811)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [36]  [40/52]  eta: 0:00:17  loss: 0.6420 (0.6415)  time: 1.3388 (0.3644 -- 4.2932)  data: 0.9249 (0.0001 -- 3.9645)  max mem: 14817
+[1,0]<stdout>:Epoch: [36]  [51/52]  eta: 0:00:01  loss: 0.6452 (0.6426)  time: 1.2858 (0.3153 -- 4.2385)  data: 0.9168 (0.0002 -- 3.9201)  max mem: 14817
+[1,0]<stdout>:Epoch: [36] Total time: 0:01:10 (1.3527 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6452 (0.6421)
+[1,0]<stdout>:Epoch: [37]  [ 0/52]  eta: 0:05:27  loss: 0.6410 (0.6410)  time: 6.3043 (6.3043 -- 6.3043)  data: 5.6543 (5.6543 -- 5.6543)  max mem: 14817
+[1,0]<stdout>:Epoch: [37]  [20/52]  eta: 0:00:49  loss: 0.6400 (0.6392)  time: 1.3159 (0.3664 -- 3.6895)  data: 0.7369 (0.0001 -- 3.3446)  max mem: 14817
+[1,0]<stdout>:Epoch: [37]  [40/52]  eta: 0:00:17  loss: 0.6391 (0.6397)  time: 1.3070 (0.3584 -- 4.2360)  data: 0.8762 (0.0001 -- 3.8603)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [37]  [51/52]  eta: 0:00:01  loss: 0.6404 (0.6400)  time: 1.2808 (0.3230 -- 4.2360)  data: 0.9151 (0.0000 -- 3.8603)  max mem: 14817
+[1,0]<stdout>:Epoch: [37] Total time: 0:01:09 (1.3445 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6404 (0.6418)
+[1,0]<stdout>:Epoch: [38]  [ 0/52]  eta: 0:05:16  loss: 0.6368 (0.6368)  time: 6.0841 (6.0841 -- 6.0841)  data: 5.4351 (5.4351 -- 5.4351)  max mem: 14817
+[1,0]<stdout>:Epoch: [38]  [20/52]  eta: 0:00:48  loss: 0.6376 (0.6391)  time: 1.2971 (0.3911 -- 3.9093)  data: 0.6980 (0.0001 -- 3.5643)  max mem: 14817
+[1,0]<stdout>:Epoch: [38]  [40/52]  eta: 0:00:16  loss: 0.6384 (0.6390)  time: 1.2830 (0.3944 -- 3.8195)  data: 0.8096 (0.0001 -- 3.3768)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [38]  [51/52]  eta: 0:00:01  loss: 0.6363 (0.6390)  time: 1.2456 (0.3478 -- 3.8221)  data: 0.8562 (0.0001 -- 3.4420)  max mem: 14817
+[1,0]<stdout>:Epoch: [38] Total time: 0:01:08 (1.3240 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6363 (0.6399)
+[1,0]<stdout>:Epoch: [39]  [ 0/52]  eta: 0:05:18  loss: 0.6275 (0.6275)  time: 6.1314 (6.1314 -- 6.1314)  data: 5.6451 (5.6451 -- 5.6451)  max mem: 14817
+[1,0]<stdout>:Epoch: [39]  [20/52]  eta: 0:00:48  loss: 0.6398 (0.6383)  time: 1.2886 (0.4052 -- 3.5171)  data: 0.7302 (0.0001 -- 3.1588)  max mem: 14817
+[1,0]<stdout>:Epoch: [39]  [40/52]  eta: 0:00:17  loss: 0.6351 (0.6369)  time: 1.3218 (0.3663 -- 4.0442)  data: 0.8736 (0.0001 -- 3.6946)  max mem: 14817
+[1,0]<stdout>:Epoch: [39]  [51/52]  eta: 0:00:01  loss: 0.6368 (0.6374)  time: 1.2629 (0.3386 -- 4.0442)  data: 0.8698 (0.0001 -- 3.6946)  max mem: 14817
+[1,0]<stdout>:Epoch: [39] Total time: 0:01:09 (1.3354 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6368 (0.6383)
+[1,0]<stdout>:Epoch: [40]  [ 0/52]  eta: 0:05:40  loss: 0.6481 (0.6481)  time: 6.5420 (6.5420 -- 6.5420)  data: 5.6739 (5.6739 -- 5.6739)  max mem: 14817
+[1,0]<stdout>:Epoch: [40]  [20/52]  eta: 0:00:49  loss: 0.6365 (0.6367)  time: 1.3119 (0.3770 -- 3.8740)  data: 0.6846 (0.0002 -- 3.3896)  max mem: 14817
+[1,0]<stdout>:Epoch: [40]  [40/52]  eta: 0:00:17  loss: 0.6331 (0.6356)  time: 1.2974 (0.3614 -- 4.0809)  data: 0.8816 (0.0002 -- 3.7478)  max mem: 14817
+[1,0]<stdout>:Epoch: [40]  [51/52]  eta: 0:00:01  loss: 0.6384 (0.6371)  time: 1.3070 (0.3241 -- 4.0809)  data: 0.9513 (0.0001 -- 3.7478)  max mem: 14817
+[1,0]<stdout>:Epoch: [40] Total time: 0:01:10 (1.3535 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6384 (0.6369)
+[1,0]<stdout>:TEST...   [ 0/10]  eta: 0:01:00  loss: 0.6327 (0.6327)  time: 6.0760 (6.0760 -- 6.0760)  data: 5.8888 (5.8888 -- 5.8888)  max mem: 14817
+[1,0]<stdout>:TEST...   [ 9/10]  eta: 0:00:01  loss: 0.6281 (0.6294)  time: 1.6272 (0.1402 -- 6.0760)  data: 1.4511 (0.0001 -- 5.8888)  max mem: 14817
+[1,0]<stdout>:TEST...  Total time: 0:00:16 (1.6274 s / it)
+[1,0]<stdout>:Averaged stats: loss: 0.6281 (0.6278)
+[1,0]<stdout>:[CKPT] Saved improved checkpoint: /leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/output/checkpoint-40.pth (test_loss 0.627806, prev 0.6454602746292949)
+[1,0]<stdout>:Epoch: [41]  [ 0/52]  eta: 0:05:20  loss: 0.6320 (0.6320)  time: 6.1611 (6.1611 -- 6.1611)  data: 5.3974 (5.3974 -- 5.3974)  max mem: 14817
+[1,0]<stdout>:Epoch: [41]  [20/52]  eta: 0:00:50  loss: 0.6362 (0.6370)  time: 1.3347 (0.3453 -- 4.2294)  data: 0.8544 (0.0001 -- 3.8285)  max mem: 14817
+[1,0]<stdout>:Epoch: [41]  [40/52]  eta: 0:00:17  loss: 0.6345 (0.6358)  time: 1.3331 (0.3341 -- 4.4512)  data: 0.9649 (0.0001 -- 4.1055)  max mem: 14817
+[1,0]<stdout>:Epoch: [41]  [51/52]  eta: 0:00:01  loss: 0.6362 (0.6360)  time: 1.3301 (0.3222 -- 4.3268)  data: 0.9860 (0.0002 -- 3.9939)  max mem: 14817
+[1,0]<stdout>:Epoch: [41] Total time: 0:01:11 (1.3672 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6362 (0.6355)
+[1,0]<stdout>:Epoch: [42]  [ 0/52]  eta: 0:05:37  loss: 0.6381 (0.6381)  time: 6.4896 (6.4896 -- 6.4896)  data: 5.3995 (5.3995 -- 5.3995)  max mem: 14817
+[1,0]<stdout>:Epoch: [42]  [20/52]  eta: 0:00:48  loss: 0.6335 (0.6359)  time: 1.2722 (0.4667 -- 3.2884)  data: 0.6932 (0.0001 -- 2.8929)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [42]  [40/52]  eta: 0:00:18  loss: 0.6338 (0.6350)  time: 1.6423 (0.3991 -- 8.9466)  data: 1.1703 (0.0001 -- 8.5377)  max mem: 14817
+[1,0]<stdout>:Epoch: [42]  [51/52]  eta: 0:00:01  loss: 0.6311 (0.6347)  time: 1.3458 (0.3151 -- 4.4137)  data: 0.9370 (0.0000 -- 4.0946)  max mem: 14817
+[1,0]<stdout>:Epoch: [42] Total time: 0:01:16 (1.4739 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6311 (0.6341)
+[1,0]<stdout>:Epoch: [43]  [ 0/52]  eta: 0:05:28  loss: 0.6300 (0.6300)  time: 6.3222 (6.3222 -- 6.3222)  data: 5.7413 (5.7413 -- 5.7413)  max mem: 14817
+[1,0]<stdout>:Epoch: [43]  [20/52]  eta: 0:00:50  loss: 0.6301 (0.6311)  time: 1.3307 (0.4252 -- 3.8223)  data: 0.7432 (0.0002 -- 3.4536)  max mem: 14817
+[1,0]<stdout>:Epoch: [43]  [40/52]  eta: 0:00:17  loss: 0.6319 (0.6319)  time: 1.3618 (0.3831 -- 4.3665)  data: 0.9343 (0.0001 -- 4.0406)  max mem: 14817
+[1,0]<stdout>:Epoch: [43]  [51/52]  eta: 0:00:01  loss: 0.6307 (0.6323)  time: 1.2972 (0.3141 -- 4.3665)  data: 0.9208 (0.0001 -- 4.0406)  max mem: 14817
+[1,0]<stdout>:Epoch: [43] Total time: 0:01:11 (1.3708 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6307 (0.6329)
+[1,0]<stdout>:Epoch: [44]  [ 0/52]  eta: 0:05:35  loss: 0.6273 (0.6273)  time: 6.4459 (6.4459 -- 6.4459)  data: 5.7889 (5.7889 -- 5.7889)  max mem: 14817
+[1,0]<stdout>:Epoch: [44]  [20/52]  eta: 0:00:48  loss: 0.6308 (0.6317)  time: 1.2830 (0.3986 -- 4.1046)  data: 0.7125 (0.0001 -- 3.7836)  max mem: 14817
+[1,0]<stdout>:Epoch: [44]  [40/52]  eta: 0:00:16  loss: 0.6313 (0.6320)  time: 1.2604 (0.4210 -- 3.7306)  data: 0.7603 (0.0001 -- 3.3521)  max mem: 14817
+[1,0]<stdout>:Epoch: [44]  [51/52]  eta: 0:00:01  loss: 0.6353 (0.6328)  time: 1.2208 (0.3180 -- 3.6191)  data: 0.7842 (0.0001 -- 3.2979)  max mem: 14817
+[1,0]<stdout>:Epoch: [44] Total time: 0:01:08 (1.3113 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6353 (0.6323)
+[1,0]<stdout>:Epoch: [45]  [ 0/52]  eta: 0:04:49  loss: 0.6353 (0.6353)  time: 5.5620 (5.5620 -- 5.5620)  data: 4.7935 (4.7935 -- 4.7935)  max mem: 14817
+[1,0]<stdout>:Epoch: [45]  [20/52]  eta: 0:00:48  loss: 0.6334 (0.6332)  time: 1.2986 (0.3801 -- 3.6083)  data: 0.7076 (0.0001 -- 3.2638)  max mem: 14817
+[1,0]<stdout>:Epoch: [45]  [40/52]  eta: 0:00:16  loss: 0.6323 (0.6326)  time: 1.2331 (0.3754 -- 4.3438)  data: 0.7634 (0.0001 -- 3.9655)  max mem: 14817
+[1,0]<stdout>:Epoch: [45]  [51/52]  eta: 0:00:01  loss: 0.6309 (0.6321)  time: 1.2142 (0.3251 -- 4.3438)  data: 0.7946 (0.0000 -- 3.9655)  max mem: 14817
+[1,0]<stdout>:Epoch: [45] Total time: 0:01:07 (1.2909 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6309 (0.6314)
+[1,0]<stdout>:Epoch: [46]  [ 0/52]  eta: 0:04:51  loss: 0.6366 (0.6366)  time: 5.6097 (5.6097 -- 5.6097)  data: 4.9755 (4.9755 -- 4.9755)  max mem: 14817
+[1,0]<stdout>:Epoch: [46]  [20/52]  eta: 0:00:47  loss: 0.6331 (0.6331)  time: 1.2857 (0.3893 -- 3.7711)  data: 0.6772 (0.0001 -- 3.4168)  max mem: 14817
+[1,0]<stdout>:Epoch: [46]  [40/52]  eta: 0:00:16  loss: 0.6298 (0.6321)  time: 1.2626 (0.4325 -- 3.8667)  data: 0.7794 (0.0002 -- 3.4932)  max mem: 14817
+[1,0]<stdout>:Epoch: [46]  [51/52]  eta: 0:00:01  loss: 0.6308 (0.6323)  time: 1.2082 (0.3237 -- 3.6240)  data: 0.7832 (0.0001 -- 3.3042)  max mem: 14817
+[1,0]<stdout>:Epoch: [46] Total time: 0:01:07 (1.3054 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6308 (0.6302)
+[1,0]<stdout>:Epoch: [47]  [ 0/52]  eta: 0:05:16  loss: 0.6379 (0.6379)  time: 6.0898 (6.0898 -- 6.0898)  data: 5.4639 (5.4639 -- 5.4639)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [47]  [20/52]  eta: 0:00:47  loss: 0.6284 (0.6299)  time: 1.2638 (0.3665 -- 3.9004)  data: 0.6919 (0.0002 -- 3.5230)  max mem: 14817
+[1,0]<stdout>:Epoch: [47]  [40/52]  eta: 0:00:16  loss: 0.6305 (0.6296)  time: 1.2553 (0.3786 -- 3.7366)  data: 0.7769 (0.0001 -- 3.3932)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [47]  [51/52]  eta: 0:00:01  loss: 0.6274 (0.6300)  time: 1.2093 (0.3253 -- 3.7366)  data: 0.7758 (0.0001 -- 3.3932)  max mem: 14817
+[1,0]<stdout>:Epoch: [47] Total time: 0:01:07 (1.2904 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6274 (0.6303)
+[1,0]<stdout>:Epoch: [48]  [ 0/52]  eta: 0:05:39  loss: 0.6321 (0.6321)  time: 6.5211 (6.5211 -- 6.5211)  data: 6.0101 (6.0101 -- 6.0101)  max mem: 14817
+[1,0]<stdout>:Epoch: [48]  [20/52]  eta: 0:00:51  loss: 0.6282 (0.6294)  time: 1.3564 (0.3967 -- 4.1709)  data: 0.7775 (0.0002 -- 3.8522)  max mem: 14817
+[1,0]<stdout>:Epoch: [48]  [40/52]  eta: 0:00:17  loss: 0.6248 (0.6278)  time: 1.3361 (0.3307 -- 4.5647)  data: 0.9611 (0.0002 -- 4.2205)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [48]  [51/52]  eta: 0:00:01  loss: 0.6243 (0.6272)  time: 1.3055 (0.3143 -- 4.4963)  data: 0.9333 (0.0001 -- 4.1589)  max mem: 14817
+[1,0]<stdout>:Epoch: [48] Total time: 0:01:12 (1.3852 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6243 (0.6283)
+[1,0]<stdout>:Epoch: [49]  [ 0/52]  eta: 0:05:26  loss: 0.6312 (0.6312)  time: 6.2884 (6.2884 -- 6.2884)  data: 5.6506 (5.6506 -- 5.6506)  max mem: 14817
+[1,0]<stdout>:Epoch: [49]  [20/52]  eta: 0:00:50  loss: 0.6292 (0.6299)  time: 1.3466 (0.3618 -- 3.7756)  data: 0.7796 (0.0001 -- 3.4128)  max mem: 14817
+[1,0]<stdout>:Epoch: [49]  [40/52]  eta: 0:00:17  loss: 0.6267 (0.6285)  time: 1.3490 (0.3627 -- 4.3808)  data: 0.9584 (0.0001 -- 4.0308)  max mem: 14817
+[1,0]<stdout>:Epoch: [49]  [51/52]  eta: 0:00:01  loss: 0.6273 (0.6286)  time: 1.3095 (0.3127 -- 4.4128)  data: 0.9495 (0.0001 -- 4.0873)  max mem: 14817
+[1,0]<stdout>:Epoch: [49] Total time: 0:01:11 (1.3754 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6273 (0.6278)
+[1,0]<stdout>:Epoch: [50]  [ 0/52]  eta: 0:05:34  loss: 0.6266 (0.6266)  time: 6.4241 (6.4241 -- 6.4241)  data: 5.6823 (5.6823 -- 5.6823)  max mem: 14817
+[1,0]<stdout>:Epoch: [50]  [20/52]  eta: 0:00:50  loss: 0.6281 (0.6284)  time: 1.3500 (0.3872 -- 4.2628)  data: 0.7223 (0.0001 -- 3.9091)  max mem: 14817
+[1,0]<stdout>:Epoch: [50]  [40/52]  eta: 0:00:17  loss: 0.6274 (0.6290)  time: 1.2804 (0.3394 -- 4.2626)  data: 0.8726 (0.0002 -- 3.8984)  max mem: 14817
+[1,0]<stdout>:Epoch: [50]  [51/52]  eta: 0:00:01  loss: 0.6240 (0.6276)  time: 1.2867 (0.3298 -- 4.1446)  data: 0.9041 (0.0000 -- 3.8271)  max mem: 14817
+[1,0]<stdout>:Epoch: [50] Total time: 0:01:10 (1.3632 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6240 (0.6269)
+[1,0]<stdout>:TEST...   [ 0/10]  eta: 0:00:56  loss: 0.6242 (0.6242)  time: 5.6843 (5.6843 -- 5.6843)  data: 5.5003 (5.5003 -- 5.5003)  max mem: 14817
+[1,0]<stdout>:TEST...   [ 9/10]  eta: 0:00:01  loss: 0.6168 (0.6199)  time: 1.6166 (0.1422 -- 5.6843)  data: 1.4417 (0.0001 -- 5.5003)  max mem: 14817
+[1,0]<stdout>:TEST...  Total time: 0:00:16 (1.6167 s / it)
+[1,0]<stdout>:Averaged stats: loss: 0.6168 (0.6179)
+[1,0]<stdout>:[CKPT] Saved improved checkpoint: /leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/output/checkpoint-50.pth (test_loss 0.617869, prev 0.6278060099110008)
+[1,0]<stdout>:Epoch: [51]  [ 0/52]  eta: 0:04:58  loss: 0.6333 (0.6333)  time: 5.7491 (5.7491 -- 5.7491)  data: 5.0468 (5.0468 -- 5.0468)  max mem: 14817
+[1,0]<stdout>:Epoch: [51]  [20/52]  eta: 0:00:50  loss: 0.6256 (0.6274)  time: 1.3546 (0.3932 -- 4.4516)  data: 0.8525 (0.0002 -- 4.1234)  max mem: 14817
+[1,0]<stdout>:Epoch: [51]  [40/52]  eta: 0:00:17  loss: 0.6249 (0.6266)  time: 1.3154 (0.3489 -- 4.3664)  data: 0.9359 (0.0001 -- 4.0421)  max mem: 14817
+[1,0]<stdout>:Epoch: [51]  [51/52]  eta: 0:00:01  loss: 0.6236 (0.6265)  time: 1.2875 (0.3127 -- 4.3664)  data: 0.9319 (0.0002 -- 4.0421)  max mem: 14817
+[1,0]<stdout>:Epoch: [51] Total time: 0:01:10 (1.3539 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6236 (0.6269)
+[1,0]<stdout>:Epoch: [52]  [ 0/52]  eta: 0:05:15  loss: 0.6300 (0.6300)  time: 6.0713 (6.0713 -- 6.0713)  data: 5.4003 (5.4003 -- 5.4003)  max mem: 14817
+[1,0]<stdout>:Epoch: [52]  [20/52]  eta: 0:00:49  loss: 0.6265 (0.6264)  time: 1.3335 (0.3708 -- 3.7902)  data: 0.7558 (0.0002 -- 3.4256)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [52]  [40/52]  eta: 0:00:17  loss: 0.6192 (0.6237)  time: 1.3464 (0.3518 -- 4.5945)  data: 0.9367 (0.0002 -- 4.2496)  max mem: 14817
+[1,0]<stdout>:Epoch: [52]  [51/52]  eta: 0:00:01  loss: 0.6218 (0.6241)  time: 1.3017 (0.3217 -- 4.5945)  data: 0.9385 (0.0001 -- 4.2496)  max mem: 14817
+[1,0]<stdout>:Epoch: [52] Total time: 0:01:10 (1.3652 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6218 (0.6253)
+[1,0]<stdout>:Epoch: [53]  [ 0/52]  eta: 0:05:19  loss: 0.6146 (0.6146)  time: 6.1410 (6.1410 -- 6.1410)  data: 5.0265 (5.0265 -- 5.0265)  max mem: 14817
+[1,0]<stdout>:Epoch: [53]  [20/52]  eta: 0:00:48  loss: 0.6241 (0.6261)  time: 1.2967 (0.3895 -- 3.4946)  data: 0.7014 (0.0002 -- 3.1368)  max mem: 14817
+[1,0]<stdout>:Epoch: [53]  [40/52]  eta: 0:00:17  loss: 0.6281 (0.6259)  time: 1.3403 (0.3636 -- 4.1391)  data: 0.9165 (0.0002 -- 3.7673)  max mem: 14817
+[1,0]<stdout>:Epoch: [53]  [51/52]  eta: 0:00:01  loss: 0.6213 (0.6259)  time: 1.3177 (0.3156 -- 4.1391)  data: 0.9605 (0.0001 -- 3.8133)  max mem: 14817
+[1,0]<stdout>:Epoch: [53] Total time: 0:01:10 (1.3570 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6213 (0.6248)
+[1,0]<stdout>:Epoch: [54]  [ 0/52]  eta: 0:05:25  loss: 0.6228 (0.6228)  time: 6.2692 (6.2692 -- 6.2692)  data: 4.9675 (4.9675 -- 4.9675)  max mem: 14817
+[1,0]<stdout>:Epoch: [54]  [20/52]  eta: 0:00:49  loss: 0.6260 (0.6243)  time: 1.3205 (0.4124 -- 3.9236)  data: 0.7242 (0.0001 -- 3.5972)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [54]  [40/52]  eta: 0:00:17  loss: 0.6224 (0.6238)  time: 1.2946 (0.3867 -- 4.0416)  data: 0.8228 (0.0001 -- 3.6593)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [54]  [51/52]  eta: 0:00:01  loss: 0.6224 (0.6242)  time: 1.2653 (0.3134 -- 4.0416)  data: 0.8625 (0.0001 -- 3.6593)  max mem: 14817
+[1,0]<stdout>:Epoch: [54] Total time: 0:01:09 (1.3400 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6224 (0.6242)
+[1,0]<stdout>:Epoch: [55]  [ 0/52]  eta: 0:05:12  loss: 0.6234 (0.6234)  time: 6.0136 (6.0136 -- 6.0136)  data: 4.8185 (4.8185 -- 4.8185)  max mem: 14817
+[1,0]<stdout>:Epoch: [55]  [20/52]  eta: 0:00:48  loss: 0.6246 (0.6267)  time: 1.2809 (0.3453 -- 4.1168)  data: 0.7043 (0.0002 -- 3.7867)  max mem: 14817
+[1,0]<stdout>:Epoch: [55]  [40/52]  eta: 0:00:16  loss: 0.6193 (0.6240)  time: 1.2422 (0.4028 -- 3.6456)  data: 0.7233 (0.0002 -- 3.2039)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [55]  [51/52]  eta: 0:00:01  loss: 0.6191 (0.6227)  time: 1.2015 (0.3239 -- 3.6016)  data: 0.7387 (0.0000 -- 3.2546)  max mem: 14817
+[1,0]<stdout>:Epoch: [55] Total time: 0:01:07 (1.3017 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6191 (0.6236)
+[1,0]<stdout>:Epoch: [56]  [ 0/52]  eta: 0:05:03  loss: 0.6340 (0.6340)  time: 5.8278 (5.8278 -- 5.8278)  data: 4.9963 (4.9963 -- 4.9963)  max mem: 14817
+[1,0]<stdout>:Epoch: [56]  [20/52]  eta: 0:00:47  loss: 0.6224 (0.6219)  time: 1.2533 (0.3883 -- 3.5136)  data: 0.6270 (0.0001 -- 3.1907)  max mem: 14817
+[1,0]<stdout>:Epoch: [56]  [40/52]  eta: 0:00:17  loss: 0.6205 (0.6213)  time: 1.4481 (0.3408 -- 6.1516)  data: 1.0013 (0.0002 -- 5.7817)  max mem: 14817
+[1,0]<stdout>:Epoch: [56]  [51/52]  eta: 0:00:01  loss: 0.6203 (0.6213)  time: 1.3925 (0.3179 -- 6.1516)  data: 1.0271 (0.0001 -- 5.7817)  max mem: 14817
+[1,0]<stdout>:Epoch: [56] Total time: 0:01:10 (1.3591 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6203 (0.6226)
+[1,0]<stdout>:Epoch: [57]  [ 0/52]  eta: 0:05:17  loss: 0.6366 (0.6366)  time: 6.1031 (6.1031 -- 6.1031)  data: 5.1532 (5.1532 -- 5.1532)  max mem: 14817
+[1,0]<stdout>:Epoch: [57]  [20/52]  eta: 0:00:47  loss: 0.6212 (0.6241)  time: 1.2386 (0.4242 -- 3.4626)  data: 0.5639 (0.0001 -- 3.1076)  max mem: 14817
+[1,0]<stdout>:Epoch: [57]  [40/52]  eta: 0:00:16  loss: 0.6228 (0.6236)  time: 1.1952 (0.3915 -- 3.2586)  data: 0.7245 (0.0001 -- 2.9137)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [57]  [51/52]  eta: 0:00:01  loss: 0.6225 (0.6236)  time: 1.2194 (0.3153 -- 3.3023)  data: 0.7780 (0.0001 -- 2.9137)  max mem: 14817
+[1,0]<stdout>:Epoch: [57] Total time: 0:01:06 (1.2764 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6225 (0.6230)
+[1,0]<stdout>:Epoch: [58]  [ 0/52]  eta: 0:05:01  loss: 0.6223 (0.6223)  time: 5.7963 (5.7963 -- 5.7963)  data: 4.8007 (4.8007 -- 4.8007)  max mem: 14817
+[1,0]<stdout>:Epoch: [58]  [20/52]  eta: 0:00:46  loss: 0.6224 (0.6216)  time: 1.2422 (0.4010 -- 3.6894)  data: 0.5683 (0.0002 -- 3.3600)  max mem: 14817
+[1,0]<stdout>:Epoch: [58]  [40/52]  eta: 0:00:16  loss: 0.6225 (0.6218)  time: 1.2199 (0.3506 -- 3.8113)  data: 0.7656 (0.0001 -- 3.4538)  max mem: 14817
+[1,0]<stdout>:Epoch: [58]  [51/52]  eta: 0:00:01  loss: 0.6232 (0.6219)  time: 1.1716 (0.3265 -- 3.6919)  data: 0.7799 (0.0001 -- 3.3789)  max mem: 14817
+[1,0]<stdout>:Epoch: [58] Total time: 0:01:05 (1.2645 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6232 (0.6217)
+[1,0]<stdout>:Epoch: [59]  [ 0/52]  eta: 0:05:03  loss: 0.6251 (0.6251)  time: 5.8312 (5.8312 -- 5.8312)  data: 4.8702 (4.8702 -- 4.8702)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [59]  [20/52]  eta: 0:00:46  loss: 0.6220 (0.6208)  time: 1.2257 (0.5206 -- 3.0302)  data: 0.5216 (0.0001 -- 2.6146)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [59]  [40/52]  eta: 0:00:15  loss: 0.6225 (0.6208)  time: 1.2127 (0.3949 -- 3.6939)  data: 0.7230 (0.0002 -- 3.3226)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [59]  [51/52]  eta: 0:00:01  loss: 0.6174 (0.6202)  time: 1.1833 (0.3179 -- 3.7850)  data: 0.7731 (0.0001 -- 3.4407)  max mem: 14817
+[1,0]<stdout>:Epoch: [59] Total time: 0:01:04 (1.2497 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6174 (0.6209)
+[1,0]<stdout>:Epoch: [60]  [ 0/52]  eta: 0:04:51  loss: 0.6141 (0.6141)  time: 5.5994 (5.5994 -- 5.5994)  data: 4.5371 (4.5371 -- 4.5371)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [60]  [20/52]  eta: 0:00:46  loss: 0.6219 (0.6208)  time: 1.2303 (0.4398 -- 3.1622)  data: 0.5303 (0.0002 -- 2.6616)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [60]  [40/52]  eta: 0:00:15  loss: 0.6198 (0.6204)  time: 1.1980 (0.4280 -- 3.3345)  data: 0.7162 (0.0002 -- 2.9486)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [60]  [51/52]  eta: 0:00:01  loss: 0.6189 (0.6200)  time: 1.1797 (0.3407 -- 3.3345)  data: 0.7813 (0.0001 -- 2.9867)  max mem: 14817
+[1,0]<stdout>:Epoch: [60] Total time: 0:01:04 (1.2461 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6189 (0.6203)
+[1,0]<stdout>:TEST...   [ 0/10]  eta: 0:00:48  loss: 0.6188 (0.6188)  time: 4.8008 (4.8008 -- 4.8008)  data: 4.6130 (4.6130 -- 4.6130)  max mem: 14817
+[1,0]<stdout>:TEST...   [ 9/10]  eta: 0:00:01  loss: 0.6151 (0.6144)  time: 1.3918 (0.1372 -- 4.8008)  data: 1.2168 (0.0001 -- 4.6130)  max mem: 14817
+[1,0]<stdout>:TEST...  Total time: 0:00:13 (1.3920 s / it)
+[1,0]<stdout>:Averaged stats: loss: 0.6151 (0.6134)
+[1,0]<stdout>:[CKPT] Saved improved checkpoint: /leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/output/checkpoint-60.pth (test_loss 0.613394, prev 0.6178685644641518)
+[1,0]<stdout>:Epoch: [61]  [ 0/52]  eta: 0:04:44  loss: 0.6278 (0.6278)  time: 5.4757 (5.4757 -- 5.4757)  data: 4.7619 (4.7619 -- 4.7619)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [61]  [20/52]  eta: 0:00:45  loss: 0.6227 (0.6235)  time: 1.2185 (0.4168 -- 3.2471)  data: 0.6594 (0.0002 -- 2.8930)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [61]  [40/52]  eta: 0:00:15  loss: 0.6196 (0.6213)  time: 1.2058 (0.3609 -- 3.6082)  data: 0.7817 (0.0001 -- 3.2804)  max mem: 14817
+[1,0]<stdout>:Epoch: [61]  [51/52]  eta: 0:00:01  loss: 0.6216 (0.6216)  time: 1.1786 (0.3310 -- 4.0467)  data: 0.7937 (0.0001 -- 3.6960)  max mem: 14817
+[1,0]<stdout>:Epoch: [61] Total time: 0:01:04 (1.2382 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6216 (0.6201)
+[1,0]<stdout>:Epoch: [62]  [ 0/52]  eta: 0:04:50  loss: 0.6243 (0.6243)  time: 5.5835 (5.5835 -- 5.5835)  data: 4.7201 (4.7201 -- 4.7201)  max mem: 14817
+[1,0]<stdout>:Epoch: [62]  [20/52]  eta: 0:00:45  loss: 0.6206 (0.6228)  time: 1.2111 (0.4490 -- 3.1839)  data: 0.5109 (0.0001 -- 2.6435)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [62]  [40/52]  eta: 0:00:15  loss: 0.6171 (0.6207)  time: 1.1965 (0.3782 -- 3.3292)  data: 0.6707 (0.0002 -- 2.9642)  max mem: 14817
+[1,0]<stdout>:Epoch: [62]  [51/52]  eta: 0:00:01  loss: 0.6174 (0.6205)  time: 1.1437 (0.3148 -- 3.6083)  data: 0.7290 (0.0001 -- 3.2972)  max mem: 14817
+[1,0]<stdout>:Epoch: [62] Total time: 0:01:03 (1.2280 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6174 (0.6193)
+[1,0]<stdout>:Epoch: [63]  [ 0/52]  eta: 0:05:04  loss: 0.6235 (0.6235)  time: 5.8464 (5.8464 -- 5.8464)  data: 4.4567 (4.4567 -- 4.4567)  max mem: 14817
+[1,0]<stdout>:Epoch: [63]  [20/52]  eta: 0:00:45  loss: 0.6183 (0.6194)  time: 1.2162 (0.4301 -- 3.1306)  data: 0.5472 (0.0002 -- 2.7457)  max mem: 14817
+[1,0]<stdout>:Epoch: [63]  [40/52]  eta: 0:00:15  loss: 0.6175 (0.6187)  time: 1.1792 (0.3489 -- 3.4856)  data: 0.7081 (0.0001 -- 3.1502)  max mem: 14817
+[1,0]<stdout>:Epoch: [63]  [51/52]  eta: 0:00:01  loss: 0.6203 (0.6194)  time: 1.1470 (0.3204 -- 3.4858)  data: 0.7275 (0.0001 -- 3.1616)  max mem: 14817
+[1,0]<stdout>:Epoch: [63] Total time: 0:01:04 (1.2355 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6203 (0.6190)
+[1,0]<stdout>:Epoch: [64]  [ 0/52]  eta: 0:04:47  loss: 0.6293 (0.6293)  time: 5.5357 (5.5357 -- 5.5357)  data: 5.0134 (5.0134 -- 5.0134)  max mem: 14817
+[1,0]<stdout>:Epoch: [64]  [20/52]  eta: 0:00:44  loss: 0.6159 (0.6165)  time: 1.1920 (0.5698 -- 2.7169)  data: 0.4838 (0.0001 -- 2.0873)  max mem: 14817
+[1,0]<stdout>:Epoch: [64]  [40/52]  eta: 0:00:15  loss: 0.6144 (0.6161)  time: 1.2083 (0.3571 -- 3.5332)  data: 0.6876 (0.0001 -- 3.1965)  max mem: 14817
+[1,0]<stdout>:Epoch: [64]  [51/52]  eta: 0:00:01  loss: 0.6154 (0.6162)  time: 1.1480 (0.3134 -- 3.5332)  data: 0.7373 (0.0001 -- 3.1965)  max mem: 14817
+[1,0]<stdout>:Epoch: [64] Total time: 0:01:03 (1.2232 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6154 (0.6181)
+[1,0]<stdout>:Epoch: [65]  [ 0/52]  eta: 0:05:00  loss: 0.6234 (0.6234)  time: 5.7862 (5.7862 -- 5.7862)  data: 5.0200 (5.0200 -- 5.0200)  max mem: 14817
+[1,0]<stdout>:Epoch: [65]  [20/52]  eta: 0:00:45  loss: 0.6193 (0.6193)  time: 1.1948 (0.5170 -- 3.1737)  data: 0.5080 (0.0001 -- 2.5843)  max mem: 14817
+[1,0]<stdout>:Epoch: [65]  [40/52]  eta: 0:00:15  loss: 0.6171 (0.6184)  time: 1.1734 (0.3862 -- 3.1304)  data: 0.6103 (0.0001 -- 2.7894)  max mem: 14817
+[1,0]<stdout>:Epoch: [65]  [51/52]  eta: 0:00:01  loss: 0.6189 (0.6191)  time: 1.1371 (0.3232 -- 3.2685)  data: 0.6939 (0.0001 -- 2.9556)  max mem: 14817
+[1,0]<stdout>:Epoch: [65] Total time: 0:01:03 (1.2252 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6189 (0.6180)
+[1,0]<stdout>:Epoch: [66]  [ 0/52]  eta: 0:05:00  loss: 0.6223 (0.6223)  time: 5.7702 (5.7702 -- 5.7702)  data: 5.0160 (5.0160 -- 5.0160)  max mem: 14817
+[1,0]<stdout>:Epoch: [66]  [20/52]  eta: 0:00:45  loss: 0.6165 (0.6169)  time: 1.2108 (0.4894 -- 3.0524)  data: 0.4905 (0.0001 -- 2.3515)  max mem: 14817
+[1,0]<stdout>:Epoch: [66]  [40/52]  eta: 0:00:15  loss: 0.6173 (0.6175)  time: 1.2127 (0.3877 -- 3.4515)  data: 0.7090 (0.0001 -- 3.1184)  max mem: 14817
+[1,0]<stdout>:Epoch: [66]  [51/52]  eta: 0:00:01  loss: 0.6182 (0.6179)  time: 1.1620 (0.3190 -- 3.5172)  data: 0.7596 (0.0001 -- 3.1896)  max mem: 14817
+[1,0]<stdout>:Epoch: [66] Total time: 0:01:04 (1.2421 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6182 (0.6174)
+[1,0]<stdout>:Epoch: [67]  [ 0/52]  eta: 0:04:53  loss: 0.6260 (0.6260)  time: 5.6391 (5.6391 -- 5.6391)  data: 4.7496 (4.7496 -- 4.7496)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [67]  [20/52]  eta: 0:00:45  loss: 0.6162 (0.6178)  time: 1.2099 (0.4538 -- 3.1510)  data: 0.5017 (0.0001 -- 2.5462)  max mem: 14817
+[1,0]<stdout>:Epoch: [67]  [40/52]  eta: 0:00:15  loss: 0.6169 (0.6172)  time: 1.1669 (0.3762 -- 3.2588)  data: 0.6816 (0.0001 -- 2.9329)  max mem: 14817
+[1,0]<stdout>:Epoch: [67]  [51/52]  eta: 0:00:01  loss: 0.6166 (0.6170)  time: 1.1183 (0.3320 -- 3.2588)  data: 0.6750 (0.0001 -- 2.9329)  max mem: 14817
+[1,0]<stdout>:Epoch: [67] Total time: 0:01:03 (1.2123 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6166 (0.6170)
+[1,0]<stdout>:Epoch: [68]  [ 0/52]  eta: 0:04:58  loss: 0.6245 (0.6245)  time: 5.7428 (5.7428 -- 5.7428)  data: 4.6233 (4.6233 -- 4.6233)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [68]  [20/52]  eta: 0:00:45  loss: 0.6117 (0.6141)  time: 1.1920 (0.4199 -- 2.9747)  data: 0.4418 (0.0002 -- 2.2322)  max mem: 14817
+[1,0]<stdout>:Epoch: [68]  [40/52]  eta: 0:00:15  loss: 0.6188 (0.6156)  time: 1.1659 (0.3939 -- 3.1744)  data: 0.6440 (0.0001 -- 2.8282)  max mem: 14817
+[1,0]<stdout>:Epoch: [68]  [51/52]  eta: 0:00:01  loss: 0.6164 (0.6156)  time: 1.1252 (0.3271 -- 3.3196)  data: 0.7018 (0.0001 -- 2.9761)  max mem: 14817
+[1,0]<stdout>:Epoch: [68] Total time: 0:01:02 (1.2089 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6164 (0.6167)
+[1,0]<stdout>:Epoch: [69]  [ 0/52]  eta: 0:04:52  loss: 0.6220 (0.6220)  time: 5.6189 (5.6189 -- 5.6189)  data: 4.8228 (4.8228 -- 4.8228)  max mem: 14817
+[1,0]<stdout>:Epoch: [69]  [20/52]  eta: 0:00:45  loss: 0.6132 (0.6124)  time: 1.2191 (0.5615 -- 3.2972)  data: 0.5481 (0.0002 -- 2.9426)  max mem: 14817
+[1,0]<stdout>:Epoch: [69]  [40/52]  eta: 0:00:16  loss: 0.6162 (0.6142)  time: 1.3650 (0.3651 -- 4.4443)  data: 0.9037 (0.0001 -- 4.0437)  max mem: 14817
+[1,0]<stdout>:Epoch: [69]  [51/52]  eta: 0:00:01  loss: 0.6124 (0.6142)  time: 1.3148 (0.3214 -- 4.4443)  data: 0.9128 (0.0001 -- 4.0437)  max mem: 14817
+[1,0]<stdout>:Epoch: [69] Total time: 0:01:08 (1.3200 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6124 (0.6159)
+[1,0]<stdout>:Epoch: [70]  [ 0/52]  eta: 0:05:41  loss: 0.6098 (0.6098)  time: 6.5617 (6.5617 -- 6.5617)  data: 5.9702 (5.9702 -- 5.9702)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [70]  [20/52]  eta: 0:00:51  loss: 0.6181 (0.6156)  time: 1.3458 (0.3697 -- 4.1881)  data: 0.7741 (0.0002 -- 3.8271)  max mem: 14817
+[1,0]<stdout>:Epoch: [70]  [40/52]  eta: 0:00:17  loss: 0.6176 (0.6167)  time: 1.3509 (0.3370 -- 4.6199)  data: 0.9739 (0.0001 -- 4.2966)  max mem: 14817
+[1,0]<stdout>:Epoch: [70]  [51/52]  eta: 0:00:01  loss: 0.6168 (0.6170)  time: 1.2629 (0.3206 -- 4.2844)  data: 0.9025 (0.0001 -- 3.9245)  max mem: 14817
+[1,0]<stdout>:Epoch: [70] Total time: 0:01:10 (1.3645 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6168 (0.6161)
+[1,0]<stdout>:TEST...   [ 0/10]  eta: 0:00:50  loss: 0.6096 (0.6096)  time: 5.0718 (5.0718 -- 5.0718)  data: 4.8851 (4.8851 -- 4.8851)  max mem: 14817
+[1,0]<stdout>:TEST...   [ 9/10]  eta: 0:00:01  loss: 0.6057 (0.6082)  time: 1.4714 (0.1397 -- 5.0718)  data: 1.2960 (0.0001 -- 4.8851)  max mem: 14817
+[1,0]<stdout>:TEST...  Total time: 0:00:14 (1.4716 s / it)
+[1,0]<stdout>:Averaged stats: loss: 0.6057 (0.6072)
+[1,0]<stdout>:[CKPT] Saved improved checkpoint: /leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/output/checkpoint-70.pth (test_loss 0.607180, prev 0.6133944531902671)
+[1,0]<stdout>:Epoch: [71]  [ 0/52]  eta: 0:05:01  loss: 0.6153 (0.6153)  time: 5.7986 (5.7986 -- 5.7986)  data: 5.0962 (5.0962 -- 5.0962)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [71]  [20/52]  eta: 0:00:46  loss: 0.6146 (0.6140)  time: 1.2516 (0.4036 -- 3.1771)  data: 0.7180 (0.0001 -- 2.8173)  max mem: 14817
+[1,0]<stdout>:Epoch: [71]  [40/52]  eta: 0:00:16  loss: 0.6149 (0.6147)  time: 1.2403 (0.4091 -- 3.2050)  data: 0.7931 (0.0003 -- 2.8512)  max mem: 14817
+[1,0]<stdout>:Epoch: [71]  [51/52]  eta: 0:00:01  loss: 0.6168 (0.6152)  time: 1.2237 (0.3383 -- 3.3102)  data: 0.8273 (0.0000 -- 2.9958)  max mem: 14817
+[1,0]<stdout>:Epoch: [71] Total time: 0:01:07 (1.2930 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6168 (0.6151)
+[1,0]<stdout>:Epoch: [72]  [ 0/52]  eta: 0:05:14  loss: 0.6188 (0.6188)  time: 6.0563 (6.0563 -- 6.0563)  data: 5.4174 (5.4174 -- 5.4174)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [72]  [20/52]  eta: 0:00:47  loss: 0.6186 (0.6172)  time: 1.2466 (0.3696 -- 3.5342)  data: 0.6400 (0.0002 -- 3.1963)  max mem: 14817
+[1,0]<stdout>:Epoch: [72]  [40/52]  eta: 0:00:16  loss: 0.6144 (0.6155)  time: 1.2375 (0.3842 -- 3.6292)  data: 0.7745 (0.0001 -- 3.2865)  max mem: 14817
+[1,0]<stdout>:Epoch: [72]  [51/52]  eta: 0:00:01  loss: 0.6171 (0.6164)  time: 1.1814 (0.3161 -- 3.6292)  data: 0.7509 (0.0001 -- 3.2865)  max mem: 14817
+[1,0]<stdout>:Epoch: [72] Total time: 0:01:05 (1.2692 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6171 (0.6149)
+[1,0]<stdout>:Epoch: [73]  [ 0/52]  eta: 0:05:02  loss: 0.6296 (0.6296)  time: 5.8113 (5.8113 -- 5.8113)  data: 5.1927 (5.1927 -- 5.1927)  max mem: 14817
+[1,0]<stdout>:Epoch: [73]  [20/52]  eta: 0:00:48  loss: 0.6139 (0.6166)  time: 1.3120 (0.3750 -- 4.1698)  data: 0.7436 (0.0001 -- 3.7958)  max mem: 14817
+[1,0]<stdout>:Epoch: [73]  [40/52]  eta: 0:00:17  loss: 0.6124 (0.6162)  time: 1.3660 (0.3537 -- 4.4986)  data: 0.9636 (0.0001 -- 4.1814)  max mem: 14817
+[1,0]<stdout>:Epoch: [73]  [51/52]  eta: 0:00:01  loss: 0.6151 (0.6164)  time: 1.3272 (0.3171 -- 4.6080)  data: 0.9775 (0.0000 -- 4.2881)  max mem: 14817
+[1,0]<stdout>:Epoch: [73] Total time: 0:01:10 (1.3653 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6151 (0.6146)
+[1,0]<stdout>:Epoch: [74]  [ 0/52]  eta: 0:05:21  loss: 0.6174 (0.6174)  time: 6.1908 (6.1908 -- 6.1908)  data: 5.0303 (5.0303 -- 5.0303)  max mem: 14817
+[1,0]<stdout>:Epoch: [74]  [20/52]  eta: 0:00:49  loss: 0.6130 (0.6132)  time: 1.3043 (0.3767 -- 3.6123)  data: 0.7296 (0.0001 -- 3.2649)  max mem: 14817
+[1,0]<stdout>:Epoch: [74]  [40/52]  eta: 0:00:17  loss: 0.6139 (0.6147)  time: 1.3369 (0.3454 -- 4.2810)  data: 0.8989 (0.0001 -- 3.9172)  max mem: 14817
+[1,0]<stdout>:Epoch: [74]  [51/52]  eta: 0:00:01  loss: 0.6146 (0.6150)  time: 1.3330 (0.3133 -- 4.4541)  data: 0.9655 (0.0001 -- 4.1340)  max mem: 14817
+[1,0]<stdout>:Epoch: [74] Total time: 0:01:10 (1.3640 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6146 (0.6141)
+[1,0]<stdout>:Epoch: [75]  [ 0/52]  eta: 0:05:20  loss: 0.5963 (0.5963)  time: 6.1683 (6.1683 -- 6.1683)  data: 5.4758 (5.4758 -- 5.4758)  max mem: 14817
+[1,0]<stdout>:Epoch: [75]  [20/52]  eta: 0:00:48  loss: 0.6152 (0.6140)  time: 1.2830 (0.4042 -- 3.7073)  data: 0.6891 (0.0001 -- 3.3171)  max mem: 14817
+[1,0]<stdout>:Epoch: [75]  [40/52]  eta: 0:00:16  loss: 0.6134 (0.6135)  time: 1.3015 (0.3704 -- 3.8378)  data: 0.8519 (0.0002 -- 3.5165)  max mem: 14817
+[1,0]<stdout>:Epoch: [75]  [51/52]  eta: 0:00:01  loss: 0.6129 (0.6140)  time: 1.3054 (0.3184 -- 3.8378)  data: 0.7994 (0.0001 -- 3.5165)  max mem: 14817
+[1,0]<stdout>:Epoch: [75] Total time: 0:01:10 (1.3522 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6129 (0.6140)
+[1,0]<stdout>:Epoch: [76]  [ 0/52]  eta: 0:05:26  loss: 0.6237 (0.6237)  time: 6.2708 (6.2708 -- 6.2708)  data: 5.6096 (5.6096 -- 5.6096)  max mem: 14817
+[1,0]<stdout>:Epoch: [76]  [20/52]  eta: 0:00:49  loss: 0.6135 (0.6131)  time: 1.3217 (0.3470 -- 4.0840)  data: 0.7544 (0.0001 -- 3.7451)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [76]  [40/52]  eta: 0:00:17  loss: 0.6125 (0.6124)  time: 1.3012 (0.3854 -- 3.6168)  data: 0.8206 (0.0002 -- 3.2717)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [76]  [51/52]  eta: 0:00:01  loss: 0.6125 (0.6130)  time: 1.2525 (0.3241 -- 3.9363)  data: 0.8556 (0.0001 -- 3.6216)  max mem: 14817
+[1,0]<stdout>:Epoch: [76] Total time: 0:01:09 (1.3456 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6125 (0.6136)
+[1,0]<stdout>:Epoch: [77]  [ 0/52]  eta: 0:05:28  loss: 0.6067 (0.6067)  time: 6.3136 (6.3136 -- 6.3136)  data: 5.6930 (5.6930 -- 5.6930)  max mem: 14817
+[1,0]<stdout>:Epoch: [77]  [20/52]  eta: 0:00:48  loss: 0.6165 (0.6139)  time: 1.2916 (0.3587 -- 3.6189)  data: 0.7074 (0.0002 -- 3.2799)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [77]  [40/52]  eta: 0:00:17  loss: 0.6150 (0.6139)  time: 1.3420 (0.3484 -- 4.1698)  data: 0.9095 (0.0001 -- 3.8337)  max mem: 14817
+[1,0]<stdout>:Epoch: [77]  [51/52]  eta: 0:00:01  loss: 0.6131 (0.6142)  time: 1.2903 (0.3127 -- 4.1698)  data: 0.9292 (0.0001 -- 3.8337)  max mem: 14817
+[1,0]<stdout>:Epoch: [77] Total time: 0:01:10 (1.3463 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6131 (0.6132)
+[1,0]<stdout>:Epoch: [78]  [ 0/52]  eta: 0:05:06  loss: 0.6141 (0.6141)  time: 5.8946 (5.8946 -- 5.8946)  data: 5.2014 (5.2014 -- 5.2014)  max mem: 14817
+[1,0]<stdout>:Epoch: [78]  [20/52]  eta: 0:00:49  loss: 0.6119 (0.6141)  time: 1.3193 (0.4132 -- 3.3801)  data: 0.7368 (0.0001 -- 3.0496)  max mem: 14817
+[1,0]<stdout>:Epoch: [78]  [40/52]  eta: 0:00:17  loss: 0.6120 (0.6131)  time: 1.3396 (0.3483 -- 3.9667)  data: 0.9182 (0.0002 -- 3.5610)  max mem: 14817
+[1,0]<stdout>:Epoch: [78]  [51/52]  eta: 0:00:01  loss: 0.6123 (0.6138)  time: 1.3183 (0.3353 -- 3.9667)  data: 0.9389 (0.0001 -- 3.5610)  max mem: 14817
+[1,0]<stdout>:Epoch: [78] Total time: 0:01:10 (1.3645 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6123 (0.6131)
+[1,0]<stdout>:Epoch: [79]  [ 0/52]  eta: 0:05:02  loss: 0.6291 (0.6291)  time: 5.8265 (5.8265 -- 5.8265)  data: 5.2812 (5.2812 -- 5.2812)  max mem: 14817
+[1,0]<stdout>:Epoch: [79]  [20/52]  eta: 0:00:49  loss: 0.6109 (0.6128)  time: 1.3204 (0.3569 -- 3.8306)  data: 0.7714 (0.0001 -- 3.4380)  max mem: 14817
+[1,0]<stdout>:Epoch: [79]  [40/52]  eta: 0:00:17  loss: 0.6116 (0.6115)  time: 1.3760 (0.3472 -- 4.4822)  data: 0.9557 (0.0002 -- 4.1639)  max mem: 14817
+[1,0]<stdout>:Epoch: [79]  [51/52]  eta: 0:00:01  loss: 0.6112 (0.6119)  time: 1.3034 (0.3186 -- 4.4822)  data: 0.9439 (0.0001 -- 4.1639)  max mem: 14817
+[1,0]<stdout>:Epoch: [79] Total time: 0:01:10 (1.3600 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6112 (0.6126)
+[1,0]<stdout>:Epoch: [80]  [ 0/52]  eta: 0:05:16  loss: 0.6043 (0.6043)  time: 6.0805 (6.0805 -- 6.0805)  data: 5.2884 (5.2884 -- 5.2884)  max mem: 14817
+[1,0]<stdout>:Epoch: [80]  [20/52]  eta: 0:00:49  loss: 0.6117 (0.6117)  time: 1.3227 (0.3663 -- 4.1735)  data: 0.7300 (0.0002 -- 3.8402)  max mem: 14817
+[1,0]<stdout>:Epoch: [80]  [40/52]  eta: 0:00:17  loss: 0.6106 (0.6113)  time: 1.3052 (0.3632 -- 4.0696)  data: 0.8408 (0.0001 -- 3.6835)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [80]  [51/52]  eta: 0:00:01  loss: 0.6120 (0.6113)  time: 1.2633 (0.3234 -- 4.0696)  data: 0.8575 (0.0001 -- 3.6835)  max mem: 14817
+[1,0]<stdout>:Epoch: [80] Total time: 0:01:09 (1.3387 s / it)
+[1,0]<stdout>:Averaged stats:[1,0]<stdout>: [1,0]<stdout>:loss: 0.6120 (0.6125)
+[1,0]<stdout>:TEST...   [ 0/10]  eta: 0:00:52  loss: 0.6080 (0.6080)  time: 5.2193 (5.2193 -- 5.2193)  data: 5.0332 (5.0332 -- 5.0332)  max mem: 14817
+[1,0]<stdout>:TEST...   [ 9/10]  eta: 0:00:01  loss: 0.6038 (0.6047)  time: 1.5012 (0.1355 -- 5.2193)  data: 1.3261 (0.0001 -- 5.0332)  max mem: 14817
+[1,0]<stdout>:TEST...  Total time: 0:00:15 (1.5013 s / it)
+[1,0]<stdout>:Averaged stats: loss: 0.6038 (0.6037)
+[1,0]<stdout>:[CKPT] Saved improved checkpoint: /leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/output/checkpoint-80.pth (test_loss 0.603690, prev 0.607180125452578)
+[1,0]<stdout>:Epoch: [81]  [ 0/52]  eta: 0:04:50  loss: 0.6098 (0.6098)  time: 5.5864 (5.5864 -- 5.5864)  data: 4.9091 (4.9091 -- 4.9091)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [81]  [20/52]  eta: 0:00:47  loss: 0.6118 (0.6129)  time: 1.2936 (0.3850 -- 3.5258)  data: 0.8398 (0.0001 -- 3.1459)  max mem: 14817
+[1,0]<stdout>:Epoch: [81]  [40/52]  eta: 0:00:16  loss: 0.6106 (0.6118)  time: 1.3193 (0.3714 -- 3.9474)  data: 0.9503 (0.0002 -- 3.6262)  max mem: 14817
+[1,0]<stdout>:Epoch: [81]  [51/52]  eta: 0:00:01  loss: 0.6160 (0.6124)  time: 1.2842 (0.3218 -- 4.1524)  data: 0.9272 (0.0001 -- 3.8256)  max mem: 14817
+[1,0]<stdout>:Epoch: [81] Total time: 0:01:09 (1.3299 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6160 (0.6122)
+[1,0]<stdout>:Epoch: [82]  [ 0/52]  eta: 0:05:07  loss: 0.6170 (0.6170)  time: 5.9158 (5.9158 -- 5.9158)  data: 4.9825 (4.9825 -- 4.9825)  max mem: 14817
+[1,0]<stdout>:Epoch: [82]  [20/52]  eta: 0:00:47  loss: 0.6118 (0.6107)  time: 1.2695 (0.3708 -- 4.0155)  data: 0.6603 (0.0001 -- 3.6936)  max mem: 14817
+[1,0]<stdout>:Epoch: [82]  [40/52]  eta: 0:00:16  loss: 0.6115 (0.6109)  time: 1.3046 (0.4531 -- 3.5703)  data: 0.8205 (0.0001 -- 3.2388)  max mem: 14817
+[1,0]<stdout>:Epoch: [82]  [51/52]  eta: 0:00:01  loss: 0.6124 (0.6118)  time: 1.2348 (0.3190 -- 3.8206)  data: 0.8048 (0.0001 -- 3.5046)  max mem: 14817
+[1,0]<stdout>:Epoch: [82] Total time: 0:01:08 (1.3120 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6124 (0.6116)
+[1,0]<stdout>:Epoch: [83]  [ 0/52]  eta: 0:05:07  loss: 0.5976 (0.5976)  time: 5.9196 (5.9196 -- 5.9196)  data: 4.6533 (4.6533 -- 4.6533)  max mem: 14817
+[1,0]<stdout>:Epoch: [83]  [20/52]  eta: 0:00:46  loss: 0.6139 (0.6121)  time: 1.2398 (0.4414 -- 3.3146)  data: 0.6148 (0.0002 -- 2.9201)  max mem: 14817
+[1,0]<stdout>:Epoch: [83]  [40/52]  eta: 0:00:16  loss: 0.6050 (0.6103)  time: 1.2782 (0.4621 -- 3.4436)  data: 0.8185 (0.0001 -- 3.1070)  max mem: 14817
+[1,0]<stdout>:Epoch: [83]  [51/52]  eta: 0:00:01  loss: 0.6072 (0.6101)  time: 1.2221 (0.3226 -- 3.4436)  data: 0.8068 (0.0001 -- 3.1070)  max mem: 14817
+[1,0]<stdout>:Epoch: [83] Total time: 0:01:07 (1.2928 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6072 (0.6116)
+[1,0]<stdout>:Epoch: [84]  [ 0/52]  eta: 0:05:06  loss: 0.6098 (0.6098)  time: 5.8896 (5.8896 -- 5.8896)  data: 4.7097 (4.7097 -- 4.7097)  max mem: 14817
+[1,0]<stdout>:Epoch: [84]  [20/52]  eta: 0:00:46  loss: 0.6129 (0.6125)  time: 1.2327 (0.4146 -- 3.1178)  data: 0.5434 (0.0001 -- 2.7216)  max mem: 14817
+[1,0]<stdout>:Epoch: [84]  [40/52]  eta: 0:00:16  loss: 0.6141 (0.6129)  time: 1.2329 (0.3592 -- 3.2335)  data: 0.7649 (0.0001 -- 2.8841)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [84]  [51/52]  eta: 0:00:01  loss: 0.6127 (0.6123)  time: 1.2271 (0.3518 -- 3.0593)  data: 0.7844 (0.0001 -- 2.3776)  max mem: 14817
+[1,0]<stdout>:Epoch: [84] Total time: 0:01:06 (1.2863 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6127 (0.6115)
+[1,0]<stdout>:Epoch: [85]  [ 0/52]  eta: 0:05:12  loss: 0.6024 (0.6024)  time: 6.0125 (6.0125 -- 6.0125)  data: 4.8472 (4.8472 -- 4.8472)  max mem: 14817
+[1,0]<stdout>:Epoch: [85]  [20/52]  eta: 0:00:45  loss: 0.6102 (0.6105)  time: 1.2008 (0.4600 -- 2.9988)  data: 0.5054 (0.0001 -- 2.5724)  max mem: 14817
+[1,0]<stdout>:Epoch: [85]  [40/52]  eta: 0:00:15  loss: 0.6092 (0.6102)  time: 1.2274 (0.3883 -- 3.8330)  data: 0.7826 (0.0001 -- 3.4997)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [85]  [51/52]  eta: 0:00:01  loss: 0.6121 (0.6107)  time: 1.1818 (0.3121 -- 3.8330)  data: 0.7835 (0.0001 -- 3.4997)  max mem: 14817
+[1,0]<stdout>:Epoch: [85] Total time: 0:01:04 (1.2485 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6121 (0.6110)
+[1,0]<stdout>:Epoch: [86]  [ 0/52]  eta: 0:04:52  loss: 0.6239 (0.6239)  time: 5.6297 (5.6297 -- 5.6297)  data: 4.8954 (4.8954 -- 4.8954)  max mem: 14817
+[1,0]<stdout>:Epoch: [86]  [20/52]  eta: 0:00:45  loss: 0.6074 (0.6089)  time: 1.2023 (0.4150 -- 2.9167)  data: 0.4753 (0.0002 -- 2.4979)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [86]  [40/52]  eta: 0:00:15  loss: 0.6131 (0.6111)  time: 1.2100 (0.3669 -- 3.6476)  data: 0.7524 (0.0001 -- 3.3081)  max mem: 14817
+[1,0]<stdout>:Epoch: [86]  [51/52]  eta: 0:00:01  loss: 0.6131 (0.6113)  time: 1.1559 (0.3281 -- 3.7205)  data: 0.7699 (0.0001 -- 3.3888)  max mem: 14817
+[1,0]<stdout>:Epoch: [86] Total time: 0:01:04 (1.2367 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6131 (0.6106)
+[1,0]<stdout>:Epoch: [87]  [ 0/52]  eta: 0:04:46  loss: 0.6047 (0.6047)  time: 5.5189 (5.5189 -- 5.5189)  data: 4.6411 (4.6411 -- 4.6411)  max mem: 14817
+[1,0]<stdout>:Epoch: [87]  [20/52]  eta: 0:00:45  loss: 0.6116 (0.6122)  time: 1.2088 (0.4051 -- 2.9884)  data: 0.5618 (0.0001 -- 2.6192)  max mem: 14817
+[1,0]<stdout>:Epoch: [87]  [40/52]  eta: 0:00:15  loss: 0.6084 (0.6108)  time: 1.1756 (0.3595 -- 3.4075)  data: 0.6865 (0.0001 -- 3.0668)  max mem: 14817
+[1,0]<stdout>:Epoch: [87]  [51/52]  eta: 0:00:01  loss: 0.6069 (0.6105)  time: 1.1495 (0.3184 -- 3.4370)  data: 0.7477 (0.0001 -- 3.1014)  max mem: 14817
+[1,0]<stdout>:Epoch: [87] Total time: 0:01:03 (1.2247 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6069 (0.6104)
+[1,0]<stdout>:Epoch: [88]  [ 0/52]  eta: 0:04:57  loss: 0.6110 (0.6110)  time: 5.7130 (5.7130 -- 5.7130)  data: 5.0503 (5.0503 -- 5.0503)  max mem: 14817
+[1,0]<stdout>:Epoch: [88]  [20/52]  eta: 0:00:44  loss: 0.6110 (0.6116)  time: 1.1858 (0.5575 -- 2.8624)  data: 0.4833 (0.0002 -- 2.1929)  max mem: 14817
+[1,0]<stdout>:Epoch: [88]  [40/52]  eta: 0:00:15  loss: 0.6090 (0.6109)  time: 1.2000 (0.3554 -- 3.4009)  data: 0.7176 (0.0002 -- 3.0694)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [88]  [51/52]  eta: 0:00:01  loss: 0.6090 (0.6107)  time: 1.1501 (0.3218 -- 3.4009)  data: 0.7413 (0.0000 -- 3.0694)  max mem: 14817
+[1,0]<stdout>:Epoch: [88] Total time: 0:01:03 (1.2277 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6090 (0.6103)
+[1,0]<stdout>:Epoch: [89]  [ 0/52]  eta: 0:04:59  loss: 0.6119 (0.6119)  time: 5.7591 (5.7591 -- 5.7591)  data: 4.7993 (4.7993 -- 4.7993)  max mem: 14817
+[1,0]<stdout>:Epoch: [89]  [20/52]  eta: 0:00:48  loss: 0.6099 (0.6087)  time: 1.3057 (0.3854 -- 3.7158)  data: 0.6756 (0.0001 -- 3.3608)  max mem: 14817
+[1,0]<stdout>:Epoch: [89]  [40/52]  eta: 0:00:16  loss: 0.6128 (0.6104)  time: 1.2830 (0.3869 -- 3.7312)  data: 0.7924 (0.0001 -- 3.2648)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [89]  [51/52]  eta: 0:00:01  loss: 0.6112 (0.6110)  time: 1.2371 (0.3228 -- 3.7312)  data: 0.8062 (0.0001 -- 3.3289)  max mem: 14817
+[1,0]<stdout>:Epoch: [89] Total time: 0:01:08 (1.3169 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6112 (0.6103)
+[1,0]<stdout>:Epoch: [90]  [ 0/52]  eta: 0:05:12  loss: 0.6225 (0.6225)  time: 6.0130 (6.0130 -- 6.0130)  data: 5.2971 (5.2971 -- 5.2971)  max mem: 14817
+[1,0]<stdout>:Epoch: [90]  [20/52]  eta: 0:00:46  loss: 0.6087 (0.6111)  time: 1.2396 (0.3847 -- 3.4026)  data: 0.6232 (0.0001 -- 3.0037)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [90]  [40/52]  eta: 0:00:16  loss: 0.6071 (0.6095)  time: 1.2431 (0.4043 -- 3.5023)  data: 0.8015 (0.0001 -- 3.1146)  max mem: 14817
+[1,0]<stdout>:Epoch: [90]  [51/52]  eta: 0:00:01  loss: 0.6077 (0.6096)  time: 1.2126 (0.3296 -- 3.2324)  data: 0.7764 (0.0000 -- 2.7389)  max mem: 14817
+[1,0]<stdout>:Epoch: [90] Total time: 0:01:07 (1.2901 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6077 (0.6097)
+[1,0]<stdout>:TEST...   [ 0/10]  eta: 0:00:51  loss: 0.6004 (0.6004)  time: 5.1204 (5.1204 -- 5.1204)  data: 4.9348 (4.9348 -- 4.9348)  max mem: 14817
+[1,0]<stdout>:TEST...   [ 9/10]  eta: 0:00:01  loss: 0.5990 (0.6004)  time: 1.4706 (0.1355 -- 5.1204)  data: 1.2958 (0.0001 -- 4.9348)  max mem: 14817
+[1,0]<stdout>:TEST...  Total time: 0:00:14 (1.4707 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.5990 (0.6003)
+[1,0]<stdout>:[CKPT] Saved improved checkpoint: /leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/output/checkpoint-90.pth (test_loss 0.600343, prev 0.6036897484213114)
+[1,0]<stdout>:Epoch: [91]  [ 0/52]  eta: 0:04:55  loss: 0.6233 (0.6233)  time: 5.6840 (5.6840 -- 5.6840)  data: 4.8626 (4.8626 -- 4.8626)  max mem: 14817
+[1,0]<stdout>:Epoch: [91]  [20/52]  eta: 0:00:46  loss: 0.6117 (0.6120)  time: 1.2368 (0.3973 -- 3.2582)  data: 0.6874 (0.0001 -- 2.9033)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [91]  [40/52]  eta: 0:00:16  loss: 0.6103 (0.6104)  time: 1.2809 (0.4872 -- 3.4056)  data: 0.8050 (0.0002 -- 3.0796)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [91]  [51/52]  eta: 0:00:01  loss: 0.6123 (0.6104)  time: 1.2434 (0.3239 -- 3.3813)  data: 0.8442 (0.0000 -- 3.0554)  max mem: 14817
+[1,0]<stdout>:Epoch: [91] Total time: 0:01:07 (1.2970 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6123 (0.6098)
+[1,0]<stdout>:Epoch: [92]  [ 0/52]  eta: 0:04:59  loss: 0.6050 (0.6050)  time: 5.7673 (5.7673 -- 5.7673)  data: 4.6154 (4.6154 -- 4.6154)  max mem: 14817
+[1,0]<stdout>:Epoch: [92]  [20/52]  eta: 0:00:46  loss: 0.6076 (0.6090)  time: 1.2408 (0.3787 -- 3.4908)  data: 0.5822 (0.0001 -- 3.1448)  max mem: 14817
+[1,0]<stdout>:Epoch: [92]  [40/52]  eta: 0:00:16  loss: 0.6103 (0.6099)  time: 1.2294 (0.3624 -- 3.0395)  data: 0.7794 (0.0001 -- 2.5921)  max mem: 14817
+[1,0]<stdout>:Epoch: [92]  [51/52]  eta: 0:00:01  loss: 0.6107 (0.6103)  time: 1.1867 (0.3320 -- 3.2071)  data: 0.7715 (0.0001 -- 2.8937)  max mem: 14817
+[1,0]<stdout>:Epoch: [92] Total time: 0:01:06 (1.2766 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6107 (0.6095)
+[1,0]<stdout>:Epoch: [93]  [ 0/52]  eta: 0:05:12  loss: 0.6210 (0.6210)  time: 6.0135 (6.0135 -- 6.0135)  data: 5.2950 (5.2950 -- 5.2950)  max mem: 14817
+[1,0]<stdout>:Epoch: [93]  [20/52]  eta: 0:00:46  loss: 0.6107 (0.6115)  time: 1.2301 (0.3667 -- 3.4327)  data: 0.6197 (0.0001 -- 2.9866)  max mem: 14817
+[1,0]<stdout>:Epoch: [93]  [40/52]  eta: 0:00:16  loss: 0.6093 (0.6101)  time: 1.2455 (0.3864 -- 3.5606)  data: 0.7877 (0.0002 -- 3.2258)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [93]  [51/52]  eta: 0:00:01  loss: 0.6069 (0.6097)  time: 1.2178 (0.3277 -- 3.6451)  data: 0.8073 (0.0001 -- 3.3206)  max mem: 14817
+[1,0]<stdout>:Epoch: [93] Total time: 0:01:06 (1.2804 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6069 (0.6094)
+[1,0]<stdout>:Epoch: [94]  [ 0/52]  eta: 0:05:11  loss: 0.6080 (0.6080)  time: 5.9970 (5.9970 -- 5.9970)  data: 4.4255 (4.4255 -- 4.4255)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [94]  [20/52]  eta: 0:00:46  loss: 0.6064 (0.6073)  time: 1.2336 (0.3765 -- 3.2508)  data: 0.5452 (0.0002 -- 2.5745)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [94]  [40/52]  eta: 0:00:16  loss: 0.6090 (0.6086)  time: 1.2626 (0.3726 -- 3.7062)  data: 0.7933 (0.0002 -- 3.3805)  max mem: 14817
+[1,0]<stdout>:Epoch: [94]  [51/52]  eta: 0:00:01  loss: 0.6081 (0.6085)  time: 1.2165 (0.3149 -- 3.7062)  data: 0.8356 (0.0002 -- 3.3805)  max mem: 14817
+[1,0]<stdout>:Epoch: [94] Total time: 0:01:06 (1.2848 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6081 (0.6091)
+[1,0]<stdout>:Epoch: [95]  [ 0/52]  eta: 0:04:50  loss: 0.5960 (0.5960)  time: 5.5901 (5.5901 -- 5.5901)  data: 4.6951 (4.6951 -- 4.6951)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [95]  [20/52]  eta: 0:00:46  loss: 0.6080 (0.6086)  time: 1.2341 (0.5298 -- 3.4167)  data: 0.5976 (0.0002 -- 2.8471)  max mem: 14817
+[1,0]<stdout>:Epoch: [95]  [40/52]  eta: 0:00:16  loss: 0.6112 (0.6096)  time: 1.2648 (0.3741 -- 3.8394)  data: 0.8220 (0.0002 -- 3.4851)  max mem: 14817
+[1,0]<stdout>:Epoch: [95]  [51/52]  eta: 0:00:01  loss: 0.6112 (0.6102)  time: 1.2351 (0.3171 -- 4.1148)  data: 0.8322 (0.0001 -- 3.7961)  max mem: 14817
+[1,0]<stdout>:Epoch: [95] Total time: 0:01:06 (1.2791 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6112 (0.6090)
+[1,0]<stdout>:Epoch: [96]  [ 0/52]  eta: 0:04:54  loss: 0.6077 (0.6077)  time: 5.6646 (5.6646 -- 5.6646)  data: 4.5535 (4.5535 -- 4.5535)  max mem: 14817
+[1,0]<stdout>:Epoch: [96]  [20/52]  eta: 0:00:46  loss: 0.6095 (0.6070)  time: 1.2467 (0.4327 -- 3.4708)  data: 0.5520 (0.0002 -- 3.1310)  max mem: 14817
+[1,0]<stdout>:Epoch: [96]  [40/52]  eta: 0:00:16  loss: 0.6038 (0.6066)  time: 1.2368 (0.3682 -- 3.7036)  data: 0.7901 (0.0001 -- 3.3279)  max mem: 14817
+[1,0]<stdout>:Epoch: [96]  [51/52]  eta: 0:00:01  loss: 0.6064 (0.6071)  time: 1.2226 (0.3293 -- 3.7586)  data: 0.8308 (0.0001 -- 3.4223)  max mem: 14817
+[1,0]<stdout>:Epoch: [96] Total time: 0:01:06 (1.2763 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6064 (0.6088)
+[1,0]<stdout>:Epoch: [97]  [ 0/52]  eta: 0:05:01  loss: 0.5975 (0.5975)  time: 5.8012 (5.8012 -- 5.8012)  data: 4.7134 (4.7134 -- 4.7134)  max mem: 14817
+[1,0]<stdout>:Epoch: [97]  [20/52]  eta: 0:00:47  loss: 0.6083 (0.6077)  time: 1.2528 (0.4635 -- 3.3017)  data: 0.6112 (0.0002 -- 2.9514)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [97]  [40/52]  eta: 0:00:16  loss: 0.6113 (0.6092)  time: 1.2355 (0.3427 -- 3.6118)  data: 0.7883 (0.0002 -- 3.2719)  max mem: 14817
+[1,0]<stdout>:Epoch: [97]  [51/52]  eta: 0:00:01  loss: 0.6080 (0.6088)  time: 1.1766 (0.3173 -- 3.6118)  data: 0.7922 (0.0001 -- 3.2719)  max mem: 14817
+[1,0]<stdout>:Epoch: [97] Total time: 0:01:05 (1.2675 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6080 (0.6086)
+[1,0]<stdout>:Epoch: [98]  [ 0/52]  eta: 0:04:53  loss: 0.6070 (0.6070)  time: 5.6434 (5.6434 -- 5.6434)  data: 4.8913 (4.8913 -- 4.8913)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [98]  [20/52]  eta: 0:00:45  loss: 0.6089 (0.6083)  time: 1.2200 (0.4726 -- 2.9185)  data: 0.4843 (0.0002 -- 2.5906)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [98]  [40/52]  eta: 0:00:16  loss: 0.6093 (0.6087)  time: 1.2449 (0.3757 -- 4.1547)  data: 0.7988 (0.0002 -- 3.8322)  max mem: 14817
+[1,0]<stdout>:Epoch: [98]  [51/52]  eta: 0:00:01  loss: 0.6089 (0.6088)  time: 1.1935 (0.3167 -- 4.1547)  data: 0.7715 (0.0001 -- 3.8322)  max mem: 14817
+[1,0]<stdout>:Epoch: [98] Total time: 0:01:05 (1.2540 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6089 (0.6084)
+[1,0]<stdout>:Epoch: [99]  [ 0/52]  eta: 0:04:59  loss: 0.5964 (0.5964)  time: 5.7629 (5.7629 -- 5.7629)  data: 5.1736 (5.1736 -- 5.1736)  max mem: 14817
+[1,0]<stdout>:Epoch: [99]  [20/52]  eta: 0:00:46  loss: 0.6104 (0.6089)  time: 1.2459 (0.3562 -- 3.3924)  data: 0.6202 (0.0002 -- 3.0385)  max mem: 14817
+[1,0]<stdout>:Epoch: [99]  [40/52]  eta: 0:00:16  loss: 0.6100 (0.6099)  time: 1.2174 (0.3775 -- 3.6936)  data: 0.7638 (0.0001 -- 3.3093)  max mem: 14817
+[1,0]<stdout>:Epoch: [99]  [51/52]  eta: 0:00:01  loss: 0.6100 (0.6099)  time: 1.1668 (0.3236 -- 3.5434)  data: 0.7567 (0.0001 -- 3.2224)  max mem: 14817
+[1,0]<stdout>:Epoch: [99] Total time: 0:01:05 (1.2576 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6100 (0.6081)
+[1,0]<stdout>:Epoch: [100]  [ 0/52]  eta: 0:05:05  loss: 0.5981 (0.5981)  time: 5.8661 (5.8661 -- 5.8661)  data: 4.7670 (4.7670 -- 4.7670)  max mem: 14817
+[1,0]<stdout>:Epoch: [100]  [20/52]  eta: 0:00:46  loss: 0.6072 (0.6068)  time: 1.2250 (0.4554 -- 3.4934)  data: 0.5274 (0.0001 -- 3.1636)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:Epoch: [100]  [40/52]  eta: 0:00:15  loss: 0.6062 (0.6074)  time: 1.2106 (0.3806 -- 3.4849)  data: 0.7713 (0.0002 -- 3.1419)  max mem: 14817
+[1,0]<stdout>:Epoch: [100]  [51/52]  eta: 0:00:01  loss: 0.6066 (0.6074)  time: 1.1648 (0.3342 -- 3.4025)  data: 0.7696 (0.0002 -- 3.0224)  max mem: 14817
+[1,0]<stdout>:Epoch: [100] Total time: 0:01:05 (1.2560 s / it)
+[1,0]<stdout>:Averaged stats: [1,0]<stdout>:loss: 0.6066 (0.6081)
+[1,0]<stdout>:TEST...   [ 0/10]  eta: 0:00:51  loss: 0.5993 (0.5993)  time: 5.1640 (5.1640 -- 5.1640)  data: 4.9771 (4.9771 -- 4.9771)  max mem: 14817[1,0]<stdout>:
+[1,0]<stdout>:TEST...   [ 9/10]  eta: 0:00:01  loss: 0.5993 (0.5999)  time: 1.3927 (0.1413 -- 5.1640)  data: 1.2168 (0.0002 -- 4.9771)  max mem: 14817
+[1,0]<stdout>:TEST...  Total time: 0:00:13 (1.3928 s / it)
+[1,0]<stdout>:Averaged stats: loss: 0.5993 (0.5992)
+[1,0]<stdout>:[CKPT] Saved improved checkpoint: /leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/output/checkpoint-100.pth (test_loss 0.599245, prev 0.6003430793061852)
+[1,0]<stdout>:Training time 1:58:13
