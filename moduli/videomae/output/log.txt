@@ -144,3 +144,14 @@
 {"epoch": 143, "train_lr": 0.00031469054, "train_loss": 107.8347, "test_loss": 706.8944, "test_geo_km": 126.8097, "val_loss": 579.354, "val_geo_km": 106.7439}
 {"epoch": 144, "train_lr": 0.00031251643, "train_loss": 113.8157, "test_loss": 780.3315, "test_geo_km": 132.9526, "val_loss": 684.7202, "val_geo_km": 116.8244}
 {"epoch": 145, "train_lr": 0.00031034033, "train_loss": 103.934, "test_loss": 752.8246, "test_geo_km": 128.2417, "val_loss": 635.3362, "val_geo_km": 109.0906}
+{"epoch": 146, "train_lr": 0.00030816249, "train_loss": 163.6842, "test_loss": 615.9072, "test_geo_km": 115.2385, "val_loss": 775.8983, "val_geo_km": 128.6707}
+{"epoch": 147, "train_lr": 0.00030598316, "train_loss": 198.938, "test_loss": 1244.5771, "test_geo_km": 169.3507, "val_loss": 1019.4266, "val_geo_km": 142.2522}
+{"epoch": 148, "train_lr": 0.00030380259, "train_loss": 297.0705, "test_loss": 1107.5729, "test_geo_km": 151.8642, "val_loss": 777.729, "val_geo_km": 115.9029}
+{"epoch": 149, "train_lr": 0.00030162101, "train_loss": 259.2683, "test_loss": 782.0394, "test_geo_km": 131.7258, "val_loss": 724.3891, "val_geo_km": 126.8303}
+{"epoch": 150, "train_lr": 0.00029943868, "train_loss": 178.3878, "test_loss": 787.0746, "test_geo_km": 135.7898, "val_loss": 622.792, "val_geo_km": 111.8301}
+{"epoch": 151, "train_lr": 0.00029725586, "train_loss": 127.9531, "test_loss": 874.6917, "test_geo_km": 141.1647, "val_loss": 613.3462, "val_geo_km": 108.811}
+{"epoch": 152, "train_lr": 0.00029507277, "train_loss": 131.3398, "test_loss": 692.8734, "test_geo_km": 123.4367, "val_loss": 690.5829, "val_geo_km": 115.6855}
+{"epoch": 153, "train_lr": 0.00029288968, "train_loss": 127.3363, "test_loss": 505.6866, "test_geo_km": 108.6156, "val_loss": 654.9534, "val_geo_km": 111.0662}
+{"epoch": 154, "train_lr": 0.00029070682, "train_loss": 126.0076, "test_loss": 711.5286, "test_geo_km": 126.2169, "val_loss": 628.2894, "val_geo_km": 110.0879}
+{"epoch": 155, "train_lr": 0.00028852446, "train_loss": 116.0646, "test_loss": 709.6642, "test_geo_km": 126.0457, "val_loss": 630.0117, "val_geo_km": 108.2935}
+{"epoch": 156, "train_lr": 0.00028634282, "train_loss": 127.8665, "test_loss": 677.0486, "test_geo_km": 121.0402, "val_loss": 622.3675, "val_geo_km": 108.6131}
