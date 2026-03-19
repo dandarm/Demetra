@@ -1466,3 +1466,65 @@ Test: Total time: 0:00:00 (0.7488 s / it)
 eval step
 start epoch140
 Epoch: [140]  [ 0/15]  eta: 0:00:19  lr: 0.000322  loss: 114.6080 (114.6080)  time: 1.3149 (1.3149 -- 1.3149)  data: 1.1223 (1.1223 -- 1.1223)  max mem: 27089
+Epoch: [140]  [14/15]  eta: 0:00:00  lr: 0.000320  loss: 139.2227 (141.9195)  time: 0.4786 (0.3767 -- 1.3149)  data: 0.0756 (0.0001 -- 1.1223)  max mem: 27089
+Epoch: [140] Total time: 0:00:07 (0.4786 s / it)
+train step
+Test:  [0/1]  eta: 0:00:00  loss: 690.8610 (690.8610)  geo_km: 125.6734 (125.6734)  time: 0.6139 (0.6139 -- 0.6139)  data: 0.5429 (0.5429 -- 0.5429)  max mem: 27089
+Test: Total time: 0:00:00 (0.6143 s / it)
+Test:  [0/1]  eta: 0:00:00  loss: 866.1562 (866.1562)  geo_km: 127.9160 (127.9160)  time: 0.7495 (0.7495 -- 0.7495)  data: 0.6625 (0.6625 -- 0.6625)  max mem: 27089
+Test: Total time: 0:00:00 (0.7500 s / it)
+eval step
+start epoch141
+Epoch: [141]  [ 0/15]  eta: 0:00:21  lr: 0.000320  loss: 175.0396 (175.0396)  time: 1.4113 (1.4113 -- 1.4113)  data: 1.2069 (1.2069 -- 1.2069)  max mem: 27089
+Epoch: [141]  [14/15]  eta: 0:00:00  lr: 0.000318  loss: 131.6719 (125.2656)  time: 0.4877 (0.3773 -- 1.4113)  data: 0.0806 (0.0001 -- 1.2069)  max mem: 27089
+Epoch: [141] Total time: 0:00:07 (0.4878 s / it)
+train step
+Test:  [0/1]  eta: 0:00:00  loss: 834.9266 (834.9266)  geo_km: 150.4011 (150.4011)  time: 0.6160 (0.6160 -- 0.6160)  data: 0.5449 (0.5449 -- 0.5449)  max mem: 27089
+Test: Total time: 0:00:00 (0.6164 s / it)
+Test:  [0/1]  eta: 0:00:00  loss: 858.8776 (858.8776)  geo_km: 122.0007 (122.0007)  time: 0.7539 (0.7539 -- 0.7539)  data: 0.6668 (0.6668 -- 0.6668)  max mem: 27089
+Test: Total time: 0:00:00 (0.7544 s / it)
+eval step
+start epoch142
+Epoch: [142]  [ 0/15]  eta: 0:00:18  lr: 0.000318  loss: 141.2482 (141.2482)  time: 1.2114 (1.2114 -- 1.2114)  data: 1.0173 (1.0173 -- 1.0173)  max mem: 27089
+Epoch: [142]  [14/15]  eta: 0:00:00  lr: 0.000316  loss: 124.5831 (124.1950)  time: 0.4833 (0.3771 -- 1.2114)  data: 0.0680 (0.0001 -- 1.0173)  max mem: 27089
+Epoch: [142] Total time: 0:00:07 (0.4834 s / it)
+train step
+Test:  [0/1]  eta: 0:00:00  loss: 893.5610 (893.5610)  geo_km: 155.1929 (155.1929)  time: 0.6112 (0.6112 -- 0.6112)  data: 0.5402 (0.5402 -- 0.5402)  max mem: 27089
+Test: Total time: 0:00:00 (0.6116 s / it)
+Test:  [0/1]  eta: 0:00:00  loss: 670.7526 (670.7526)  geo_km: 110.7965 (110.7965)  time: 0.7425 (0.7425 -- 0.7425)  data: 0.6561 (0.6561 -- 0.6561)  max mem: 27089
+Test: Total time: 0:00:00 (0.7430 s / it)
+eval step
+[INFO] Best checkpoint saved at /leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/output/checkpoint-tracking-best.pth
+start epoch143
+Epoch: [143]  [ 0/15]  eta: 0:00:19  lr: 0.000316  loss: 120.9521 (120.9521)  time: 1.2693 (1.2693 -- 1.2693)  data: 1.0594 (1.0594 -- 1.0594)  max mem: 27089
+Epoch: [143]  [14/15]  eta: 0:00:00  lr: 0.000314  loss: 115.0392 (115.7642)  time: 0.4424 (0.3753 -- 1.2693)  data: 0.0746 (0.0001 -- 1.0594)  max mem: 27089
+Epoch: [143] Total time: 0:00:06 (0.4425 s / it)
+train step
+Test:  [0/1]  eta: 0:00:00  loss: 702.4313 (702.4313)  geo_km: 131.1742 (131.1742)  time: 0.6086 (0.6086 -- 0.6086)  data: 0.5373 (0.5373 -- 0.5373)  max mem: 27089
+Test: Total time: 0:00:00 (0.6090 s / it)
+Test:  [0/1]  eta: 0:00:00  loss: 583.8750 (583.8750)  geo_km: 106.7238 (106.7238)  time: 0.7400 (0.7400 -- 0.7400)  data: 0.6528 (0.6528 -- 0.6528)  max mem: 27089
+Test: Total time: 0:00:00 (0.7405 s / it)
+eval step
+[INFO] Best checkpoint saved at /leonardo/home/userexternal/ddarmien/Demetra/moduli/videomae/output/checkpoint-tracking-best.pth
+start epoch144
+Epoch: [144]  [ 0/15]  eta: 0:00:18  lr: 0.000314  loss: 82.4844 (82.4844)  time: 1.2634 (1.2634 -- 1.2634)  data: 1.0594 (1.0594 -- 1.0594)  max mem: 27089
+Epoch: [144]  [14/15]  eta: 0:00:00  lr: 0.000312  loss: 108.9192 (111.6839)  time: 0.4398 (0.3759 -- 1.2634)  data: 0.0729 (0.0001 -- 1.0594)  max mem: 27089
+Epoch: [144] Total time: 0:00:06 (0.4399 s / it)
+train step
+Test:  [0/1]  eta: 0:00:00  loss: 799.5549 (799.5549)  geo_km: 145.0294 (145.0295)  time: 0.6122 (0.6122 -- 0.6122)  data: 0.5410 (0.5410 -- 0.5410)  max mem: 27089
+Test: Total time: 0:00:00 (0.6127 s / it)
+Test:  [0/1]  eta: 0:00:00  loss: 700.5964 (700.5964)  geo_km: 114.9261 (114.9261)  time: 0.7489 (0.7489 -- 0.7489)  data: 0.6631 (0.6631 -- 0.6631)  max mem: 27089
+Test: Total time: 0:00:00 (0.7494 s / it)
+eval step
+start epoch145
+Epoch: [145]  [ 0/15]  eta: 0:00:17  lr: 0.000311  loss: 95.1665 (95.1665)  time: 1.1685 (1.1685 -- 1.1685)  data: 0.9637 (0.9637 -- 0.9637)  max mem: 27089
+Epoch: [145]  [14/15]  eta: 0:00:00  lr: 0.000309  loss: 86.4238 (97.3472)  time: 0.4786 (0.3774 -- 1.1685)  data: 0.0690 (0.0001 -- 0.9637)  max mem: 27089
+Epoch: [145] Total time: 0:00:07 (0.4787 s / it)
+train step
+Test:  [0/1]  eta: 0:00:00  loss: 833.8508 (833.8508)  geo_km: 144.2391 (144.2391)  time: 0.6235 (0.6235 -- 0.6235)  data: 0.5513 (0.5513 -- 0.5513)  max mem: 27089
+Test: Total time: 0:00:00 (0.6239 s / it)
+Test:  [0/1]  eta: 0:00:00  loss: 661.5756 (661.5756)  geo_km: 107.6064 (107.6064)  time: 0.7464 (0.7464 -- 0.7464)  data: 0.6599 (0.6599 -- 0.6599)  max mem: 27089
+Test: Total time: 0:00:00 (0.7468 s / it)
+eval step
+start epoch146
+Epoch: [146]  [ 0/15]  eta: 0:00:20  lr: 0.000309  loss: 123.5312 (123.5312)  time: 1.3384 (1.3384 -- 1.3384)  data: 1.1261 (1.1261 -- 1.1261)  max mem: 27089
