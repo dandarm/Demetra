@@ -39,7 +39,7 @@ EUMETSAT_COLLECTION_ID_DEFAULT = "EO:EUM:DAT:MSG:MSG15-RSS"
 FRAME_RE = re.compile(r"airmass_rgb_(\d{8}_\d{4})\.png$")
 
 FIRSTPASS_MODEL_DEFAULT = REPO_ROOT / "trained_models" / "firstpass_model.ckpt"
-TRACKING_MODEL_DEFAULT = Path("/media/isacDisk2/demetra_trained_models/checkpoint-tracking-best_1.pth")
+TRACKING_MODEL_DEFAULT = Path("/media/isacDisk2/demetra_trained_models/checkpoint_new_tracking2.pth")
 MANOS_FILE_DEFAULT = (
     REPO_ROOT / "moduli" / "videomae" / "medicane_data_input" / "medicanes_new_windows.csv"
 )
@@ -125,6 +125,12 @@ def parse_args() -> argparse.Namespace:
         "--skip_inference",
         action="store_true",
         help="Scarica solo i frame e non lancia il tracking.",
+    )
+    parser.add_argument(
+        "--video_coastlines",
+        action=argparse.BooleanOptionalAction,
+        default=False,
+        help="Se attivo, include le linee di costa nel video finale.",
     )
     parser.add_argument(
         "--eumetsat_download_workers",
@@ -659,6 +665,7 @@ def run_inference_pipeline(
     tracking_model_path: Path,
     manos_file: Path,
     video_name: str,
+    video_coastlines: bool,
 ) -> None:
     cmd = [
         python_exec,
@@ -677,6 +684,8 @@ def run_inference_pipeline(
         "--video_name",
         video_name,
     ]
+    if video_coastlines:
+        cmd.append("--video_coastlines")
     LOG.info("Lancio inferenza: %s", " ".join(cmd))
     subprocess.run(cmd, cwd=str(REPO_ROOT), check=True)
 
@@ -831,6 +840,7 @@ def main() -> int:
         tracking_model_path=tracking_model_path,
         manos_file=manos_file,
         video_name=video_name,
+        video_coastlines=bool(args.video_coastlines),
     )
 
     final_csv = run_dir / "tracking_inference_predictions.csv"

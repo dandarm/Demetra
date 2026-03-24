@@ -33,6 +33,7 @@ Questo documento descrive lo script `scripts/predict_firstpass_and_track_from_fo
 - `--standard_tiling`: attivo di default; usa la tile della griglia standard che contiene il centro first-pass.
 - `--manos_file`: GT opzionale per tracking.
 - `--make_video`: genera anche il video ROI-firstpass finale.
+- `--video_coastlines`: se attivo, disegna le linee di costa nel video finale.
 - `--only_video`: crea solo MP4 da frame già renderizzati (richiede `--make_video`).
 - `--video_name`: nome base del file video.
 - `--ffmpeg_path`: path opzionale per ffmpeg.

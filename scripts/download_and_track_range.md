@@ -27,6 +27,7 @@ Questo wrapper:
   - `--eumetsat_download_workers`
   - `--eumetsat_download_retries`
   - `--eumetsat_read_timeout`
+  - `--video_coastlines`
 
 ## Logica implementata
 
@@ -167,7 +168,8 @@ La run lunga e' stata interrotta manualmente dopo aver verificato che:
   --start 15-03-2026 \
   --end 17-03-2026 \
   --download_source eumetsat \
-  --eumetsat_download_workers 4
+  --eumetsat_download_workers 4 \
+  --video_coastlines
 ```
 
 ### Solo download e conversione, senza inferenza

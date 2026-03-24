@@ -19,6 +19,7 @@ import shutil
 import subprocess
 import sys
 from datetime import datetime
+from functools import lru_cache
 from pathlib import Path
 from typing import Dict, List, Optional, Sequence, Tuple
 
@@ -26,7 +27,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 VIDEOMAE_ROOT = REPO_ROOT / "moduli" / "videomae"
 FIRSTPASS_ROOT_DEFAULT = REPO_ROOT / "moduli" / "firstpass"
 FIRSTPASS_MODEL_DEFAULT = REPO_ROOT / "trained_models" / "firstpass_model.ckpt"
-TRACKING_MODEL_DEFAULT = REPO_ROOT / "trained_models" / "checkpoint-tracking-best_1.pth"
+TRACKING_MODEL_DEFAULT = Path("/media/isacDisk2/demetra_trained_models/checkpoint_new_tracking2.pth")
 if str(VIDEOMAE_ROOT) not in sys.path:
     sys.path.insert(0, str(VIDEOMAE_ROOT))
 
@@ -43,6 +44,7 @@ from dataset.datasets import MedicanesTrackDataset
 import engine_for_tracking as tracking_engine
 from ffmpeg_utils import resolve_ffmpeg_executable
 from inference_tracking import run_tracking_inference, load_checkpoint, set_seeds
+from medicane_utils.geo_const import create_basemap_obj
 from models.tracking_model import create_tracking_model
 from track_from_folder import (
     _parse_tile_folder_name,
@@ -150,7 +152,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--standard_tiling",
         action=argparse.BooleanOptionalAction,
-        default=True,
+        default=False,
         help=(
             "Se attivo, per ogni centro first-pass usa la tile della griglia standard "
             "(stride default) che contiene il centro, invece del crop centrato."
@@ -198,6 +200,12 @@ def parse_args() -> argparse.Namespace:
         "--ffmpeg_path",
         default=None,
         help="Path da aggiungere al PATH per trovare ffmpeg (opzionale).",
+    )
+    parser.add_argument(
+        "--video_coastlines",
+        action=argparse.BooleanOptionalAction,
+        default=False,
+        help="Se attivo, disegna le linee di costa nel video finale.",
     )
     return parser.parse_args()
 
@@ -982,6 +990,52 @@ def _draw_marker_if_finite(
     return True
 
 
+@lru_cache(maxsize=8)
+def _get_coastline_polylines(image_w: int, image_h: int) -> Tuple[np.ndarray, ...]:
+    basemap_obj = create_basemap_obj()
+    if not getattr(basemap_obj, "coastsegs", None):
+        basemap_obj.drawcoastlines()
+
+    x_span = float(basemap_obj.xmax - basemap_obj.xmin)
+    y_span = float(basemap_obj.ymax - basemap_obj.ymin)
+    if x_span <= 0 or y_span <= 0:
+        return tuple()
+
+    split_jump_px = max(80.0, 0.2 * float(max(image_w, image_h)))
+    polylines: List[np.ndarray] = []
+    for seg in basemap_obj.coastsegs:
+        if len(seg) < 2:
+            continue
+        pts: List[Tuple[int, int]] = []
+        for x_map, y_map in seg:
+            x_pix = int(round((float(x_map) - float(basemap_obj.xmin)) / x_span * max(1, image_w - 1)))
+            y_pix = int(round((float(basemap_obj.ymax) - float(y_map)) / y_span * max(1, image_h - 1)))
+            if 0 <= x_pix < image_w and 0 <= y_pix < image_h:
+                pts.append((x_pix, y_pix))
+        if len(pts) < 2:
+            continue
+
+        current: List[Tuple[int, int]] = [pts[0]]
+        for prev_pt, pt in zip(pts, pts[1:]):
+            dx = float(pt[0] - prev_pt[0])
+            dy = float(pt[1] - prev_pt[1])
+            if (dx * dx + dy * dy) ** 0.5 > split_jump_px:
+                if len(current) >= 2:
+                    polylines.append(np.asarray(current, dtype=np.int32).reshape(-1, 1, 2))
+                current = [pt]
+                continue
+            current.append(pt)
+        if len(current) >= 2:
+            polylines.append(np.asarray(current, dtype=np.int32).reshape(-1, 1, 2))
+    return tuple(polylines)
+
+
+def _overlay_coastlines(img: np.ndarray, color_bgr=(255, 255, 255), thickness: int = 1) -> None:
+    h, w = img.shape[:2]
+    for poly in _get_coastline_polylines(int(w), int(h)):
+        cv2.polylines(img, [poly], isClosed=False, color=color_bgr, thickness=thickness, lineType=cv2.LINE_AA)
+
+
 def _run_tracking_inference(
     args_cli: argparse.Namespace,
     positive_folders: Sequence[Path],
@@ -1076,6 +1130,7 @@ def _render_firstpass_roi_frames(
     manos_file: Optional[str],
     frames_dir: Path,
     tile_size: int,
+    video_coastlines: bool,
 ) -> int:
     if cv2 is None:
         raise RuntimeError("OpenCV (cv2) non disponibile. Installa opencv-python nell'ambiente.")
@@ -1220,6 +1275,9 @@ def _render_firstpass_roi_frames(
             continue
         h, w = img.shape[:2]
 
+        if video_coastlines:
+            _overlay_coastlines(img)
+
         draw_box_val = pd.to_numeric(getattr(row, "draw_box", 0), errors="coerce")
         draw_box = bool(np.isfinite(draw_box_val) and int(draw_box_val) == 1)
         off_x = pd.to_numeric(getattr(row, "tile_offset_x", np.nan), errors="coerce")
@@ -1360,6 +1418,7 @@ def _make_firstpass_roi_video(
             manos_file=args_cli.manos_file,
             frames_dir=frames_dir,
             tile_size=int(args_cli.tile_size),
+            video_coastlines=bool(args_cli.video_coastlines),
         )
         if n_frames == 0:
             raise RuntimeError("Nessun frame renderizzato per il video ROI first-pass.")

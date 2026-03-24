@@ -216,6 +216,9 @@ frames.txt
 
 *.csv
 
+*.xlsx
+
 output/
 notebooks/generated_tracking_tiles/
 atbd/
+altro/
