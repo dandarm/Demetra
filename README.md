@@ -33,8 +33,8 @@ export EUMETSAT_CONSUMER_SECRET=<your_consumer_secret>
 conda activate demetra
 
 python scripts/download_and_track_range.py   --start 15-03-2026   --end 17-03-2026 \ 
-  --firstpass_model_path /media/isacDisk1/Demetra/trained_models/firstpass_model.ckpt \
-  --tracking_model_path /media/isacDisk2/demetra_trained_models/checkpoint_new_tracking2.pth
+  --firstpass_model_path <firstpass_model_checkpoint> \
+  --tracking_model_path <videomae_model_checkpoint>
 ```
 
 the script will automatically download data from EUMETSAT using your account keys
