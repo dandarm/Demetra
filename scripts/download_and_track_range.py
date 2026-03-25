@@ -82,7 +82,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--download_source",
         choices=["auto", "public", "eumetsat"],
-        default="auto",
+        default="eumetsat",
         help="Sorgente download: pubblico GCS, EUMETSAT diretto o auto.",
     )
     parser.add_argument(

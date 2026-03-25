@@ -207,6 +207,14 @@ def parse_args() -> argparse.Namespace:
         default=False,
         help="Se attivo, disegna le linee di costa nel video finale.",
     )
+    parser.add_argument(
+        "--video_tracking_dot_only",
+        action="store_true",
+        help=(
+            "Se presente, nel video finale non disegna box e rombo del first-pass "
+            "e mantiene solo il dot rosso del tracking VideoMAE."
+        ),
+    )
     return parser.parse_args()
 
 
@@ -1131,6 +1139,7 @@ def _render_firstpass_roi_frames(
     frames_dir: Path,
     tile_size: int,
     video_coastlines: bool,
+    video_tracking_dot_only: bool,
 ) -> int:
     if cv2 is None:
         raise RuntimeError("OpenCV (cv2) non disponibile. Installa opencv-python nell'ambiente.")
@@ -1282,23 +1291,24 @@ def _render_firstpass_roi_frames(
         draw_box = bool(np.isfinite(draw_box_val) and int(draw_box_val) == 1)
         off_x = pd.to_numeric(getattr(row, "tile_offset_x", np.nan), errors="coerce")
         off_y = pd.to_numeric(getattr(row, "tile_offset_y", np.nan), errors="coerce")
-        if draw_box and np.isfinite(off_x) and np.isfinite(off_y):
+        if (not video_tracking_dot_only) and draw_box and np.isfinite(off_x) and np.isfinite(off_y):
             x0 = int(np.clip(int(round(float(off_x))), 0, max(0, w - 1)))
             y0 = int(np.clip(int(round(float(off_y))), 0, max(0, h - 1)))
             x1 = int(np.clip(x0 + int(tile_size), 0, max(0, w - 1)))
             y1 = int(np.clip(y0 + int(tile_size), 0, max(0, h - 1)))
             cv2.rectangle(img, (x0, y0), (x1, y1), (0, 0, 255), 2)
 
-        if _draw_marker_if_finite(
-            img,
-            getattr(row, "firstpass_x_orig", np.nan),
-            getattr(row, "firstpass_y_orig", np.nan),
-            marker_type=cv2.MARKER_DIAMOND,
-            color_bgr=(0, 0, 255),
-            size=16,
-            thickness=2,
-        ):
-            n_firstpass_marker += 1
+        if not video_tracking_dot_only:
+            if _draw_marker_if_finite(
+                img,
+                getattr(row, "firstpass_x_orig", np.nan),
+                getattr(row, "firstpass_y_orig", np.nan),
+                marker_type=cv2.MARKER_DIAMOND,
+                color_bgr=(0, 0, 255),
+                size=16,
+                thickness=2,
+            ):
+                n_firstpass_marker += 1
 
         track_x = pd.to_numeric(getattr(row, "track_x", np.nan), errors="coerce")
         track_y = pd.to_numeric(getattr(row, "track_y", np.nan), errors="coerce")
@@ -1419,6 +1429,7 @@ def _make_firstpass_roi_video(
             frames_dir=frames_dir,
             tile_size=int(args_cli.tile_size),
             video_coastlines=bool(args_cli.video_coastlines),
+            video_tracking_dot_only=bool(args_cli.video_tracking_dot_only),
         )
         if n_frames == 0:
             raise RuntimeError("Nessun frame renderizzato per il video ROI first-pass.")

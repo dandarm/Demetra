@@ -20,7 +20,7 @@ Questo wrapper:
   `/home/isac/miniconda3/envs/videomae/bin/python`
 - usa di default i checkpoint:
   - `/media/isacDisk1/Demetra/trained_models/firstpass_model.ckpt`
-  - `/media/isacDisk1/Demetra/trained_models/checkpoint-tracking-best_1.pth`
+  - `/media/isacDisk2/demetra_trained_models/checkpoint_new_tracking2.pth`
 - salva tutto sotto:
   `/media/isacDisk1/airmassRGB/`
 - supporta download concorrente EUMETSAT con:
@@ -169,7 +169,9 @@ La run lunga e' stata interrotta manualmente dopo aver verificato che:
   --end 17-03-2026 \
   --download_source eumetsat \
   --eumetsat_download_workers 4 \
-  --video_coastlines
+  --video_coastlines \
+  --firstpass_model_path /media/isacDisk1/Demetra/trained_models/firstpass_model.ckpt \
+  --tracking_model_path /media/isacDisk2/demetra_trained_models/checkpoint_new_tracking2.pth
 ```
 
 ### Solo download e conversione, senza inferenza
@@ -180,7 +182,8 @@ La run lunga e' stata interrotta manualmente dopo aver verificato che:
   --start 15-03-2026 \
   --end 17-03-2026 \
   --download_source eumetsat \
-  --skip_inference
+  --skip_inference \
+
 ```
 
 ## Credenziali EUMETSAT

@@ -34,6 +34,7 @@ Questo documento descrive lo script `scripts/predict_firstpass_and_track_from_fo
 - `--manos_file`: GT opzionale per tracking.
 - `--make_video`: genera anche il video ROI-firstpass finale.
 - `--video_coastlines`: se attivo, disegna le linee di costa nel video finale.
+- `--video_tracking_dot_only`: nel video finale nasconde box e rombo first-pass e lascia solo il dot rosso del tracking VideoMAE.
 - `--only_video`: crea solo MP4 da frame già renderizzati (richiede `--make_video`).
 - `--video_name`: nome base del file video.
 - `--ffmpeg_path`: path opzionale per ffmpeg.
@@ -63,14 +64,26 @@ python3 scripts/predict_firstpass_and_track_from_folder.py \
   --video_name mediterraneo_firstpass_track \
 ```
 
+Per rigenerare frame + MP4 senza rifare l'inferenza, basta rilanciare lo script con lo stesso `--output_dir` e `--make_video`:
+
+```bash
+python3 scripts/predict_firstpass_and_track_from_folder.py \
+  --input_dir ../fromgcloud/2023 \
+  --output_dir ../airmassRGB/firstpass_track \
+  --make_video \
+  --video_tracking_dot_only \
+  --video_name mediterraneo_tracking_only
+```
+
 ## Note
 
 - Lo script usa solo tile first-pass positive per il tracking HR.
 - Il naming tile e il formato frame sono compatibili con `track_from_folder.py`.
 - Il video `--make_video` non usa il mosaico 12 tile VideoMAE: renderizza il frame originale e disegna un solo riquadro rosso (ROI) quando la detection first-pass è positiva.
+- Con `--video_tracking_dot_only`, nel video finale vengono soppressi sia il riquadro rosso della ROI sia il rombo rosso del first-pass; resta il solo dot rosso del tracking.
 - Il video viene renderizzato su **tutti** i frame disponibili in `input_dir` (es. ogni 5 minuti); tra due predizioni consecutive mantiene marker e stato dell'ultimo timestamp predetto.
 - Overlay marker nel video: rombo rosso = centro coarse first-pass, punto rosso = predizione tracking VideoMAE (globale), punto verde = GT da `manos_file` quando disponibile.
 - Nel CSV finale, `pred_lat/pred_lon` usano il tracking quando disponibile; se assente (es. `has_cyclone=0`) viene mantenuta la stima coarse first-pass.
 - Le copie stretched temporanee vengono mantenute in `output_dir/_tmp_firstpass_stretched`.
-- Caching automatico: se esistono i file tmp (`_tmp_firstpass_predictions.csv`, `_tmp_tracking_inference_predictions_tiles.csv`) non vengono ricalcolati.
+- Caching automatico: se esistono i file tmp (`_tmp_firstpass_predictions.csv`, `_tmp_tracking_inference_predictions_tiles.csv`) non vengono ricalcolati; se esiste gia `tracking_inference_predictions.csv`, il video viene comunque rigenerato leggendo i CSV temporanei presenti.
 - Le tile originali in `firstpass_tiles` non vengono modificate: l'overlay tracking viene scritto in una cartella separata.

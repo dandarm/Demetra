@@ -1,0 +1,67 @@
+# Generated from /home/isac/miniconda3/envs/videomae/bin/python on 2026-03-25
+# Python version in source env: 3.9
+#
+# This is a curated, pip-installable requirements file for the Demetra repo.
+# Versions are pinned from the working "videomae" environment, but Conda-local
+# references from `pip freeze` were normalized/removed on purpose.
+#
+# If you are installing on a machine without CUDA 11.3 support, adjust the
+# torch/torchvision/torchaudio lines below accordingly.
+--extra-index-url https://download.pytorch.org/whl/cu113
+
+# Core ML stack
+torch==1.12.1+cu113
+torchvision==0.13.1+cu113
+torchaudio==0.12.1+cu113
+timm==0.4.12
+pytorchvideo==0.1.5
+einops==0.8.1
+fvcore==0.1.5.post20221221
+iopath==0.1.10
+yacs==0.1.8
+tensorboard==2.9.0
+tensorboardX==1.8
+protobuf==3.20.3
+triton==3.2.0
+
+# Data and scientific computing
+numpy==1.26.4
+pandas==2.2.3
+scipy==1.13.1
+scikit-image==0.24.0
+scikit-learn==1.6.1
+matplotlib==3.8.4
+seaborn==0.13.2
+tqdm==4.67.1
+packaging==23.2
+PyYAML==6.0.2
+Pillow==11.1.0
+opencv-python==4.11.0.86
+imageio==2.37.0
+
+# Video / model I/O
+av==14.1.0
+decord==0.6.0
+parameterized==0.9.0
+portalocker==3.2.0
+
+# Download and remote data access
+requests==2.32.3
+eumdac==3.1.1
+gcsfs==2024.10.0
+xarray==2023.12.0
+zarr==2.18.2
+ocf_blosc2==0.0.13
+dask==2024.8.0
+distributed==2024.8.0
+
+# Geo / meteorological processing
+basemap==1.4.1
+basemap-data==1.3.2
+pyproj==3.6.1
+pyshp==2.3.1
+satpy==0.51.0
+
+# Analysis utilities used by repo scripts
+hdbscan==0.8.40
+umap-learn==0.5.9.post2
