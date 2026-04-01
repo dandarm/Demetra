@@ -37,6 +37,7 @@ PUBLIC_BUCKET_BASE = (
 )
 EUMETSAT_COLLECTION_ID_DEFAULT = "EO:EUM:DAT:MSG:MSG15-RSS"
 FRAME_RE = re.compile(r"airmass_rgb_(\d{8}_\d{4})\.png$")
+RUN_DIR_RE = re.compile(r"range_(\d{8}_\d{4})__(\d{8}_\d{4})$")
 
 FIRSTPASS_MODEL_DEFAULT = REPO_ROOT / "trained_models" / "firstpass_model.ckpt"
 TRACKING_MODEL_DEFAULT = Path("/media/isacDisk2/demetra_trained_models/checkpoint_new_tracking2.pth")
@@ -135,13 +136,13 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--eumetsat_download_workers",
         type=int,
-        default=4,
+        default=8,
         help="Numero di download concorrenti EUMETSAT.",
     )
     parser.add_argument(
         "--eumetsat_download_retries",
         type=int,
-        default=3,
+        default=5,
         help="Numero massimo di retry per ciascun prodotto EUMETSAT.",
     )
     parser.add_argument(
@@ -212,6 +213,22 @@ def format_compact(ts: pd.Timestamp) -> str:
     return pd.Timestamp(ts).strftime("%Y%m%d_%H%M")
 
 
+def parse_compact_timestamp(value: str) -> pd.Timestamp:
+    return pd.Timestamp(datetime.strptime(value, "%Y%m%d_%H%M"))
+
+
+def parse_run_dir_range(path: Path) -> Tuple[pd.Timestamp, pd.Timestamp] | None:
+    match = RUN_DIR_RE.fullmatch(path.name)
+    if not match:
+        return None
+    try:
+        start_ts = parse_compact_timestamp(match.group(1))
+        end_ts = parse_compact_timestamp(match.group(2))
+    except ValueError:
+        return None
+    return start_ts, end_ts
+
+
 def collect_existing_frame_map(frames_dir: Path) -> Dict[pd.Timestamp, Path]:
     frame_map: Dict[pd.Timestamp, Path] = {}
     if not frames_dir.exists():
@@ -246,11 +263,38 @@ def write_availability_report(
     return report_path
 
 
-def build_run_paths(output_root: Path, requested_start: pd.Timestamp, requested_end: pd.Timestamp) -> Tuple[Path, Path]:
+def resolve_run_paths(
+    output_root: Path,
+    requested_start: pd.Timestamp,
+    requested_end: pd.Timestamp,
+) -> Tuple[Path, Path, Path | None]:
     run_name = f"range_{format_compact(requested_start)}__{format_compact(requested_end)}"
     run_dir = output_root / run_name
     frames_dir = run_dir / "frames"
-    return run_dir, frames_dir
+    if run_dir.exists():
+        return run_dir, frames_dir, None
+
+    reuse_candidate: Path | None = None
+    reuse_end: pd.Timestamp | None = None
+    if output_root.exists():
+        for candidate in output_root.iterdir():
+            if not candidate.is_dir():
+                continue
+            parsed_range = parse_run_dir_range(candidate)
+            if parsed_range is None:
+                continue
+            candidate_start, candidate_end = parsed_range
+            if candidate_start != requested_start or candidate_end > requested_end:
+                continue
+            if reuse_end is None or candidate_end > reuse_end:
+                reuse_candidate = candidate
+                reuse_end = candidate_end
+
+    if reuse_candidate is not None:
+        reuse_candidate.rename(run_dir)
+        return run_dir, frames_dir, reuse_candidate
+
+    return run_dir, frames_dir, None
 
 
 def has_eumdac_credentials() -> bool:
@@ -418,6 +462,49 @@ def verify_downloaded_frames(
         if ts not in frame_map:
             missing.append(frames_dir / f"airmass_rgb_{pd.Timestamp(ts).strftime('%Y%m%d_%H%M')}.png")
     return missing
+
+
+def report_frame_spacing(
+    frame_times: Iterable[pd.Timestamp],
+    run_dir: Path,
+    expected_minutes: int = 5,
+) -> Path | None:
+    times = sorted(pd.Timestamp(ts) for ts in frame_times)
+    if len(times) < 2:
+        LOG.info("Controllo cadenza frame: meno di 2 frame disponibili, niente confronto temporale.")
+        return None
+
+    expected_delta = pd.Timedelta(minutes=int(expected_minutes))
+    anomalies: List[Tuple[pd.Timestamp, pd.Timestamp, pd.Timedelta]] = []
+    for prev_ts, next_ts in zip(times, times[1:]):
+        delta = next_ts - prev_ts
+        if delta != expected_delta:
+            anomalies.append((prev_ts, next_ts, delta))
+
+    if not anomalies:
+        LOG.info("Controllo cadenza frame OK: tutti i frame distano %d minuti.", expected_minutes)
+        return None
+
+    report_path = run_dir / "frame_spacing_report.txt"
+    lines = [
+        f"Expected spacing: {expected_minutes} minutes",
+        f"Frames checked: {len(times)}",
+        f"Anomalies found: {len(anomalies)}",
+        "",
+    ]
+    for prev_ts, next_ts, delta in anomalies:
+        delta_minutes = delta.total_seconds() / 60.0
+        lines.append(
+            f"{prev_ts} -> {next_ts} | delta_minutes={delta_minutes:.1f}"
+        )
+    report_path.write_text("\n".join(lines) + "\n", encoding="ascii")
+    LOG.warning(
+        "Controllo cadenza frame: trovati %d gap/anomalie rispetto ai %d minuti attesi. Report: %s",
+        len(anomalies),
+        expected_minutes,
+        report_path,
+    )
+    return report_path
 
 
 def public_segments_cover_request(
@@ -699,11 +786,13 @@ def main() -> int:
         raise ValueError("`end` deve essere >= `start`.")
 
     output_root = Path(args.output_root).expanduser().resolve()
-    run_dir, frames_dir = build_run_paths(output_root, requested_start, requested_end)
+    run_dir, frames_dir, renamed_from = resolve_run_paths(output_root, requested_start, requested_end)
     setup_logging(run_dir)
 
     LOG.info("Repo root: %s", REPO_ROOT)
     LOG.info("Range richiesto: %s -> %s", requested_start, requested_end)
+    if renamed_from is not None:
+        LOG.info("Run esistente riusata e rinominata: %s -> %s", renamed_from, run_dir)
     LOG.info("Cartella run: %s", run_dir)
 
     firstpass_model_path = Path(args.firstpass_model_path).expanduser().resolve()
@@ -826,6 +915,7 @@ def main() -> int:
         frame_times[0],
         frame_times[-1],
     )
+    report_frame_spacing(frame_times, run_dir, expected_minutes=5)
 
     if args.skip_inference:
         LOG.info("skip_inference attivo: fermo dopo il download.")

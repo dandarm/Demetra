@@ -171,6 +171,15 @@ def _temporal_gradient_colors(base_rgb: tuple, n: int, start_mix: float = 0.35, 
     return np.clip(colors, 0.0, 1.0)
 
 
+def _pred_temporal_colors(n: int, mode: str = "jet") -> np.ndarray:
+    if n <= 0:
+        return np.zeros((0, 3), dtype=float)
+    mode_norm = str(mode or "jet").strip().lower()
+    if mode_norm in {"red", "reds", "light_red", "red_gradient"}:
+        return _temporal_gradient_colors(base_rgb=(0.80, 0.0, 0.0), n=n, start_mix=0.30, end_mix=1.0)
+    return plt.cm.jet(np.linspace(0.08, 0.92, n))[:, :3]
+
+
 def _window_mask(df: pd.DataFrame, window: tuple) -> np.ndarray:
     if df is None or df.empty or window is None:
         return np.zeros(0, dtype=bool)
@@ -369,6 +378,7 @@ def _plot_med_tracks_map(
     pred_connect_window: tuple = None,
     annotation_window: tuple = None,
     annotation_every_hours: int = None,
+    pred_color_mode: str = "jet",
     dpi: int = 150,
 ) -> None:
     g = _clean_track_df(gt_df)
@@ -480,7 +490,7 @@ def _plot_med_tracks_map(
 
     if not r.empty:
         xr_all, yr_all = m(r["lon"].to_numpy(), r["lat"].to_numpy())
-        r_colors = plt.cm.jet(np.linspace(0.08, 0.92, len(r)))[:, :3]
+        r_colors = _pred_temporal_colors(len(r), mode=pred_color_mode)
         r_in_mask = _window_mask(r, pred_connect_window)
         if g.empty:
             ax.scatter(
@@ -1077,6 +1087,7 @@ def build_all_cyclone_maps(
     mercad_manos_path: Path = None,
     use_nearest_hour="auto",
     annotation_every_hours: int = None,
+    pred_color_mode: str = "jet",
     dpi: int = 150,
 ) -> pd.DataFrame:
     more_manos_file = more_manos_file or (REPO_ROOT / "moduli" / "videomae" / "medicane_data_input" / "more_medicanes_time_updated.csv")
@@ -1245,6 +1256,7 @@ def build_all_cyclone_maps(
             pred_connect_window=gt_window,
             annotation_window=gt_window_labels,
             annotation_every_hours=annotation_every_hours,
+            pred_color_mode=pred_color_mode,
             dpi=dpi,
         )
         map_rows.append(

@@ -28,6 +28,9 @@ VIDEOMAE_ROOT = REPO_ROOT / "moduli" / "videomae"
 FIRSTPASS_ROOT_DEFAULT = REPO_ROOT / "moduli" / "firstpass"
 FIRSTPASS_MODEL_DEFAULT = REPO_ROOT / "trained_models" / "firstpass_model.ckpt"
 TRACKING_MODEL_DEFAULT = Path("/media/isacDisk2/demetra_trained_models/checkpoint_new_tracking2.pth")
+
+
+
 if str(VIDEOMAE_ROOT) not in sys.path:
     sys.path.insert(0, str(VIDEOMAE_ROOT))
 
@@ -66,6 +69,9 @@ STANDARD_TILE_STRIDE_X = 213
 STANDARD_TILE_STRIDE_Y = 196
 STANDARD_IMAGE_WIDTH = 1290
 STANDARD_IMAGE_HEIGHT = 420
+
+num_frames = 16
+tile_size = 224
 
 
 def parse_args() -> argparse.Namespace:
@@ -136,18 +142,6 @@ def parse_args() -> argparse.Namespace:
         type=float,
         default=None,
         help="Tau per soft-argmax first-pass (opzionale).",
-    )
-    parser.add_argument(
-        "--num_frames",
-        type=int,
-        default=16,
-        help="Numero frame per videotile.",
-    )
-    parser.add_argument(
-        "--tile_size",
-        type=int,
-        default=224,
-        help="Dimensione lato tile crop sull'immagine originale.",
     )
     parser.add_argument(
         "--standard_tiling",
@@ -454,8 +448,6 @@ def _split_contiguous_groups(frames_df: pd.DataFrame, max_gap_minutes: float) ->
 def _build_clip_candidates(
     frames_df: pd.DataFrame,
     firstpass_df: pd.DataFrame,
-    num_frames: int,
-    tile_size: int,
     threshold: float,
     max_gap_minutes: float,
     standard_tiling: bool = False,
@@ -509,7 +501,6 @@ def _build_clip_candidates(
                     std_offset = _select_standard_offset_for_center(
                         x=float(x_orig),
                         y=float(y_orig),
-                        tile_size=tile_size,
                     )
                     tile_offset_x = int(std_offset[0])
                     tile_offset_y = int(std_offset[1])
@@ -542,7 +533,7 @@ def _build_clip_candidates(
     return candidates
 
 
-def _standard_offsets(tile_size: int) -> List[Tuple[int, int]]:
+def _standard_offsets() -> List[Tuple[int, int]]:
     offsets: List[Tuple[int, int]] = []
     for oy in range(0, STANDARD_IMAGE_HEIGHT - tile_size + 1, STANDARD_TILE_STRIDE_Y):
         for ox in range(0, STANDARD_IMAGE_WIDTH - tile_size + 1, STANDARD_TILE_STRIDE_X):
@@ -550,9 +541,9 @@ def _standard_offsets(tile_size: int) -> List[Tuple[int, int]]:
     return offsets
 
 
-def _select_standard_offset_for_center(x: float, y: float, tile_size: int) -> Tuple[int, int]:
+def _select_standard_offset_for_center(x: float, y: float) -> Tuple[int, int]:
     """Return the standard-grid tile offset containing point (x, y)."""
-    offsets = _standard_offsets(tile_size=tile_size)
+    offsets = _standard_offsets()
 
     containing = [
         (ox, oy)
@@ -575,7 +566,6 @@ def _select_standard_offset_for_center(x: float, y: float, tile_size: int) -> Tu
 def _create_tile_folders(
     candidates_df: pd.DataFrame,
     tile_root: Path,
-    tile_size: int,
 ) -> List[Path]:
     if tile_root.exists():
         shutil.rmtree(tile_root)
@@ -1137,7 +1127,6 @@ def _render_firstpass_roi_frames(
     tracking_df: Optional[pd.DataFrame],
     manos_file: Optional[str],
     frames_dir: Path,
-    tile_size: int,
     video_coastlines: bool,
     video_tracking_dot_only: bool,
 ) -> int:
@@ -1427,7 +1416,6 @@ def _make_firstpass_roi_video(
             tracking_df=tracking_df,
             manos_file=args_cli.manos_file,
             frames_dir=frames_dir,
-            tile_size=int(args_cli.tile_size),
             video_coastlines=bool(args_cli.video_coastlines),
             video_tracking_dot_only=bool(args_cli.video_tracking_dot_only),
         )
@@ -1552,8 +1540,6 @@ def main() -> None:
         clip_candidates = _build_clip_candidates(
             frames_df=frames_df,
             firstpass_df=firstpass_df,
-            num_frames=args_cli.num_frames,
-            tile_size=args_cli.tile_size,
             threshold=args_cli.firstpass_threshold,
             max_gap_minutes=float(args_cli.max_contiguous_gap_minutes),
             standard_tiling=bool(args_cli.standard_tiling),
@@ -1562,7 +1548,6 @@ def main() -> None:
         created_folders = _create_tile_folders(
             candidates_df=clip_candidates,
             tile_root=tile_root,
-            tile_size=args_cli.tile_size,
         )
         n_pos = int((clip_candidates["is_positive"] == 1).sum())
         print(

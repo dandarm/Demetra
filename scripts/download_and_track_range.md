@@ -216,6 +216,8 @@ Lo script riusa automaticamente:
 
 Quindi il rilancio non riparte da zero.
 
+Se rilanci con la stessa `start` ma una `end` piu' grande, lo script prova prima a riusare la run esistente con la stessa `start` e la `end` piu' lunga gia' presente, poi rinomina la cartella con la nuova `end` e scarica solo i frame ancora mancanti.
+
 ## Parametri utili per EUMETSAT
 
 Per i download via Data Store EUMETSAT sono ora disponibili questi parametri:
