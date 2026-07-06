@@ -128,6 +128,14 @@ def parse_args() -> argparse.Namespace:
         help="Scarica solo i frame e non lancia il tracking.",
     )
     parser.add_argument(
+        "--force",
+        action="store_true",
+        help=(
+            "Propaga --force allo script di inferenza: ricalcola prediction/video "
+            "anche se gli output sono gia presenti, mantenendo gli stretched first-pass."
+        ),
+    )
+    parser.add_argument(
         "--video_coastlines",
         action=argparse.BooleanOptionalAction,
         default=False,
@@ -753,6 +761,7 @@ def run_inference_pipeline(
     manos_file: Path,
     video_name: str,
     video_coastlines: bool,
+    force: bool,
 ) -> None:
     cmd = [
         python_exec,
@@ -771,6 +780,8 @@ def run_inference_pipeline(
         "--video_name",
         video_name,
     ]
+    if force:
+        cmd.append("--force")
     if video_coastlines:
         cmd.append("--video_coastlines")
     LOG.info("Lancio inferenza: %s", " ".join(cmd))
@@ -931,6 +942,7 @@ def main() -> int:
         manos_file=manos_file,
         video_name=video_name,
         video_coastlines=bool(args.video_coastlines),
+        force=bool(args.force),
     )
 
     final_csv = run_dir / "tracking_inference_predictions.csv"

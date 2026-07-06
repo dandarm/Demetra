@@ -28,7 +28,7 @@ from download_and_track_range import (  # noqa: E402
     AIRMAss_OUTPUT_ROOT_DEFAULT,
     FRAME_RE,
     PYTHON_EXEC_DEFAULT,
-    build_run_paths,
+    resolve_run_paths,
 )
 
 
@@ -334,7 +334,7 @@ def run_download_segment(
         modes_to_try.append("eumetsat")
 
     last_error: str | None = None
-    run_dir, frames_dir = build_run_paths(output_root, start, end)
+    run_dir, frames_dir, _ = resolve_run_paths(output_root, start, end)
     for mode in modes_to_try:
         cmd = [
             str(python_exec),

@@ -36,6 +36,7 @@ Questo documento descrive lo script `scripts/predict_firstpass_and_track_from_fo
 - `--video_coastlines`: se attivo, disegna le linee di costa nel video finale.
 - `--video_tracking_dot_only`: nel video finale nasconde box e rombo first-pass e lascia solo il dot rosso del tracking VideoMAE.
 - `--only_video`: crea solo MP4 da frame già renderizzati (richiede `--make_video`).
+- `--force`: forza il ricalcolo delle prediction e del video eliminando cache e artefatti derivati, ma mantiene `output_dir/_tmp_firstpass_stretched`.
 - `--video_name`: nome base del file video.
 - `--ffmpeg_path`: path opzionale per ffmpeg.
 
@@ -75,6 +76,16 @@ python3 scripts/predict_firstpass_and_track_from_folder.py \
   --video_name mediterraneo_tracking_only
 ```
 
+Per forzare un ricalcolo completo delle prediction mantenendo gli stretched già preparati:
+
+```bash
+python3 scripts/predict_firstpass_and_track_from_folder.py \
+  --input_dir ../fromgcloud/2023 \
+  --output_dir ../airmassRGB/firstpass_track \
+  --force \
+  --make_video
+```
+
 ## Note
 
 - Lo script usa solo tile first-pass positive per il tracking HR.
@@ -85,5 +96,6 @@ python3 scripts/predict_firstpass_and_track_from_folder.py \
 - Overlay marker nel video: rombo rosso = centro coarse first-pass, punto rosso = predizione tracking VideoMAE (globale), punto verde = GT da `manos_file` quando disponibile.
 - Nel CSV finale, `pred_lat/pred_lon` usano il tracking quando disponibile; se assente (es. `has_cyclone=0`) viene mantenuta la stima coarse first-pass.
 - Le copie stretched temporanee vengono mantenute in `output_dir/_tmp_firstpass_stretched`.
+- Con `--force`, lo script rimuove solo cache di prediction/video (`tracking_inference_predictions.csv`, tmp tracking/first-pass derivati, `firstpass_tiles`, `anim_frames_*`, MP4) e lascia intatti gli stretched.
 - Caching automatico: se esistono i file tmp (`_tmp_firstpass_predictions.csv`, `_tmp_tracking_inference_predictions_tiles.csv`) non vengono ricalcolati; se esiste gia `tracking_inference_predictions.csv`, il video viene comunque rigenerato leggendo i CSV temporanei presenti.
 - Le tile originali in `firstpass_tiles` non vengono modificate: l'overlay tracking viene scritto in una cartella separata.
