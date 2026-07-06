@@ -28,6 +28,7 @@ Questo wrapper:
   - `--eumetsat_download_retries`
   - `--eumetsat_read_timeout`
   - `--video_coastlines`
+  - `--force`
 
 ## Logica implementata
 
@@ -215,6 +216,19 @@ Lo script riusa automaticamente:
   [frames](/media/isacDisk1/airmassRGB/range_20260315_0000__20260317_2355/frames)
 
 Quindi il rilancio non riparte da zero.
+
+Se vuoi invece mantenere i frame e gli stretched first-pass ma ricalcolare forzatamente prediction/video, puoi rilanciare con:
+
+```bash
+/home/isac/miniconda3/envs/videomae/bin/python \
+  /media/isacDisk1/Demetra/scripts/download_and_track_range.py \
+  --start 15-03-2026 \
+  --end 17-03-2026 \
+  --download_source eumetsat \
+  --force
+```
+
+In questo caso il wrapper propaga `--force` a `predict_firstpass_and_track_from_folder.py`, che elimina solo gli artefatti di prediction/video e mantiene `frames/` e `_tmp_firstpass_stretched`.
 
 Se rilanci con la stessa `start` ma una `end` piu' grande, lo script prova prima a riusare la run esistente con la stessa `start` e la `end` piu' lunga gia' presente, poi rinomina la cartella con la nuova `end` e scarica solo i frame ancora mancanti.
 

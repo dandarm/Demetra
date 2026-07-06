@@ -38,3 +38,21 @@ python scripts/download_and_track_range.py   --start 15-03-2026   --end 17-03-20
 ```
 
 the script will automatically download data from EUMETSAT using your account keys
+
+
+
+## Example using most common features
+
+```bash
+python scripts/predict_firstpass_and_track_from_folder.py   \
+--input_dir /media/isacDisk2/source_dataset_by_cyc/jolina  \
+--output_dir /media/isacDisk2/demetra_output/jolina  \
+--firstpass_model_path /media/isacDisk1/Demetra/trained_models/firstpass_model.ckpt \
+--tracking_model_path /media/isacDisk2/demetra_trained_models/checkpoint_new_tracking2.pth \
+--firstpass_threshold 0.2 \
+--make_video \
+--ffmpeg_path /mnt/share/Demetra_files/VideoMAEv2/ffmpeg-7.0.2-amd64-static/ \
+--standard_tiling \
+--video_coastlines \
+--video_tracking_dot_only 
+```

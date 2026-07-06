@@ -209,6 +209,14 @@ def parse_args() -> argparse.Namespace:
             "e mantiene solo il dot rosso del tracking VideoMAE."
         ),
     )
+    parser.add_argument(
+        "--force",
+        action="store_true",
+        help=(
+            "Forza il ricalcolo delle prediction eliminando cache di first-pass/tracking "
+            "e artefatti video, ma mantiene _tmp_firstpass_stretched."
+        ),
+    )
     return parser.parse_args()
 
 
@@ -276,12 +284,12 @@ def _make_stretched_manifest(
 ) -> pd.DataFrame:
     if cv2 is None:
         raise RuntimeError("OpenCV (cv2) non disponibile. Installa opencv-python nell'ambiente.")
-    if stretched_root.exists():
-        shutil.rmtree(stretched_root)
     stretched_root.mkdir(parents=True, exist_ok=True)
 
     records: List[Dict[str, object]] = []
     skipped = 0
+    reused = 0
+    written = 0
     for row in frames_df.itertuples(index=False):
         orig_path = Path(row.orig_path)
         # Force 3 channels to keep first-pass temporal fusion shape stable (16*3=48).
@@ -299,10 +307,19 @@ def _make_stretched_manifest(
         except ValueError:
             dst_path = stretched_root / orig_path.name
         dst_path.parent.mkdir(parents=True, exist_ok=True)
-        ok = cv2.imwrite(str(dst_path), stretched)
-        if not ok:
-            skipped += 1
-            continue
+        need_write = True
+        if dst_path.exists():
+            existing = cv2.imread(str(dst_path), cv2.IMREAD_COLOR)
+            if existing is not None and existing.shape[:2] == (image_size, image_size):
+                need_write = False
+                reused += 1
+        if need_write:
+            stretched = cv2.resize(img, (image_size, image_size), interpolation=cv2.INTER_AREA)
+            ok = cv2.imwrite(str(dst_path), stretched)
+            if not ok:
+                skipped += 1
+                continue
+            written += 1
 
         scale_x = image_size / float(orig_w)
         scale_y = image_size / float(orig_h)
@@ -324,11 +341,48 @@ def _make_stretched_manifest(
         raise RuntimeError("Impossibile generare copie stretched per first-pass.")
     if skipped:
         print(f"[WARN] Frame saltati nella creazione stretched: {skipped}")
+    print(
+        f"[INFO] Stretched first-pass: riusati={reused}, scritti={written}, root={stretched_root}"
+    )
 
     manifest_df = pd.DataFrame(records).sort_values("datetime").reset_index(drop=True)
     manifest_df.to_csv(manifest_csv, index=False)
     print(f"[INFO] Manifest first-pass salvato in {manifest_csv} ({len(manifest_df)} righe)")
     return manifest_df
+
+
+def _clear_prediction_cache(output_dir: Path, video_name: str) -> None:
+    paths_to_remove = [
+        output_dir / "_tmp_firstpass_predictions.csv",
+        output_dir / "_tmp_firstpass_clip_candidates.csv",
+        output_dir / "_tmp_tracking_inference_predictions_tiles.csv",
+        output_dir / "_tmp_tracking_inference_dataset.csv",
+        output_dir / "tracking_inference_predictions.csv",
+        output_dir / f"{video_name}.mp4",
+    ]
+    dirs_to_remove = [
+        output_dir / "_tmp_firstpass_out",
+        output_dir / "firstpass_tiles",
+        output_dir / "firstpass_tiles_tracking_overlay",
+        output_dir / f"anim_frames_{video_name}",
+    ]
+
+    removed_files = 0
+    removed_dirs = 0
+    for path in paths_to_remove:
+        if path.exists():
+            path.unlink()
+            removed_files += 1
+    for path in dirs_to_remove:
+        if path.exists():
+            shutil.rmtree(path)
+            removed_dirs += 1
+
+    print(
+        "[INFO] Force attivo: cache prediction/video rimossa "
+        f"(file={removed_files}, cartelle={removed_dirs}) | "
+        f"stretched preservati: {output_dir / '_tmp_firstpass_stretched'}"
+    )
 
 
 def _run_firstpass_inference(
@@ -1440,6 +1494,8 @@ def main() -> None:
         )
     if args_cli.only_video and not args_cli.make_video:
         raise RuntimeError("--only_video richiede --make_video.")
+    if args_cli.only_video and args_cli.force:
+        raise RuntimeError("--force non e' compatibile con --only_video.")
     output_dir = Path(args_cli.output_dir).resolve()
     output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -1452,6 +1508,9 @@ def main() -> None:
     tile_root = output_dir / "firstpass_tiles"
     track_tiles_csv = output_dir / "_tmp_tracking_inference_predictions_tiles.csv"
     final_time_csv = output_dir / "tracking_inference_predictions.csv"
+
+    if args_cli.force:
+        _clear_prediction_cache(output_dir=output_dir, video_name=args_cli.video_name)
 
     # Fast cache path: if final CSV exists, skip all prediction stages.
     if final_time_csv.exists():
