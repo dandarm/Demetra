@@ -131,10 +131,10 @@ def plot_training_curves(tuple_vars, plot_file_name=None):  #TODO: per l'asse no
     # Asse sinistro per la loss
     ax1.plot(train_epochs, train_losses, marker='.', label='Training Loss') #, marker='o', linestyle='')
     if test_losses is not None and len(test_losses) > 0:
-        ax1.plot(test_epochs, test_losses, label='Test Loss') #color='r', marker='s', 
-    ax1.plot(val_epochs, val_losses, marker='.', label='Validation Loss') #color='r', marker='s', 
-    if val2_losses is not None and len(val2_losses) > 0:
-       ax1.plot(val_epochs, val2_losses, marker='.', label='Validation2 Loss', color='peachpuff') # marker='s',
+        ax1.plot(test_epochs, test_losses, label='Validation Loss') #color='r', marker='s', 
+    #ax1.plot(val_epochs, val_losses, marker='.', label='Test Loss') #color='r', marker='s', 
+    #if val2_losses is not None and len(val2_losses) > 0:
+    #   ax1.plot(val_epochs, val2_losses, marker='.', label='Validation2 Loss', color='peachpuff') # marker='s',
     
 
     tick_length = 20
@@ -150,6 +150,7 @@ def plot_training_curves(tuple_vars, plot_file_name=None):  #TODO: per l'asse no
     ax1.set_yscale('log')
     ax1.set_xscale('log')
 
+    """
     if len(val_accs)>0:
         # Asse destro per l'accuracy
         
@@ -165,8 +166,9 @@ def plot_training_curves(tuple_vars, plot_file_name=None):  #TODO: per l'asse no
         ax2.set_ylim(0,1)
 
         axis_color(ax2, colore_asse)
+    """
 
-
+    """
     if len(lr_epochs) > 0:
         try:
             ax3 = ax1.twinx()
@@ -189,6 +191,7 @@ def plot_training_curves(tuple_vars, plot_file_name=None):  #TODO: per l'asse no
         ax3.set_xscale('log')
 
         axis_color(ax3, colore_asse)
+    """
 
     plt.title('Training Loss, Validation Loss, and Accuracy per Epoch')
     fig.canvas.draw()
