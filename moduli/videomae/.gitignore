@@ -174,3 +174,7 @@ ffmpeg*
 anim_frames*
 
 randomizza.sh
+
+# Versioned figures embedded in SUPPLEMENTARY_MATERIAL.md
+!supplementary_material/
+!supplementary_material/ianos_*.gif
