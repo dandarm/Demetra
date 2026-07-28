@@ -1,16 +1,18 @@
 <div align="center">
-<h1> VideoMAEv2 extension for Medicanes
+<h1>DeMeTrA: Detection and Tracking of Medicanes</h1>
 <br>
 <img src="misc/med_earth_icon.png" alt="Project Icon" width="100" />
 </div>
 
 # Overview
 
-This repository adapts **VideoMAE v2** (Video Masked Autoencoder: [VideoMAEv2](https://github.com/OpenGVLab/VideoMAEv2)) to the study of *Mediterranean tropical-like cyclones* (Medicanes). It provides scripts for both **self-supervised pretraining** and **supervised fine-tuning** on satellite (SEVIRI MSG) imagery AirmassRGB composite datasets.
+**DeMeTrA** is a self-supervised vision-transformer framework for detecting and tracking *Mediterranean tropical-like cyclones* (Medicanes) from SEVIRI/MSG AirmassRGB satellite imagery. It provides workflows for self-supervised pretraining, supervised cyclone detection, and cyclone-centre tracking.
+
+> **Preprint:** [*Detection and Tracking of Medicanes Through DeMeTrA Self-Supervised Vision Transformer*](https://www.preprints.org/manuscript/202605.1494) — Daniele D’Armiento, Stefano Sebastianelli, Leo Pio D’Adderio, Paolo Sanò, Daniele Casella, and Giulia Panegrossi (2026). DOI: [10.20944/preprints202605.1494.v1](https://doi.org/10.20944/preprints202605.1494.v1)
 
 The repo is developed to:
 
-* Pretrain VideoMAE for a **specialization phase** using unlabeled satellite video sequences.
+* Pretrain the model for a **specialization phase** using unlabeled satellite video sequences.
 * Fine-tune the pretrained model for **cyclone detection** and **center tracking**.
 
 ---
@@ -79,20 +81,18 @@ python medicane_utils/download_airmassRGB.py --start "2020-09-01 00:00" --end "2
 ```
 
 
-## References
+## Citation
+
+If you use DeMeTrA, please cite the preprint:
+
+> D’Armiento, D., Sebastianelli, S., D’Adderio, L. P., Sanò, P., Casella, D., & Panegrossi, G. (2026). *Detection and Tracking of Medicanes Through DeMeTrA Self-Supervised Vision Transformer*. Preprints.org. https://doi.org/10.20944/preprints202605.1494.v1
+
+GitHub also exposes this citation through [`CITATION.cff`](CITATION.cff).
+
+## Upstream work
+
+DeMeTrA builds on [VideoMAE v2](https://github.com/OpenGVLab/VideoMAEv2). Please also cite the upstream work where appropriate:
 
 * [VideoMAE v1 (NeurIPS 2022)](https://arxiv.org/abs/2203.12602)
 * [VideoMAE v2 (CVPR 2023)](https://arxiv.org/abs/2303.16727)
-
-
-### [CVPR 2023] Official Implementation of VideoMAE V2
-
-![flowchart](misc/VideoMAEv2_flowchart.png)
-
-> [**VideoMAE V2: Scaling Video Masked Autoencoders with Dual Masking**](https://arxiv.org/abs/2303.16727)<br>
-> [Limin Wang](http://wanglimin.github.io/), [Bingkun Huang](https://github.com/congee524), [Zhiyu Zhao](https://github.com/JerryFlymi), [Zhan Tong](https://scholar.google.com/citations?user=6FsgWBMAAAAJ), [Yinan He](https://dblp.org/pid/93/7763.html), [Yi Wang](https://scholar.google.com.hk/citations?hl=zh-CN&user=Xm2M8UwAAAAJ), [Yali Wang](https://scholar.google.com/citations?user=hD948dkAAAAJ), and [Yu Qiao](https://scholar.google.com/citations?user=gFtI-8QAAAAJ&hl)<br>
-> Nanjing University, Shanghai AI Lab, CAS<br>
-
----
-
 

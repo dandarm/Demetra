@@ -1,0 +1,37 @@
+cff-version: 1.2.0
+message: "If you use DeMeTrA, please cite it as described below."
+title: "DeMeTrA: Detection and Tracking of Medicanes"
+type: software
+authors:
+  - family-names: "D'Armiento"
+    given-names: "Daniele"
+  - family-names: "Sebastianelli"
+    given-names: "Stefano"
+  - family-names: "D'Adderio"
+    given-names: "Leo Pio"
+  - family-names: "Sanò"
+    given-names: "Paolo"
+  - family-names: "Casella"
+    given-names: "Daniele"
+  - family-names: "Panegrossi"
+    given-names: "Giulia"
+repository-code: "https://github.com/dandarm/DeMeTra-v1"
+preferred-citation:
+  type: article
+  title: "Detection and Tracking of Medicanes Through DeMeTrA Self-Supervised Vision Transformer"
+  authors:
+    - family-names: "D'Armiento"
+      given-names: "Daniele"
+    - family-names: "Sebastianelli"
+      given-names: "Stefano"
+    - family-names: "D'Adderio"
+      given-names: "Leo Pio"
+    - family-names: "Sanò"
+      given-names: "Paolo"
+    - family-names: "Casella"
+      given-names: "Daniele"
+    - family-names: "Panegrossi"
+      given-names: "Giulia"
+  doi: "10.20944/preprints202605.1494.v1"
+  url: "https://www.preprints.org/manuscript/202605.1494"
+  year: 2026
