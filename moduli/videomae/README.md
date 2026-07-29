@@ -22,14 +22,23 @@ The repo is developed to:
 ```
 ├── specialization.py            # Additional unsupervised pretraining ("specialization")
 ├── classification.py            # Fine-tuning entry point (classification)
+├── tracking.py                  # Cyclone-centre regression training
+├── inference_classification.py  # Classification inference
+├── predict_and_track_from_folder.py # End-to-end operational inference
 ├── engine_for_pretraining.py    # Training loop for pretraining
 ├── engine_for_finetuning.py     # Training loop for fine-tuning
-├── datasets.py                  # Contains custom MedicaneDataset and TrackindDataset definitions 
-├── build_dataset.py             # Tools to build dataset CSVs (tile-based)
+├── engine_for_tracking.py       # Training loop for tracking
+├── dataset/                     # Dataset building, loading, and augmentation
+├── models/                      # VideoMAE-based model definitions
+├── medicane_utils/              # Satellite and geospatial utilities
 ├── make_dataset_from_rgb.py     # Entry points for dataset construction
-└── arguments.py                 # Centralized training arguments
+├── docs/                        # Project and workflow documentation
+└── arguments.py                 # Centralised training arguments
 ```
-Check `README_MORE` for more in depth description of each module and notebook.
+
+The [project guide](docs/PROJECT_GUIDE.md) explains how these components fit
+together across the complete data, training, inference, and evaluation
+pipeline.
 
 ---
 
@@ -39,7 +48,7 @@ The following index collects the project documentation, notebooks, and operation
 
 ### Project overview and setup
 
-* [Extended project guide](README_MORE.md)
+* [Extended project guide](docs/PROJECT_GUIDE.md)
 * [Installation](docs/INSTALL.md)
 * [Supplementary material: Ianos and MANOS track–image consistency](SUPPLEMENTARY_MATERIAL.md)
 
