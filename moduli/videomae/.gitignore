@@ -156,6 +156,10 @@ medicane_video/
 *.pth*
 *.zip
 *.csv
+
+# Local tracking dataset splits: keep them on disk, never version them.
+*tracking_selezionati*
+
 *.dat
 *.png
 *.ttf
