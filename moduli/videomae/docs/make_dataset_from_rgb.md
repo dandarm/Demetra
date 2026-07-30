@@ -8,8 +8,8 @@ Utility CLI per generare varianti di dataset RGB a partire da sorgenti Medicanes
 3. Se `--master_df`: invocare `make_master_df` per generare un dataframe consolidato.
 4. Altrimenti, se `--relabeled_df`: eseguire `make_relabeled_dataset` (eventuale opzione `--cloudy`).
 5. Se `--cloudy`: ricreare dataset con filtraggio basato sull'indice di nuvolosità
-6. Se `--manos_tracks`: costruire dataset supervisionato da tracce Manos (`make_dataset_from_manos_tracks`).
-7. Se `--tracking_manos`: creare dataset di tracking con split standard (`make_tracking_dataset_from_manos_tracks`).
+6. Se `--manos_tracks`: costruire un dataset supervisionato dalle tracce di riferimento (`make_dataset_from_manos_tracks`); l'opzione conserva il nome legacy per compatibilità.
+7. Se `--tracking_manos`: creare un dataset di tracking con split standard (`make_tracking_dataset_from_manos_tracks`); l'opzione conserva il nome legacy per compatibilità.
 8. Se `--all_year`: generare dataset completo per l'anno indicato (`make_dataset_from_entire_year`).
 9. In assenza di flag specifici: default su `make_sup_dataset`.
 ```

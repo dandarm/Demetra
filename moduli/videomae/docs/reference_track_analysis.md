@@ -1,8 +1,8 @@
-# Analyze_Manos_tracks.ipynb
+# Mediterranean Cyclone Reference-Track Analysis
 
 
 ## Overview
-Questo notebook è dedicato all’analisi esplorativa delle tracce dei cicloni fornite da Manos (dataset `TRACKS_CL*.dat`). Vengono unificati i file per classi di ciclone (CL2–CL10), si effettua una verifica della consistenza e copertura temporale, sono calcolate le tracce con coordinate in pixel rispetto al riferimento dato dalle immagini Airmass RGB con un dato riferimento spaziale, e sono prodotti sottoinsiemi focalizzati sui cicloni maggiormente definiti, aventi durata maggiore e strutture più simili ai Medicane, e sui Medicanes stessi. Infine vengono generati file di tracce CSV aggiornati con nuove finestre temporali più aderenti alle fasi in cui il ciclone è chiaramente sviluppato e mostra una dinamica con una rotazione evidente.
+Il notebook legacy `Analyze_Manos_tracks.ipynb` è dedicato all’analisi esplorativa delle tracce di riferimento dei cicloni mediterranei (dataset `TRACKS_CL*.dat`). La terminologia e la fonte del dataset sono definite nella sezione [Terminology](../README.md#terminology) del README. Vengono unificati i file per classi di ciclone (CL2–CL10), si effettua una verifica della consistenza e copertura temporale, sono calcolate le tracce con coordinate in pixel rispetto al riferimento dato dalle immagini Airmass RGB con un dato riferimento spaziale, e sono prodotti sottoinsiemi focalizzati sui cicloni maggiormente definiti, aventi durata maggiore e strutture più simili ai Medicane, e sui Medicanes stessi. Infine vengono generati file di tracce CSV aggiornati con nuove finestre temporali più aderenti alle fasi in cui il ciclone è chiaramente sviluppato e mostra una dinamica con una rotazione evidente.
 
 
 ## Caricamento dei file CL e verifiche preliminari
@@ -21,9 +21,9 @@ Questo notebook è dedicato all’analisi esplorativa delle tracce dei cicloni f
 
 ## Calcolo delle coordinate in pixel: trasformazione da lon,lat a x,y
 - Si usa `get_lon_lat_grid_2_pixel` e `get_cyclone_center_pixel_vector` per la trasformazione
-- Si aggiungono le colonne `x_pix` e `y_pix` al dataframe, e si salva in `all_manos_CL_pixel.csv`
+- Si aggiungono le colonne `x_pix` e `y_pix` al dataframe, e si salva nel file legacy `all_manos_CL_pixel.csv`
 - Si filtrano via quelli che durano meno di 3 giorni per fare statistiche di studio
-- codice per filtrare via dai metadata_files tutti i file immagine che non rientrano negli intervalli temporali di copertura date dal df tracks di Manos (poi inglobato in una funzione dentro DataBuilder? TODO: verificare)
+- codice per filtrare via dai metadata_files tutti i file immagine che non rientrano negli intervalli temporali coperti dal dataframe delle tracce di riferimento (poi inglobato in una funzione dentro DataBuilder? TODO: verificare)
 
 
 ## Si salvano versioni normalizzate per classi specifiche 

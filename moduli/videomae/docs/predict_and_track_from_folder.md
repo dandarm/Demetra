@@ -17,7 +17,7 @@ Questo documento descrive lo script `predict_and_track_from_folder.py`, che **un
 - `--classification_model_path`: checkpoint del modello di classificazione.
 - `--tracking_model_path`: checkpoint del modello di tracking.
 - `--split_by_subfolder`: se presente, processa ogni subfolder come sequenza separata.
-- `--manos_file`: CSV Manos (opzionale) per etichette/GT.
+- `--manos_file`: nome legacy dell'opzione per il CSV delle tracce di riferimento usato come ground truth (opzionale).
 - `--make_video`: genera il video Mediterraneo.
 - `--only_video`: genera solo il video da PNG esistenti (salta rendering frame).
 - `--ffmpeg_path`: (opzionale) path da aggiungere a `PATH` per trovare `ffmpeg`.

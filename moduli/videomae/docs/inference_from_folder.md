@@ -22,7 +22,7 @@ Questo documento descrive lo script `predict_from_folder.py`, che esegue l’inf
 - `--output_dir`: cartella di output per le tile video
 - `--model_path`: checkpoint del modello
 - `--split_by_subfolder`: se presente, tratta ogni subfolder come sequenza separata
-- `--manos_file`: CSV Manos per etichette (opzionale)
+- `--manos_file`: nome legacy dell'opzione per il CSV delle tracce di riferimento usato come ground truth (opzionale)
 - `--make_video`: genera il video Mediterraneo
 - `--ffmpeg_path`: (opzionale) path da aggiungere a `PATH` per trovare `ffmpeg`
 - `--only_video`: crea solo il video da frame PNG già esistenti (salta il rendering)

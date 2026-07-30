@@ -10,7 +10,7 @@
 - Il CSV di tracking viene cercato in `output/tracking_inference_predictions.csv` con fallback su `args.output_dir`, e subito dopo viene forzato il colore rosso per la classe `PRED` all’interno di `PALETTE`, così da usare un canale consistente all’atto del disegno della traccia sul video (`View_MED_tracking_preds.ipynb:123` e `View_MED_tracking_preds.ipynb:137`).
 
 ## Costruzione del dataset di tracking
-- `prepare_tracking_args()` inizializza l’insieme di iper-parametri per la pipeline di regression e alimenta `make_tracking_data_builder_from_csv`, che ricostruisce le sequenze video e i metadati Manos a partire dal CSV `medicane_data_input/medicanes_new_windows.csv`, dal sottoinsieme `test_tracking_selezionati.csv` e dalle cartelle `../fromgcloud` / `../airmassRGB/supervised/` (`View_MED_tracking_preds.ipynb:204`).
+- `prepare_tracking_args()` inizializza l’insieme di iper-parametri per la pipeline di regression e alimenta `make_tracking_data_builder_from_csv`, che ricostruisce le sequenze video e i metadati delle tracce di riferimento a partire dal CSV `medicane_data_input/medicanes_new_windows.csv`, dal sottoinsieme `test_tracking_selezionati.csv` e dalle cartelle `../fromgcloud` / `../airmassRGB/supervised/` (`View_MED_tracking_preds.ipynb:204`).
 - L’oggetto `test_builder` fornisce sia `df_video` (informazioni aggregate per ciascun video tile) sia `master_df` (metadati per singolo frame) che saranno usati per motivare l’espansione ai frame (`View_MED_tracking_preds.ipynb:205`).
 
 ## Join con le predizioni del tracker

@@ -38,7 +38,7 @@ Usare le seguenti definizioni, raccordarle a quelle usate in sklearn e già calc
 ## Dataset
 - scaricare tutto il 2023
 - Dataset di test di un anno intero
-    - Devo prendere un master_df caricato su tutte le immagini, non sulle righe di un manos track, perché altrimenti andrei a prendere solo gli intervalli relativi a cicloni,
+    - Devo prendere un master_df caricato su tutte le immagini, non sulle sole righe delle tracce di riferimento, perché altrimenti andrei a prendere solo gli intervalli relativi ai cicloni,
       invece voglio tutto un anno, anche quando non ci sono cicloni
 
 ## Tracking

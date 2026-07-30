@@ -23,7 +23,7 @@ evaluation, and visual-quality-assurance tools needed to support these stages.
 ## 2. End-to-end workflow
 
 ```text
-SEVIRI/MSG imagery + MANOS tracks
+SEVIRI/MSG imagery + Mediterranean cyclone reference tracks
                 |
                 v
       dataset preparation
@@ -80,9 +80,11 @@ annotations used by the learning tasks.
 
 ### Track preparation
 
-The [MANOS track analysis](Analyze_Manos_tracks.md) describes how track files
-are aggregated, assigned consistent identifiers, mapped from geographic
-coordinates to image pixels, and adjusted to suitable Medicane time windows.
+The [Mediterranean cyclone reference-track analysis](reference_track_analysis.md)
+describes how track files are aggregated, assigned consistent identifiers,
+mapped from geographic coordinates to image pixels, and adjusted to suitable
+Medicane time windows. The term is defined and sourced in the
+[README terminology section](../README.md#terminology).
 The [pixel-to-kilometre conversion guide](pixel_km_conversion.md) and
 [geographic utilities reference](medicane_utils_geo_const.md) document the
 coordinate transformations used throughout the project.
@@ -93,7 +95,7 @@ The [dataset-building guide](Build_dataset_videoMAE.md) covers tile extraction,
 16-frame sequence creation, balancing, and storage for supervised and
 self-supervised use. The [AirmassRGB dataset command](make_dataset_from_rgb.md)
 acts as the dispatcher for master dataframes, video tiles, cloudy subsets,
-annual datasets, and MANOS-derived datasets.
+annual datasets, and reference-track-derived datasets.
 
 Additional workflows support:
 
@@ -166,7 +168,7 @@ DeMeTrA uses both numerical and visual evaluation:
 
 The repository root also contains
 [supplementary material](../SUPPLEMENTARY_MATERIAL.md) focused on Ianos and
-MANOS track–image consistency.
+reference-track–image consistency.
 
 ## 8. Recommended reading paths
 

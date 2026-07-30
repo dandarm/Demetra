@@ -17,6 +17,23 @@ The repo is developed to:
 
 ---
 
+## Terminology
+
+Throughout this repository, **Mediterranean cyclone reference tracks** (or
+**cyclone-centre reference tracks** when discussing spatial labels) refers to
+the composite reference-track datasets introduced by Flaounas et al.:
+
+> Flaounas, E., et al. (2023). *A composite approach to produce reference
+> datasets for extratropical cyclone tracks: application to Mediterranean
+> cyclones*. Weather and Climate Dynamics, 4, 639–661.
+> [https://doi.org/10.5194/wcd-4-639-2023](https://doi.org/10.5194/wcd-4-639-2023)
+
+Some legacy filenames, function names, notebook names, and command-line options
+contain `manos`. These identifiers are retained only for compatibility and
+should not be interpreted as the name or source of the dataset.
+
+---
+
 ## Repository Structure
 
 ```
@@ -50,7 +67,7 @@ The following index collects the project documentation, notebooks, and operation
 
 * [Extended project guide](docs/PROJECT_GUIDE.md)
 * [Installation](docs/INSTALL.md)
-* [Supplementary material: Ianos and MANOS track–image consistency](SUPPLEMENTARY_MATERIAL.md)
+* [Supplementary material: Ianos reference-track–image consistency](SUPPLEMENTARY_MATERIAL.md)
 
 ### Training workflows
 
@@ -81,7 +98,7 @@ The following index collects the project documentation, notebooks, and operation
 
 ### Analysis, evaluation, and visualisation
 
-* [MANOS track analysis](docs/Analyze_Manos_tracks.md)
+* [Mediterranean cyclone reference-track analysis](docs/reference_track_analysis.md)
 * [Performance metrics](docs/metrics.md)
 * [Model statistics](docs/Model_stats.md)
 * [Training-loss visualisation](docs/Plot_train_loss.md)

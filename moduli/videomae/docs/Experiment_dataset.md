@@ -15,7 +15,7 @@ Notebook sperimentale dedicato alla manipolazione del master dataframe supervisi
 - Invocazione di `BuildDataset` per costruire dataset supervisionati per entrambi gli split, con salvataggio dei CSV (`train_CL10`, `test_CL10`).
 
 ## Dataset di soli medicanes
-- Lettura di `manos_medicanes_only.csv` e `more_medicanes_time_updated.csv` (che sono dei Tracks di Manos).
+- Lettura dei file legacy `manos_medicanes_only.csv` e `more_medicanes_time_updated.csv`, contenenti tracce di riferimento dei cicloni.
 - Normalizzazione della colonna `id_final` assegnando ID numerici anche ai cicloni nominati (via `utils.str2num`).
 - Filtraggio delle righe fuori dal range temporale dichiarato, salvataggio in `medicanes_new_windows.csv` e split 70/15/15 con `get_train_test_validation_df`. (la differenza tra more_medicanes_time_updated e medicanes_new_windows è che nel secondo sono state tole le righe il cui time cade fuori dagli start_time e end_time 'updated' )
 - Creazione dei dataset `train_manos_w`, `test_manos_w`, `val_manos_w` tramite `BuildDataset` passando i rispettivi DataFrame delle tracce.

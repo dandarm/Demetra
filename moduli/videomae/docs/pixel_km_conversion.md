@@ -78,6 +78,6 @@ Per misurare l’errore del tracker in chilometri:
 - La griglia lat/lon è valida solo per immagini 1290×420; se cambiano dimensioni occorre rigenerarla chiamando `get_lon_lat_grid_2_pixel` con i nuovi parametri sia lato dataset che lato tracking.
 - Quando lavori con offset manuali o affini, assicurati di invertire l’asse Y nello stesso modo in cui fanno `coord2px` e `_pixels_to_latlon`, altrimenti il punto risulterà ribaltato verticalmente.
 - Per debug veloci è spesso sufficiente usare `_compute_sample_record` (`inference_tracking.py:37-114`), che incapsula tutti i passaggi e restituisce sia coordinate in pixel che lat/lon, oltre a `err_km`.
-- Se devi processare molte coordinate lat/lon simultaneamente (es. durante il preprocessing dei CSV Manos), usa la funzione vettoriale `get_cyclone_center_pixel_vector` (cfr. `medicane_utils/geo_const.py:51-84` e note in `docs/Analyze_Manos_tracks.md`), così resti allineato alla trasformazione usata anche nel tracking.
+- Se devi processare molte coordinate lat/lon simultaneamente (es. durante il preprocessing dei CSV delle tracce di riferimento), usa la funzione vettoriale `get_cyclone_center_pixel_vector` (cfr. `medicane_utils/geo_const.py:51-84` e note in [`reference_track_analysis.md`](reference_track_analysis.md)), così resti allineato alla trasformazione usata anche nel tracking.
 
 Seguendo i riferimenti indicati sopra è possibile implementare o verificare qualsiasi conversione pixel ↔ km mantenendo allineata la pipeline con il codice di riferimento del repository.

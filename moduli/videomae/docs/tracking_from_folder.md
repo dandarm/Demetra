@@ -22,7 +22,7 @@ Questo documento descrive lo script `track_from_folder.py`, che esegue l’infer
 - `--input_dir`: cartella che contiene le subfolder dei video tile.
 - `--model_path`: checkpoint del modello di tracking.
 - `--output_dir`: cartella output per CSV e metriche (default: `./output`).
-- `--manos_file`: CSV Manos con GT (default: `medicane_data_input/medicanes_new_windows.csv`).
+- `--manos_file`: nome legacy dell'opzione per il CSV delle tracce di riferimento usato come ground truth (default: `medicane_data_input/medicanes_new_windows.csv`).
   - Se il file **non esiste**, l’output è solo con la traccia predetta (nessun GT).
 - `--make_video`: genera i video tile annotati.
 - `--ffmpeg_path`: (opzionale) path da aggiungere a `PATH` per trovare `ffmpeg`.
@@ -52,6 +52,6 @@ python track_from_folder.py \
 
 - La **GT** viene associata così:
   - dal nome della cartella si estraggono **data/ora** e **offset**.
-  - nel CSV Manos (`time`, `x_pix`, `y_pix`) si prende la riga con `time` arrotondata all’ora e con punto `(x_pix, y_pix)` **dentro la tile** definita da `offsetX/offsetY`.
+  - nel CSV delle tracce di riferimento (`time`, `x_pix`, `y_pix`) si prende la riga con `time` arrotondata all’ora e con punto `(x_pix, y_pix)` **dentro la tile** definita da `offsetX/offsetY`.
   - se non c’è match, la riga resta senza GT → output solo predizioni.
 - `err_km` richiede che i nomi delle tile includano gli offset (come nello standard). Se non sono parsabili, `err_km` resta vuoto.
