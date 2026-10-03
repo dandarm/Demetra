@@ -94,6 +94,11 @@ def parse_args() -> argparse.Namespace:
         help="Checkpoint tracking VideoMAE.",
     )
     parser.add_argument(
+        "--tracking_predictions_csv",
+        default=None,
+        help="CSV tile tracking da riutilizzare (default: <output_dir>/_tmp_tracking_inference_predictions_tiles.csv).",
+    )
+    parser.add_argument(
         "--firstpass_root",
         default=None,
         help="Root modulo firstpass (default: <repo>/moduli/firstpass).",
@@ -189,6 +194,24 @@ def parse_args() -> argparse.Namespace:
         "--video_name",
         default="mediterraneo_predizioni",
         help="Nome base del video MP4 (senza estensione).",
+    )
+    parser.add_argument(
+        "--video-fps",
+        type=float,
+        default=10.0,
+        help="Frame rate del video finale (default: 10).",
+    )
+    parser.add_argument(
+        "--video-frame-stride",
+        type=int,
+        default=1,
+        help="Usa un frame ogni N nel video finale (default: 1, nessun campionamento).",
+    )
+    parser.add_argument(
+        "--video-duration-seconds",
+        type=float,
+        default=None,
+        help="Durata finale desiderata: se impostata, calcola automaticamente il frame rate.",
     )
     parser.add_argument(
         "--ffmpeg_path",
@@ -727,6 +750,30 @@ def _create_tiles_with_tracking_overlay(
     )
 
 
+def _validate_tracking_tile_matches(
+    candidates_df: pd.DataFrame,
+    tracking_df: Optional[pd.DataFrame],
+) -> None:
+    positive_tiles = set(
+        candidates_df.loc[candidates_df["is_positive"].eq(1), "tile_folder"]
+        .dropna().astype(str).str.strip()
+    ) - {""}
+    tracking_tiles = (
+        set(tracking_df["path"].dropna().astype(str).map(lambda p: os.path.basename(p).strip()))
+        if tracking_df is not None and not tracking_df.empty and "path" in tracking_df.columns
+        else set()
+    )
+    missing_tiles = positive_tiles - tracking_tiles
+    if missing_tiles:
+        example = sorted(missing_tiles)[0]
+        raise RuntimeError(
+            f"Predizioni tracking non coerenti con le tile candidate: "
+            f"{len(missing_tiles)}/{len(positive_tiles)} tile senza prediction "
+            f"(esempio: {example}). Verifica --standard_tiling e "
+            "--tracking_predictions_csv."
+        )
+
+
 def _build_timeframe_csv_from_candidates(
     candidates_df: pd.DataFrame,
     tracking_df: pd.DataFrame,
@@ -737,6 +784,7 @@ def _build_timeframe_csv_from_candidates(
     cands = cands[cands["end_datetime"].notna()].copy()
     if cands.empty:
         raise RuntimeError("Nessuna clip candidata valida per costruire CSV finale.")
+    _validate_tracking_tile_matches(cands, tracking_df)
 
     track_map: Dict[str, pd.Series] = {}
     if tracking_df is not None and not tracking_df.empty and "path" in tracking_df.columns:
@@ -1042,6 +1090,16 @@ def _draw_marker_if_finite(
     return True
 
 
+def _reset_rendered_frame_sequence(frames_dir: Path) -> None:
+    """Remove only previously rendered sequence frames before a fresh render."""
+    frames_dir.mkdir(parents=True, exist_ok=True)
+    stale_frames = list(frames_dir.glob("frame_*.png"))
+    for frame_path in stale_frames:
+        frame_path.unlink()
+    if stale_frames:
+        print(f"[INFO] Rimossi {len(stale_frames)} frame video precedenti da {frames_dir}")
+
+
 @lru_cache(maxsize=8)
 def _get_coastline_polylines(image_w: int, image_h: int) -> Tuple[np.ndarray, ...]:
     basemap_obj = create_basemap_obj()
@@ -1183,16 +1241,18 @@ def _render_firstpass_roi_frames(
     frames_dir: Path,
     video_coastlines: bool,
     video_tracking_dot_only: bool,
+    video_frame_stride: int,
 ) -> int:
     if cv2 is None:
         raise RuntimeError("OpenCV (cv2) non disponibile. Installa opencv-python nell'ambiente.")
-    frames_dir.mkdir(parents=True, exist_ok=True)
 
     cands = candidates_df.copy()
     cands["end_datetime"] = pd.to_datetime(cands["end_datetime"], errors="coerce")
     cands = cands[cands["end_datetime"].notna()].copy()
     if cands.empty or frames_df is None or frames_df.empty:
         return 0
+    _validate_tracking_tile_matches(cands, tracking_df)
+    _reset_rendered_frame_sequence(frames_dir)
 
     timeline = frames_df.copy()
     if "orig_path" not in timeline.columns or "datetime" not in timeline.columns:
@@ -1318,7 +1378,9 @@ def _render_firstpass_roi_frames(
         render_df["gt_x_manos"] = np.nan
         render_df["gt_y_manos"] = np.nan
 
-    for row in render_df.itertuples(index=False):
+    for input_idx, row in enumerate(render_df.itertuples(index=False)):
+        if input_idx % video_frame_stride != 0:
+            continue
         img_path = Path(str(row.frame_path))
         if not img_path.exists():
             continue
@@ -1417,8 +1479,10 @@ def _encode_video_from_frames(
     frames_dir: Path,
     output_mp4: Path,
     ffmpeg_path: Optional[str],
-    fps: int = 10,
+    fps: float = 10.0,
 ) -> None:
+    if fps <= 0:
+        raise ValueError("Il frame rate del video deve essere maggiore di zero.")
     ffmpeg_exec = resolve_ffmpeg_executable(ffmpeg_path)
     if ffmpeg_exec is None:
         raise RuntimeError(
@@ -1432,7 +1496,7 @@ def _encode_video_from_frames(
         ffmpeg_exec,
         "-y",
         "-framerate",
-        str(int(fps)),
+        str(float(fps)),
         "-i",
         str(frames_dir / "frame_%05d.png"),
         "-c:v",
@@ -1472,15 +1536,27 @@ def _make_firstpass_roi_video(
             frames_dir=frames_dir,
             video_coastlines=bool(args_cli.video_coastlines),
             video_tracking_dot_only=bool(args_cli.video_tracking_dot_only),
+            video_frame_stride=int(args_cli.video_frame_stride),
         )
         if n_frames == 0:
             raise RuntimeError("Nessun frame renderizzato per il video ROI first-pass.")
+
+    frame_count = len(sorted(frames_dir.glob("frame_*.png")))
+    if frame_count == 0:
+        raise RuntimeError(f"Nessun frame PNG trovato in {frames_dir}")
+    video_fps = float(args_cli.video_fps)
+    if args_cli.video_duration_seconds is not None:
+        video_fps = float(frame_count) / float(args_cli.video_duration_seconds)
+        print(
+            f"[INFO] Video campionato: {frame_count} frame, "
+            f"durata {args_cli.video_duration_seconds:g} s, fps {video_fps:.6f}"
+        )
 
     _encode_video_from_frames(
         frames_dir=frames_dir,
         output_mp4=output_mp4,
         ffmpeg_path=args_cli.ffmpeg_path,
-        fps=10,
+        fps=video_fps,
     )
     return output_mp4
 
@@ -1496,6 +1572,10 @@ def main() -> None:
         raise RuntimeError("--only_video richiede --make_video.")
     if args_cli.only_video and args_cli.force:
         raise RuntimeError("--force non e' compatibile con --only_video.")
+    if args_cli.video_frame_stride <= 0:
+        raise RuntimeError("--video-frame-stride deve essere maggiore di zero.")
+    if args_cli.video_duration_seconds is not None and args_cli.video_duration_seconds <= 0:
+        raise RuntimeError("--video-duration-seconds deve essere maggiore di zero.")
     output_dir = Path(args_cli.output_dir).resolve()
     output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -1506,7 +1586,13 @@ def main() -> None:
     firstpass_preds_csv = output_dir / "_tmp_firstpass_predictions.csv"
     clip_candidates_csv = output_dir / "_tmp_firstpass_clip_candidates.csv"
     tile_root = output_dir / "firstpass_tiles"
-    track_tiles_csv = output_dir / "_tmp_tracking_inference_predictions_tiles.csv"
+    track_tiles_csv = (
+        Path(args_cli.tracking_predictions_csv).resolve()
+        if args_cli.tracking_predictions_csv
+        else output_dir / "_tmp_tracking_inference_predictions_tiles.csv"
+    )
+    if args_cli.tracking_predictions_csv and not track_tiles_csv.is_file():
+        raise FileNotFoundError(f"CSV tracking specificato non trovato: {track_tiles_csv}")
     final_time_csv = output_dir / "tracking_inference_predictions.csv"
 
     if args_cli.force:

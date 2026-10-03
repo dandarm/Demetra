@@ -35,6 +35,10 @@ Questo documento descrive lo script `scripts/predict_firstpass_and_track_from_fo
 - `--make_video`: genera anche il video ROI-firstpass finale.
 - `--video_coastlines`: se attivo, disegna le linee di costa nel video finale.
 - `--video_tracking_dot_only`: nel video finale nasconde box e rombo first-pass e lascia solo il dot rosso del tracking VideoMAE.
+- `--video-fps`: frame rate del video finale (default: `10`); può essere decimale, ad es. `40.2` per 603 frame in 15 secondi.
+- `--video-frame-stride`: conserva un frame ogni N, mantenendo intervalli temporali regolari (default: `1`).
+- `--video-duration-seconds`: imposta una durata finale e calcola automaticamente il frame rate dai frame conservati.
+- `--tracking_predictions_csv`: usa un CSV tile VideoMAE esplicito; il rendering verifica che ogni tile candidata positiva abbia la predizione corrispondente.
 - `--only_video`: crea solo MP4 da frame già renderizzati (richiede `--make_video`).
 - `--force`: forza il ricalcolo delle prediction e del video eliminando cache e artefatti derivati, ma mantiene `output_dir/_tmp_firstpass_stretched`.
 - `--video_name`: nome base del file video.
@@ -56,7 +60,7 @@ Questo documento descrive lo script `scripts/predict_firstpass_and_track_from_fo
 
 ```bash
 python3 scripts/predict_firstpass_and_track_from_folder.py \
-  --input_dir ../fromgcloud/2023 \
+  --input_dir /path/to/source_dataset/2023 \
   --output_dir ../airmassRGB/firstpass_track \
   --firstpass_model_path ../firstpass/outputs/runs/exp1/checkpoints/best.ckpt \
   --tracking_model_path ./output/checkpoint-tracking-best.pth \
@@ -69,7 +73,7 @@ Per rigenerare frame + MP4 senza rifare l'inferenza, basta rilanciare lo script 
 
 ```bash
 python3 scripts/predict_firstpass_and_track_from_folder.py \
-  --input_dir ../fromgcloud/2023 \
+  --input_dir /path/to/source_dataset/2023 \
   --output_dir ../airmassRGB/firstpass_track \
   --make_video \
   --video_tracking_dot_only \
@@ -80,7 +84,7 @@ Per forzare un ricalcolo completo delle prediction mantenendo gli stretched già
 
 ```bash
 python3 scripts/predict_firstpass_and_track_from_folder.py \
-  --input_dir ../fromgcloud/2023 \
+  --input_dir /path/to/source_dataset/2023 \
   --output_dir ../airmassRGB/firstpass_track \
   --force \
   --make_video
@@ -88,6 +92,7 @@ python3 scripts/predict_firstpass_and_track_from_folder.py \
 
 ## Note
 
+- `source_dataset` è organizzato in sottocartelle `anno/mese`; la raccolta dei frame sotto `--input_dir` è ricorsiva.
 - Lo script usa solo tile first-pass positive per il tracking HR.
 - Il naming tile e il formato frame sono compatibili con `track_from_folder.py`.
 - Il video `--make_video` non usa il mosaico 12 tile VideoMAE: renderizza il frame originale e disegna un solo riquadro rosso (ROI) quando la detection first-pass è positiva.
@@ -98,4 +103,5 @@ python3 scripts/predict_firstpass_and_track_from_folder.py \
 - Le copie stretched temporanee vengono mantenute in `output_dir/_tmp_firstpass_stretched`.
 - Con `--force`, lo script rimuove solo cache di prediction/video (`tracking_inference_predictions.csv`, tmp tracking/first-pass derivati, `firstpass_tiles`, `anim_frames_*`, MP4) e lascia intatti gli stretched.
 - Caching automatico: se esistono i file tmp (`_tmp_firstpass_predictions.csv`, `_tmp_tracking_inference_predictions_tiles.csv`) non vengono ricalcolati; se esiste gia `tracking_inference_predictions.csv`, il video viene comunque rigenerato leggendo i CSV temporanei presenti.
+- Un cambio di `--standard_tiling` richiede predizioni VideoMAE calcolate sulle nuove tile: il vecchio CSV di tracking con nomi tile differenti non è riutilizzabile per quel rendering.
 - Le tile originali in `firstpass_tiles` non vengono modificate: l'overlay tracking viene scritto in una cartella separata.
