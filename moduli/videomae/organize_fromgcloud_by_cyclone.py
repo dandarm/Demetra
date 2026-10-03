@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Organize airmass frames into per-cyclone folders using event windows from CSV.
+Organize airmass frames from source_dataset into per-cyclone folders using event windows from CSV.
 
 For each cyclone:
 - positives: frames with timestamp inside [start_time, end_time]
@@ -8,9 +8,9 @@ For each cyclone:
   to target N_neg ~= N_pos (symmetric before/after when possible)
 
 Selected frames are moved (or copied) into:
-  <fromgcloud>/<cyclone_id>/
+  <source_dataset>/<cyclone_id>/
 
-Frames not selected remain in <fromgcloud> root.
+Frames not selected remain in the source dataset tree.
 """
 from __future__ import annotations
 
@@ -51,7 +51,7 @@ class Frame:
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=(
-            "Move/copy frames from fromgcloud root into per-cyclone folders, "
+            "Move/copy frames from source_dataset into per-cyclone folders, "
             "balancing positive/negative frames."
         )
     )
@@ -63,9 +63,11 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--fromgcloud",
+        "--source-dataset",
+        dest="fromgcloud",
         type=Path,
-        default=Path("./fromgcloud"),
-        help="Root folder containing frame images (default: %(default)s).",
+        default=Path("source_dataset"),
+        help="Root folder containing frames, optionally arranged by year/month (default: %(default)s).",
     )
     parser.add_argument(
         "--action",
@@ -75,8 +77,9 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--recursive",
-        action="store_true",
-        help="Scan files recursively (default: only files in fromgcloud root).",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help="Scan files recursively (default: enabled; use --no-recursive to disable).",
     )
     parser.add_argument(
         "--frame-regex",
@@ -184,9 +187,9 @@ def scan_frames(
     root: Path, frame_re: re.Pattern[str], exts: Sequence[str], recursive: bool
 ) -> List[Frame]:
     if not root.exists():
-        raise FileNotFoundError(f"fromgcloud folder not found: {root}")
+        raise FileNotFoundError(f"source_dataset folder not found: {root}")
     if not root.is_dir():
-        raise NotADirectoryError(f"fromgcloud path is not a directory: {root}")
+        raise NotADirectoryError(f"source_dataset path is not a directory: {root}")
 
     exts_lc = {e.lower() if e.startswith(".") else f".{e.lower()}" for e in exts}
     iterator: Iterable[Path]
@@ -336,7 +339,7 @@ def main() -> int:
 
     frames = scan_frames(root, frame_re, args.ext, args.recursive)
     if not frames:
-        raise RuntimeError("No valid frames found in fromgcloud.")
+        raise RuntimeError("No valid frames found in source_dataset.")
 
     positives_by_event, is_core_any, overlap_count = assign_positive_owner(frames, events)
 

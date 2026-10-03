@@ -30,9 +30,11 @@ Questo documento descrive lo script `predict_from_folder.py`, che esegue l’inf
 
 ## Esempio (ambiente non HPC)
 
+La directory `source_dataset` è organizzata per `anno/mese`; il caricatore delle immagini esegue una scansione ricorsiva.
+
 ```bash
 python predict_from_folder.py \
-  --input_dir ../fromgcloud/2023 \
+  --input_dir /path/to/source_dataset/2023 \
   --output_dir ../airmassRGB/supervised \
   --model_path ./output/checkpoint-best-lr-again2.pth \
   --manos_file medicane_data_input/medicanes_new_windows.csv \

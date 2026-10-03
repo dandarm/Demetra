@@ -37,7 +37,7 @@ Questo documento descrive lo script `predict_and_track_from_folder.py`, che **un
 
 ```bash
 python predict_and_track_from_folder.py \
-  --input_dir ../fromgcloud/2023 \
+  --input_dir /path/to/source_dataset/2023 \
   --output_dir ../airmassRGB/supervised \
   --classification_model_path ./output/checkpoint-best-classification.pth \
   --tracking_model_path ./output/checkpoint-tracking-best.pth \
@@ -48,6 +48,7 @@ python predict_and_track_from_folder.py \
 
 ## Note
 
+- `source_dataset` è organizzato in sottocartelle `anno/mese`; il caricamento dei frame sotto `--input_dir` è ricorsivo.
 - Le tile generate hanno nomi del tipo `DD-MM-YYYY_HHMM_offsetX_offsetY`. Questo formato è necessario per associare correttamente il tracking e la GT.
 - Il **CSV finale per timeframe** sceglie:
   - la tile con **GT presente**, se `--manos_file` esiste;

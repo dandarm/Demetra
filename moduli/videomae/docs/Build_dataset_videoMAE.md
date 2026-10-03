@@ -32,5 +32,5 @@ e usando il metodo `get_data_ready`. Quindi l’utilizzo della classe `BuildData
 - CSV: `train_960_UNsupervised.csv`, `all_data_CL7_tracks_complete_fast.csv`, `train_supervised.csv`, `val_supervised.csv`, `test_supervised.csv`, oltre ai dataset intermedi creati per esperimenti specifici.
 
 ## Note operative
-- Tutte le funzioni delegate (dal modulo `dataset.build_dataset`) assumono che le immagini siano già scaricate e disponibili in `../fromgcloud` e che le tracce di riferimento siano coerenti con i timestamp delle immagini.
+- Tutte le funzioni delegate (dal modulo `dataset.build_dataset`) assumono che le immagini siano già scaricate in una directory sorgente, eventualmente organizzata in sottocartelle `anno/mese`. Il caricamento è ricorsivo; le tracce di riferimento devono essere coerenti con i timestamp delle immagini.
 - Gli step di bilanciamento e filtraggio sono modulari: il notebook mostra diverse strategie (sampling casuale, selezione di periodi storici, filtri su nuvolosità) che possono essere riprese singolarmente.
