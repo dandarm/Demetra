@@ -216,6 +216,7 @@ frames.txt
 *.ckpt
 
 *.csv
+GENERAL_QUICKSTART_FIXES.md
 
 *.xlsx
 
