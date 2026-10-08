@@ -1,0 +1,5 @@
+# CPU-only PyTorch for the documented quick start (Windows and Linux).
+--index-url https://download.pytorch.org/whl/cpu
+torch==2.2.2+cpu
+torchvision==0.17.2+cpu
+torchaudio==2.2.2+cpu

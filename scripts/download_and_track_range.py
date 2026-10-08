@@ -1,4 +1,4 @@
-#!/home/isac/miniconda3/envs/videomae/bin/python
+#!/usr/bin/env python3
 """Download Airmass RGB frames for a date range and run first-pass + tracking."""
 from __future__ import annotations
 
@@ -30,8 +30,8 @@ from dask.distributed import Client, LocalCluster
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-AIRMAss_OUTPUT_ROOT_DEFAULT = Path("/media/isacDisk2/demetra_output")
-PYTHON_EXEC_DEFAULT = Path("/home/isac/miniconda3/envs/videomae/bin/python")
+AIRMAss_OUTPUT_ROOT_DEFAULT = REPO_ROOT / "output"
+PYTHON_EXEC_DEFAULT = Path(sys.executable)
 PUBLIC_BUCKET_BASE = (
     "public-datasets-eumetsat-solar-forecasting/satellite/EUMETSAT/SEVIRI_RSS/v4"
 )
@@ -40,13 +40,16 @@ FRAME_RE = re.compile(r"airmass_rgb_(\d{8}_\d{4})\.png$")
 RUN_DIR_RE = re.compile(r"range_(\d{8}_\d{4})__(\d{8}_\d{4})$")
 
 FIRSTPASS_MODEL_DEFAULT = REPO_ROOT / "trained_models" / "firstpass_model.ckpt"
-TRACKING_MODEL_DEFAULT = Path("/media/isacDisk2/demetra_trained_models/checkpoint_new_tracking2.pth")
+TRACKING_MODEL_DEFAULT = REPO_ROOT / "trained_models" / "checkpoint_new_tracking2.pth"
 MANOS_FILE_DEFAULT = (
     REPO_ROOT / "moduli" / "videomae" / "medicane_data_input" / "medicanes_new_windows.csv"
 )
 INFERENCE_SCRIPT = REPO_ROOT / "scripts" / "predict_firstpass_and_track_from_folder.py"
 
-MEDICANE_UTILS_DIR = REPO_ROOT / "moduli" / "videomae" / "medicane_utils"
+VIDEOMAE_ROOT = REPO_ROOT / "moduli" / "videomae"
+MEDICANE_UTILS_DIR = VIDEOMAE_ROOT / "medicane_utils"
+if str(VIDEOMAE_ROOT) not in sys.path:
+    sys.path.insert(0, str(VIDEOMAE_ROOT))
 if str(MEDICANE_UTILS_DIR) not in sys.path:
     sys.path.insert(0, str(MEDICANE_UTILS_DIR))
 
@@ -89,7 +92,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--output_root",
         default=str(AIRMAss_OUTPUT_ROOT_DEFAULT),
-        help="Root dove creare la cartella di run (default: /media/isacDisk2/demetra_output).",
+        help="Root dove creare la cartella di run (default: <repo>/output).",
     )
     parser.add_argument(
         "--eumetsat_collection",
@@ -119,8 +122,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--dask_workers",
         type=int,
-        default=16,
-        help="Numero di worker Dask per il download/preprocessing.",
+        default=2,
+        help="Numero di worker Dask per il download/preprocessing (default conservativo: 2).",
     )
     parser.add_argument(
         "--skip_inference",
@@ -144,7 +147,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--eumetsat_download_workers",
         type=int,
-        default=8,
+        default=2,
         help="Numero di download concorrenti EUMETSAT.",
     )
     parser.add_argument(
@@ -158,6 +161,21 @@ def parse_args() -> argparse.Namespace:
         type=int,
         default=180,
         help="Read timeout in secondi per ciascun stream EUMETSAT.",
+    )
+    parser.add_argument("--firstpass-batch-size", type=int, default=1)
+    parser.add_argument("--firstpass-num-workers", type=int, default=0)
+    parser.add_argument("--tracking-batch-size", type=int, default=1)
+    parser.add_argument("--tracking-num-workers", type=int, default=0)
+    parser.add_argument(
+        "--ffmpeg-path",
+        default=None,
+        help="Directory di FFmpeg o percorso a ffmpeg/ffmpeg.exe.",
+    )
+    parser.add_argument(
+        "--min-free-gib",
+        type=float,
+        default=20.0,
+        help="Spazio libero minimo prima del download (default: 20 GiB).",
     )
     return parser.parse_args()
 
@@ -762,6 +780,11 @@ def run_inference_pipeline(
     video_name: str,
     video_coastlines: bool,
     force: bool,
+    firstpass_batch_size: int,
+    firstpass_num_workers: int,
+    tracking_batch_size: int,
+    tracking_num_workers: int,
+    ffmpeg_path: str | None,
 ) -> None:
     cmd = [
         python_exec,
@@ -779,13 +802,63 @@ def run_inference_pipeline(
         "--make_video",
         "--video_name",
         video_name,
+        "--firstpass-batch-size",
+        str(firstpass_batch_size),
+        "--firstpass-num-workers",
+        str(firstpass_num_workers),
+        "--tracking-batch-size",
+        str(tracking_batch_size),
+        "--tracking-num-workers",
+        str(tracking_num_workers),
     ]
     if force:
         cmd.append("--force")
     if video_coastlines:
         cmd.append("--video_coastlines")
+    if ffmpeg_path:
+        cmd.extend(["--ffmpeg_path", str(Path(ffmpeg_path).expanduser().resolve())])
     LOG.info("Lancio inferenza: %s", " ".join(cmd))
     subprocess.run(cmd, cwd=str(REPO_ROOT), check=True)
+
+
+def preflight(args: argparse.Namespace, output_root: Path) -> None:
+    """Fail before a large download when local prerequisites are missing."""
+    output_root.mkdir(parents=True, exist_ok=True)
+    if args.min_free_gib < 0:
+        raise ValueError("--min-free-gib non puo essere negativo.")
+    if min(args.firstpass_batch_size, args.tracking_batch_size) <= 0:
+        raise ValueError("I batch size devono essere maggiori di zero.")
+    if min(args.firstpass_num_workers, args.tracking_num_workers, args.dask_workers) < 0:
+        raise ValueError("Il numero di worker non puo essere negativo.")
+    if args.download_source == "eumetsat" and not has_eumdac_credentials():
+        raise RuntimeError(
+            "Mancano le credenziali EUMETSAT. Imposta EUMETSAT_CONSUMER_KEY e "
+            "EUMETSAT_CONSUMER_SECRET prima di scaricare dati 2026."
+        )
+    if not args.skip_inference:
+        for label, path in (
+            ("Checkpoint first-pass", Path(args.firstpass_model_path).expanduser()),
+            ("Checkpoint tracking", Path(args.tracking_model_path).expanduser()),
+            ("Script di inferenza", INFERENCE_SCRIPT),
+        ):
+            if not path.is_file():
+                raise FileNotFoundError(
+                    f"{label} non trovato: {path}. Controlla README.md o passa il percorso corretto."
+                )
+        from ffmpeg_utils import resolve_ffmpeg_executable
+
+        if resolve_ffmpeg_executable(args.ffmpeg_path) is None:
+            raise RuntimeError(
+                "FFmpeg non trovato. Su Windows: `winget install Gyan.FFmpeg`; poi riapri il terminale "
+                "o passa --ffmpeg-path C:\\percorso\\ffmpeg\\bin."
+            )
+    free_bytes = shutil.disk_usage(output_root).free
+    required_bytes = int(args.min_free_gib * 1024**3)
+    if free_bytes < required_bytes:
+        raise RuntimeError(
+            f"Spazio disco insufficiente in {output_root}: disponibili {free_bytes / 1024**3:.1f} GiB, "
+            f"richiesti almeno {args.min_free_gib:.1f} GiB. Scegli --output_root su un disco piu capiente."
+        )
 
 
 def main() -> int:
@@ -797,6 +870,7 @@ def main() -> int:
         raise ValueError("`end` deve essere >= `start`.")
 
     output_root = Path(args.output_root).expanduser().resolve()
+    preflight(args, output_root)
     run_dir, frames_dir, renamed_from = resolve_run_paths(output_root, requested_start, requested_end)
     setup_logging(run_dir)
 
@@ -943,6 +1017,11 @@ def main() -> int:
         video_name=video_name,
         video_coastlines=bool(args.video_coastlines),
         force=bool(args.force),
+        firstpass_batch_size=args.firstpass_batch_size,
+        firstpass_num_workers=args.firstpass_num_workers,
+        tracking_batch_size=args.tracking_batch_size,
+        tracking_num_workers=args.tracking_num_workers,
+        ffmpeg_path=args.ffmpeg_path,
     )
 
     final_csv = run_dir / "tracking_inference_predictions.csv"

@@ -27,7 +27,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 VIDEOMAE_ROOT = REPO_ROOT / "moduli" / "videomae"
 FIRSTPASS_ROOT_DEFAULT = REPO_ROOT / "moduli" / "firstpass"
 FIRSTPASS_MODEL_DEFAULT = REPO_ROOT / "trained_models" / "firstpass_model.ckpt"
-TRACKING_MODEL_DEFAULT = Path("/media/isacDisk2/demetra_trained_models/checkpoint_new_tracking2.pth")
+TRACKING_MODEL_DEFAULT = REPO_ROOT / "trained_models" / "checkpoint_new_tracking2.pth"
 
 
 
@@ -121,16 +121,28 @@ def parse_args() -> argparse.Namespace:
         help="Lato SxS delle immagini stretched date al first-pass.",
     )
     parser.add_argument(
-        "--firstpass_batch_size",
+        "--firstpass_batch_size", "--firstpass-batch-size",
         type=int,
-        default=40,
-        help="Batch size first-pass inference.",
+        default=1,
+        help="Batch size first-pass inference (default sicuro per CPU: 1).",
     )
     parser.add_argument(
-        "--firstpass_num_workers",
+        "--firstpass_num_workers", "--firstpass-num-workers",
         type=int,
-        default=4,
-        help="Num workers first-pass inference.",
+        default=0,
+        help="Worker first-pass inference (default sicuro per CPU/Windows: 0).",
+    )
+    parser.add_argument(
+        "--tracking_batch_size", "--tracking-batch-size",
+        type=int,
+        default=1,
+        help="Batch size tracking VideoMAE (default sicuro per CPU: 1).",
+    )
+    parser.add_argument(
+        "--tracking_num_workers", "--tracking-num-workers",
+        type=int,
+        default=0,
+        help="Worker tracking VideoMAE (default sicuro per CPU/Windows: 0).",
     )
     parser.add_argument(
         "--firstpass_device",
@@ -1173,6 +1185,10 @@ def _run_tracking_inference(
     args_tracking.pretrained = False
     args_tracking.init_ckpt = ""
     args_tracking.load_for_test_mode = True
+    args_tracking.batch_size = int(args_cli.tracking_batch_size)
+    args_tracking.num_workers = int(args_cli.tracking_num_workers)
+    if device.type == "cpu":
+        args_tracking.pin_mem = False
 
     set_seeds(args_tracking.seed)
 
@@ -1576,6 +1592,39 @@ def main() -> None:
         raise RuntimeError("--video-frame-stride deve essere maggiore di zero.")
     if args_cli.video_duration_seconds is not None and args_cli.video_duration_seconds <= 0:
         raise RuntimeError("--video-duration-seconds deve essere maggiore di zero.")
+    if args_cli.firstpass_batch_size <= 0 or args_cli.tracking_batch_size <= 0:
+        raise RuntimeError("I batch size devono essere maggiori di zero.")
+    if args_cli.firstpass_num_workers < 0 or args_cli.tracking_num_workers < 0:
+        raise RuntimeError("Il numero di worker non puo essere negativo.")
+
+    # Resolve CLI paths before creating output or starting subprocesses.  This
+    # is important on Windows, where the current directory often differs from
+    # the directory containing the launcher.
+    args_cli.input_dir = str(Path(args_cli.input_dir).expanduser().resolve())
+    args_cli.output_dir = str(Path(args_cli.output_dir).expanduser().resolve())
+    args_cli.firstpass_model_path = str(Path(args_cli.firstpass_model_path).expanduser().resolve())
+    args_cli.tracking_model_path = str(Path(args_cli.tracking_model_path).expanduser().resolve())
+    args_cli.manos_file = str(Path(args_cli.manos_file).expanduser().resolve())
+    if args_cli.firstpass_root:
+        args_cli.firstpass_root = str(Path(args_cli.firstpass_root).expanduser().resolve())
+    if args_cli.firstpass_config:
+        args_cli.firstpass_config = str(Path(args_cli.firstpass_config).expanduser().resolve())
+
+    if not Path(args_cli.input_dir).is_dir():
+        raise FileNotFoundError(f"input_dir non trovata: {args_cli.input_dir}")
+    for label, path in (
+        ("Checkpoint first-pass", Path(args_cli.firstpass_model_path)),
+        ("Checkpoint tracking", Path(args_cli.tracking_model_path)),
+    ):
+        if not path.is_file():
+            raise FileNotFoundError(
+                f"{label} non trovato: {path}. Scaricalo seguendo README.md oppure passalo con la relativa opzione."
+            )
+    if args_cli.make_video and resolve_ffmpeg_executable(args_cli.ffmpeg_path) is None:
+        raise RuntimeError(
+            "FFmpeg non trovato. Su Windows esegui `winget install Gyan.FFmpeg` e riapri il terminale, "
+            "oppure passa --ffmpeg_path C:\\percorso\\ffmpeg\\bin."
+        )
     output_dir = Path(args_cli.output_dir).resolve()
     output_dir.mkdir(parents=True, exist_ok=True)
 

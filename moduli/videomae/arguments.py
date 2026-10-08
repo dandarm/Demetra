@@ -1,4 +1,8 @@
 import os
+from pathlib import Path
+
+
+REPO_ROOT = Path(__file__).resolve().parents[2]
 
 class Args:
     def __init__(self, **kwargs):
@@ -506,7 +510,7 @@ def prepare_tracking_args(machine=None):
     user_args_tracking = {
         'model': 'vit_large_patch16_224',  # vit_giant_patch14_224
         'pretrained': True,
-        'init_ckpt': '/media/isacDisk2/demetra_trained_models/checkpoint_large_new.pth',           #'./output/checkpoint-best-lr-again2.pth',
+        'init_ckpt': str(REPO_ROOT / 'trained_models' / 'checkpoint_large_new.pth'),
         'auto_resume': False,
         #'resume_checkpoint': './output/checkpoint-tracking-augmented.pth',
         'load_for_test_mode': False,

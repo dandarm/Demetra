@@ -88,7 +88,7 @@ Questo primo pass è deliberatamente **leggero, robusto e agnostico** rispetto a
 
 ### Parametri consigliati (da tarare una volta sola)
 
-* `S=512`, `s=4` → heatmap 128×128;
+* `S=224`, `s=2` → heatmap 112×112;
 * `σ` tra 6 e 10 px (riferito a S×S);
 * soglia `τ` per presenza scelta su **val** per un compromesso Precision/Recall;
 * `r0` (ROI base) e `k` (moltiplicatore) tarati su **val** in funzione della scala media dei cicloni.
@@ -274,4 +274,3 @@ class XYG,BP,ROI,OUT0,OUT1,J,DL output;
 
 ---
 **In sintesi**: cyc‑firstpass è il “portiere” della pipeline per i medicanes: normalizza, decide se “far passare” un frame e indica **dove guardare**. Così il sistema complessivo diventa più rapido, più affidabile e più facile da mantenere. 
-

@@ -36,7 +36,7 @@ python -m tools.render_letterbox_video \
   --fps 12 \
   --gap-minutes 20 \
   --segment-slate-seconds 0 \
-  --image-size 512 \
+  --image-size 224 \
   --path-col resized_path \
   --pred-x-col x_g --pred-y-col y_g \
   --gt-x-col x_pix_resized --gt-y-col y_pix_resized
@@ -51,7 +51,7 @@ python -m tools.render_letterbox_video \
 * `--fps`: frame rate del video.
 * `--gap-minutes`: se il **delta** tra timestamp consecutivi supera questa soglia, considera “fine segmento” e inizia un nuovo segmento.
 * `--segment-slate-seconds`: secondi di **interstiziale** nero (o slate semplice) tra segmenti; se 0, si concatena diretto.
-* `--image-size`: S del letterbox (default 512; deve combaciare con i file immagine SxS).
+* `--image-size`: S del letterbox (default 224; deve combaciare con i file immagine SxS).
 * `--path-col`: nome colonna che punta al **file immagine SxS** (default `resized_path`).
 * `--pred-x-col/--pred-y-col`: colonne con coordinate **pred** in SxS (default `x_g/y_g`).
 * `--gt-x-col/--gt-y-col`: colonne con coordinate **GT** in SxS (default `x_pix_resized/y_pix_resized`).

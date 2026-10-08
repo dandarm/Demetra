@@ -83,7 +83,7 @@ def build_argparser() -> argparse.ArgumentParser:
     p.add_argument("--fps", type=int, default=12, help="Playback FPS for the video.")
     p.add_argument("--gap-minutes", type=float, default=600.0, help="Start new segment when delta minutes exceed this.")
     p.add_argument("--segment-slate-seconds", type=float, default=1.0, help="Seconds of slate/black between segments.")
-    p.add_argument("--image-size", type=int, default=384, help="Letterbox side S (pixels).")
+    p.add_argument("--image-size", type=int, default=224, help="Letterbox side S (pixels).")
     return p
 
 

@@ -171,6 +171,7 @@ nohup.out
 myJob*
 slurm*
 ffmpeg*
+!ffmpeg_utils.py
 anim_frames*
 
 randomizza.sh

@@ -20,7 +20,7 @@ def main():
     ap = argparse.ArgumentParser(description="Pre-compute letterbox for a whole folder")
     ap.add_argument("--in_dir", required=True)
     ap.add_argument("--out_dir", required=True)
-    ap.add_argument("--size", type=int, default=384, help="output square size, e.g. 512/448/320/…")
+    ap.add_argument("--size", type=int, default=224, help="output square side in pixels")
     ap.add_argument(
         "--resize-mode",
         choices=["letterbox", "stretch"],

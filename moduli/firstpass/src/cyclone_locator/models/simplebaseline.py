@@ -84,7 +84,7 @@ class SimpleBaseline(nn.Module):
 
     def forward(self, x):
         """
-        x: (B,C,H,W) - H=W=512 (o multipli di 32).
+        x: (B,C,H,W) - H=W=224 nel setup operativo (o multipli di 32).
         Return:
           heatmap: (B,1,H/4,W/4)
           presence_logit: (B,1)

@@ -47,7 +47,7 @@ def build_argparser() -> argparse.ArgumentParser:
     p.add_argument("--windows-csv", required=True, type=Path, help="CSV con start_time/end_time e id evento")
     p.add_argument("--src", required=True, type=Path, help="Directory di origine con i frame")
     p.add_argument("--out-dir", required=True, type=Path, help="Cartella di destinazione (conterrà resized/ e CSV)")
-    p.add_argument("--image-size", type=int, default=512, help="Lato dell'immagine letterbox")
+    p.add_argument("--image-size", type=int, default=224, help="Lato dell'immagine letterbox")
     p.add_argument(
         "--resize-mode",
         choices=["letterbox", "stretch"],

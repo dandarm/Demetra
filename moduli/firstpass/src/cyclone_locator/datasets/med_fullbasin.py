@@ -14,7 +14,7 @@ class MedFullBasinDataset(Dataset):
     Supporta sia manifest con path originali + meta letterbox, sia manifest già letterbox
     con colonne x_pix_resized/y_pix_resized.
     """
-    def __init__(self, csv_path, image_size=512, heatmap_stride=4,
+    def __init__(self, csv_path, image_size=224, heatmap_stride=4,
                  heatmap_sigma_px=8, use_aug=False,
                  use_pre_letterboxed=True, letterbox_meta_csv=None, letterbox_size_assert=None,
                  temporal_T=1, temporal_stride=1,

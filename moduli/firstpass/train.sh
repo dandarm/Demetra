@@ -7,7 +7,7 @@ cd "$SCRIPT_DIR"
 
 TRAIN_CSV="manifests/train.csv"
 VAL_CSV="manifests/val.csv"
-IMAGE_SIZE="384"
+IMAGE_SIZE="224"
 HEATMAP_STRIDE="4"
 HEATMAP_SIGMA="8"
 

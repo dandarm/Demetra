@@ -749,7 +749,7 @@ def main():
     logger.info("Starting inference")
     logger.info("Args: %s", vars(args))
 
-    image_size = args.image_size or cfg.get("train", {}).get("image_size", 512)
+    image_size = args.image_size or cfg.get("train", {}).get("image_size", 224)
     stride = args.heatmap_stride or cfg.get("train", {}).get("heatmap_stride", 4)
     temporal_T = max(1, int(args.temporal_T or cfg.get("train", {}).get("temporal_T", 1)))
     temporal_stride = max(1, int(args.temporal_stride or cfg.get("train", {}).get("temporal_stride", 1)))

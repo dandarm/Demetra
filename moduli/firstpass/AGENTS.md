@@ -28,7 +28,7 @@ image_path,presence,cx,cy
 Se il manifest punta a immagini già letterbox, includere anche `x_pix_resized` e `y_pix_resized` (pixel nello spazio letterbox). Le colonne `cx`, `cy` restano comunque espresse nei pixel dell'immagine originale.
 
 ## Pre-processing letterbox offline
-Gli script [`scripts/letterbox_folder.py`](scripts/letterbox_folder.py) e [`scripts/make_letterboxed_copies.py`](scripts/make_letterboxed_copies.py) applicano un letterbox offline per normalizzare le dimensioni input (ad es. 512×512) mantenendo il rapporto d'aspetto. Questo step migliora la coerenza del training, evita ridimensionamenti runtime costosi e permette di cache-are i metadati necessari per riportare le coordinate al dominio originale.
+Gli script [`scripts/letterbox_folder.py`](scripts/letterbox_folder.py) e [`scripts/make_letterboxed_copies.py`](scripts/make_letterboxed_copies.py) applicano un letterbox offline per normalizzare le dimensioni input (224×224 nel setup operativo) mantenendo il rapporto d'aspetto. Questo step migliora la coerenza del training, evita ridimensionamenti runtime costosi e permette di cache-are i metadati necessari per riportare le coordinate al dominio originale.
 
 Per ogni immagine si salvano:
 - `orig_w`, `orig_h`: dimensioni originali.
@@ -57,7 +57,7 @@ Questi valori sono serializzati da [`scripts/make_manifest_from_windows.py`](scr
    - Metadati (`meta_scale`, `meta_pad_x`, `meta_pad_y`, `orig_w`, `orig_h`, `image_path`) per la fase di inferenza/hand-off.
 
 Parametri principali:
-- `image_size`: lato dell'immagine letterbox (default 512).
+- `image_size`: lato dell'immagine letterbox (default 224).
 - `heatmap_stride`: fattore di downsampling rispetto all'immagine (default 4, quindi heatmap 128×128).
 - `heatmap_sigma_px`: sigma della gaussiana nello spazio pixel originale (default 8 px).
 - `use_pre_letterboxed`: se `True`, richiede il CSV dei metadati per campioni non già letterbox.

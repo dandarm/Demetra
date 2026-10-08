@@ -6,22 +6,53 @@
 </div>
 
 
-## Environment setup
+## Installazione (Windows, Linux, CPU e CUDA)
 
-Create a Python 3.9 Conda environment and install the repo dependencies:
+Sono supportati Python 3.9–3.11 e un ambiente virtuale dedicato. Il primo
+comando seleziona PyTorch: scegliere **una sola** variante; non modificare i
+file requirements.
 
-```bash
-conda create -n demetra python=3.9 -y
-conda activate demetra
+### Windows PowerShell, CPU
 
+```powershell
+git clone https://github.com/dandarm/Demetra.git
+cd Demetra
+py -3.11 -m venv .venv
+.\.venv\Scripts\Activate.ps1
 python -m pip install --upgrade pip
+python -m pip install -r requirements-cpu.txt
 python -m pip install -r requirements.txt
+winget install Gyan.FFmpeg
 ```
 
+Chiudere e riaprire PowerShell dopo l'installazione di FFmpeg, poi riattivare
+`.venv`. Se `winget` non è disponibile, installare FFmpeg da
+[ffmpeg.org](https://ffmpeg.org/download.html) e passare il suo `bin` con
+`--ffmpeg-path C:\percorso\ffmpeg\bin`.
 
-Note: the file currently pins `torch==1.12.1+cu113`, `torchvision==0.13.1+cu113`
-and `torchaudio==0.12.1+cu113`. If your machine does not use CUDA 11.3, adjust
-those lines before installing.
+### Linux, CPU
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -r requirements-cpu.txt
+python -m pip install -r requirements.txt
+sudo apt install ffmpeg
+```
+
+### GPU NVIDIA
+
+Al posto di `requirements-cpu.txt`, installare `requirements-cuda118.txt` su
+un sistema con driver compatibile con CUDA 11.8, poi installare
+`requirements.txt`. Per altre versioni CUDA, seguire la matrice ufficiale
+PyTorch e mantenere `requirements.txt` invariato.
+
+Il tracking VideoMAE-Large richiede molta RAM e, su CPU, può richiedere ore.
+I default dell'inferenza sono volutamente conservativi (`batch=1`, `workers=0`)
+e funzionano con Windows; aumentarli soltanto dopo una prima esecuzione
+riuscita. Il download e gli artefatti necessitano almeno 20 GiB liberi come
+controllo iniziale e spesso di più per intervalli lunghi.
 
 ## Model weights
 
@@ -58,8 +89,43 @@ echo '0a841577b376a077cf9eb7856f5168f4be2043066779e241203fe49b3e0c48fa  trained_
 echo 'f5607edaccc5b802773dd67be9e69b1195e69bd42095a2ff8fceaa5bd2a34f4a  trained_models/checkpoint_new_tracking2.pth' | sha256sum -c -
 ```
 
+Maintainers can publish a much smaller inference-only tracking artifact with:
+
+```bash
+python scripts/export_model_only_checkpoint.py \
+  --input trained_models/checkpoint_new_tracking2.pth \
+  --output trained_models/checkpoint_new_tracking2_model_only.pth
+```
+
+The command prints the exact size and SHA-256 to publish with the release. The
+generated file is accepted by the current inference loader; it intentionally
+contains no optimizer, RNG state, local paths, or training arguments.
+
 ## Quick start
-Launch the following script to download image data from Eumetsat (using your account keys) and track with DeMeTra
+
+### Verifica locale senza credenziali
+
+Questo comando controlla le dipendenze Python e genera i manifest dal piccolo
+dataset incluso; non scarica dati satellitari né carica checkpoint:
+
+```bash
+cd moduli/firstpass
+python -m pytest tests/test_letterbox.py tests/test_manifest_cli.py
+cd ../..
+```
+
+Controllare inoltre che gli entrypoint siano disponibili:
+
+```bash
+python scripts/predict_firstpass_and_track_from_folder.py --help
+python scripts/download_and_track_range.py --help
+```
+
+### Download EUMETSAT e tracking
+
+Per dati recenti (incluso marzo 2026) sono obbligatorie credenziali EUMETSAT.
+Lo script si ferma prima del download se mancano credenziali, checkpoint,
+FFmpeg o spazio su disco.
 
 ```bash
 export EUMETSAT_CONSUMER_KEY=<your_consumer_key>
@@ -70,10 +136,20 @@ conda activate demetra
 python scripts/download_and_track_range.py \
   --start 15-03-2026 --end 17-03-2026 \
   --firstpass_model_path trained_models/firstpass_model.ckpt \
-  --tracking_model_path trained_models/checkpoint_new_tracking2.pth
+  --tracking_model_path trained_models/checkpoint_new_tracking2.pth \
+  --output_root output
 ```
 
-the script will automatically download data from EUMETSAT using your account keys
+Su Windows sostituire `export` con:
+
+```powershell
+$env:EUMETSAT_CONSUMER_KEY = '<your_consumer_key>'
+$env:EUMETSAT_CONSUMER_SECRET = '<your_consumer_secret>'
+```
+
+Il primo avvio scarica inoltre il backbone X3D-M usato dal first-pass. CPU è
+utile per il controllo d'installazione ma non è un'impostazione pratica per
+produzioni estese; usare una GPU NVIDIA per range temporali grandi.
 
 
 
@@ -81,14 +157,18 @@ the script will automatically download data from EUMETSAT using your account key
 
 ```bash
 python scripts/predict_firstpass_and_track_from_folder.py   \
---input_dir /media/isacDisk2/source_dataset_by_cyc/jolina  \
---output_dir /media/isacDisk2/demetra_output/jolina  \
+--input_dir /path/to/source_dataset/jolina  \
+--output_dir output/jolina  \
 --firstpass_model_path trained_models/firstpass_model.ckpt \
 --tracking_model_path trained_models/checkpoint_new_tracking2.pth \
 --firstpass_threshold 0.2 \
 --make_video \
---ffmpeg_path /mnt/share/Demetra_files/VideoMAEv2/ffmpeg-7.0.2-amd64-static/ \
+--ffmpeg_path /path/to/ffmpeg/bin \
 --standard_tiling \
 --video_coastlines \
 --video_tracking_dot_only 
 ```
+
+I file CSV LFS storici `all_manos_CL*.csv` non sono richiesti dal quick start
+né dall'inferenza. Sono stati esclusi dalla distribuzione per evitare che un
+clone pubblico dipenda da oggetti LFS non pubblicati.

@@ -2,7 +2,7 @@
 
 First-pass **detector+locator** del centro di ciclone su **intero Mediterraneo**:
 - **Presenza** (0/1) + **coordinate** (da heatmap K=1).
-- Input: frame **letterbox 512x512**, no deformazioni.
+- Input operativo: frame full basin ridimensionati a **224×224**.
 - Output: CSV/JSON con (x_orig, y_orig), **probabilità di presenza**, e **ROI** ritagliate per il modello HR (VideoMAE).
 
 ## Setup
@@ -27,16 +27,16 @@ Per generare nuovi manifest da un CSV di finestre temporali (`medicanes_new_wind
 ```bash
 python scripts/make_manifest_from_windows.py \
   --windows-csv path/medicanes_new_windows.csv \
-  --images-dir data/letterboxed_512/resized \
+  --images-dir mini_data_input/resized \
   --out-dir path/manifests \
   --orig-size 1290 420 \
-  --target-size 384 \
+  --target-size 224 \
   --val-split 0.15 --test-split 0.15 \
   --attach-keypoints auto
 ```
 
 * Legge `data/medicanes_new_windows.csv`.
-* Scansiona `data/letterboxed_512/resized` (immagini già letterbox SxS).
+* Scansiona `mini_data_input/resized` (immagini di esempio SxS).
 * Scrive: `data/manifests/train.csv`, `data/manifests/val.csv`, `data/manifests/test.csv`.
 
 Lo script etichetta ogni frame in base alle finestre `[start_time, end_time]` (inclusione chiusa).
@@ -62,7 +62,7 @@ image_path,presence,cx,cy<br>
 python -m src.cyclone_locator.train \
   --train_csv manifests/train.csv \
   --val_csv   manifests/val.csv \
-  --image_size 384 \
+  --image_size 224 \
   --heatmap_stride 4 \
   --heatmap_sigma_px 8 \
   --backbone resnet18 \

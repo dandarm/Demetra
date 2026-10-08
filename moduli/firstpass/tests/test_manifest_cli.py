@@ -29,7 +29,7 @@ def test_manifest_cli_smoke(tmp_path):
         "1290",
         "420",
         "--target-size",
-        "512",
+        "224",
     ]
     subprocess.run(cmd, check=True)
 
@@ -42,12 +42,12 @@ def test_manifest_cli_smoke(tmp_path):
 
     ds = MedFullBasinDataset(
         out_dir / "train.csv",
-        image_size=512,
+        image_size=224,
         heatmap_stride=4,
         heatmap_sigma_px=8,
         use_aug=False,
         use_pre_letterboxed=False,
     )
     sample = ds[0]
-    assert sample["image"].shape[-1] == 512
+    assert sample["image"].shape[-1] == 224
     assert sample["presence"].shape == (1,)
