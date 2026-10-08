@@ -41,9 +41,6 @@ RUN_DIR_RE = re.compile(r"range_(\d{8}_\d{4})__(\d{8}_\d{4})$")
 
 FIRSTPASS_MODEL_DEFAULT = REPO_ROOT / "trained_models" / "firstpass_model.ckpt"
 TRACKING_MODEL_DEFAULT = REPO_ROOT / "trained_models" / "checkpoint_new_tracking2.pth"
-MANOS_FILE_DEFAULT = (
-    REPO_ROOT / "moduli" / "videomae" / "medicane_data_input" / "medicanes_new_windows.csv"
-)
 INFERENCE_SCRIPT = REPO_ROOT / "scripts" / "predict_firstpass_and_track_from_folder.py"
 
 VIDEOMAE_ROOT = REPO_ROOT / "moduli" / "videomae"
@@ -111,8 +108,8 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--manos_file",
-        default=str(MANOS_FILE_DEFAULT),
-        help="CSV opzionale con GT.",
+        default=None,
+        help="CSV opzionale con GT per confronto (non usato di default).",
     )
     parser.add_argument(
         "--python_exec",
@@ -776,7 +773,7 @@ def run_inference_pipeline(
     run_dir: Path,
     firstpass_model_path: Path,
     tracking_model_path: Path,
-    manos_file: Path,
+    manos_file: Path | None,
     video_name: str,
     video_coastlines: bool,
     force: bool,
@@ -797,8 +794,6 @@ def run_inference_pipeline(
         str(firstpass_model_path),
         "--tracking_model_path",
         str(tracking_model_path),
-        "--manos_file",
-        str(manos_file),
         "--make_video",
         "--video_name",
         video_name,
@@ -811,6 +806,8 @@ def run_inference_pipeline(
         "--tracking-num-workers",
         str(tracking_num_workers),
     ]
+    if manos_file is not None:
+        cmd.extend(["--manos_file", str(manos_file)])
     if force:
         cmd.append("--force")
     if video_coastlines:
@@ -882,12 +879,12 @@ def main() -> int:
 
     firstpass_model_path = Path(args.firstpass_model_path).expanduser().resolve()
     tracking_model_path = Path(args.tracking_model_path).expanduser().resolve()
-    manos_file = Path(args.manos_file).expanduser().resolve()
+    manos_file = Path(args.manos_file).expanduser().resolve() if args.manos_file else None
 
     for path in (firstpass_model_path, tracking_model_path, INFERENCE_SCRIPT):
         if not path.exists():
             raise FileNotFoundError(f"Path richiesto non trovato: {path}")
-    if not manos_file.exists():
+    if manos_file is not None and not manos_file.exists():
         LOG.warning("manos_file non trovato: %s", manos_file)
 
     year_map = list_available_nonhrv_years()

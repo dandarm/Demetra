@@ -184,8 +184,8 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--manos_file",
-        default=str(VIDEOMAE_ROOT / "medicane_data_input" / "medicanes_new_windows.csv"),
-        help="CSV Manos opzionale per GT tracking.",
+        default=None,
+        help="CSV Manos opzionale per confronto con GT (non usato di default).",
     )
     parser.add_argument(
         "--on",
@@ -1604,7 +1604,8 @@ def main() -> None:
     args_cli.output_dir = str(Path(args_cli.output_dir).expanduser().resolve())
     args_cli.firstpass_model_path = str(Path(args_cli.firstpass_model_path).expanduser().resolve())
     args_cli.tracking_model_path = str(Path(args_cli.tracking_model_path).expanduser().resolve())
-    args_cli.manos_file = str(Path(args_cli.manos_file).expanduser().resolve())
+    if args_cli.manos_file:
+        args_cli.manos_file = str(Path(args_cli.manos_file).expanduser().resolve())
     if args_cli.firstpass_root:
         args_cli.firstpass_root = str(Path(args_cli.firstpass_root).expanduser().resolve())
     if args_cli.firstpass_config:
