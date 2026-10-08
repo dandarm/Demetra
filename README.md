@@ -131,8 +131,6 @@ FFmpeg o spazio su disco.
 export EUMETSAT_CONSUMER_KEY=<your_consumer_key>
 export EUMETSAT_CONSUMER_SECRET=<your_consumer_secret>
 
-conda activate demetra
-
 python scripts/download_and_track_range.py \
   --start 15-03-2026 --end 17-03-2026 \
   --firstpass_model_path trained_models/firstpass_model.ckpt \
@@ -140,11 +138,12 @@ python scripts/download_and_track_range.py \
   --output_root output
 ```
 
-Su Windows sostituire `export` con:
+Su Windows, con `.venv` attivo, usare PowerShell:
 
 ```powershell
 $env:EUMETSAT_CONSUMER_KEY = '<your_consumer_key>'
 $env:EUMETSAT_CONSUMER_SECRET = '<your_consumer_secret>'
+python .\scripts\download_and_track_range.py --start 15-03-2026 --end 17-03-2026
 ```
 
 Il primo avvio scarica inoltre il backbone X3D-M usato dal first-pass. CPU è
