@@ -353,15 +353,16 @@ def run_tracking_inference(
             df["path"] = df["path"].apply(lambda p: os.path.basename(str(p)) if p else p)
 
         def _summary_stats(series: pd.Series) -> Optional[Dict[str, float]]:
-            s = pd.to_numeric(series, errors="coerce")
+            s = pd.to_numeric(series, errors="coerce").astype("float64")
             s = s[np.isfinite(s)]
             if s.empty:
                 return None
+            std = s.std()
             return {
                 "min": float(s.min()),
                 "max": float(s.max()),
                 "mean": float(s.mean()),
-                "std": float(s.std()),
+                "std": 0.0 if pd.isna(std) else float(std),
                 "p05": float(s.quantile(0.05)),
                 "p50": float(s.quantile(0.50)),
                 "p95": float(s.quantile(0.95)),

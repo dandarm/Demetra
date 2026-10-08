@@ -184,7 +184,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--manos_file",
-        default="medicane_data_input/medicanes_new_windows.csv",
+        default=str(VIDEOMAE_ROOT / "medicane_data_input" / "medicanes_new_windows.csv"),
         help="CSV Manos opzionale per GT tracking.",
     )
     parser.add_argument(
