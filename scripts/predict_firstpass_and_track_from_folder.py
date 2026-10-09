@@ -27,7 +27,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 VIDEOMAE_ROOT = REPO_ROOT / "moduli" / "videomae"
 FIRSTPASS_ROOT_DEFAULT = REPO_ROOT / "moduli" / "firstpass"
 FIRSTPASS_MODEL_DEFAULT = REPO_ROOT / "trained_models" / "firstpass_model.ckpt"
-TRACKING_MODEL_DEFAULT = REPO_ROOT / "trained_models" / "checkpoint_new_tracking2.pth"
+TRACKING_MODEL_DEFAULT = REPO_ROOT / "trained_models" / "checkpoint_new_tracking2_model_only.pth"
 
 
 

@@ -40,7 +40,7 @@ FRAME_RE = re.compile(r"airmass_rgb_(\d{8}_\d{4})\.png$")
 RUN_DIR_RE = re.compile(r"range_(\d{8}_\d{4})__(\d{8}_\d{4})$")
 
 FIRSTPASS_MODEL_DEFAULT = REPO_ROOT / "trained_models" / "firstpass_model.ckpt"
-TRACKING_MODEL_DEFAULT = REPO_ROOT / "trained_models" / "checkpoint_new_tracking2.pth"
+TRACKING_MODEL_DEFAULT = REPO_ROOT / "trained_models" / "checkpoint_new_tracking2_model_only.pth"
 INFERENCE_SCRIPT = REPO_ROOT / "scripts" / "predict_firstpass_and_track_from_folder.py"
 
 VIDEOMAE_ROOT = REPO_ROOT / "moduli" / "videomae"

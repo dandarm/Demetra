@@ -9,7 +9,7 @@ essere passati sulla riga di comando.
 
 - Ambiente installato secondo il [README](../README.md), incluso FFmpeg.
 - `trained_models/firstpass_model.ckpt` e
-  `trained_models/checkpoint_new_tracking2.pth`.
+  `trained_models/checkpoint_new_tracking2_model_only.pth`.
 - Per intervalli non disponibili nel bucket storico pubblico, credenziali
   EUMETSAT in `EUMETSAT_CONSUMER_KEY` e `EUMETSAT_CONSUMER_SECRET`.
 - Almeno 20 GiB liberi (modificabile con `--min-free-gib`).

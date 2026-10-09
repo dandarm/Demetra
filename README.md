@@ -56,8 +56,8 @@ controllo iniziale e spesso di più per intervalli lunghi.
 
 ## Model weights
 
-The DeMeTrA v1 checkpoints are available on Zenodo:
-[doi:10.5281/zenodo.23123832](https://doi.org/10.5281/zenodo.23123832).
+The DeMeTrA v1 checkpoints are available on
+[Zenodo](https://doi.org/10.5281/zenodo.23123831).
 They are distributed under the CC BY-NC 4.0 licence.
 
 For inference, download these two files into `trained_models/`:
@@ -65,41 +65,41 @@ For inference, download these two files into `trained_models/`:
 | File | Use |
 | --- | --- |
 | `firstpass_model.ckpt` | X3D-M first-pass cyclone detection and coarse centre localization |
-| `checkpoint_new_tracking2.pth` | VideoMAE-Large supervised centre-tracking model |
+| `checkpoint_new_tracking2_model_only.pth` | VideoMAE-Large supervised centre-tracking model, packaged for cross-platform inference |
 
 ```bash
-mkdir -p trained_models
-
-curl -L \
-  'https://zenodo.org/records/23123832/files/firstpass_model.ckpt?download=1' \
-  -o trained_models/firstpass_model.ckpt
-curl -L \
-  'https://zenodo.org/records/23123832/files/checkpoint_new_tracking2.pth?download=1' \
-  -o trained_models/checkpoint_new_tracking2.pth
+python scripts/download_model_weights.py
 ```
+
+This command also works in Windows PowerShell with the virtual environment
+active. Zenodo stores the tracking checkpoint in numbered parts for reliable
+transfer. The script downloads and joins them, verifies SHA-256, and removes
+the temporary parts after a successful reconstruction. Interrupted downloads
+can be retried with the same command.
 
 `checkpoint_large_new.pth` is also available in the Zenodo release. It is the
 self-supervised VideoMAE-Large specialization checkpoint used to initialize
-tracking training; it is not required for inference.
+tracking training; it is not required for inference. The full training
+checkpoint `checkpoint_new_tracking2.pth` remains in the
+[original record](https://doi.org/10.5281/zenodo.23123832) for provenance;
+the model-only file contains the same 320 model tensors without optimizer,
+run arguments, or RNG state.
 
 Verify downloaded files before use:
 
 ```bash
 echo '0a841577b376a077cf9eb7856f5168f4be2043066779e241203fe49b3e0c48fa  trained_models/firstpass_model.ckpt' | sha256sum -c -
-echo 'f5607edaccc5b802773dd67be9e69b1195e69bd42095a2ff8fceaa5bd2a34f4a  trained_models/checkpoint_new_tracking2.pth' | sha256sum -c -
+echo '49097d5cff6b19a86731d24a41a0391b8672099110a0537de606c2265b9b13c6  trained_models/checkpoint_new_tracking2_model_only.pth' | sha256sum -c -
 ```
 
-Maintainers can publish a much smaller inference-only tracking artifact with:
+On PowerShell, verify the downloaded files with:
 
-```bash
-python scripts/export_model_only_checkpoint.py \
-  --input trained_models/checkpoint_new_tracking2.pth \
-  --output trained_models/checkpoint_new_tracking2_model_only.pth
+```powershell
+Get-FileHash trained_models/firstpass_model.ckpt -Algorithm SHA256
+Get-FileHash trained_models/checkpoint_new_tracking2_model_only.pth -Algorithm SHA256
 ```
 
-The command prints the exact size and SHA-256 to publish with the release. The
-generated file is accepted by the current inference loader; it intentionally
-contains no optimizer, RNG state, local paths, or training arguments.
+Compare the displayed hashes with the two values above.
 
 ## Quick start
 
@@ -134,7 +134,7 @@ export EUMETSAT_CONSUMER_SECRET=<your_consumer_secret>
 python scripts/download_and_track_range.py \
   --start 15-03-2026 --end 17-03-2026 \
   --firstpass_model_path trained_models/firstpass_model.ckpt \
-  --tracking_model_path trained_models/checkpoint_new_tracking2.pth \
+  --tracking_model_path trained_models/checkpoint_new_tracking2_model_only.pth \
   --output_root output
 ```
 
@@ -159,7 +159,7 @@ python scripts/predict_firstpass_and_track_from_folder.py   \
 --input_dir /path/to/source_dataset/jolina  \
 --output_dir output/jolina  \
 --firstpass_model_path trained_models/firstpass_model.ckpt \
---tracking_model_path trained_models/checkpoint_new_tracking2.pth \
+--tracking_model_path trained_models/checkpoint_new_tracking2_model_only.pth \
 --firstpass_threshold 0.2 \
 --make_video \
 --ffmpeg_path /path/to/ffmpeg/bin \
